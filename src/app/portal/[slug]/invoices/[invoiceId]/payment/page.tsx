@@ -4,8 +4,10 @@ import { notFound } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-export default async function PaymentPage({ params }: { params: { slug: string, invoiceId: string } }) {
-  const invoice = await getInvoicePaymentDetails(params.invoiceId);
+export default async function PaymentPage({ params }: { params: Promise<{ slug: string, invoiceId: string }> }) {
+  // Await params in Next.js 15+
+  const { invoiceId } = await params;
+  const invoice = await getInvoicePaymentDetails(invoiceId);
 
   if (!invoice) return notFound();
 

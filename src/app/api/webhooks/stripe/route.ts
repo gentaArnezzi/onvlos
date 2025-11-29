@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { successResponse, errorResponse, handleApiError } from "@/lib/api/utils";
 import { InvoiceService } from "@/services/invoice.service";
+import { triggerWorkflows } from "@/lib/workflows/engine";
 // import Stripe from "stripe";
 
 // const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -29,12 +30,20 @@ export async function POST(request: NextRequest) {
     // Handle payment success
     if (event.type === "checkout.session.completed" || event.type === "payment_intent.succeeded") {
       const invoiceId = event.data.object.metadata?.invoice_id;
+      const amount = event.data.object.amount_total ? event.data.object.amount_total / 100 : null;
       
       if (invoiceId) {
-        await InvoiceService.markAsPaid(invoiceId);
+        const invoice = await InvoiceService.markAsPaid(invoiceId);
         
-        // TODO: Trigger workflow "invoice_paid"
-        // await triggerWorkflow("invoice_paid", { invoice_id: invoiceId });
+        // Trigger workflow "invoice_paid"
+        if (invoice) {
+          await triggerWorkflows("invoice_paid", {
+            invoice_id: invoiceId,
+            amount: amount || invoice.total_amount,
+            client_id: invoice.client_id,
+            workspace_id: invoice.workspace_id,
+          });
+        }
       }
     }
 

@@ -94,6 +94,11 @@ export class TaskService {
   }
 
   static async update(taskId: string, data: UpdateTaskInput) {
+    // Get old task to check if status changed to "done"
+    const oldTask = await db.query.tasks.findFirst({
+      where: eq(tasks.id, taskId)
+    });
+
     const updateData: any = {
       updated_at: new Date(),
     };
@@ -117,6 +122,18 @@ export class TaskService {
       .set(updateData)
       .where(eq(tasks.id, taskId))
       .returning();
+
+    // Trigger workflow "task_completed" if status changed to "done"
+    if (data.status === "done" && oldTask?.status !== "done" && updated) {
+      const { triggerWorkflows } = await import("@/lib/workflows/engine");
+      await triggerWorkflows("task_completed", {
+        task_id: taskId,
+        workspace_id: updated.workspace_id,
+        client_id: updated.client_id,
+        task_title: updated.title,
+        completed_at: new Date().toISOString(),
+      });
+    }
 
     return updated || null;
   }

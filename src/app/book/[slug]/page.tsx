@@ -7,10 +7,12 @@ import { notFound } from "next/navigation";
 export default async function BookingPage({ 
   params 
 }: { 
-  params: { slug: string } 
+  params: Promise<{ slug: string }> 
 }) {
+  // Await params in Next.js 15+
+  const { slug } = await params;
   const link = await db.query.booking_links.findFirst({
-    where: eq(booking_links.slug, params.slug)
+    where: eq(booking_links.slug, slug)
   });
 
   if (!link || !link.is_active) {

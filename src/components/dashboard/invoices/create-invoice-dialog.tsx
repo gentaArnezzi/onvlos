@@ -13,7 +13,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import * as React from "react";
 import { createInvoice } from "@/actions/invoices";
 import { Plus, Trash2, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -25,15 +26,29 @@ import { cn } from "@/lib/utils";
 
 interface CreateInvoiceDialogProps {
   clients: { id: string; name: string; company_name: string | null }[];
+  initialClientId?: string;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function CreateInvoiceDialog({ clients }: CreateInvoiceDialogProps) {
-  const [open, setOpen] = useState(false);
+export function CreateInvoiceDialog({ clients, initialClientId, open: controlledOpen, onOpenChange: setControlledOpen }: CreateInvoiceDialogProps) {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isControlled = controlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : internalOpen;
+  const setOpen = isControlled ? setControlledOpen : setInternalOpen;
+  
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState<Date>();
-  const [selectedClient, setSelectedClient] = useState("");
+  const [selectedClient, setSelectedClient] = useState(initialClientId || "");
   const [items, setItems] = useState([{ name: "", quantity: 1, unit_price: 0 }]);
   const router = useRouter();
+
+  // Update selectedClient when initialClientId changes
+  React.useEffect(() => {
+    if (initialClientId) {
+      setSelectedClient(initialClientId);
+    }
+  }, [initialClientId]);
 
   const handleAddItem = () => {
     setItems([...items, { name: "", quantity: 1, unit_price: 0 }]);
@@ -82,11 +97,13 @@ export function CreateInvoiceDialog({ clients }: CreateInvoiceDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button className="bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-700 hover:to-teal-600 text-white shadow-lg shadow-emerald-500/20 border-0">
-          <Plus className="mr-2 h-4 w-4" /> Create Invoice
-        </Button>
-      </DialogTrigger>
+      {!isControlled && (
+        <DialogTrigger asChild>
+          <Button className="bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-700 hover:to-teal-600 text-white shadow-lg shadow-emerald-500/20 border-0">
+            <Plus className="mr-2 h-4 w-4" /> Create Invoice
+          </Button>
+        </DialogTrigger>
+      )}
       <DialogContent className="sm:max-w-[600px] bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
         <DialogHeader>
           <DialogTitle className="text-slate-900 dark:text-white">Create Invoice</DialogTitle>
@@ -127,12 +144,13 @@ export function CreateInvoiceDialog({ clients }: CreateInvoiceDialogProps) {
                             {date ? format(date, "PPP") : <span>Pick a date</span>}
                             </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0">
+                        <PopoverContent className="w-auto p-0 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 shadow-lg">
                             <Calendar
                             mode="single"
                             selected={date}
                             onSelect={setDate}
                             initialFocus
+                            className="rounded-md"
                             />
                         </PopoverContent>
                     </Popover>
@@ -215,7 +233,7 @@ export function CreateInvoiceDialog({ clients }: CreateInvoiceDialogProps) {
                 type="button"
                 variant="outline" 
                 onClick={() => setOpen(false)}
-                className="border-slate-200 dark:border-slate-700"
+                className="border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700"
             >
                 Cancel
             </Button>

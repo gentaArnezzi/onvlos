@@ -128,8 +128,8 @@
   --card: 24 24 32;
   --card-foreground: 248 250 252;
 
-  /* Popover */
-  --popover: 24 24 32;
+  /* Popover - Lighter for better visibility */
+  --popover: 51 65 85;
   --popover-foreground: 248 250 252;
 
   /* Primary - Brighter Purple in Dark Mode */

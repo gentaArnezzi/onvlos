@@ -69,6 +69,24 @@ export async function completeOnboardingStep(
     })
     .where(eq(client_onboarding_sessions.id, sessionId));
 
+  // Get funnel for workspace_id
+  const funnel = await db.query.funnels.findFirst({
+    where: eq(funnels.id, session.funnel_id)
+  });
+
+  // Trigger workflow "funnel_step_completed"
+  if (funnel) {
+    const { triggerWorkflows } = await import("@/lib/workflows/engine");
+    await triggerWorkflows("funnel_step_completed", {
+      funnel_id: session.funnel_id,
+      step_type: stepType,
+      step_index: stepIndex,
+      client_onboarding_session_id: sessionId,
+      workspace_id: funnel.workspace_id,
+      client_email: session.client_email,
+    });
+  }
+
   return { success: true };
 }
 
@@ -98,6 +116,18 @@ export async function completeOnboarding(sessionId: string) {
     status: "active",
     description: formData.description
   }).returning();
+
+  // Trigger workflow "new_client_created" (from funnel completion)
+  const { triggerWorkflows } = await import("@/lib/workflows/engine");
+  await triggerWorkflows("new_client_created", {
+    client_id: newClient.id,
+    workspace_id: funnel.workspace_id,
+    client_name: newClient.name,
+    client_email: newClient.email,
+    company_name: newClient.company_name,
+    source: "funnel",
+    funnel_id: funnel.id,
+  });
 
   // 2. Create Client Space
   const slug = (newClient.company_name || "client").toLowerCase().replace(/[^a-z0-9]/g, '-') + "-" + Math.random().toString(36).substring(2, 7);

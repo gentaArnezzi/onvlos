@@ -142,6 +142,11 @@ export async function updateTask(taskId: string, data: {
             updateData.due_date = data.due_date ? data.due_date.toISOString().split('T')[0] : null;
         }
 
+        // Get old task to check if status changed to "done"
+        const oldTask = await db.query.tasks.findFirst({
+            where: eq(tasks.id, taskId)
+        });
+
         const [updatedTask] = await db.update(tasks)
             .set(updateData)
             .where(
@@ -151,6 +156,18 @@ export async function updateTask(taskId: string, data: {
                 )
             )
             .returning();
+
+        // Trigger workflow "task_completed" if status changed to "done"
+        if (data.status === "done" && oldTask?.status !== "done") {
+            const { triggerWorkflows } = await import("@/lib/workflows/engine");
+            await triggerWorkflows("task_completed", {
+                task_id: taskId,
+                workspace_id: workspace.id,
+                client_id: updatedTask.client_id,
+                task_title: updatedTask.title,
+                completed_at: new Date().toISOString(),
+            });
+        }
 
         revalidatePath("/dashboard/tasks");
         revalidatePath("/dashboard/clients");

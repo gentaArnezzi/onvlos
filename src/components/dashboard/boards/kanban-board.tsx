@@ -229,7 +229,7 @@ function AddCardButton({ columnId, onCardAdded }: { columnId: string; onCardAdde
                             type="button"
                             variant="outline"
                             onClick={() => setOpen(false)}
-                            className="border-slate-200 dark:border-slate-700"
+                            className="border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700"
                         >
                             Cancel
                         </Button>

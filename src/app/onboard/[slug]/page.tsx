@@ -2,8 +2,10 @@ import { getFunnelBySlug } from "@/actions/funnels";
 import { OnboardingWizard } from "@/components/onboarding/wizard";
 import { notFound } from "next/navigation";
 
-export default async function OnboardingPage({ params }: { params: { slug: string } }) {
-  const funnel = await getFunnelBySlug(params.slug);
+export default async function OnboardingPage({ params }: { params: Promise<{ slug: string }> }) {
+  // Await params in Next.js 15+
+  const { slug } = await params;
+  const funnel = await getFunnelBySlug(slug);
 
   if (!funnel) {
     notFound();

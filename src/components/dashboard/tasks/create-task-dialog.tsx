@@ -20,6 +20,7 @@ import { Plus, Loader2 } from "lucide-react";
 interface CreateTaskDialogProps {
   clients: { id: string; name: string; company_name: string | null }[];
   taskToEdit?: any;
+  initialClientId?: string;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 }
@@ -27,7 +28,7 @@ interface CreateTaskDialogProps {
 import { updateTask } from "@/actions/tasks";
 import { useEffect } from "react";
 
-export function CreateTaskDialog({ clients, taskToEdit, open: controlledOpen, onOpenChange: setControlledOpen }: CreateTaskDialogProps) {
+export function CreateTaskDialog({ clients, taskToEdit, initialClientId, open: controlledOpen, onOpenChange: setControlledOpen }: CreateTaskDialogProps) {
   const [internalOpen, setInternalOpen] = useState(false);
   const isControlled = controlledOpen !== undefined;
   const open = isControlled ? controlledOpen : internalOpen;
@@ -36,15 +37,21 @@ export function CreateTaskDialog({ clients, taskToEdit, open: controlledOpen, on
   const [loading, setLoading] = useState(false);
 
   const [title, setTitle] = useState("");
-  const [clientId, setClientId] = useState("");
+  const [clientId, setClientId] = useState(initialClientId || "");
   const [priority, setPriority] = useState("medium");
   const [dueDate, setDueDate] = useState("");
   const [description, setDescription] = useState("");
 
   useEffect(() => {
+    if (initialClientId) {
+      setClientId(initialClientId);
+    }
+  }, [initialClientId]);
+
+  useEffect(() => {
     if (taskToEdit && open) {
       setTitle(taskToEdit.title);
-      setClientId(taskToEdit.client_id || "");
+      setClientId(taskToEdit.client_id || initialClientId || "");
       setPriority(taskToEdit.priority);
       setDueDate(taskToEdit.due_date ? new Date(taskToEdit.due_date).toISOString().split('T')[0] : "");
       setDescription(taskToEdit.description || "");
@@ -52,12 +59,12 @@ export function CreateTaskDialog({ clients, taskToEdit, open: controlledOpen, on
       // Reset form when closing (only if not editing, or if we want to clear after edit)
       // For edit mode, we might want to keep state if re-opening, but usually reset is safer.
       setTitle("");
-      setClientId("");
+      setClientId(initialClientId || "");
       setPriority("medium");
       setDueDate("");
       setDescription("");
     }
-  }, [taskToEdit, open]);
+  }, [taskToEdit, open, initialClientId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

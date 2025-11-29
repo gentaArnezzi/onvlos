@@ -259,6 +259,17 @@ export const workflows = pgTable("workflows", {
   enabled: boolean("enabled").default(true),
   created_by_user_id: text("created_by_user_id").references(() => users.id),
   created_at: timestamp("created_at").defaultNow(),
+  updated_at: timestamp("updated_at").defaultNow(),
+});
+
+export const workflow_executions = pgTable("workflow_executions", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  workflow_id: text("workflow_id").notNull().references(() => workflows.id, { onDelete: "cascade" }),
+  trigger_data: json("trigger_data"), // { invoice_id, client_id, etc. }
+  status: text("status").default("pending"), // "pending" | "running" | "completed" | "failed"
+  executed_at: timestamp("executed_at").defaultNow(),
+  result: json("result"), // { action_results: [], errors: [] }
+  error_message: text("error_message"),
 });
 
 // Chat & Messages

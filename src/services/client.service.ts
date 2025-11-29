@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { client_companies, client_spaces } from "@/lib/db/schema";
 import { eq, and, desc, like, or } from "drizzle-orm";
 import type { CreateClientInput, UpdateClientInput } from "@/lib/validators/client";
+import { triggerWorkflows } from "@/lib/workflows/engine";
 
 export class ClientService {
   static async create(data: CreateClientInput) {
@@ -22,6 +23,15 @@ export class ClientService {
         owner_user_id: data.owner_user_id || null,
       })
       .returning();
+
+    // Trigger workflow "new_client_created"
+    await triggerWorkflows("new_client_created", {
+        client_id: client.id,
+        workspace_id: data.workspace_id,
+        client_name: data.name,
+        client_email: data.email,
+        company_name: data.company_name,
+    });
 
     return client;
   }

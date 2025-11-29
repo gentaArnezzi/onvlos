@@ -1,8 +1,8 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { client_companies, client_spaces, conversations, workspaces } from "@/lib/db/schema";
-import { desc, eq, and } from "drizzle-orm";
+import { client_companies, client_spaces, conversations, workspaces, tasks, invoices } from "@/lib/db/schema";
+import { desc, eq, and, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { getSession } from "@/lib/get-session";
 import { sendEmail } from "@/lib/email";
@@ -19,11 +19,38 @@ export async function getClients() {
     
     if (!workspace) return [];
     
+    // Get clients with related data
     const clients = await db.select()
       .from(client_companies)
       .where(eq(client_companies.workspace_id, workspace.id))
       .orderBy(desc(client_companies.created_at));
-    return clients;
+
+    // Enrich with client space and additional data
+    const enrichedClients = await Promise.all(
+      clients.map(async (client) => {
+        // Get client space for portal link
+        const space = await db.query.client_spaces.findFirst({
+          where: eq(client_spaces.client_id, client.id)
+        });
+
+        // Get task and invoice counts for engagement
+        const taskCount = await db.select({ count: sql<number>`count(*)` })
+          .from(tasks)
+          .where(eq(tasks.client_id, client.id));
+        const invoiceCount = await db.select({ count: sql<number>`count(*)` })
+          .from(invoices)
+          .where(eq(invoices.client_id, client.id));
+
+        return {
+          ...client,
+          space_public_url: space?.public_url || null,
+          task_count: Number(taskCount[0]?.count || 0),
+          invoice_count: Number(invoiceCount[0]?.count || 0),
+        };
+      })
+    );
+
+    return enrichedClients;
   } catch (error) {
     console.error("Failed to fetch clients:", error);
     return [];
@@ -148,14 +175,32 @@ export async function createClient(data: {
         title: "General Chat"
     });
 
-    // Send welcome email to client
+    // Send welcome email to client (non-blocking - if email fails, client is still created)
     const portalUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/portal/${slug}`;
     const tempPassword = Math.random().toString(36).substring(2, 10); // Generate temp password
     
-    await sendEmail(data.email, 'clientInvite', {
-        clientName: data.name,
-        portalUrl: portalUrl,
-        password: tempPassword
+    try {
+      const emailResult = await sendEmail(data.email, 'clientInvite', {
+          clientName: data.name,
+          portalUrl: portalUrl,
+          password: tempPassword
+      });
+      if (!emailResult.success) {
+        console.warn('Email sending failed (non-critical):', emailResult.error);
+      }
+    } catch (emailError) {
+      // Email sending is optional - don't fail client creation if email fails
+      console.warn('Email sending error (non-critical):', emailError);
+    }
+
+    // Trigger workflow "new_client_created"
+    const { triggerWorkflows } = await import("@/lib/workflows/engine");
+    await triggerWorkflows("new_client_created", {
+        client_id: newClient.id,
+        workspace_id: workspace.id,
+        client_name: data.name,
+        client_email: data.email,
+        company_name: data.company_name,
     });
 
     revalidatePath("/dashboard/clients");

@@ -1,9 +1,8 @@
 import { getClients } from "@/actions/clients";
 import { ClientDialog } from "@/components/dashboard/clients/client-dialog";
-import { ClientsTable } from "@/components/dashboard/clients/clients-table";
+import { ClientsGrid } from "@/components/dashboard/clients/clients-grid";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, UserCheck, UserPlus, Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Users, UserCheck, UserPlus } from "lucide-react";
 
 export default async function ClientsPage() {
   const clients = await getClients();
@@ -91,21 +90,8 @@ export default async function ClientsPage() {
         </Card>
       </div>
 
-      {/* Main Content */}
-      <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-slate-900 dark:text-white">Client List</CardTitle>
-            <div className="relative w-64 hidden md:block">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-slate-500 dark:text-slate-400" />
-              <Input placeholder="Search clients..." className="pl-8 bg-slate-50 dark:bg-slate-900/50 border-none text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400" />
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <ClientsTable clients={clients} />
-        </CardContent>
-      </Card>
+      {/* Main Content - Grid Cards */}
+      <ClientsGrid clients={clients} />
     </div>
   );
 }

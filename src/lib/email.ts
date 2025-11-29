@@ -4,16 +4,18 @@ import { Resend } from 'resend';
 // Email service configuration
 const emailProvider = process.env.EMAIL_PROVIDER || 'smtp'; // 'smtp' or 'resend'
 
-// SMTP Configuration
-const smtpTransporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || 'smtp.gmail.com',
-  port: parseInt(process.env.SMTP_PORT || '587'),
-  secure: process.env.SMTP_SECURE === 'true',
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASSWORD,
-  },
-});
+// SMTP Configuration (only create if credentials are available)
+const smtpTransporter = (process.env.SMTP_USER && process.env.SMTP_PASSWORD) 
+  ? nodemailer.createTransport({
+      host: process.env.SMTP_HOST || 'smtp.gmail.com',
+      port: parseInt(process.env.SMTP_PORT || '587'),
+      secure: process.env.SMTP_SECURE === 'true',
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASSWORD,
+      },
+    })
+  : null;
 
 // Resend Configuration
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
@@ -248,8 +250,8 @@ export async function sendEmail(
         html: emailContent.html,
       });
       return { success: true, messageId: result.data?.id };
-    } else {
-      // Use SMTP
+    } else if (smtpTransporter) {
+      // Use SMTP if transporter is available
       const result = await smtpTransporter.sendMail({
         from,
         to,
@@ -257,6 +259,10 @@ export async function sendEmail(
         html: emailContent.html,
       });
       return { success: true, messageId: result.messageId };
+    } else {
+      // No email provider configured - return success but log warning
+      console.warn('Email not sent: No email provider configured (missing SMTP credentials or RESEND_API_KEY)');
+      return { success: false, error: 'No email provider configured' };
     }
   } catch (error) {
     console.error('Email sending error:', error);

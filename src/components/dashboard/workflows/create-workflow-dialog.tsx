@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,23 +18,71 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { createWorkflow } from "@/actions/workflows";
 import { Plus, Loader2 } from "lucide-react";
 
+const triggerOptions = [
+  { value: "invoice_paid", label: "Invoice Paid" },
+  { value: "funnel_step_completed", label: "Funnel Step Completed" },
+  { value: "new_client_created", label: "New Client Created" },
+  { value: "due_date_approaching", label: "Due Date Approaching" },
+  { value: "task_completed", label: "Task Completed" },
+];
+
+const actionOptions = [
+  { value: "send_email", label: "Send Email" },
+  { value: "create_task", label: "Create Task" },
+  { value: "move_card", label: "Move Card" },
+  { value: "send_chat_message", label: "Send Chat Message" },
+];
+
 export function CreateWorkflowDialog() {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [trigger, setTrigger] = useState("invoice_paid");
+  const [triggerType, setTriggerType] = useState("invoice_paid");
+  const [actions, setActions] = useState<Array<{ type: string; config: any }>>([
+    { type: "send_email", config: {} }
+  ]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     
-    await createWorkflow(name, description, trigger);
+    const result = await createWorkflow({
+      name,
+      description: description || undefined,
+      trigger: {
+        type: triggerType as any,
+        config: {}
+      },
+      actions: actions,
+      enabled: false // Start as disabled, user can enable after configuring
+    });
+
+    if (result.success) {
+      setOpen(false);
+      setName("");
+      setDescription("");
+      setTriggerType("invoice_paid");
+      setActions([{ type: "send_email", config: {} }]);
+      router.refresh();
+      // Redirect to edit page for full configuration
+      router.push(`/dashboard/workflows/${result.workflow?.id}`);
+    }
 
     setLoading(false);
-    setOpen(false);
-    setName("");
-    setDescription("");
+  };
+
+  const addAction = () => {
+    setActions([...actions, { type: "send_email", config: {} }]);
+  };
+
+  const removeAction = (index: number) => {
+    setActions(actions.filter((_, i) => i !== index));
+  };
+
+  const updateAction = (index: number, updates: Partial<{ type: string; config: any }>) => {
+    setActions(actions.map((action, i) => i === index ? { ...action, ...updates } : action));
   };
 
   return (
@@ -43,7 +92,7 @@ export function CreateWorkflowDialog() {
           <Plus className="mr-2 h-4 w-4" /> New Workflow
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+      <DialogContent className="sm:max-w-[600px] bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-slate-900 dark:text-white">Create Automation</DialogTitle>
         </DialogHeader>
@@ -61,38 +110,100 @@ export function CreateWorkflowDialog() {
             </div>
             
             <div className="space-y-2">
-               <Label className="text-slate-900 dark:text-white">Trigger</Label>
-               <Select value={trigger} onValueChange={setTrigger}>
-                    <SelectTrigger className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
-                        <SelectValue placeholder="Select a trigger" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="invoice_paid">Invoice Paid</SelectItem>
-                        <SelectItem value="client_created">New Client Created</SelectItem>
-                        <SelectItem value="form_submitted">Form Submitted</SelectItem>
-                        <SelectItem value="task_completed">Task Completed</SelectItem>
-                    </SelectContent>
-               </Select>
-            </div>
-
-             <div className="space-y-2">
               <Label className="text-slate-900 dark:text-white">Description</Label>
               <Textarea 
                 value={description} 
                 onChange={e => setDescription(e.target.value)} 
-                placeholder="Sends a thank you email..."
+                placeholder="Sends a thank you email when invoice is paid..."
                 className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
               />
             </div>
+
+            <div className="space-y-2">
+              <Label className="text-slate-900 dark:text-white">Trigger</Label>
+              <Select value={triggerType} onValueChange={setTriggerType}>
+                <SelectTrigger className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
+                  <SelectValue placeholder="Select a trigger" />
+                </SelectTrigger>
+                <SelectContent className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+                  {triggerOptions.map((option) => (
+                    <SelectItem 
+                      key={option.value} 
+                      value={option.value}
+                      className="text-slate-900 dark:text-white focus:bg-slate-100 dark:focus:bg-slate-700"
+                    >
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-slate-900 dark:text-white">Actions</Label>
+              <div className="space-y-2">
+                {actions.map((action, index) => (
+                  <div key={index} className="flex gap-2 items-center p-2 border border-slate-200 dark:border-slate-700 rounded-md">
+                    <Select 
+                      value={action.type} 
+                      onValueChange={(value) => updateAction(index, { type: value })}
+                    >
+                      <SelectTrigger className="flex-1 bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+                        {actionOptions.map((option) => (
+                          <SelectItem 
+                            key={option.value} 
+                            value={option.value}
+                            className="text-slate-900 dark:text-white focus:bg-slate-100 dark:focus:bg-slate-700"
+                          >
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {actions.length > 1 && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => removeAction(index)}
+                        className="text-red-600 dark:text-red-400"
+                      >
+                        <Plus className="h-4 w-4 rotate-45" />
+                      </Button>
+                    )}
+                  </div>
+                ))}
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={addAction}
+                  className="w-full bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800"
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add Action
+                </Button>
+              </div>
+            </div>
           </div>
           <DialogFooter>
+            <Button 
+              type="button"
+              variant="outline"
+              onClick={() => setOpen(false)}
+              className="border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700"
+            >
+              Cancel
+            </Button>
             <Button 
               type="submit" 
               disabled={loading}
               className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white"
             >
-                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Create
+              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Create & Configure
             </Button>
           </DialogFooter>
         </form>

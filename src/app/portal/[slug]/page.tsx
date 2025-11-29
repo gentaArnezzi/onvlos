@@ -10,8 +10,10 @@ import { getConversation } from "@/actions/chat";
 import { ChatInterface } from "@/components/chat/chat-interface";
 import { FileManager } from "@/components/dashboard/files/file-manager";
 
-export default async function PortalPage({ params }: { params: { slug: string } }) {
-  const data = await getClientSpace(params.slug);
+export default async function PortalPage({ params }: { params: Promise<{ slug: string }> }) {
+  // Await params in Next.js 15+
+  const { slug } = await params;
+  const data = await getClientSpace(slug);
 
   if (!data) {
     return (
@@ -137,7 +139,7 @@ export default async function PortalPage({ params }: { params: { slug: string } 
                                         </Badge>
                                         {invoice.status !== 'paid' && (
                                             <Button size="sm" asChild>
-                                                <a href={`/portal/${params.slug}/invoices/${invoice.id}/payment`}>Pay Now</a>
+                                                <a href={`/portal/${slug}/invoices/${invoice.id}/payment`}>Pay Now</a>
                                             </Button>
                                         )}
                                     </div>
