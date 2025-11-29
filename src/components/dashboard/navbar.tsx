@@ -149,17 +149,23 @@ export function Navbar({ user }: NavbarProps) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-48 bg-[#1A1D24] border-slate-800 text-slate-200">
-              <DropdownMenuItem className="focus:bg-slate-800 focus:text-white cursor-pointer">
-                <Settings className="mr-2 h-4 w-4" />
-                <span>Settings</span>
+              <DropdownMenuItem className="focus:bg-slate-800 focus:text-white cursor-pointer" asChild>
+                <Link href="/dashboard/settings">
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>Settings</span>
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className="focus:bg-slate-800 focus:text-white cursor-pointer">
-                <HelpCircle className="mr-2 h-4 w-4" />
-                <span>Help & Support</span>
+              <DropdownMenuItem className="focus:bg-slate-800 focus:text-white cursor-pointer" asChild>
+                <Link href="/dashboard/help">
+                  <HelpCircle className="mr-2 h-4 w-4" />
+                  <span>Help & Support</span>
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className="focus:bg-slate-800 focus:text-white cursor-pointer">
-                <FileText className="mr-2 h-4 w-4" />
-                <span>Documentation</span>
+              <DropdownMenuItem className="focus:bg-slate-800 focus:text-white cursor-pointer" asChild>
+                <Link href="/dashboard/docs">
+                  <FileText className="mr-2 h-4 w-4" />
+                  <span>Documentation</span>
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -219,9 +225,11 @@ export function Navbar({ user }: NavbarProps) {
                 <Users className="mr-2 h-4 w-4" />
                 <span>Profile</span>
               </DropdownMenuItem>
-              <DropdownMenuItem className="focus:bg-slate-800 focus:text-white cursor-pointer">
-                <Settings className="mr-2 h-4 w-4" />
-                <span>Settings</span>
+              <DropdownMenuItem className="focus:bg-slate-800 focus:text-white cursor-pointer" asChild>
+                <Link href="/dashboard/settings">
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>Settings</span>
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator className="bg-slate-800" />
               <DropdownMenuItem className="text-red-400 focus:bg-red-950/30 focus:text-red-300 cursor-pointer">
