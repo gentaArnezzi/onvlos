@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { useState, useEffect } from "react";
 import * as React from "react";
 import { createInvoice } from "@/actions/invoices";
@@ -40,6 +41,12 @@ export function CreateInvoiceDialog({ clients, initialClientId, open: controlled
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState<Date>();
   const [selectedClient, setSelectedClient] = useState(initialClientId || "");
+  const [currency, setCurrency] = useState("USD");
+  const [discountType, setDiscountType] = useState<"amount" | "percentage">("amount");
+  const [discountValue, setDiscountValue] = useState("");
+  const [taxRate, setTaxRate] = useState("");
+  const [notes, setNotes] = useState("");
+  const [status, setStatus] = useState<"draft" | "sent">("draft");
   const [items, setItems] = useState([{ name: "", quantity: 1, unit_price: 0 }]);
   const router = useRouter();
 
@@ -67,8 +74,21 @@ export function CreateInvoiceDialog({ clients, initialClientId, open: controlled
     setItems(newItems);
   };
 
-  const calculateTotal = () => {
-      return items.reduce((acc, item) => acc + (item.quantity * item.unit_price), 0);
+  const calculateTotals = () => {
+      const subtotal = items.reduce((acc, item) => acc + (item.quantity * item.unit_price), 0);
+      const discount = discountType === "amount" 
+          ? parseFloat(discountValue || "0")
+          : (subtotal * parseFloat(discountValue || "0")) / 100;
+      const afterDiscount = subtotal - discount;
+      const tax = (afterDiscount * parseFloat(taxRate || "0")) / 100;
+      const total = afterDiscount + tax;
+      
+      return {
+          subtotal,
+          discount,
+          tax,
+          total
+      };
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -77,10 +97,18 @@ export function CreateInvoiceDialog({ clients, initialClientId, open: controlled
 
     setLoading(true);
     
+    const totals = calculateTotals();
+    
     const result = await createInvoice({
       client_id: selectedClient,
       due_date: date,
+      currency,
       items: items.map(i => ({ ...i, unit_price: Number(i.unit_price), quantity: Number(i.quantity) })),
+      discount_amount: discountType === "amount" ? totals.discount : undefined,
+      discount_percentage: discountType === "percentage" ? parseFloat(discountValue || "0") : undefined,
+      tax_rate: parseFloat(taxRate || "0"),
+      notes: notes || undefined,
+      status,
     });
 
     setLoading(false);
@@ -91,6 +119,12 @@ export function CreateInvoiceDialog({ clients, initialClientId, open: controlled
       setItems([{ name: "", quantity: 1, unit_price: 0 }]);
       setDate(undefined);
       setSelectedClient("");
+      setCurrency("USD");
+      setDiscountType("amount");
+      setDiscountValue("");
+      setTaxRate("");
+      setNotes("");
+      setStatus("draft");
       router.refresh();
     }
   };
@@ -113,7 +147,7 @@ export function CreateInvoiceDialog({ clients, initialClientId, open: controlled
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-2">
                     <Label className="text-slate-900 dark:text-white">Client</Label>
                     <Select value={selectedClient} onValueChange={setSelectedClient} required>
@@ -126,6 +160,21 @@ export function CreateInvoiceDialog({ clients, initialClientId, open: controlled
                                     {c.company_name || c.name}
                                 </SelectItem>
                             ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div className="space-y-2">
+                    <Label className="text-slate-900 dark:text-white">Currency</Label>
+                    <Select value={currency} onValueChange={setCurrency}>
+                        <SelectTrigger className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="USD">USD ($)</SelectItem>
+                            <SelectItem value="IDR">IDR (Rp)</SelectItem>
+                            <SelectItem value="SGD">SGD (S$)</SelectItem>
+                            <SelectItem value="AUD">AUD (A$)</SelectItem>
+                            <SelectItem value="EUR">EUR (€)</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -221,11 +270,95 @@ export function CreateInvoiceDialog({ clients, initialClientId, open: controlled
                     ))}
                 </div>
                 
-                <div className="flex justify-end pt-4 border-t border-slate-200 dark:border-slate-700">
-                    <div className="text-lg font-bold text-slate-900 dark:text-white">
-                        Total: <span className="text-emerald-600 dark:text-emerald-400">${calculateTotal().toLocaleString()}</span>
+                <div className="space-y-3 pt-4 border-t border-slate-200 dark:border-slate-700">
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <Label className="text-slate-900 dark:text-white">Discount</Label>
+                            <div className="flex gap-2">
+                                <Select value={discountType} onValueChange={(v: "amount" | "percentage") => setDiscountType(v)}>
+                                    <SelectTrigger className="w-24 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="amount">$</SelectItem>
+                                        <SelectItem value="percentage">%</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <Input
+                                    type="number"
+                                    value={discountValue}
+                                    onChange={e => setDiscountValue(e.target.value)}
+                                    placeholder="0"
+                                    min="0"
+                                    step="0.01"
+                                    className="flex-1 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                                />
+                            </div>
+                        </div>
+                        <div className="space-y-2">
+                            <Label className="text-slate-900 dark:text-white">Tax Rate (%)</Label>
+                            <Input
+                                type="number"
+                                value={taxRate}
+                                onChange={e => setTaxRate(e.target.value)}
+                                placeholder="0"
+                                min="0"
+                                step="0.1"
+                                className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                            />
+                        </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                        <Label className="text-slate-900 dark:text-white">Notes / Terms (Optional)</Label>
+                        <textarea
+                            value={notes}
+                            onChange={e => setNotes(e.target.value)}
+                            placeholder="Payment terms, notes, etc."
+                            rows={3}
+                            className="w-full px-3 py-2 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 resize-none"
+                        />
+                    </div>
+
+                    <div className="flex justify-between items-center pt-2">
+                        <div className="space-y-1">
+                            <div className="flex justify-between text-sm text-slate-600 dark:text-slate-400">
+                                <span>Subtotal:</span>
+                                <span>${calculateTotals().subtotal.toLocaleString()}</span>
+                            </div>
+                            {calculateTotals().discount > 0 && (
+                                <div className="flex justify-between text-sm text-slate-600 dark:text-slate-400">
+                                    <span>Discount:</span>
+                                    <span className="text-red-600 dark:text-red-400">-${calculateTotals().discount.toLocaleString()}</span>
+                                </div>
+                            )}
+                            {calculateTotals().tax > 0 && (
+                                <div className="flex justify-between text-sm text-slate-600 dark:text-slate-400">
+                                    <span>Tax:</span>
+                                    <span>${calculateTotals().tax.toLocaleString()}</span>
+                                </div>
+                            )}
+                        </div>
+                        <div className="text-right">
+                            <div className="text-lg font-bold text-slate-900 dark:text-white">
+                                Total: <span className="text-emerald-600 dark:text-emerald-400">${calculateTotals().total.toLocaleString()}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
+            
+            <div className="space-y-2 pt-4 border-t border-slate-200 dark:border-slate-700">
+                <Label className="text-slate-900 dark:text-white">Status</Label>
+                <Select value={status} onValueChange={(v: "draft" | "sent") => setStatus(v)}>
+                    <SelectTrigger className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
+                        <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="draft">Save as Draft</SelectItem>
+                        <SelectItem value="sent">Send to Client</SelectItem>
+                    </SelectContent>
+                </Select>
             </div>
           </div>
           <DialogFooter>

@@ -1,32 +1,22 @@
 import { getInvoices } from "@/actions/invoices";
 import { getClients } from "@/actions/clients";
-import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Plus, CreditCard, CheckCircle, Clock, AlertCircle, Search } from "lucide-react";
-import { format } from "date-fns";
 import { CreateInvoiceDialog } from "@/components/dashboard/invoices/create-invoice-dialog";
+import { InvoicesList } from "@/components/dashboard/invoices/invoices-list";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { CreditCard, CheckCircle, Clock } from "lucide-react";
 
 export default async function InvoicesPage() {
   const invoices = await getInvoices();
   const clients = await getClients();
 
-  // Calculate stats
-  const totalRevenue = invoices.reduce((sum, inv) => sum + Number(inv.amount || 0), 0);
-  const paidInvoices = invoices.filter(inv => inv.status === 'paid');
+  // Calculate stats - filter out archived invoices
+  const activeInvoices = invoices.filter(inv => inv.status !== 'archived');
+  const totalRevenue = activeInvoices.reduce((sum, inv) => sum + Number(inv.amount || 0), 0);
+  const paidInvoices = activeInvoices.filter(inv => inv.status === 'paid');
   const paidAmount = paidInvoices.reduce((sum, inv) => sum + Number(inv.amount || 0), 0);
-  const pendingInvoices = invoices.filter(inv => inv.status === 'sent' || inv.status === 'pending');
+  const pendingInvoices = activeInvoices.filter(inv => inv.status === 'sent' || inv.status === 'pending' || inv.status === 'draft');
   const pendingAmount = pendingInvoices.reduce((sum, inv) => sum + Number(inv.amount || 0), 0);
-  const overdueInvoices = invoices.filter(inv => inv.status === 'overdue');
+  const overdueInvoices = activeInvoices.filter(inv => inv.status === 'overdue');
 
   return (
     <div className="flex-1 space-y-8 p-8 max-w-7xl mx-auto">
@@ -115,86 +105,10 @@ export default async function InvoicesPage() {
       {/* Main Content */}
       <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50">
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-slate-900 dark:text-white">Invoice History</CardTitle>
-            <div className="relative w-64 hidden md:block">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-slate-500 dark:text-slate-400" />
-              <Input 
-                placeholder="Search invoices..." 
-                className="pl-8 bg-slate-50 dark:bg-slate-900/50 border-none text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400" 
-              />
-            </div>
-          </div>
+          <CardTitle className="text-slate-900 dark:text-white">Invoice History</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 overflow-hidden">
-            <Table>
-              <TableHeader className="bg-slate-50 dark:bg-slate-900/50">
-                <TableRow className="hover:bg-transparent border-slate-200 dark:border-slate-700">
-                  <TableHead className="pl-6 h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Invoice #</TableHead>
-                  <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Client</TableHead>
-                  <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</TableHead>
-                  <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Due Date</TableHead>
-                  <TableHead className="text-right pr-6 h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Amount</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {invoices.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={5} className="h-48 text-center">
-                      <div className="flex flex-col items-center justify-center py-8">
-                        <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-4">
-                          <CreditCard className="w-8 h-8 text-slate-400 dark:text-slate-500" />
-                        </div>
-                        <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">No invoices yet</h3>
-                        <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 max-w-md text-center">
-                          Create your first invoice to start tracking your billing and payments.
-                        </p>
-                        <CreateInvoiceDialog clients={clients} />
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  invoices.map((invoice) => (
-                    <TableRow key={invoice.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors border-slate-100 dark:border-slate-800 group">
-                      <TableCell className="pl-6 py-4 font-medium text-slate-900 dark:text-white">
-                        <div className="flex items-center gap-2">
-                          <div className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
-                            <CreditCard className="h-4 w-4" />
-                          </div>
-                          {invoice.invoice_number}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-slate-600 dark:text-slate-300 font-medium">
-                        {invoice.client_name || "Unknown Client"}
-                      </TableCell>
-                      <TableCell>
-                        <Badge
-                          variant="outline"
-                          className={`
-                                capitalize font-medium border-0 px-2.5 py-0.5
-                                ${invoice.status === 'paid' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' : ''}
-                                ${invoice.status === 'overdue' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' : ''}
-                                ${invoice.status === 'pending' ? 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400' : ''}
-                                ${invoice.status === 'sent' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' : ''}
-                                ${invoice.status === 'draft' ? 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400' : ''}
-                            `}
-                        >
-                          {invoice.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-slate-600 dark:text-slate-300">
-                        {invoice.due_date ? format(new Date(invoice.due_date), "MMM d, yyyy") : "-"}
-                      </TableCell>
-                      <TableCell className="text-right pr-6 font-bold text-slate-900 dark:text-white">
-                        ${Number(invoice.amount).toLocaleString()}
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
+          <InvoicesList initialInvoices={invoices} clients={clients} />
         </CardContent>
       </Card>
     </div>

@@ -2,24 +2,58 @@
 
 import { db } from "@/lib/db";
 import { invoices, invoice_items, client_companies } from "@/lib/db/schema";
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, and, or, like } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { getOrCreateWorkspace } from "./workspace";
+import { getSession } from "@/lib/get-session";
 
-export async function getInvoices() {
+export async function getInvoices(search?: string, status?: string) {
   try {
-    const data = await db.select({
+    const session = await getSession();
+    if (!session) return [];
+
+    const workspace = await getOrCreateWorkspace();
+    if (!workspace) return [];
+
+    const conditions = [eq(invoices.workspace_id, workspace.id)];
+
+    // Filter by status
+    if (status && status !== 'all') {
+      conditions.push(eq(invoices.status, status));
+    }
+
+    // Search by invoice number or client name
+    let query = db.select({
         id: invoices.id,
         invoice_number: invoices.invoice_number,
         amount: invoices.total_amount,
         status: invoices.status,
         due_date: invoices.due_date,
         client_name: client_companies.name,
+        client_company_name: client_companies.company_name,
         created_at: invoices.created_at
     })
     .from(invoices)
     .leftJoin(client_companies, eq(invoices.client_id, client_companies.id))
-    .orderBy(desc(invoices.created_at));
-    
+    .where(and(...conditions));
+
+    if (search && search.trim()) {
+      // Note: Drizzle doesn't support LIKE with joins easily, so we'll filter in memory for now
+      // For production, consider using a more sophisticated search
+    }
+
+    const data = await query.orderBy(desc(invoices.created_at));
+
+    // Filter by search term if provided
+    if (search && search.trim()) {
+      const searchLower = search.toLowerCase();
+      return data.filter(inv => 
+        inv.invoice_number?.toLowerCase().includes(searchLower) ||
+        inv.client_name?.toLowerCase().includes(searchLower) ||
+        inv.client_company_name?.toLowerCase().includes(searchLower)
+      );
+    }
+
     return data;
   } catch (error) {
     console.error(error);
@@ -31,11 +65,23 @@ export async function createInvoice(data: {
     client_id: string;
     due_date: Date;
     items: { name: string; quantity: number; unit_price: number }[];
+    currency?: string;
+    discount_amount?: number;
+    discount_percentage?: number;
+    tax_rate?: number;
     notes?: string;
+    status?: 'draft' | 'sent';
 }) {
     try {
-        // Mock workspace
-        const workspaceId = "00000000-0000-0000-0000-000000000000";
+        const session = await getSession();
+        if (!session) {
+            return { success: false, error: "Not authenticated" };
+        }
+
+        const workspace = await getOrCreateWorkspace();
+        if (!workspace) {
+            return { success: false, error: "Workspace not found" };
+        }
         
         // Calculate totals
         let subtotal = 0;
@@ -45,29 +91,45 @@ export async function createInvoice(data: {
             return { ...item, subtotal: itemSubtotal };
         });
         
-        // Simple tax logic (e.g., 0% for MVP unless specified)
-        const taxRate = 0;
-        const taxAmount = 0;
-        const totalAmount = subtotal + taxAmount;
+        // Calculate discount
+        const discountAmount = data.discount_amount 
+            ? data.discount_amount 
+            : data.discount_percentage 
+                ? (subtotal * data.discount_percentage) / 100 
+                : 0;
+        
+        // Calculate tax (on subtotal after discount)
+        const taxRate = data.tax_rate || 0;
+        const taxAmount = (subtotal - discountAmount) * (taxRate / 100);
+        const totalAmount = subtotal - discountAmount + taxAmount;
         
         // Generate Invoice Number
-        const count = await db.$count(invoices);
+        const existingInvoices = await db.select()
+            .from(invoices)
+            .where(eq(invoices.workspace_id, workspace.id));
+        const count = existingInvoices.length;
         const invoiceNumber = `INV-${String(count + 1).padStart(3, '0')}`;
         
         // Transaction
         await db.transaction(async (tx) => {
             const [newInvoice] = await tx.insert(invoices).values({
-                workspace_id: workspaceId,
+                workspace_id: workspace.id,
                 client_id: data.client_id,
                 invoice_number: invoiceNumber,
-                due_date: data.due_date.toISOString(), // Drizzle date expects string YYYY-MM-DD often, but let's try Date object or ISO string
-                issued_date: new Date().toISOString(),
+                currency: data.currency || 'USD',
+                due_date: data.due_date instanceof Date 
+                    ? data.due_date.toISOString().split('T')[0] 
+                    : data.due_date,
+                issued_date: new Date().toISOString().split('T')[0],
                 amount_subtotal: subtotal.toString(),
-                tax_rate: taxRate.toString(),
-                tax_amount: taxAmount.toString(),
+                discount_amount: discountAmount > 0 ? discountAmount.toString() : null,
+                discount_percentage: data.discount_percentage ? data.discount_percentage.toString() : null,
+                tax_rate: taxRate > 0 ? taxRate.toString() : null,
+                tax_amount: taxAmount > 0 ? taxAmount.toString() : null,
                 total_amount: totalAmount.toString(),
-                notes: data.notes,
-                status: 'sent', // Auto send for MVP
+                notes: data.notes || null,
+                status: data.status || 'draft',
+                created_by_user_id: session.user.id,
             }).returning();
             
             if (itemsWithSubtotal.length > 0) {
@@ -87,5 +149,180 @@ export async function createInvoice(data: {
     } catch (error) {
         console.error("Failed to create invoice:", error);
         return { success: false, error: "Failed to create invoice" };
+    }
+}
+
+export async function updateInvoiceStatus(invoiceId: string, status: string) {
+    try {
+        const session = await getSession();
+        if (!session) {
+            return { success: false, error: "Not authenticated" };
+        }
+
+        const workspace = await getOrCreateWorkspace();
+        if (!workspace) {
+            return { success: false, error: "Workspace not found" };
+        }
+
+        await db.update(invoices)
+            .set({ 
+                status,
+                updated_at: new Date(),
+                ...(status === 'paid' ? { paid_date: new Date().toISOString().split('T')[0] } : {})
+            })
+            .where(and(
+                eq(invoices.id, invoiceId),
+                eq(invoices.workspace_id, workspace.id)
+            ));
+
+        revalidatePath("/dashboard/invoices");
+        return { success: true };
+    } catch (error) {
+        console.error("Failed to update invoice status:", error);
+        return { success: false, error: "Failed to update invoice status" };
+    }
+}
+
+export async function sendInvoice(invoiceId: string) {
+    try {
+        const session = await getSession();
+        if (!session) {
+            return { success: false, error: "Not authenticated" };
+        }
+
+        const workspace = await getOrCreateWorkspace();
+        if (!workspace) {
+            return { success: false, error: "Workspace not found" };
+        }
+
+        // Update status to 'sent'
+        await db.update(invoices)
+            .set({ 
+                status: 'sent',
+                updated_at: new Date()
+            })
+            .where(and(
+                eq(invoices.id, invoiceId),
+                eq(invoices.workspace_id, workspace.id)
+            ));
+
+        // TODO: Send email to client
+        // await sendEmail(...);
+
+        revalidatePath("/dashboard/invoices");
+        return { success: true };
+    } catch (error) {
+        console.error("Failed to send invoice:", error);
+        return { success: false, error: "Failed to send invoice" };
+    }
+}
+
+export async function getInvoiceById(invoiceId: string) {
+    try {
+        const session = await getSession();
+        if (!session) return null;
+
+        const workspace = await getOrCreateWorkspace();
+        if (!workspace) return null;
+
+        const invoice = await db.query.invoices.findFirst({
+            where: and(
+                eq(invoices.id, invoiceId),
+                eq(invoices.workspace_id, workspace.id)
+            )
+        });
+
+        if (!invoice) return null;
+
+        const items = await db.query.invoice_items.findMany({
+            where: eq(invoice_items.invoice_id, invoiceId)
+        });
+
+        const client = await db.query.client_companies.findFirst({
+            where: eq(client_companies.id, invoice.client_id)
+        });
+
+        return {
+            ...invoice,
+            items,
+            client
+        };
+    } catch (error) {
+        console.error("Failed to get invoice:", error);
+        return null;
+    }
+}
+
+export async function duplicateInvoice(invoiceId: string) {
+    try {
+        const session = await getSession();
+        if (!session) {
+            return { success: false, error: "Not authenticated" };
+        }
+
+        const workspace = await getOrCreateWorkspace();
+        if (!workspace) {
+            return { success: false, error: "Workspace not found" };
+        }
+
+        const originalInvoice = await db.query.invoices.findFirst({
+            where: and(
+                eq(invoices.id, invoiceId),
+                eq(invoices.workspace_id, workspace.id)
+            )
+        });
+
+        if (!originalInvoice) {
+            return { success: false, error: "Invoice not found" };
+        }
+
+        const originalItems = await db.query.invoice_items.findMany({
+            where: eq(invoice_items.invoice_id, invoiceId)
+        });
+
+        // Generate new invoice number
+        const existingInvoices = await db.select()
+            .from(invoices)
+            .where(eq(invoices.workspace_id, workspace.id));
+        const count = existingInvoices.length;
+        const invoiceNumber = `INV-${String(count + 1).padStart(3, '0')}`;
+
+        // Create duplicate
+        await db.transaction(async (tx) => {
+            const [newInvoice] = await tx.insert(invoices).values({
+                workspace_id: workspace.id,
+                client_id: originalInvoice.client_id,
+                invoice_number: invoiceNumber,
+                currency: originalInvoice.currency || 'USD',
+                due_date: originalInvoice.due_date,
+                issued_date: new Date().toISOString().split('T')[0],
+                amount_subtotal: originalInvoice.amount_subtotal,
+                discount_amount: originalInvoice.discount_amount,
+                discount_percentage: originalInvoice.discount_percentage,
+                tax_rate: originalInvoice.tax_rate,
+                tax_amount: originalInvoice.tax_amount,
+                total_amount: originalInvoice.total_amount,
+                notes: originalInvoice.notes,
+                status: 'draft',
+                created_by_user_id: session.user.id,
+            }).returning();
+
+            if (originalItems.length > 0) {
+                await tx.insert(invoice_items).values(
+                    originalItems.map(item => ({
+                        invoice_id: newInvoice.id,
+                        name: item.name,
+                        quantity: item.quantity,
+                        unit_price: item.unit_price,
+                    }))
+                );
+            }
+        });
+
+        revalidatePath("/dashboard/invoices");
+        return { success: true };
+    } catch (error) {
+        console.error("Failed to duplicate invoice:", error);
+        return { success: false, error: "Failed to duplicate invoice" };
     }
 }
