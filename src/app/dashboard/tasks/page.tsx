@@ -33,7 +33,7 @@ export default async function TasksPage() {
           <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-violet-600 to-indigo-500 bg-clip-text text-transparent">
             Tasks
           </h2>
-          <p className="text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-slate-300 mt-1">
             Track and manage your project deliverables.
           </p>
         </div>
@@ -42,12 +42,12 @@ export default async function TasksPage() {
 
       {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-3">
-        <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50 relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4 opacity-10">
+        <Card className="border border-slate-700/50 shadow-lg bg-slate-800/50 backdrop-blur-sm relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-4 opacity-5">
             <CheckSquare className="h-16 w-16" />
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">
+            <CardTitle className="text-sm font-medium text-slate-300">
               Total Tasks
             </CardTitle>
             <div className="p-2 rounded-lg bg-violet-100 text-violet-600 dark:bg-violet-900/30 dark:text-violet-400">
@@ -55,19 +55,19 @@ export default async function TasksPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900 dark:text-white">{totalTasks}</div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <div className="text-2xl font-bold text-white">{totalTasks}</div>
+            <p className="text-xs text-slate-400 mt-1">
               All assignments
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50 relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4 opacity-10">
+        <Card className="border border-slate-700/50 shadow-lg bg-slate-800/50 backdrop-blur-sm relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-4 opacity-5">
             <Clock className="h-16 w-16" />
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">
+            <CardTitle className="text-sm font-medium text-slate-300">
               Pending
             </CardTitle>
             <div className="p-2 rounded-lg bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400">
@@ -75,19 +75,19 @@ export default async function TasksPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900 dark:text-white">{pendingTasks}</div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <div className="text-2xl font-bold text-white">{pendingTasks}</div>
+            <p className="text-xs text-slate-400 mt-1">
               To do & In progress
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50 relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4 opacity-10">
+        <Card className="border border-slate-700/50 shadow-lg bg-slate-800/50 backdrop-blur-sm relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-4 opacity-5">
             <AlertTriangle className="h-16 w-16" />
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">
+            <CardTitle className="text-sm font-medium text-slate-300">
               High Priority
             </CardTitle>
             <div className="p-2 rounded-lg bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400">
@@ -95,8 +95,8 @@ export default async function TasksPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900 dark:text-white">{highPriorityTasks}</div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <div className="text-2xl font-bold text-white">{highPriorityTasks}</div>
+            <p className="text-xs text-slate-400 mt-1">
               Needs attention
             </p>
           </CardContent>
@@ -104,52 +104,55 @@ export default async function TasksPage() {
       </div>
 
       {/* Main Content */}
-      <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50">
+      <Card className="border border-slate-700/50 shadow-lg bg-slate-800/50 backdrop-blur-sm">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle>Task List</CardTitle>
+            <CardTitle className="text-white">Task List</CardTitle>
             <div className="relative w-64 hidden md:block">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-slate-500" />
-              <Input placeholder="Search tasks..." className="pl-8 bg-slate-50 dark:bg-slate-900/50 border-none" />
+              <Search className="absolute left-2 top-2.5 h-4 w-4 text-slate-400" />
+              <Input
+                placeholder="Search tasks..."
+                className="pl-8 bg-slate-900/50 border-slate-700 text-slate-200 placeholder:text-slate-500"
+              />
             </div>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 overflow-hidden">
+          <div className="rounded-xl border border-slate-700 bg-slate-900/30 overflow-hidden">
             <Table>
-              <TableHeader className="bg-slate-50 dark:bg-slate-900/50">
-                <TableRow className="hover:bg-transparent border-slate-200 dark:border-slate-700">
+              <TableHeader className="bg-slate-900/50">
+                <TableRow className="hover:bg-transparent border-slate-700">
                   <TableHead className="w-[50px] pl-6 h-12"></TableHead>
-                  <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Title</TableHead>
-                  <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Client</TableHead>
-                  <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Priority</TableHead>
-                  <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Due Date</TableHead>
-                  <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</TableHead>
+                  <TableHead className="h-12 text-xs font-medium text-slate-400 uppercase tracking-wider">Title</TableHead>
+                  <TableHead className="h-12 text-xs font-medium text-slate-400 uppercase tracking-wider">Client</TableHead>
+                  <TableHead className="h-12 text-xs font-medium text-slate-400 uppercase tracking-wider">Priority</TableHead>
+                  <TableHead className="h-12 text-xs font-medium text-slate-400 uppercase tracking-wider">Due Date</TableHead>
+                  <TableHead className="h-12 text-xs font-medium text-slate-400 uppercase tracking-wider">Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {tasks.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="h-32 text-center text-slate-500 dark:text-slate-400">
+                    <TableCell colSpan={6} className="h-32 text-center text-slate-400">
                       No tasks found.
                     </TableCell>
                   </TableRow>
                 ) : (
                   tasks.map((task) => (
-                    <TableRow key={task.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors border-slate-100 dark:border-slate-800 group">
+                    <TableRow key={task.id} className="hover:bg-slate-800/30 transition-colors border-slate-800 group">
                       <TableCell className="pl-6 py-4">
                         {task.status === 'done' ? (
-                          <div className="h-6 w-6 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+                          <div className="h-6 w-6 rounded-full bg-emerald-900/30 flex items-center justify-center text-emerald-400">
                             <CheckCircle2 className="h-4 w-4" />
                           </div>
                         ) : (
-                          <div className="h-6 w-6 rounded-full border-2 border-slate-300 dark:border-slate-600 group-hover:border-slate-400 dark:group-hover:border-slate-500 transition-colors" />
+                          <div className="h-6 w-6 rounded-full border-2 border-slate-600 group-hover:border-slate-500 transition-colors" />
                         )}
                       </TableCell>
-                      <TableCell className="font-medium text-slate-900 dark:text-white">
+                      <TableCell className="font-medium text-white">
                         <div className="flex flex-col">
                           <span className="text-sm font-semibold">{task.title}</span>
-                          {task.description && <span className="text-xs text-slate-500 dark:text-slate-400 truncate max-w-[250px] mt-0.5">{task.description}</span>}
+                          {task.description && <span className="text-xs text-slate-400 truncate max-w-[250px] mt-0.5">{task.description}</span>}
                         </div>
                       </TableCell>
                       <TableCell className="text-slate-600 dark:text-slate-300">

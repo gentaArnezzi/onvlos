@@ -116,10 +116,13 @@ export default async function InvoicesPage() {
       <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle>Invoice History</CardTitle>
+            <CardTitle className="text-slate-900 dark:text-white">Invoice History</CardTitle>
             <div className="relative w-64 hidden md:block">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-slate-500" />
-              <Input placeholder="Search invoices..." className="pl-8 bg-slate-50 dark:bg-slate-900/50 border-none" />
+              <Search className="absolute left-2 top-2.5 h-4 w-4 text-slate-500 dark:text-slate-400" />
+              <Input 
+                placeholder="Search invoices..." 
+                className="pl-8 bg-slate-50 dark:bg-slate-900/50 border-none text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400" 
+              />
             </div>
           </div>
         </CardHeader>
@@ -138,8 +141,17 @@ export default async function InvoicesPage() {
               <TableBody>
                 {invoices.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="h-32 text-center text-slate-500 dark:text-slate-400">
-                      No invoices found.
+                    <TableCell colSpan={5} className="h-48 text-center">
+                      <div className="flex flex-col items-center justify-center py-8">
+                        <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-4">
+                          <CreditCard className="w-8 h-8 text-slate-400 dark:text-slate-500" />
+                        </div>
+                        <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">No invoices yet</h3>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 max-w-md text-center">
+                          Create your first invoice to start tracking your billing and payments.
+                        </p>
+                        <CreateInvoiceDialog clients={clients} />
+                      </div>
                     </TableCell>
                   </TableRow>
                 ) : (

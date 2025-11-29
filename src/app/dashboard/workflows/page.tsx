@@ -109,7 +109,7 @@ export default async function WorkflowsPage() {
               <CardTitle className="text-lg mt-2 text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
                 {workflow.name}
               </CardTitle>
-              <CardDescription className="line-clamp-2">
+              <CardDescription className="line-clamp-2 text-slate-600 dark:text-slate-300">
                 {workflow.description || "No description provided."}
               </CardDescription>
             </CardHeader>

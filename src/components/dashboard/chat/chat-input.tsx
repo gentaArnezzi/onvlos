@@ -1,0 +1,111 @@
+"use client";
+
+import { useState, useRef, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Send, Loader2, Paperclip } from "lucide-react";
+import { sendMessage } from "@/actions/messages";
+import { toast } from "sonner";
+
+interface ChatInputProps {
+    clientId: string;
+    onMessageSent: (message: any) => void;
+}
+
+export function ChatInput({ clientId, onMessageSent }: ChatInputProps) {
+    const [message, setMessage] = useState("");
+    const [sending, setSending] = useState(false);
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+    // Focus textarea after sending
+    useEffect(() => {
+        if (!sending && textareaRef.current) {
+            textareaRef.current.focus();
+        }
+    }, [sending]);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (!message.trim() || sending) return;
+
+        const messageText = message.trim();
+        setSending(true);
+        setMessage(""); // Clear input immediately for better UX
+        
+        try {
+            const result = await sendMessage(clientId, messageText);
+
+            if (result.success && result.message) {
+                onMessageSent(result.message);
+            } else {
+                toast.error(result.error || "Failed to send message");
+                setMessage(messageText); // Restore message if failed
+            }
+        } catch (error) {
+            toast.error("Failed to send message");
+            setMessage(messageText); // Restore message on error
+        } finally {
+            setSending(false);
+        }
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            e.stopPropagation();
+            handleSubmit(e as any);
+        }
+    };
+
+    return (
+        <div className="w-full">
+            <form 
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleSubmit(e);
+                    return false;
+                }}
+                className="flex items-end gap-2 w-full"
+            >
+                <div className="flex-1 min-w-0">
+                    <Textarea
+                        ref={textareaRef}
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        placeholder="Type a message... (Enter to send, Shift+Enter for new line)"
+                        className="min-h-[60px] max-h-[120px] bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 resize-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+                        disabled={sending}
+                    />
+                </div>
+
+                {/* Future: File upload button */}
+                {/* <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="text-slate-400 hover:text-slate-200"
+                    disabled={sending}
+                >
+                    <Paperclip className="w-5 h-5" />
+                </Button> */}
+
+                <Button
+                    type="submit"
+                    size="icon"
+                    disabled={!message.trim() || sending}
+                    className="bg-blue-600 hover:bg-blue-700 text-white flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed h-[60px]"
+                >
+                    {sending ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                        <Send className="w-4 h-4" />
+                    )}
+                </Button>
+            </form>
+        </div>
+    );
+}

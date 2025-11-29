@@ -39,7 +39,7 @@ export function CreateWorkflowDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
+        <Button className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white shadow-lg shadow-amber-500/20 border-0">
           <Plus className="mr-2 h-4 w-4" /> New Workflow
         </Button>
       </DialogTrigger>

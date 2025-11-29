@@ -27,14 +27,14 @@ export function CreateFunnelDialog() {
     e.preventDefault();
     setLoading(true);
     const formData = new FormData(e.currentTarget);
-    
+
     const res = await createFunnel(
       formData.get("name") as string,
       formData.get("description") as string,
     );
 
     if (res.success && res.funnel) {
-        router.push(`/dashboard/funnels/${res.funnel.id}`);
+      router.push(`/dashboard/funnels/${res.funnel.id}`);
     }
 
     setLoading(false);
@@ -44,7 +44,7 @@ export function CreateFunnelDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
+        <Button className="bg-violet-600 hover:bg-violet-700 text-white">
           <Plus className="mr-2 h-4 w-4" /> New Funnel
         </Button>
       </DialogTrigger>
@@ -72,7 +72,7 @@ export function CreateFunnelDialog() {
           </div>
           <DialogFooter>
             <Button type="submit" disabled={loading}>
-                {loading ? "Creating..." : "Create Funnel"}
+              {loading ? "Creating..." : "Create Funnel"}
             </Button>
           </DialogFooter>
         </form>

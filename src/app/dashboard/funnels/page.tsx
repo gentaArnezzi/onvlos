@@ -29,7 +29,7 @@ export default async function FunnelsPage() {
           <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent">
             Onboarding Funnels
           </h2>
-          <p className="text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-slate-300 mt-1">
             Create and manage your client onboarding flows.
           </p>
         </div>
@@ -38,12 +38,12 @@ export default async function FunnelsPage() {
 
       {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-3">
-        <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50 relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4 opacity-10">
+        <Card className="border border-slate-700/50 shadow-lg bg-slate-800/50 backdrop-blur-sm relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-4 opacity-5">
             <Filter className="h-16 w-16" />
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">
+            <CardTitle className="text-sm font-medium text-slate-300">
               Total Funnels
             </CardTitle>
             <div className="p-2 rounded-lg bg-pink-100 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400">
@@ -51,19 +51,19 @@ export default async function FunnelsPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900 dark:text-white">{totalFunnels}</div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <div className="text-2xl font-bold text-white">{totalFunnels}</div>
+            <p className="text-xs text-slate-400 mt-1">
               Active workflows
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50 relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4 opacity-10">
+        <Card className="border border-slate-700/50 shadow-lg bg-slate-800/50 backdrop-blur-sm relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-4 opacity-5">
             <Globe className="h-16 w-16" />
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">
+            <CardTitle className="text-sm font-medium text-slate-300">
               Published
             </CardTitle>
             <div className="p-2 rounded-lg bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
@@ -71,19 +71,19 @@ export default async function FunnelsPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900 dark:text-white">{publishedFunnels}</div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <div className="text-2xl font-bold text-white">{publishedFunnels}</div>
+            <p className="text-xs text-slate-400 mt-1">
               Live and accessible
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50 relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4 opacity-10">
+        <Card className="border border-slate-700/50 shadow-lg bg-slate-800/50 backdrop-blur-sm relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-4 opacity-5">
             <Lock className="h-16 w-16" />
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">
+            <CardTitle className="text-sm font-medium text-slate-300">
               Drafts
             </CardTitle>
             <div className="p-2 rounded-lg bg-slate-100 text-slate-600 dark:bg-slate-700/50 dark:text-slate-400">
@@ -91,8 +91,8 @@ export default async function FunnelsPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900 dark:text-white">{draftFunnels}</div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <div className="text-2xl font-bold text-white">{draftFunnels}</div>
+            <p className="text-xs text-slate-400 mt-1">
               Work in progress
             </p>
           </CardContent>
@@ -116,7 +116,7 @@ export default async function FunnelsPage() {
               <CardTitle className="text-xl text-slate-900 dark:text-white group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors">
                 {funnel.name}
               </CardTitle>
-              <CardDescription className="line-clamp-2">
+              <CardDescription className="line-clamp-2 text-slate-400">
                 {funnel.description || "No description provided for this funnel."}
               </CardDescription>
             </CardHeader>
@@ -125,7 +125,7 @@ export default async function FunnelsPage() {
                 <Zap className="h-3 w-3" />
                 <span>0 Clients</span>
               </div>
-              <Button asChild variant="ghost" size="sm" className="hover:text-pink-600 hover:bg-pink-50 dark:hover:bg-pink-900/20">
+              <Button asChild variant="ghost" size="sm" className="text-slate-300 hover:text-pink-400 hover:bg-pink-900/20">
                 <Link href={`/dashboard/funnels/${funnel.id}`}>
                   Edit Funnel <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
@@ -139,8 +139,8 @@ export default async function FunnelsPage() {
             <div className="h-16 w-16 rounded-full bg-pink-100 dark:bg-pink-900/20 flex items-center justify-center mb-4">
               <Filter className="h-8 w-8 text-pink-600 dark:text-pink-400" />
             </div>
-            <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">No funnels yet</h3>
-            <p className="text-slate-500 dark:text-slate-400 mb-6 max-w-md text-center">
+            <h3 className="text-xl font-semibold text-white mb-2">No funnels yet</h3>
+            <p className="text-slate-400 mb-6 max-w-md text-center">
               Create your first onboarding funnel to start automating your client intake process.
             </p>
             <CreateFunnelDialog />

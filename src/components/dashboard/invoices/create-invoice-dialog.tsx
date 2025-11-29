@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useState } from "react";
 import { createInvoice } from "@/actions/invoices";
 import { Plus, Trash2, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
@@ -32,6 +33,7 @@ export function CreateInvoiceDialog({ clients }: CreateInvoiceDialogProps) {
   const [date, setDate] = useState<Date>();
   const [selectedClient, setSelectedClient] = useState("");
   const [items, setItems] = useState([{ name: "", quantity: 1, unit_price: 0 }]);
+  const router = useRouter();
 
   const handleAddItem = () => {
     setItems([...items, { name: "", quantity: 1, unit_price: 0 }]);
@@ -60,31 +62,35 @@ export function CreateInvoiceDialog({ clients }: CreateInvoiceDialogProps) {
 
     setLoading(true);
     
-    await createInvoice({
+    const result = await createInvoice({
       client_id: selectedClient,
       due_date: date,
       items: items.map(i => ({ ...i, unit_price: Number(i.unit_price), quantity: Number(i.quantity) })),
     });
 
     setLoading(false);
-    setOpen(false);
-    // Reset form
-    setItems([{ name: "", quantity: 1, unit_price: 0 }]);
-    setDate(undefined);
-    setSelectedClient("");
+    
+    if (result.success) {
+      setOpen(false);
+      // Reset form
+      setItems([{ name: "", quantity: 1, unit_price: 0 }]);
+      setDate(undefined);
+      setSelectedClient("");
+      router.refresh();
+    }
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
+        <Button className="bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-700 hover:to-teal-600 text-white shadow-lg shadow-emerald-500/20 border-0">
           <Plus className="mr-2 h-4 w-4" /> Create Invoice
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Create Invoice</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-slate-900 dark:text-white">Create Invoice</DialogTitle>
+          <DialogDescription className="text-slate-600 dark:text-slate-400">
             Generate a new invoice for a client.
           </DialogDescription>
         </DialogHeader>
@@ -92,9 +98,9 @@ export function CreateInvoiceDialog({ clients }: CreateInvoiceDialogProps) {
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                    <Label>Client</Label>
+                    <Label className="text-slate-900 dark:text-white">Client</Label>
                     <Select value={selectedClient} onValueChange={setSelectedClient} required>
-                        <SelectTrigger>
+                        <SelectTrigger className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
                             <SelectValue placeholder="Select client" />
                         </SelectTrigger>
                         <SelectContent>
@@ -107,14 +113,14 @@ export function CreateInvoiceDialog({ clients }: CreateInvoiceDialogProps) {
                     </Select>
                 </div>
                 <div className="space-y-2">
-                    <Label>Due Date</Label>
+                    <Label className="text-slate-900 dark:text-white">Due Date</Label>
                     <Popover>
                         <PopoverTrigger asChild>
                             <Button
                             variant={"outline"}
                             className={cn(
-                                "w-full justify-start text-left font-normal",
-                                !date && "text-muted-foreground"
+                                "w-full justify-start text-left font-normal bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white",
+                                !date && "text-slate-500 dark:text-slate-400"
                             )}
                             >
                             <CalendarIcon className="mr-2 h-4 w-4" />
@@ -135,42 +141,51 @@ export function CreateInvoiceDialog({ clients }: CreateInvoiceDialogProps) {
 
             <div className="space-y-4 mt-4">
                 <div className="flex items-center justify-between">
-                    <Label>Items</Label>
-                    <Button type="button" variant="ghost" size="sm" onClick={handleAddItem}>
+                    <Label className="text-slate-900 dark:text-white">Items</Label>
+                    <Button 
+                        type="button" 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={handleAddItem}
+                        className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                    >
                         <Plus className="h-3 w-3 mr-1" /> Add Item
                     </Button>
                 </div>
                 
-                <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2">
+                <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600 scrollbar-track-transparent">
                     {items.map((item, index) => (
-                        <div key={index} className="flex gap-2 items-end">
+                        <div key={index} className="flex gap-2 items-end p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700">
                             <div className="flex-1 space-y-1">
-                                <Label className="text-xs">Description</Label>
+                                <Label className="text-xs text-slate-700 dark:text-slate-300">Description</Label>
                                 <Input 
                                     value={item.name} 
                                     onChange={e => handleItemChange(index, 'name', e.target.value)}
                                     placeholder="Service name"
+                                    className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
                                     required 
                                 />
                             </div>
                             <div className="w-20 space-y-1">
-                                <Label className="text-xs">Qty</Label>
+                                <Label className="text-xs text-slate-700 dark:text-slate-300">Qty</Label>
                                 <Input 
                                     type="number" 
                                     value={item.quantity} 
                                     onChange={e => handleItemChange(index, 'quantity', e.target.value)}
                                     min="1"
+                                    className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
                                     required 
                                 />
                             </div>
                             <div className="w-28 space-y-1">
-                                <Label className="text-xs">Price</Label>
+                                <Label className="text-xs text-slate-700 dark:text-slate-300">Price</Label>
                                 <Input 
                                     type="number" 
                                     value={item.unit_price} 
                                     onChange={e => handleItemChange(index, 'unit_price', e.target.value)}
                                     min="0"
                                     step="0.01"
+                                    className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
                                     required 
                                 />
                             </div>
@@ -178,7 +193,7 @@ export function CreateInvoiceDialog({ clients }: CreateInvoiceDialogProps) {
                                 type="button"
                                 variant="ghost" 
                                 size="icon" 
-                                className="text-destructive mb-0.5"
+                                className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 mb-0.5"
                                 onClick={() => handleRemoveItem(index)}
                                 disabled={items.length === 1}
                              >
@@ -188,15 +203,35 @@ export function CreateInvoiceDialog({ clients }: CreateInvoiceDialogProps) {
                     ))}
                 </div>
                 
-                <div className="flex justify-end text-lg font-bold">
-                    Total: ${calculateTotal().toLocaleString()}
+                <div className="flex justify-end pt-4 border-t border-slate-200 dark:border-slate-700">
+                    <div className="text-lg font-bold text-slate-900 dark:text-white">
+                        Total: <span className="text-emerald-600 dark:text-emerald-400">${calculateTotal().toLocaleString()}</span>
+                    </div>
                 </div>
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" disabled={loading}>
-                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Create Invoice
+            <Button 
+                type="button"
+                variant="outline" 
+                onClick={() => setOpen(false)}
+                className="border-slate-200 dark:border-slate-700"
+            >
+                Cancel
+            </Button>
+            <Button 
+                type="submit" 
+                disabled={loading || !date || !selectedClient}
+                className="bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-700 hover:to-teal-600 text-white"
+            >
+                {loading ? (
+                    <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Creating...
+                    </>
+                ) : (
+                    "Create Invoice"
+                )}
             </Button>
           </DialogFooter>
         </form>

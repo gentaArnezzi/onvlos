@@ -64,11 +64,12 @@ export async function moveCard(cardId: string, newColumnId: string, newOrder: nu
     }
 }
 
-export async function createCard(columnId: string, title: string) {
+export async function createCard(columnId: string, title: string, description: string | null = null) {
     try {
         await db.insert(cards).values({
             column_id: columnId,
             title: title,
+            description: description,
             order: 999, // Append to end
         });
         revalidatePath("/dashboard/boards");

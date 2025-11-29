@@ -39,7 +39,7 @@ export function ClientDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
+        <Button className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white shadow-lg shadow-blue-500/20 border-0">
           <Plus className="mr-2 h-4 w-4" /> Add Client
         </Button>
       </DialogTrigger>

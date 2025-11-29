@@ -108,15 +108,15 @@ export default async function DashboardPage() {
       {/* Hero Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+          <h1 className="text-3xl font-bold tracking-tight text-white">
             Good morning, {user?.name?.split(' ')[0] || 'User'} 👋
           </h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-slate-300 mt-1">
             Here's what's happening with your workspace today.
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" className="hidden sm:flex">
+          <Button variant="outline" className="hidden sm:flex border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white">
             <Calendar className="mr-2 h-4 w-4" />
             {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
           </Button>
@@ -129,12 +129,12 @@ export default async function DashboardPage() {
       {/* Stats Grid */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
-          <Card key={stat.title} className="relative overflow-hidden border-none shadow-lg bg-white dark:bg-slate-800/50 hover:scale-[1.02] transition-transform duration-300">
-            <div className={`absolute top-0 right-0 p-4 opacity-10`}>
+          <Card key={stat.title} className="relative overflow-hidden border border-slate-700/50 shadow-lg bg-slate-800/50 backdrop-blur-sm hover:scale-[1.02] hover:border-slate-600/50 transition-all duration-300">
+            <div className={`absolute top-0 right-0 p-4 opacity-5`}>
               <stat.icon className="h-24 w-24" />
             </div>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">
+              <CardTitle className="text-sm font-medium text-slate-300">
                 {stat.title}
               </CardTitle>
               <div className={`p-2 rounded-lg bg-gradient-to-br ${stat.gradient} ${stat.shadow}`}>
@@ -142,13 +142,13 @@ export default async function DashboardPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-slate-900 dark:text-white">{stat.value}</div>
+              <div className="text-2xl font-bold text-white">{stat.value}</div>
               <div className="flex items-center mt-1">
-                <span className={`text-xs font-medium ${stat.trendUp ? 'text-emerald-500' : 'text-red-500'} flex items-center`}>
+                <span className={`text-xs font-medium ${stat.trendUp ? 'text-emerald-400' : 'text-red-400'} flex items-center`}>
                   {stat.trendUp ? <ArrowUpRight className="h-3 w-3 mr-1" /> : <ArrowDownRight className="h-3 w-3 mr-1" />}
                   {stat.trend}
                 </span>
-                <span className="text-xs text-slate-500 dark:text-slate-400 ml-2">vs last month</span>
+                <span className="text-xs text-slate-400 ml-2">vs last month</span>
               </div>
             </CardContent>
           </Card>
@@ -159,18 +159,33 @@ export default async function DashboardPage() {
         {/* Main Content - Left Column */}
         <div className="lg:col-span-8 xl:col-span-9 space-y-8">
           {/* Revenue Chart */}
-          <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50">
+          <Card className="border border-slate-700/50 shadow-lg bg-slate-800/50 backdrop-blur-sm">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-lg font-semibold text-slate-900 dark:text-white">Revenue Overview</CardTitle>
-                  <CardDescription>Monthly revenue vs expenses</CardDescription>
+                  <CardTitle className="text-lg font-semibold text-white">Revenue Overview</CardTitle>
+                  <CardDescription className="text-slate-400">Monthly revenue vs expenses</CardDescription>
                 </div>
                 <Tabs defaultValue="6m" className="w-[200px]">
-                  <TabsList className="grid w-full grid-cols-3 bg-slate-100 dark:bg-slate-900/50">
-                    <TabsTrigger value="1m">1M</TabsTrigger>
-                    <TabsTrigger value="6m">6M</TabsTrigger>
-                    <TabsTrigger value="1y">1Y</TabsTrigger>
+                  <TabsList className="grid w-full grid-cols-3 !bg-slate-800 !border !border-slate-600">
+                    <TabsTrigger
+                      value="1m"
+                      className="!text-slate-300 data-[state=active]:!bg-slate-600 data-[state=active]:!text-white"
+                    >
+                      1M
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="6m"
+                      className="!text-slate-300 data-[state=active]:!bg-slate-600 data-[state=active]:!text-white"
+                    >
+                      6M
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="1y"
+                      className="!text-slate-300 data-[state=active]:!bg-slate-600 data-[state=active]:!text-white"
+                    >
+                      1Y
+                    </TabsTrigger>
                   </TabsList>
                 </Tabs>
               </div>
@@ -181,45 +196,45 @@ export default async function DashboardPage() {
           </Card>
 
           {/* Recent Transactions */}
-          <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50">
+          <Card className="border border-slate-700/50 shadow-lg bg-slate-800/50 backdrop-blur-sm">
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle className="text-lg font-semibold text-slate-900 dark:text-white">Recent Transactions</CardTitle>
-                <CardDescription>Latest financial activity</CardDescription>
+                <CardTitle className="text-lg font-semibold text-white">Recent Transactions</CardTitle>
+                <CardDescription className="text-slate-400">Latest financial activity</CardDescription>
               </div>
               <Button variant="ghost" size="sm" className="text-violet-500 hover:text-violet-600" asChild>
                 <Link href="/dashboard/invoices">View All</Link>
               </Button>
             </CardHeader>
             <CardContent>
-              <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 overflow-hidden">
+              <div className="rounded-xl border border-slate-700 bg-slate-900/30 overflow-hidden">
                 <Table>
-                  <TableHeader className="bg-slate-50 dark:bg-slate-900/50">
-                    <TableRow className="hover:bg-transparent border-slate-200 dark:border-slate-700">
-                      <TableHead className="pl-6 h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Invoice</TableHead>
-                      <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Date</TableHead>
-                      <TableHead className="text-right pr-6 h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Amount</TableHead>
+                  <TableHeader className="bg-slate-900/50">
+                    <TableRow className="hover:bg-transparent border-slate-700">
+                      <TableHead className="pl-6 h-12 text-xs font-medium text-slate-400 uppercase tracking-wider">Invoice</TableHead>
+                      <TableHead className="h-12 text-xs font-medium text-slate-400 uppercase tracking-wider">Date</TableHead>
+                      <TableHead className="text-right pr-6 h-12 text-xs font-medium text-slate-400 uppercase tracking-wider">Amount</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {paidInvoices.length > 0 ? (
                       paidInvoices.map((inv) => (
-                        <TableRow key={inv.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors border-slate-100 dark:border-slate-800 group">
+                        <TableRow key={inv.id} className="hover:bg-slate-800/30 transition-colors border-slate-800 group">
                           <TableCell className="pl-6 py-4">
                             <div className="flex items-center gap-3">
-                              <div className="h-8 w-8 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform">
+                              <div className="h-8 w-8 rounded-full bg-emerald-900/30 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
                                 <DollarSign className="h-4 w-4" />
                               </div>
-                              <span className="font-medium text-slate-900 dark:text-white">#{inv.invoice_number}</span>
+                              <span className="font-medium text-white">#{inv.invoice_number}</span>
                             </div>
                           </TableCell>
-                          <TableCell className="text-slate-500 dark:text-slate-400 text-sm">
+                          <TableCell className="text-slate-400 text-sm">
                             {inv.paid_date ? new Date(inv.paid_date).toLocaleDateString() : 'Paid recently'}
                           </TableCell>
                           <TableCell className="text-right pr-6">
                             <div className="flex flex-col items-end">
-                              <span className="font-bold text-slate-900 dark:text-white">+${Number(inv.total_amount).toLocaleString()}</span>
-                              <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border-none text-[10px] px-1.5 py-0 h-5">
+                              <span className="font-bold text-white">+${Number(inv.total_amount).toLocaleString()}</span>
+                              <Badge variant="secondary" className="bg-emerald-900/30 text-emerald-400 border-none text-[10px] px-1.5 py-0 h-5">
                                 Paid
                               </Badge>
                             </div>
@@ -228,7 +243,7 @@ export default async function DashboardPage() {
                       ))
                     ) : (
                       <TableRow>
-                        <TableCell colSpan={3} className="h-24 text-center text-slate-500">
+                        <TableCell colSpan={3} className="h-24 text-center text-slate-400">
                           No recent transactions
                         </TableCell>
                       </TableRow>
@@ -269,9 +284,9 @@ export default async function DashboardPage() {
           </Card>
 
           {/* Upcoming Tasks */}
-          <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50">
+          <Card className="border border-slate-700/50 shadow-lg bg-slate-800/50 backdrop-blur-sm">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-lg font-semibold text-slate-900 dark:text-white">Upcoming Tasks</CardTitle>
+              <CardTitle className="text-lg font-semibold text-white">Upcoming Tasks</CardTitle>
               <Button variant="ghost" size="icon" className="h-8 w-8">
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
@@ -280,11 +295,11 @@ export default async function DashboardPage() {
               <div className="space-y-4">
                 {recentTasks.length > 0 ? (
                   recentTasks.map((task) => (
-                    <div key={task.id} className="flex items-start gap-3 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer">
-                      <div className={`mt-1 h-2 w-2 rounded-full ${task.priority === 'high' ? 'bg-red-500' : task.priority === 'medium' ? 'bg-orange-500' : 'bg-blue-500'}`} />
+                    <div key={task.id} className="flex items-start gap-3 p-3 rounded-lg hover:bg-slate-800/50 transition-colors cursor-pointer">
+                      <div className={`mt-1 h-2 w-2 rounded-full ${task.priority === 'high' ? 'bg-red-400' : task.priority === 'medium' ? 'bg-orange-400' : 'bg-blue-400'}`} />
                       <div className="flex-1 space-y-1">
-                        <p className="text-sm font-medium text-slate-900 dark:text-white leading-none">{task.title}</p>
-                        <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                        <p className="text-sm font-medium text-white leading-none">{task.title}</p>
+                        <div className="flex items-center gap-2 text-xs text-slate-400">
                           <Clock className="h-3 w-3" />
                           {task.due_date ? new Date(task.due_date).toLocaleDateString() : 'No due date'}
                         </div>
@@ -295,9 +310,9 @@ export default async function DashboardPage() {
                     </div>
                   ))
                 ) : (
-                  <div className="text-center py-8 text-slate-500">No pending tasks</div>
+                  <div className="text-center py-8 text-slate-400">No pending tasks</div>
                 )}
-                <Button variant="outline" className="w-full text-xs" asChild>
+                <Button variant="outline" className="w-full text-xs border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white" asChild>
                   <Link href="/dashboard/tasks">View All Tasks</Link>
                 </Button>
               </div>

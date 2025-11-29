@@ -139,7 +139,12 @@ export function Navbar({ user }: NavbarProps) {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 rounded-lg ml-1">
+              <Button
+                variant="ghost"
+                size="icon"
+                suppressHydrationWarning
+                className="text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 rounded-lg ml-1"
+              >
                 <MoreHorizontal className="w-5 h-5" />
               </Button>
             </DropdownMenuTrigger>

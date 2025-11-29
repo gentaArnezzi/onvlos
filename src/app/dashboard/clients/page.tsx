@@ -95,10 +95,10 @@ export default async function ClientsPage() {
       <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle>Client List</CardTitle>
+            <CardTitle className="text-slate-900 dark:text-white">Client List</CardTitle>
             <div className="relative w-64 hidden md:block">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-slate-500" />
-              <Input placeholder="Search clients..." className="pl-8 bg-slate-50 dark:bg-slate-900/50 border-none" />
+              <Search className="absolute left-2 top-2.5 h-4 w-4 text-slate-500 dark:text-slate-400" />
+              <Input placeholder="Search clients..." className="pl-8 bg-slate-50 dark:bg-slate-900/50 border-none text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400" />
             </div>
           </div>
         </CardHeader>
