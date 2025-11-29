@@ -9,7 +9,12 @@ import { getOrCreateWorkspace } from "@/actions/workspace";
 
 export async function getWorkflows() {
     try {
+        const session = await getSession();
+        if (!session) return [];
+
         const workspace = await getOrCreateWorkspace();
+        if (!workspace) return [];
+
         const data = await db.query.workflows.findMany({
             where: eq(workflows.workspace_id, workspace.id),
             orderBy: [desc(workflows.created_at)]
@@ -177,6 +182,21 @@ export async function getWorkflowExecutions(workflowId: string) {
     try {
         const session = await getSession();
         if (!session) return [];
+
+        const workspace = await getOrCreateWorkspace();
+        if (!workspace) return [];
+
+        // Verify that the workflow belongs to the user's workspace
+        const workflow = await db.query.workflows.findFirst({
+            where: and(
+                eq(workflows.id, workflowId),
+                eq(workflows.workspace_id, workspace.id)
+            )
+        });
+
+        if (!workflow) {
+            return [];
+        }
 
         const executions = await db.query.workflow_executions.findMany({
             where: eq(workflow_executions.workflow_id, workflowId),

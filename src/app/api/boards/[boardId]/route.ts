@@ -36,6 +36,7 @@ export async function PATCH(
     if (authResult instanceof Response) return authResult;
 
     const { boardId } = await params;
+    const workspaceId = extractWorkspaceId(request);
 
     const body = await getRequestBody(request);
     if (!body) {
@@ -47,7 +48,7 @@ export async function PATCH(
       return errorResponse(validation.error, 400);
     }
 
-    const board = await BoardService.update(boardId, validation.data);
+    const board = await BoardService.update(boardId, validation.data, workspaceId || undefined);
     if (!board) {
       return errorResponse("Board not found", 404);
     }
@@ -67,8 +68,9 @@ export async function DELETE(
     if (authResult instanceof Response) return authResult;
 
     const { boardId } = await params;
+    const workspaceId = extractWorkspaceId(request);
 
-    await BoardService.delete(boardId);
+    await BoardService.delete(boardId, workspaceId || undefined);
 
     return successResponse(null, "Board deleted successfully");
   } catch (error) {

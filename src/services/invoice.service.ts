@@ -148,7 +148,15 @@ export class InvoiceService {
     return await query;
   }
 
-  static async update(invoiceId: string, data: UpdateInvoiceInput) {
+  static async update(invoiceId: string, data: UpdateInvoiceInput, workspaceId?: string) {
+    // Verify invoice belongs to workspace if workspaceId is provided
+    if (workspaceId) {
+      const existing = await this.getById(invoiceId, workspaceId);
+      if (!existing) {
+        return null;
+      }
+    }
+
     const updateData: any = {
       updated_at: new Date(),
     };
@@ -203,17 +211,26 @@ export class InvoiceService {
       );
     }
 
+    const conditions = [eq(invoices.id, invoiceId)];
+    if (workspaceId) {
+      conditions.push(eq(invoices.workspace_id, workspaceId));
+    }
+
     const [updated] = await db
       .update(invoices)
       .set(updateData)
-      .where(eq(invoices.id, invoiceId))
+      .where(and(...conditions))
       .returning();
 
     return updated || null;
   }
 
-  static async delete(invoiceId: string) {
-    await db.delete(invoices).where(eq(invoices.id, invoiceId));
+  static async delete(invoiceId: string, workspaceId?: string) {
+    const conditions = [eq(invoices.id, invoiceId)];
+    if (workspaceId) {
+      conditions.push(eq(invoices.workspace_id, workspaceId));
+    }
+    await db.delete(invoices).where(and(...conditions));
   }
 
   static async markAsSent(invoiceId: string) {

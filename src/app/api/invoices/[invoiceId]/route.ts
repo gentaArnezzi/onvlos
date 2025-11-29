@@ -36,6 +36,7 @@ export async function PATCH(
     if (authResult instanceof Response) return authResult;
 
     const { invoiceId } = await params;
+    const workspaceId = extractWorkspaceId(request);
 
     const body = await getRequestBody(request);
     if (!body) {
@@ -47,7 +48,7 @@ export async function PATCH(
       return errorResponse(validation.error, 400);
     }
 
-    const invoice = await InvoiceService.update(invoiceId, validation.data);
+    const invoice = await InvoiceService.update(invoiceId, validation.data, workspaceId || undefined);
     if (!invoice) {
       return errorResponse("Invoice not found", 404);
     }
@@ -67,8 +68,9 @@ export async function DELETE(
     if (authResult instanceof Response) return authResult;
 
     const { invoiceId } = await params;
+    const workspaceId = extractWorkspaceId(request);
 
-    await InvoiceService.delete(invoiceId);
+    await InvoiceService.delete(invoiceId, workspaceId || undefined);
 
     return successResponse(null, "Invoice deleted successfully");
   } catch (error) {

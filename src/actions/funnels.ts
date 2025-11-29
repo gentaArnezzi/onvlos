@@ -2,13 +2,19 @@
 
 import { db } from "@/lib/db";
 import { funnels, funnel_steps, client_onboarding_sessions } from "@/lib/db/schema";
-import { desc, eq, sql, count } from "drizzle-orm";
+import { desc, eq, sql, count, and } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { getOrCreateWorkspace } from "@/actions/workspace";
+import { getSession } from "@/lib/get-session";
 
 export async function getFunnels() {
     try {
+        const session = await getSession();
+        if (!session) return [];
+
         const workspace = await getOrCreateWorkspace();
+        if (!workspace) return [];
+
         const data = await db.select({
             id: funnels.id,
             workspace_id: funnels.workspace_id,
@@ -37,7 +43,16 @@ export async function getFunnels() {
 
 export async function createFunnel(name: string, description: string) {
     try {
+        const session = await getSession();
+        if (!session) {
+            return { success: false, error: "Not authenticated" };
+        }
+
         const workspace = await getOrCreateWorkspace();
+        if (!workspace) {
+            return { success: false, error: "Workspace not found" };
+        }
+
         // Generate slug from name
         const slug = name.toLowerCase().replace(/ /g, "-") + "-" + Math.random().toString(36).substring(2, 7);
 
@@ -58,8 +73,17 @@ export async function createFunnel(name: string, description: string) {
 
 export async function getFunnelDetails(id: string) {
     try {
+        const session = await getSession();
+        if (!session) return null;
+
+        const workspace = await getOrCreateWorkspace();
+        if (!workspace) return null;
+
         const funnel = await db.query.funnels.findFirst({
-            where: eq(funnels.id, id)
+            where: and(
+                eq(funnels.id, id),
+                eq(funnels.workspace_id, workspace.id)
+            )
         });
         if (!funnel) return null;
 
@@ -90,6 +114,28 @@ export async function getFunnelBySlug(slug: string) {
 
 export async function addFunnelStep(funnelId: string, type: string, order: number) {
     try {
+        const session = await getSession();
+        if (!session) {
+            return { success: false, error: "Not authenticated" };
+        }
+
+        const workspace = await getOrCreateWorkspace();
+        if (!workspace) {
+            return { success: false, error: "Workspace not found" };
+        }
+
+        // Verify that the funnel belongs to the user's workspace
+        const funnel = await db.query.funnels.findFirst({
+            where: and(
+                eq(funnels.id, funnelId),
+                eq(funnels.workspace_id, workspace.id)
+            )
+        });
+
+        if (!funnel) {
+            return { success: false, error: "Funnel not found or access denied" };
+        }
+
         await db.insert(funnel_steps).values({
             funnel_id: funnelId,
             step_type: type,
@@ -106,16 +152,38 @@ export async function addFunnelStep(funnelId: string, type: string, order: numbe
 
 export async function updateFunnelStepConfig(stepId: string, config: any) {
     try {
+        const session = await getSession();
+        if (!session) {
+            return { success: false, error: "Not authenticated" };
+        }
+
+        const workspace = await getOrCreateWorkspace();
+        if (!workspace) {
+            return { success: false, error: "Workspace not found" };
+        }
+
+        // Get step and verify it belongs to a funnel in the user's workspace
+        const step = await db.select().from(funnel_steps).where(eq(funnel_steps.id, stepId)).limit(1);
+        if (step.length === 0) {
+            return { success: false, error: "Step not found" };
+        }
+
+        const funnel = await db.query.funnels.findFirst({
+            where: and(
+                eq(funnels.id, step[0].funnel_id),
+                eq(funnels.workspace_id, workspace.id)
+            )
+        });
+
+        if (!funnel) {
+            return { success: false, error: "Access denied" };
+        }
+
         await db.update(funnel_steps)
             .set({ config })
             .where(eq(funnel_steps.id, stepId));
 
-        // We need to find the funnel ID to revalidate the path
-        const step = await db.select().from(funnel_steps).where(eq(funnel_steps.id, stepId)).limit(1);
-        if (step.length > 0) {
-            revalidatePath(`/dashboard/funnels/${step[0].funnel_id}`);
-        }
-
+        revalidatePath(`/dashboard/funnels/${step[0].funnel_id}`);
         return { success: true };
     } catch (error) {
         console.error("Failed to update step config:", error);
@@ -125,11 +193,35 @@ export async function updateFunnelStepConfig(stepId: string, config: any) {
 
 export async function deleteFunnelStep(stepId: string) {
     try {
-        const step = await db.select().from(funnel_steps).where(eq(funnel_steps.id, stepId)).limit(1);
-        if (step.length > 0) {
-            await db.delete(funnel_steps).where(eq(funnel_steps.id, stepId));
-            revalidatePath(`/dashboard/funnels/${step[0].funnel_id}`);
+        const session = await getSession();
+        if (!session) {
+            return { success: false, error: "Not authenticated" };
         }
+
+        const workspace = await getOrCreateWorkspace();
+        if (!workspace) {
+            return { success: false, error: "Workspace not found" };
+        }
+
+        // Get step and verify it belongs to a funnel in the user's workspace
+        const step = await db.select().from(funnel_steps).where(eq(funnel_steps.id, stepId)).limit(1);
+        if (step.length === 0) {
+            return { success: false, error: "Step not found" };
+        }
+
+        const funnel = await db.query.funnels.findFirst({
+            where: and(
+                eq(funnels.id, step[0].funnel_id),
+                eq(funnels.workspace_id, workspace.id)
+            )
+        });
+
+        if (!funnel) {
+            return { success: false, error: "Access denied" };
+        }
+
+        await db.delete(funnel_steps).where(eq(funnel_steps.id, stepId));
+        revalidatePath(`/dashboard/funnels/${step[0].funnel_id}`);
         return { success: true };
     } catch (error) {
         console.error("Failed to delete step:", error);
@@ -139,9 +231,22 @@ export async function deleteFunnelStep(stepId: string) {
 
 export async function updateFunnelStatus(funnelId: string, published: boolean) {
     try {
+        const session = await getSession();
+        if (!session) {
+            return { success: false, error: "Not authenticated" };
+        }
+
+        const workspace = await getOrCreateWorkspace();
+        if (!workspace) {
+            return { success: false, error: "Workspace not found" };
+        }
+
         await db.update(funnels)
             .set({ published })
-            .where(eq(funnels.id, funnelId));
+            .where(and(
+                eq(funnels.id, funnelId),
+                eq(funnels.workspace_id, workspace.id)
+            ));
 
         revalidatePath(`/dashboard/funnels/${funnelId}`);
         revalidatePath("/dashboard/funnels");

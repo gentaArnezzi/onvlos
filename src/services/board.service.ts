@@ -73,18 +73,27 @@ export class BoardService {
     return boardsList;
   }
 
-  static async update(boardId: string, data: UpdateBoardInput) {
+  static async update(boardId: string, data: UpdateBoardInput, workspaceId?: string) {
+    const conditions = [eq(boards.id, boardId)];
+    if (workspaceId) {
+      conditions.push(eq(boards.workspace_id, workspaceId));
+    }
+
     const [updated] = await db
       .update(boards)
       .set(data)
-      .where(eq(boards.id, boardId))
+      .where(and(...conditions))
       .returning();
 
     return updated || null;
   }
 
-  static async delete(boardId: string) {
-    await db.delete(boards).where(eq(boards.id, boardId));
+  static async delete(boardId: string, workspaceId?: string) {
+    const conditions = [eq(boards.id, boardId)];
+    if (workspaceId) {
+      conditions.push(eq(boards.workspace_id, workspaceId));
+    }
+    await db.delete(boards).where(and(...conditions));
   }
 
   static async createColumn(data: CreateBoardColumnInput) {

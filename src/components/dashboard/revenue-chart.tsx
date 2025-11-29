@@ -4,24 +4,34 @@ import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YA
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTheme } from "@/components/theme-provider";
 
-const data = [
-    { name: "Jan", revenue: 4000, expenses: 2400 },
-    { name: "Feb", revenue: 3000, expenses: 1398 },
-    { name: "Mar", revenue: 2000, expenses: 9800 },
-    { name: "Apr", revenue: 2780, expenses: 3908 },
-    { name: "May", revenue: 1890, expenses: 4800 },
-    { name: "Jun", revenue: 2390, expenses: 3800 },
-    { name: "Jul", revenue: 3490, expenses: 4300 },
-];
+interface RevenueChartProps {
+    data?: Array<{ month: string; revenue: number }>;
+}
 
-export function RevenueChart() {
+export function RevenueChart({ data = [] }: RevenueChartProps) {
     const { theme } = useTheme();
 
     const isDark = theme === "dark";
 
+    // Transform data to match chart format
+    const chartData = data.length > 0 
+        ? data.map(item => ({
+            name: item.month,
+            revenue: Number(item.revenue) || 0,
+            expenses: 0 // Expenses can be added later if needed
+        }))
+        : [
+            { name: "Jan", revenue: 0, expenses: 0 },
+            { name: "Feb", revenue: 0, expenses: 0 },
+            { name: "Mar", revenue: 0, expenses: 0 },
+            { name: "Apr", revenue: 0, expenses: 0 },
+            { name: "May", revenue: 0, expenses: 0 },
+            { name: "Jun", revenue: 0, expenses: 0 },
+        ];
+
     return (
         <ResponsiveContainer width="100%" height={350}>
-            <AreaChart data={data}>
+            <AreaChart data={chartData}>
                 <defs>
                     <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3} />

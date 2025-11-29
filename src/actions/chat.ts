@@ -2,20 +2,37 @@
 
 import { db } from "@/lib/db";
 import { conversations, messages, client_spaces, users } from "@/lib/db/schema";
-import { eq, asc, desc } from "drizzle-orm";
+import { eq, asc, desc, and } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { getOrCreateWorkspace } from "@/actions/workspace";
 import { getSession } from "@/lib/get-session";
 
 export async function getConversation(clientSpaceId: string) {
     try {
+        const session = await getSession();
+        if (!session) return null;
+
+        const workspace = await getOrCreateWorkspace();
+        if (!workspace) return null;
+
+        // Verify that the client space belongs to the user's workspace
+        const clientSpace = await db.query.client_spaces.findFirst({
+            where: eq(client_spaces.id, clientSpaceId)
+        });
+
+        if (!clientSpace || clientSpace.workspace_id !== workspace.id) {
+            return null;
+        }
+
         let conversation = await db.query.conversations.findFirst({
-            where: eq(conversations.client_space_id, clientSpaceId)
+            where: and(
+                eq(conversations.client_space_id, clientSpaceId),
+                eq(conversations.workspace_id, workspace.id)
+            )
         });
 
         if (!conversation) {
              // Auto-create conversation if it doesn't exist
-             const workspace = await getOrCreateWorkspace();
              const [newConv] = await db.insert(conversations).values({
                  workspace_id: workspace.id,
                  client_space_id: clientSpaceId,
@@ -47,10 +64,27 @@ export async function sendMessage(conversationId: string, content: string, userI
     try {
         // Get user ID from session if not provided
         let messageUserId = userId;
+        const session = await getSession();
+        if (!session) throw new Error("Not authenticated");
         if (!messageUserId) {
-            const session = await getSession();
-            if (!session) throw new Error("Not authenticated");
             messageUserId = session.user.id;
+        }
+
+        const workspace = await getOrCreateWorkspace();
+        if (!workspace) {
+            return { success: false, error: "Workspace not found" };
+        }
+
+        // Verify that the conversation belongs to the user's workspace
+        const conversation = await db.query.conversations.findFirst({
+            where: and(
+                eq(conversations.id, conversationId),
+                eq(conversations.workspace_id, workspace.id)
+            )
+        });
+
+        if (!conversation) {
+            return { success: false, error: "Conversation not found or access denied" };
         }
         
         await db.insert(messages).values({
@@ -65,13 +99,36 @@ export async function sendMessage(conversationId: string, content: string, userI
         return { success: true };
     } catch (error) {
          console.error("Error sending message:", error);
-         return { success: false };
+        return { success: false };
     }
 }
 
 export async function getClientSpaceId(clientId: string) {
-    const space = await db.query.client_spaces.findFirst({
-        where: eq(client_spaces.client_id, clientId)
-    });
-    return space ? space.id : null;
+    try {
+        const session = await getSession();
+        if (!session) return null;
+
+        const workspace = await getOrCreateWorkspace();
+        if (!workspace) return null;
+
+        // Verify that the client belongs to the user's workspace
+        const client = await db.query.client_companies.findFirst({
+            where: and(
+                eq(client_companies.id, clientId),
+                eq(client_companies.workspace_id, workspace.id)
+            )
+        });
+
+        if (!client) {
+            return null;
+        }
+
+        const space = await db.query.client_spaces.findFirst({
+            where: eq(client_spaces.client_id, clientId)
+        });
+        return space ? space.id : null;
+    } catch (error) {
+        console.error("Error getting client space ID:", error);
+        return null;
+    }
 }

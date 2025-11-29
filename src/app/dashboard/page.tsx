@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Users, DollarSign, Activity, CreditCard, BarChart3, Home, TrendingUp, ArrowUpRight, ArrowDownRight, Zap, Plus, FileText, CheckCircle2, Clock, MoreHorizontal, Calendar } from "lucide-react";
 import { db } from "@/lib/db";
 import { client_companies, invoices, tasks } from "@/lib/db/schema";
-import { eq, and, desc } from "drizzle-orm";
+import { eq, and, desc, sql } from "drizzle-orm";
 import { getOrCreateWorkspace } from "@/actions/workspace";
 import { getAnalyticsData } from "@/actions/analytics";
 import { AnalyticsDashboard } from "@/components/dashboard/analytics/analytics-dashboard";
@@ -34,14 +34,26 @@ export default async function DashboardPage() {
   const user = session.user;
   const workspace = await getOrCreateWorkspace();
 
+  // Fetch analytics data first (contains most stats)
+  const analyticsData = await getAnalyticsData();
+
   // Fetch Real Data
-  const clientsCount = await db.$count(client_companies, eq(client_companies.workspace_id, workspace.id));
-  const activeClientsCount = await db.$count(client_companies,
-    and(
-      eq(client_companies.status, 'active'),
-      eq(client_companies.workspace_id, workspace.id)
-    )
-  );
+  const clientsCountResult = await db
+    .select({ count: sql<number>`count(*)` })
+    .from(client_companies)
+    .where(eq(client_companies.workspace_id, workspace.id));
+  const clientsCount = Number(clientsCountResult[0]?.count || 0);
+
+  const activeClientsCountResult = await db
+    .select({ count: sql<number>`count(*)` })
+    .from(client_companies)
+    .where(
+      and(
+        eq(client_companies.status, 'active'),
+        eq(client_companies.workspace_id, workspace.id)
+      )
+    );
+  const activeClientsCount = Number(activeClientsCountResult[0]?.count || 0);
 
   const paidInvoices = await db.select().from(invoices).where(
     and(
@@ -50,14 +62,19 @@ export default async function DashboardPage() {
     )
   ).orderBy(desc(invoices.created_at)).limit(5);
 
-  const totalRevenue = paidInvoices.reduce((sum, inv) => sum + Number(inv.total_amount), 0);
+  // Use analytics data for total revenue if available, otherwise calculate from paid invoices
+  const totalRevenue = analyticsData?.stats?.yearRevenue || paidInvoices.reduce((sum, inv) => sum + Number(inv.total_amount || 0), 0);
 
-  const sentInvoicesCount = await db.$count(invoices,
-    and(
-      eq(invoices.status, 'sent'),
-      eq(invoices.workspace_id, workspace.id)
-    )
-  );
+  const sentInvoicesCountResult = await db
+    .select({ count: sql<number>`count(*)` })
+    .from(invoices)
+    .where(
+      and(
+        eq(invoices.status, 'sent'),
+        eq(invoices.workspace_id, workspace.id)
+      )
+    );
+  const sentInvoicesCount = Number(sentInvoicesCountResult[0]?.count || 0);
 
   // Fetch Recent Tasks
   const recentTasks = await db.select().from(tasks)
@@ -65,7 +82,19 @@ export default async function DashboardPage() {
     .orderBy(desc(tasks.created_at))
     .limit(5);
 
-  const analyticsData = await getAnalyticsData();
+  // Calculate completion rate from analytics data or tasks
+  const completionRate = analyticsData?.stats?.taskCompletionRate || 
+    (recentTasks.length > 0 
+      ? Math.round((recentTasks.filter(t => t.status === 'completed' || t.status === 'done').length / recentTasks.length) * 100)
+      : 0);
+
+  // Calculate trends (comparing current month vs last month from analytics)
+  const revenueTrend = analyticsData?.stats 
+    ? analyticsData.stats.lastMonthRevenue > 0
+      ? ((analyticsData.stats.currentMonthRevenue - analyticsData.stats.lastMonthRevenue) / analyticsData.stats.lastMonthRevenue * 100).toFixed(1)
+      : "0"
+    : "0";
+  const revenueTrendUp = Number(revenueTrend) >= 0;
 
   const stats = [
     {
@@ -73,8 +102,8 @@ export default async function DashboardPage() {
       value: `$${totalRevenue.toLocaleString()}`,
       description: "Lifetime collected",
       icon: DollarSign,
-      trend: "+12.5%",
-      trendUp: true,
+      trend: `${revenueTrendUp ? '+' : ''}${revenueTrend}%`,
+      trendUp: revenueTrendUp,
       gradient: "from-violet-500 to-purple-600",
       shadow: "shadow-violet-500/20"
     },
@@ -83,7 +112,9 @@ export default async function DashboardPage() {
       value: activeClientsCount.toString(),
       description: "Clients currently active",
       icon: Users,
-      trend: "+3",
+      trend: analyticsData?.stats && analyticsData.stats.totalClients > 0 
+        ? `${((activeClientsCount / analyticsData.stats.totalClients) * 100).toFixed(0)}% active`
+        : `${activeClientsCount} total`,
       trendUp: true,
       gradient: "from-blue-500 to-cyan-600",
       shadow: "shadow-blue-500/20"
@@ -93,17 +124,17 @@ export default async function DashboardPage() {
       value: sentInvoicesCount.toString(),
       description: "Awaiting payment",
       icon: CreditCard,
-      trend: "-2",
+      trend: "0",
       trendUp: false,
       gradient: "from-orange-500 to-red-600",
       shadow: "shadow-orange-500/20"
     },
     {
       title: "Completion Rate",
-      value: "94%",
+      value: `${completionRate}%`,
       description: "Tasks completed on time",
       icon: CheckCircle2,
-      trend: "+5.2%",
+      trend: "+0%",
       trendUp: true,
       gradient: "from-emerald-500 to-teal-600",
       shadow: "shadow-emerald-500/20"
@@ -198,7 +229,7 @@ export default async function DashboardPage() {
               </div>
             </CardHeader>
             <CardContent className="pl-0">
-              <RevenueChart />
+              <RevenueChart data={analyticsData?.charts?.monthlyRevenue || []} />
             </CardContent>
           </Card>
 

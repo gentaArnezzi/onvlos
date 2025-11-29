@@ -93,11 +93,20 @@ export class TaskService {
     return await query;
   }
 
-  static async update(taskId: string, data: UpdateTaskInput) {
-    // Get old task to check if status changed to "done"
+  static async update(taskId: string, data: UpdateTaskInput, workspaceId?: string) {
+    // Get old task to check if status changed to "done" and verify workspace
+    const conditions = [eq(tasks.id, taskId)];
+    if (workspaceId) {
+      conditions.push(eq(tasks.workspace_id, workspaceId));
+    }
+
     const oldTask = await db.query.tasks.findFirst({
-      where: eq(tasks.id, taskId)
+      where: and(...conditions)
     });
+
+    if (!oldTask) {
+      return null;
+    }
 
     const updateData: any = {
       updated_at: new Date(),
@@ -120,7 +129,7 @@ export class TaskService {
     const [updated] = await db
       .update(tasks)
       .set(updateData)
-      .where(eq(tasks.id, taskId))
+      .where(and(...conditions))
       .returning();
 
     // Trigger workflow "task_completed" if status changed to "done"
@@ -138,8 +147,12 @@ export class TaskService {
     return updated || null;
   }
 
-  static async delete(taskId: string) {
-    await db.delete(tasks).where(eq(tasks.id, taskId));
+  static async delete(taskId: string, workspaceId?: string) {
+    const conditions = [eq(tasks.id, taskId)];
+    if (workspaceId) {
+      conditions.push(eq(tasks.workspace_id, workspaceId));
+    }
+    await db.delete(tasks).where(and(...conditions));
   }
 
   static async addComment(taskId: string, userId: string, content: string) {

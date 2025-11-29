@@ -130,11 +130,20 @@ export async function sendProposal(proposalId: string) {
     const session = await getSession();
     if (!session) throw new Error("Not authenticated");
     
-    const proposal = await db.query.proposals.findFirst({
-      where: eq(proposals.id, proposalId)
+    const workspace = await db.query.workspaces.findFirst({
+      where: eq(workspaces.created_by_user_id, session.user.id)
     });
     
-    if (!proposal) throw new Error("Proposal not found");
+    if (!workspace) throw new Error("No workspace found");
+    
+    const proposal = await db.query.proposals.findFirst({
+      where: and(
+        eq(proposals.id, proposalId),
+        eq(proposals.workspace_id, workspace.id)
+      )
+    });
+    
+    if (!proposal) throw new Error("Proposal not found or access denied");
     
     // Get client details
     const client = await db.query.client_companies.findFirst({

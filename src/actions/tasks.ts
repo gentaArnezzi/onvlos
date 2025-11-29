@@ -85,7 +85,10 @@ export async function createTask(data: {
         // Send notification email if task has a client
         if (data.client_id) {
             const client = await db.query.client_companies.findFirst({
-                where: eq(client_companies.id, data.client_id)
+                where: and(
+                    eq(client_companies.id, data.client_id),
+                    eq(client_companies.workspace_id, workspace.id)
+                )
             });
 
             if (client && client.email) {
@@ -144,7 +147,10 @@ export async function updateTask(taskId: string, data: {
 
         // Get old task to check if status changed to "done"
         const oldTask = await db.query.tasks.findFirst({
-            where: eq(tasks.id, taskId)
+            where: and(
+                eq(tasks.id, taskId),
+                eq(tasks.workspace_id, workspace.id)
+            )
         });
 
         const [updatedTask] = await db.update(tasks)

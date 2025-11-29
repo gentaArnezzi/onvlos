@@ -2,9 +2,10 @@
 
 import { db } from "@/lib/db";
 import { boards, board_columns, cards } from "@/lib/db/schema";
-import { eq, asc, inArray } from "drizzle-orm";
+import { eq, asc, inArray, and } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { getOrCreateWorkspace } from "@/actions/workspace";
+import { getSession } from "@/lib/get-session";
 
 export async function getBoards() {
     try {
@@ -45,6 +46,28 @@ export async function getBoards() {
 }
 
 async function getBoardData(boardId: string) {
+    const session = await getSession();
+    if (!session) {
+        return { id: boardId, columns: [] };
+    }
+
+    const workspace = await getOrCreateWorkspace();
+    if (!workspace) {
+        return { id: boardId, columns: [] };
+    }
+
+    // Verify board belongs to user's workspace
+    const board = await db.query.boards.findFirst({
+        where: and(
+            eq(boards.id, boardId),
+            eq(boards.workspace_id, workspace.id)
+        )
+    });
+
+    if (!board) {
+        return { id: boardId, columns: [] };
+    }
+
     const columns = await db.select().from(board_columns).where(eq(board_columns.board_id, boardId)).orderBy(asc(board_columns.order));
     
     if (columns.length === 0) {
@@ -70,8 +93,52 @@ async function getBoardData(boardId: string) {
 
 export async function moveCard(cardId: string, newColumnId: string, newOrder: number) {
     try {
-        // Optimized: Single update query without extra verification queries
-        // Drizzle-orm with PostgreSQL handles transactions automatically
+        const session = await getSession();
+        if (!session) {
+            return { success: false, error: "Not authenticated" };
+        }
+
+        const workspace = await getOrCreateWorkspace();
+        if (!workspace) {
+            return { success: false, error: "Workspace not found" };
+        }
+
+        // Verify card belongs to user's workspace by checking the column's board
+        const card = await db.query.cards.findFirst({
+            where: eq(cards.id, cardId)
+        });
+
+        if (!card) {
+            return { success: false, error: "Card not found" };
+        }
+
+        // Get the column that contains this card
+        const currentColumn = await db.query.board_columns.findFirst({
+            where: eq(board_columns.id, card.column_id)
+        });
+
+        if (!currentColumn) {
+            return { success: false, error: "Column not found" };
+        }
+
+        // Get the board that contains this column
+        const currentBoard = await db.query.boards.findFirst({
+            where: eq(boards.id, currentColumn.board_id)
+        });
+
+        if (!currentBoard || currentBoard.workspace_id !== workspace.id) {
+            return { success: false, error: "Card not found or access denied" };
+        }
+
+        // Verify new column also belongs to the same board
+        const newColumn = await db.query.board_columns.findFirst({
+            where: eq(board_columns.id, newColumnId)
+        });
+
+        if (!newColumn || newColumn.board_id !== currentBoard.id) {
+            return { success: false, error: "Invalid column or access denied" };
+        }
+
         const result = await db.update(cards).set({
             column_id: newColumnId,
             order: newOrder,
@@ -93,6 +160,34 @@ export async function moveCard(cardId: string, newColumnId: string, newOrder: nu
 
 export async function createCard(columnId: string, title: string, description: string | null = null) {
     try {
+        const session = await getSession();
+        if (!session) {
+            return { success: false, card: null, error: "Not authenticated" };
+        }
+
+        const workspace = await getOrCreateWorkspace();
+        if (!workspace) {
+            return { success: false, card: null, error: "Workspace not found" };
+        }
+
+        // Verify column belongs to user's workspace
+        const column = await db.query.board_columns.findFirst({
+            where: eq(board_columns.id, columnId)
+        });
+
+        if (!column) {
+            return { success: false, card: null, error: "Column not found" };
+        }
+
+        // Get the board that contains this column
+        const board = await db.query.boards.findFirst({
+            where: eq(boards.id, column.board_id)
+        });
+
+        if (!board || board.workspace_id !== workspace.id) {
+            return { success: false, card: null, error: "Column not found or access denied" };
+        }
+
         const [newCard] = await db.insert(cards).values({
             column_id: columnId,
             title: title,
@@ -104,6 +199,6 @@ export async function createCard(columnId: string, title: string, description: s
         return { success: true, card: newCard };
     } catch (error) {
          console.error("Failed to create card:", error);
-        return { success: false, card: null };
+        return { success: false, card: null, error: "Failed to create card" };
     }
 }

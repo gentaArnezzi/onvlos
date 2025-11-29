@@ -2,7 +2,7 @@
 
 import { db } from "@/lib/db";
 import { tasks, invoices, client_companies, messages, conversations } from "@/lib/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, inArray } from "drizzle-orm";
 import { getSession } from "@/lib/get-session";
 import { getOrCreateWorkspace } from "./workspace";
 
@@ -57,16 +57,14 @@ async function getContextData(workspaceId: string): Promise<ContextData> {
     let recentMessages: any[] = [];
     
     if (conversationIds.length > 0) {
-        // Get messages for these conversations
+        // Get messages for these conversations - filter directly in query for better security and performance
         const allMessages = await db.query.messages.findMany({
+            where: inArray(messages.conversation_id, conversationIds),
             orderBy: [desc(messages.created_at)],
-            limit: 100
+            limit: 20
         });
         
-        // Filter messages that belong to workspace conversations
-        recentMessages = allMessages
-            .filter(m => conversationIds.includes(m.conversation_id))
-            .slice(0, 20);
+        recentMessages = allMessages;
     }
 
     // Calculate stats
