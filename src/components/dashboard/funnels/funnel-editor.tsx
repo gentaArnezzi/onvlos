@@ -1,14 +1,42 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, FileText, FileSignature, Receipt, Zap, Trash2, Loader2 } from "lucide-react";
-import { addFunnelStep, updateFunnelStepConfig, deleteFunnelStep } from "@/actions/funnels";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+    Plus, FileText, FileSignature, Receipt, Zap, Trash2, Loader2,
+    GripVertical, Eye, Layout, ArrowLeft, Smartphone, Monitor,
+    Settings, ChevronRight, Save
+} from "lucide-react";
+import { addFunnelStep, updateFunnelStepConfig, deleteFunnelStep, updateFunnelStatus } from "@/actions/funnels";
 import { StepConfigForm } from "./steps/step-config-form";
 import { StepConfigContract } from "./steps/step-config-contract";
 import { StepConfigInvoice } from "./steps/step-config-invoice";
+import { StepConfigAutomation } from "./steps/step-config-automation";
+import { StepPreview } from "./steps/step-preview";
 import { cn } from "@/lib/utils";
+import {
+    DndContext,
+    closestCenter,
+    KeyboardSensor,
+    PointerSensor,
+    useSensor,
+    useSensors,
+    DragEndEvent,
+} from "@dnd-kit/core";
+import {
+    arrayMove,
+    SortableContext,
+    sortableKeyboardCoordinates,
+    verticalListSortingStrategy,
+    useSortable,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 interface FunnelEditorProps {
     funnel: any;
@@ -21,20 +49,116 @@ const stepTypes = [
     { type: 'automation', label: 'Automation', icon: Zap, description: 'Trigger actions' },
 ];
 
+function SortableStepItem({
+    step,
+    index,
+    isSelected,
+    onSelect,
+    onDelete,
+}: {
+    step: any;
+    index: number;
+    isSelected: boolean;
+    onSelect: () => void;
+    onDelete: (e: React.MouseEvent) => void;
+}) {
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+        isDragging,
+    } = useSortable({ id: step.id });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.5 : 1,
+        zIndex: isDragging ? 50 : 'auto',
+    };
+
+    return (
+        <div
+            ref={setNodeRef}
+            style={style}
+            className={cn(
+                "group relative flex items-center p-3 rounded-xl border transition-all duration-200 cursor-pointer",
+                isSelected
+                    ? "bg-violet-50/50 border-violet-200 dark:bg-violet-900/20 dark:border-violet-800 shadow-sm"
+                    : "bg-white border-slate-200 hover:border-slate-300 hover:shadow-sm dark:bg-slate-900 dark:border-slate-800 dark:hover:border-slate-700"
+            )}
+            onClick={onSelect}
+        >
+            <div
+                {...attributes}
+                {...listeners}
+                className="mr-3 cursor-grab active:cursor-grabbing text-slate-400 hover:text-slate-600 dark:text-slate-600 dark:hover:text-slate-400"
+            >
+                <GripVertical className="h-4 w-4" />
+            </div>
+
+            <div className={cn(
+                "h-8 w-8 rounded-lg flex items-center justify-center text-xs font-bold flex-shrink-0 mr-3 transition-colors",
+                isSelected
+                    ? "bg-violet-600 text-white shadow-sm"
+                    : "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400"
+            )}>
+                {index + 1}
+            </div>
+
+            <div className="flex-1 min-w-0">
+                <div className="font-medium text-sm text-slate-900 dark:text-white truncate">
+                    {step.config?.title || step.step_type}
+                </div>
+                <div className="text-xs text-slate-500 dark:text-slate-400 capitalize flex items-center mt-0.5">
+                    {step.step_type}
+                </div>
+            </div>
+
+            <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
+                onClick={onDelete}
+            >
+                <Trash2 className="h-3.5 w-3.5" />
+            </Button>
+
+            {isSelected && (
+                <div className="absolute -right-[1px] top-1/2 -translate-y-1/2 w-1 h-8 bg-violet-600 rounded-l-full" />
+            )}
+        </div>
+    );
+}
+
 export function FunnelEditor({ funnel }: FunnelEditorProps) {
+    const router = useRouter();
     const [steps, setSteps] = useState(funnel.steps || []);
     const [selectedStepId, setSelectedStepId] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
+    const [previewMode, setPreviewMode] = useState<'desktop' | 'mobile'>('desktop');
+    const [published, setPublished] = useState(funnel.published || false);
 
-    // Effect to sync local state when funnel prop changes (e.g. after server revalidate)
+    const sensors = useSensors(
+        useSensor(PointerSensor),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
+    );
+
     useEffect(() => {
         setSteps(funnel.steps || []);
-    }, [funnel.steps]);
+        setPublished(funnel.published || false);
+    }, [funnel.steps, funnel.published]);
 
     const handleAddStep = async (type: string) => {
         setLoading(true);
-        await addFunnelStep(funnel.id, type, steps.length);
+        const result = await addFunnelStep(funnel.id, type, steps.length);
+        if (result.success) {
+            router.refresh();
+        }
         setLoading(false);
     };
 
@@ -46,14 +170,9 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
         }
     };
 
-    const handleUpdateConfig = async (config: any) => {
+    const handleUpdateConfig = (config: any) => {
         if (!selectedStepId) return;
-        
-        // Optimistic update for UI responsiveness
         setSteps(steps.map((s: any) => s.id === selectedStepId ? { ...s, config } : s));
-        
-        // Debounce save in real app, here just direct save
-        // Using a "Save" button is safer for MVP than auto-save on every keystroke
     };
 
     const saveConfig = async () => {
@@ -66,118 +185,287 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
         setSaving(false);
     };
 
+    const togglePublished = async (checked: boolean) => {
+        setPublished(checked);
+        await updateFunnelStatus(funnel.id, checked);
+    };
+
+    const handleDragEnd = async (event: DragEndEvent) => {
+        const { active, over } = event;
+        if (over && active.id !== over.id) {
+            const oldIndex = steps.findIndex((s: any) => s.id === active.id);
+            const newIndex = steps.findIndex((s: any) => s.id === over.id);
+            const newSteps = arrayMove(steps, oldIndex, newIndex);
+            setSteps(newSteps);
+            // Ideally we would save the new order here
+        }
+    };
+
     const selectedStep = steps.find((s: any) => s.id === selectedStepId);
 
     return (
-        <div className="flex h-full">
-            {/* Steps Sidebar */}
-            <div className="w-72 border-r bg-background flex flex-col">
-                <div className="p-4 border-b">
-                     <h3 className="font-medium">Steps</h3>
-                </div>
-                <div className="flex-1 overflow-y-auto p-4 space-y-2">
-                    {steps.map((step: any, index: number) => (
-                        <Card 
-                            key={step.id} 
-                            className={cn(
-                                "cursor-pointer transition relative group",
-                                selectedStepId === step.id ? "border-primary ring-1 ring-primary" : "hover:bg-muted/50"
-                            )}
-                            onClick={() => setSelectedStepId(step.id)}
+        <div className="flex flex-col h-full bg-slate-50 dark:bg-slate-950">
+            {/* Top Navigation Bar */}
+            <header className="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 flex-shrink-0 z-20">
+                <div className="flex items-center space-x-4">
+                    <Button variant="ghost" size="icon" asChild className="hover:bg-slate-100 dark:hover:bg-slate-800">
+                        <Link href="/dashboard/funnels">
+                            <ArrowLeft className="h-5 w-5 text-slate-500" />
+                        </Link>
+                    </Button>
+                    <div className="h-6 w-px bg-slate-200 dark:bg-slate-700" />
+                    <div>
+                        <h1 className="text-sm font-semibold text-slate-900 dark:text-white flex items-center">
+                            {funnel.name}
+                            <span className={cn(
+                                "ml-2 px-2 py-0.5 rounded-full text-[10px] uppercase tracking-wider font-bold",
+                                published
+                                    ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
+                                    : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"
+                            )}>
+                                {published ? 'Live' : 'Draft'}
+                            </span>
+                        </h1>
+                        <a
+                            href={`/onboard/${funnel.public_url}`}
+                            target="_blank"
+                            className="text-xs text-slate-500 dark:text-slate-400 hover:text-violet-600 dark:hover:text-violet-400 flex items-center mt-0.5 transition-colors"
                         >
-                            <CardContent className="p-3 flex items-center space-x-3">
-                                <div className={cn(
-                                    "h-6 w-6 rounded-full flex items-center justify-center text-xs font-bold",
-                                    selectedStepId === step.id ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
-                                )}>
-                                    {index + 1}
-                                </div>
-                                <div className="flex-1 overflow-hidden">
-                                    <div className="font-medium capitalize truncate">{step.config?.title || step.step_type}</div>
-                                    <div className="text-xs text-muted-foreground capitalize">{step.step_type}</div>
-                                </div>
-                                <Button 
-                                    variant="ghost" 
-                                    size="icon" 
-                                    className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive"
-                                    onClick={(e) => handleDeleteStep(step.id, e)}
-                                >
-                                    <Trash2 className="h-3 w-3" />
-                                </Button>
-                            </CardContent>
-                        </Card>
-                    ))}
-                </div>
-                
-                <div className="p-4 border-t bg-muted/10">
-                    <div className="grid grid-cols-2 gap-2">
-                        {stepTypes.map((t) => (
-                            <Button 
-                                key={t.type} 
-                                variant="outline" 
-                                className="h-auto py-2 flex flex-col items-center justify-center space-y-1"
-                                onClick={() => handleAddStep(t.type)}
-                                disabled={loading}
-                            >
-                                <t.icon className="h-4 w-4" />
-                                <span className="text-[10px]">{t.label}</span>
-                            </Button>
-                        ))}
+                            onvlo.com/onboard/{funnel.public_url}
+                            <Eye className="h-3 w-3 ml-1" />
+                        </a>
                     </div>
                 </div>
-            </div>
 
-            {/* Configuration Area */}
-            <div className="flex-1 bg-slate-50 flex flex-col">
-                {selectedStep ? (
-                    <>
-                        <div className="flex-1 overflow-y-auto p-8">
-                            <div className="max-w-2xl mx-auto">
-                                <Card>
-                                    <CardHeader>
-                                        <CardTitle className="capitalize flex items-center gap-2">
-                                            Configure {selectedStep.step_type} Step
-                                        </CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                        {selectedStep.step_type === 'form' && (
-                                            <StepConfigForm 
-                                                config={selectedStep.config || {}} 
-                                                onUpdate={handleUpdateConfig} 
+                <div className="flex items-center space-x-3">
+                    <div className="bg-slate-100 dark:bg-slate-800 p-1 rounded-lg flex items-center">
+                        <button
+                            onClick={() => togglePublished(false)}
+                            className={cn(
+                                "h-7 px-3 text-xs font-medium rounded-md transition-all flex items-center justify-center",
+                                !published
+                                    ? "bg-white dark:bg-slate-600 text-slate-900 dark:text-white shadow-sm"
+                                    : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+                            )}
+                        >
+                            Draft
+                        </button>
+                        <button
+                            onClick={() => togglePublished(true)}
+                            className={cn(
+                                "h-7 px-3 text-xs font-medium rounded-md transition-all flex items-center justify-center",
+                                published
+                                    ? "bg-emerald-500 text-white shadow-sm"
+                                    : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+                            )}
+                        >
+                            Live
+                        </button>
+                    </div>
+
+                    <div className="h-6 w-px bg-slate-200 dark:bg-slate-700" />
+
+                    <div className="bg-slate-100 dark:bg-slate-800 p-1 rounded-lg flex items-center space-x-1">
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setPreviewMode('desktop')}
+                            className={cn(
+                                "h-7 px-2 text-slate-500 hover:text-slate-900 dark:hover:text-white",
+                                previewMode === 'desktop' && "bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm"
+                            )}
+                        >
+                            <Monitor className="h-4 w-4" />
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setPreviewMode('mobile')}
+                            className={cn(
+                                "h-7 px-2 text-slate-500 hover:text-slate-900 dark:hover:text-white",
+                                previewMode === 'mobile' && "bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm"
+                            )}
+                        >
+                            <Smartphone className="h-4 w-4" />
+                        </Button>
+                    </div>
+
+                    <div className="h-6 w-px bg-slate-200 dark:bg-slate-700" />
+
+                    <Button
+                        onClick={saveConfig}
+                        disabled={saving || !selectedStep}
+                        className={cn(
+                            "bg-violet-600 hover:bg-violet-700 text-white shadow-md shadow-violet-500/20 transition-all",
+                            saving && "opacity-80"
+                        )}
+                    >
+                        {saving ? (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                            <Save className="mr-2 h-4 w-4" />
+                        )}
+                        Save Changes
+                    </Button>
+                </div>
+            </header>
+
+            <div className="flex-1 flex overflow-hidden">
+                {/* Left Sidebar: Steps Timeline */}
+                <aside className="w-80 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col z-10">
+                    <div className="p-5 border-b border-slate-100 dark:border-slate-800/50">
+                        <h2 className="text-sm font-semibold text-slate-900 dark:text-white mb-1">Funnel Steps</h2>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">Manage the client journey</p>
+                    </div>
+
+                    <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                        {steps.length > 0 ? (
+                            <DndContext
+                                sensors={sensors}
+                                collisionDetection={closestCenter}
+                                onDragEnd={handleDragEnd}
+                            >
+                                <SortableContext
+                                    items={steps.map((s: any) => s.id)}
+                                    strategy={verticalListSortingStrategy}
+                                >
+                                    <div className="space-y-2">
+                                        {steps.map((step: any, index: number) => (
+                                            <SortableStepItem
+                                                key={step.id}
+                                                step={step}
+                                                index={index}
+                                                isSelected={selectedStepId === step.id}
+                                                onSelect={() => setSelectedStepId(step.id)}
+                                                onDelete={(e) => handleDeleteStep(step.id, e)}
                                             />
-                                        )}
-                                        {selectedStep.step_type === 'contract' && (
-                                            <StepConfigContract 
-                                                config={selectedStep.config || {}} 
-                                                onUpdate={handleUpdateConfig} 
-                                            />
-                                        )}
-                                        {selectedStep.step_type === 'invoice' && (
-                                            <StepConfigInvoice 
-                                                config={selectedStep.config || {}} 
-                                                onUpdate={handleUpdateConfig} 
-                                            />
-                                        )}
-                                        {selectedStep.step_type === 'automation' && (
-                                            <div className="text-center py-8 text-muted-foreground">
-                                                Automation configuration is coming soon.
-                                            </div>
-                                        )}
-                                    </CardContent>
-                                </Card>
+                                        ))}
+                                    </div>
+                                </SortableContext>
+                            </DndContext>
+                        ) : (
+                            <div className="flex flex-col items-center justify-center py-12 text-center px-4">
+                                <div className="p-4 rounded-full bg-slate-50 dark:bg-slate-800 mb-4">
+                                    <Layout className="h-8 w-8 text-slate-300 dark:text-slate-600" />
+                                </div>
+                                <p className="text-sm font-medium text-slate-900 dark:text-white mb-1">
+                                    Empty Funnel
+                                </p>
+                                <p className="text-xs text-slate-500 dark:text-slate-400">
+                                    Add your first step below to get started
+                                </p>
+                            </div>
+                        )}
+
+                        {/* Add Step Button Area */}
+                        <div className="pt-4 mt-2 border-t border-slate-100 dark:border-slate-800/50">
+                            <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-3 px-1 uppercase tracking-wider">
+                                Add Step
+                            </p>
+                            <div className="grid grid-cols-2 gap-2">
+                                {stepTypes.map((t) => (
+                                    <button
+                                        key={t.type}
+                                        onClick={() => handleAddStep(t.type)}
+                                        disabled={loading}
+                                        className="flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-violet-300 dark:hover:border-violet-700 hover:bg-violet-50 dark:hover:bg-violet-900/10 transition-all group text-center"
+                                    >
+                                        <t.icon className="h-5 w-5 text-slate-400 group-hover:text-violet-600 dark:text-slate-500 dark:group-hover:text-violet-400 mb-2" />
+                                        <span className="text-xs font-medium text-slate-700 dark:text-slate-300 group-hover:text-violet-700 dark:group-hover:text-violet-300">
+                                            {t.label}
+                                        </span>
+                                    </button>
+                                ))}
                             </div>
                         </div>
-                        <div className="p-4 border-t bg-background flex justify-end px-8">
-                             <Button onClick={saveConfig} disabled={saving}>
-                                 {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                 Save Configuration
-                             </Button>
-                        </div>
-                    </>
-                ) : (
-                     <div className="flex-1 flex items-center justify-center text-muted-foreground">
-                        Select a step from the left sidebar to configure it.
                     </div>
+                </aside>
+
+                {/* Center Canvas: Preview */}
+                <main className="flex-1 bg-slate-50/50 dark:bg-slate-950 relative overflow-hidden flex flex-col items-center justify-center p-8">
+                    <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-[0.03] pointer-events-none" />
+
+                    {selectedStep ? (
+                        <div className={cn(
+                            "relative transition-all duration-500 ease-in-out flex flex-col shadow-2xl rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800",
+                            previewMode === 'mobile' ? "w-[375px] h-[667px]" : "w-full max-w-4xl h-full max-h-[800px]"
+                        )}>
+                            {/* Browser/Device Header Simulation */}
+                            <div className="h-8 bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 flex items-center px-4 space-x-2">
+                                <div className="flex space-x-1.5">
+                                    <div className="w-2.5 h-2.5 rounded-full bg-red-400/80" />
+                                    <div className="w-2.5 h-2.5 rounded-full bg-amber-400/80" />
+                                    <div className="w-2.5 h-2.5 rounded-full bg-emerald-400/80" />
+                                </div>
+                                <div className="flex-1 text-center">
+                                    <div className="inline-flex items-center px-3 py-0.5 rounded-md bg-white dark:bg-slate-900 text-[10px] text-slate-400 font-medium border border-slate-200 dark:border-slate-700 max-w-[200px] truncate">
+                                        onvlo.com/onboard/{funnel.public_url}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Preview Content */}
+                            <div className="flex-1 overflow-y-auto bg-white dark:bg-slate-900">
+                                <StepPreview step={selectedStep} />
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="text-center max-w-md">
+                            <div className="w-24 h-24 bg-violet-100 dark:bg-violet-900/20 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse">
+                                <Layout className="h-10 w-10 text-violet-600 dark:text-violet-400" />
+                            </div>
+                            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
+                                Select a Step to Edit
+                            </h3>
+                            <p className="text-slate-500 dark:text-slate-400">
+                                Click on any step in the sidebar to configure its settings and see a live preview here.
+                            </p>
+                        </div>
+                    )}
+                </main>
+
+                {/* Right Sidebar: Configuration */}
+                {selectedStep && (
+                    <aside className="w-96 bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 flex flex-col z-10 shadow-xl shadow-slate-200/50 dark:shadow-none">
+                        <div className="h-14 border-b border-slate-100 dark:border-slate-800 flex items-center px-6 justify-between bg-white dark:bg-slate-900">
+                            <div className="flex items-center space-x-2">
+                                <Settings className="h-4 w-4 text-slate-400" />
+                                <h3 className="font-semibold text-sm text-slate-900 dark:text-white">
+                                    Configuration
+                                </h3>
+                            </div>
+                            <div className="text-xs font-medium px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 capitalize">
+                                {selectedStep.step_type}
+                            </div>
+                        </div>
+
+                        <div className="flex-1 overflow-y-auto p-6">
+                            {selectedStep.step_type === 'form' && (
+                                <StepConfigForm
+                                    config={selectedStep.config || {}}
+                                    onUpdate={handleUpdateConfig}
+                                />
+                            )}
+                            {selectedStep.step_type === 'contract' && (
+                                <StepConfigContract
+                                    config={selectedStep.config || {}}
+                                    onUpdate={handleUpdateConfig}
+                                />
+                            )}
+                            {selectedStep.step_type === 'invoice' && (
+                                <StepConfigInvoice
+                                    config={selectedStep.config || {}}
+                                    onUpdate={handleUpdateConfig}
+                                />
+                            )}
+                            {selectedStep.step_type === 'automation' && (
+                                <StepConfigAutomation
+                                    config={selectedStep.config || {}}
+                                    onUpdate={handleUpdateConfig}
+                                />
+                            )}
+                        </div>
+                    </aside>
                 )}
             </div>
         </div>

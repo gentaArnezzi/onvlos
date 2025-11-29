@@ -13,6 +13,7 @@ import { RevenueChart } from "@/components/dashboard/revenue-chart";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { getSession } from "@/lib/get-session";
+import { redirect } from "next/navigation";
 import {
   Table,
   TableBody,
@@ -24,7 +25,13 @@ import {
 
 export default async function DashboardPage() {
   const session = await getSession();
-  const user = session?.user;
+  
+  // Redirect to login if no session (should be handled by middleware, but adding safety check)
+  if (!session) {
+    redirect("/login?from=/dashboard");
+  }
+
+  const user = session.user;
   const workspace = await getOrCreateWorkspace();
 
   // Fetch Real Data

@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { auth } from "@/lib/auth";
-import { toNextJsHandler } from "better-auth/next-js";
 
 // Routes yang perlu auth
 const protectedRoutes = ["/dashboard", "/portal"];
@@ -14,8 +12,13 @@ export async function middleware(request: NextRequest) {
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
   const isAuthRoute = authRoutes.some(route => pathname.startsWith(route));
   
-  // Get session from cookies
-  const sessionCookie = request.cookies.get("better-auth.session_token");
+  // Check for better-auth session cookie
+  // Better-auth uses different cookie names, check for common ones
+  const sessionCookie = 
+    request.cookies.get("better-auth.session_token") ||
+    request.cookies.get("session_token") ||
+    request.cookies.get("better-auth.session");
+  
   const hasSession = !!sessionCookie?.value;
   
   // Redirect to login if accessing protected route without session

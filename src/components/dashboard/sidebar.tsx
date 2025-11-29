@@ -90,9 +90,11 @@ export function Sidebar() {
         {/* Logo */}
         <Link href="/dashboard" className="flex items-center gap-3 mb-8 group">
           <div className="relative">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center font-bold text-xl text-white shadow-lg shadow-purple-500/50 transition-all duration-300 group-hover:shadow-xl group-hover:shadow-purple-500/60 group-hover:scale-105">
-              <Sparkles className="w-5 h-5" />
-            </div>
+            <img
+              src="/logo-onvlo.png"
+              alt="Onvlo"
+              className="w-10 h-10 object-contain transition-all duration-300 group-hover:scale-105"
+            />
           </div>
           <div className="flex flex-col">
             <h1 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-400 dark:to-blue-400 bg-clip-text text-transparent">

@@ -83,9 +83,11 @@ export default function Home() {
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 px-6 lg:px-12 h-20 flex items-center border-b border-slate-200/50 dark:border-slate-800/50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl z-50">
         <Link className="flex items-center gap-3 group" href="/">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center shadow-lg shadow-purple-500/50 transition-all duration-300 group-hover:shadow-xl group-hover:shadow-purple-500/60 group-hover:scale-105">
-            <Sparkles className="w-5 h-5 text-white" />
-          </div>
+          <img
+            src="/logo-onvlo.png"
+            alt="Onvlo"
+            className="w-10 h-10 object-contain transition-all duration-300 group-hover:scale-105"
+          />
           <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
             Onvlo
           </span>
@@ -326,11 +328,13 @@ export default function Home() {
       {/* Footer */}
       <footer className="border-t border-slate-200 dark:border-slate-800 py-12 px-6 bg-slate-50 dark:bg-slate-900">
         <div className="container mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center shadow-lg">
-                <Sparkles className="w-4 h-4 text-white" />
-              </div>
+              <img
+                src="/logo-onvlo.png"
+                alt="Onvlo"
+                className="w-8 h-8 object-contain"
+              />
               <span className="text-lg font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
                 Onvlo
               </span>
