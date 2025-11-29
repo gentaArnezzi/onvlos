@@ -40,23 +40,7 @@ pool.on('error', (err) => {
   }
 });
 
-// Log pool statistics periodically (development only)
-if (process.env.NODE_ENV !== 'production') {
-  setInterval(() => {
-    const stats = {
-      total: pool.totalCount,
-      idle: pool.idleCount,
-      waiting: pool.waitingCount,
-      active: pool.totalCount - pool.idleCount
-    };
-    console.log(`[DB Pool Stats]`, stats);
-    
-    // Warn if pool is getting full
-    if (stats.total >= poolConfig.max! * 0.8) {
-      console.warn(`⚠️  [DB Pool] Pool is ${Math.round((stats.total / poolConfig.max!) * 100)}% full!`);
-    }
-  }, 15000); // Every 15 seconds for better monitoring
-}
+// Pool statistics monitoring removed to reduce console noise
 
 // Test connection on startup
 pool.query('SELECT NOW()')
