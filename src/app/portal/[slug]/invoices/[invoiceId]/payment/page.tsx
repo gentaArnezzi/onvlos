@@ -3,6 +3,7 @@ import { PaymentForm } from "@/components/portal/payment-form";
 import { notFound } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { getCurrencySymbol } from "@/lib/currency";
 
 export default async function PaymentPage({ params }: { params: Promise<{ slug: string, invoiceId: string }> }) {
   // Await params in Next.js 15+
@@ -10,6 +11,8 @@ export default async function PaymentPage({ params }: { params: Promise<{ slug: 
   const invoice = await getInvoicePaymentDetails(invoiceId);
 
   if (!invoice) return notFound();
+
+  const currencySymbol = getCurrencySymbol(invoice.currency || 'USD');
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] py-12 px-4">
@@ -24,7 +27,7 @@ export default async function PaymentPage({ params }: { params: Promise<{ slug: 
                 <div className="flex justify-between items-center pb-4 border-b border-slate-200 dark:border-slate-700">
                     <span className="text-slate-600 dark:text-slate-400 font-medium">Total Amount</span>
                     <span className="text-3xl font-bold text-slate-900 dark:text-white">
-                        ${Number(invoice.total_amount).toLocaleString()}
+                        {currencySymbol}{Number(invoice.total_amount).toLocaleString()}
                     </span>
                 </div>
                 

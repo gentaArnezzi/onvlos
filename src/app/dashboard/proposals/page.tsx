@@ -1,5 +1,6 @@
 import { getProposals, getContracts } from "@/actions/proposals";
 import { getClients } from "@/actions/clients";
+import { getOrCreateWorkspace } from "@/actions/workspace";
 import { ProposalEditor } from "@/components/proposals/proposal-editor";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -24,11 +25,14 @@ import { Plus, Eye, Send, FileText, FileSignature, CheckCircle2, Clock, XCircle,
 import { format } from "date-fns";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
+import { getCurrencySymbol } from "@/lib/currency";
 
 export default async function ProposalsPage() {
   const proposals = await getProposals();
   const contracts = await getContracts();
   const clients = await getClients();
+  const workspace = await getOrCreateWorkspace();
+  const defaultCurrencySymbol = getCurrencySymbol(workspace?.default_currency || "USD");
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -151,7 +155,7 @@ export default async function ProposalsPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900 dark:text-white">${totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+            <div className="text-2xl font-bold text-slate-900 dark:text-white">{defaultCurrencySymbol}{totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Potential revenue</p>
           </CardContent>
         </Card>
@@ -215,7 +219,7 @@ export default async function ProposalsPage() {
                           </TableCell>
                           <TableCell className="font-medium text-slate-900 dark:text-white">{proposal.title}</TableCell>
                           <TableCell className="text-slate-600 dark:text-slate-300">{proposal.client_name || '-'}</TableCell>
-                          <TableCell className="font-bold text-slate-900 dark:text-white">${proposal.total || '0'}</TableCell>
+                          <TableCell className="font-bold text-slate-900 dark:text-white">{defaultCurrencySymbol}{proposal.total || '0'}</TableCell>
                           <TableCell>
                             <Badge variant="outline" className={`capitalize font-medium border-0 px-2.5 py-0.5 ${getStatusBadgeClass(proposal.status)}`}>
                               {proposal.status}

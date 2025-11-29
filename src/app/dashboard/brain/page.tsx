@@ -1,17 +1,20 @@
 import { getClients } from "@/actions/clients";
 import { getInvoices } from "@/actions/invoices";
 import { getTasks } from "@/actions/tasks";
+import { getOrCreateWorkspace } from "@/actions/workspace";
 import { BrainChat } from "@/components/dashboard/brain/brain-chat";
 import { SuggestedQueries } from "@/components/dashboard/brain/suggested-queries";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Brain, Sparkles, TrendingUp, Users, CreditCard, CheckSquare, FileText, Upload } from "lucide-react";
 import { getAnalyticsData } from "@/actions/analytics";
+import { getCurrencySymbol } from "@/lib/currency";
 
 export default async function BrainPage() {
   const clients = await getClients();
   const invoices = await getInvoices();
   const tasks = await getTasks();
   const analytics = await getAnalyticsData();
+  const workspace = await getOrCreateWorkspace();
 
   // Calculate quick stats
   const totalClients = clients.length;
@@ -33,7 +36,7 @@ export default async function BrainPage() {
     },
     {
       title: "Total Revenue",
-      value: `$${totalRevenue.toLocaleString()}`,
+      value: `${getCurrencySymbol(workspace?.default_currency || "USD")}${totalRevenue.toLocaleString()}`,
       description: "from paid invoices",
       icon: CreditCard,
       color: "text-emerald-600 dark:text-emerald-400",

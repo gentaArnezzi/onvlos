@@ -8,6 +8,7 @@ import { format } from "date-fns";
 import Link from "next/link";
 import { InvoiceActions } from "@/components/dashboard/invoices/invoice-actions";
 import { InvoiceQuickActions } from "@/components/dashboard/invoices/invoice-quick-actions";
+import { getCurrencySymbol } from "@/lib/currency";
 
 export default async function InvoiceDetailPage({ params }: { params: Promise<{ invoiceId: string }> }) {
   const { invoiceId } = await params;
@@ -16,12 +17,8 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
   if (!invoice) {
     notFound();
   }
-
-  const currencySymbol = invoice.currency === 'USD' ? '$' : 
-                         invoice.currency === 'IDR' ? 'Rp' :
-                         invoice.currency === 'SGD' ? 'S$' :
-                         invoice.currency === 'AUD' ? 'A$' :
-                         invoice.currency === 'EUR' ? '€' : '$';
+  
+  const currencySymbol = getCurrencySymbol(invoice.currency || 'USD');
 
   return (
     <div className="flex-1 space-y-6 p-8 max-w-7xl mx-auto">

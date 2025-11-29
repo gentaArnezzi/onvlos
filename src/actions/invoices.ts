@@ -27,6 +27,7 @@ export async function getInvoices(search?: string, status?: string) {
         id: invoices.id,
         invoice_number: invoices.invoice_number,
         amount: invoices.total_amount,
+        currency: invoices.currency,
         status: invoices.status,
         due_date: invoices.due_date,
         client_name: client_companies.name,
@@ -83,6 +84,9 @@ export async function createInvoice(data: {
             return { success: false, error: "Workspace not found" };
         }
         
+        // Use workspace default currency if currency not provided
+        const currency = data.currency || workspace.default_currency || "USD";
+        
         // Calculate totals
         let subtotal = 0;
         const itemsWithSubtotal = data.items.map(item => {
@@ -116,7 +120,7 @@ export async function createInvoice(data: {
                 workspace_id: workspace.id,
                 client_id: data.client_id,
                 invoice_number: invoiceNumber,
-                currency: data.currency || 'USD',
+                currency: currency,
                 due_date: data.due_date instanceof Date 
                     ? data.due_date.toISOString().split('T')[0] 
                     : data.due_date,

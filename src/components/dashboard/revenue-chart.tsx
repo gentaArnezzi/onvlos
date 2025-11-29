@@ -6,9 +6,10 @@ import { useTheme } from "@/components/theme-provider";
 
 interface RevenueChartProps {
     data?: Array<{ month: string; revenue: number }>;
+    currencySymbol?: string;
 }
 
-export function RevenueChart({ data = [] }: RevenueChartProps) {
+export function RevenueChart({ data = [], currencySymbol = '$' }: RevenueChartProps) {
     const { theme } = useTheme();
 
     const isDark = theme === "dark";
@@ -54,7 +55,7 @@ export function RevenueChart({ data = [] }: RevenueChartProps) {
                     fontSize={12}
                     tickLine={false}
                     axisLine={false}
-                    tickFormatter={(value) => `$${value}`}
+                    tickFormatter={(value) => `${currencySymbol}${value}`}
                 />
                 <Tooltip
                     contentStyle={{

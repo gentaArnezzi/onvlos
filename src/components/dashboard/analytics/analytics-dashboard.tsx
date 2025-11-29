@@ -57,7 +57,7 @@ interface AnalyticsData {
 
 const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6'];
 
-export function AnalyticsDashboard({ data }: { data: AnalyticsData }) {
+export function AnalyticsDashboard({ data, currencySymbol = '$' }: { data: AnalyticsData; currencySymbol?: string }) {
   const revenueChange = data.stats.lastMonthRevenue > 0
     ? ((data.stats.currentMonthRevenue - data.stats.lastMonthRevenue) / data.stats.lastMonthRevenue) * 100
     : 100;
@@ -74,9 +74,9 @@ export function AnalyticsDashboard({ data }: { data: AnalyticsData }) {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${data.stats.yearRevenue.toLocaleString()}</div>
+            <div className="text-2xl font-bold">{currencySymbol}{data.stats.yearRevenue.toLocaleString()}</div>
             <p className="text-xs text-muted-foreground">
-              ${data.stats.currentMonthRevenue.toLocaleString()} this month
+              {currencySymbol}{data.stats.currentMonthRevenue.toLocaleString()} this month
             </p>
           </CardContent>
         </Card>
@@ -95,7 +95,7 @@ export function AnalyticsDashboard({ data }: { data: AnalyticsData }) {
               {isRevenueUp ? '+' : ''}{revenueChange.toFixed(1)}%
             </div>
             <p className="text-xs text-muted-foreground">
-              vs last month (${data.stats.lastMonthRevenue.toLocaleString()})
+              vs last month ({currencySymbol}{data.stats.lastMonthRevenue.toLocaleString()})
             </p>
           </CardContent>
         </Card>
@@ -147,10 +147,10 @@ export function AnalyticsDashboard({ data }: { data: AnalyticsData }) {
                 <YAxis 
                   className="text-xs"
                   tick={{ fill: 'currentColor' }}
-                  tickFormatter={(value) => `$${value}`}
+                  tickFormatter={(value) => `${currencySymbol}${value}`}
                 />
                 <Tooltip 
-                  formatter={(value: number) => [`$${value.toLocaleString()}`, 'Revenue']}
+                  formatter={(value: number) => [`${currencySymbol}${value.toLocaleString()}`, 'Revenue']}
                   contentStyle={{ 
                     backgroundColor: 'hsl(var(--background))',
                     border: '1px solid hsl(var(--border))',
@@ -261,7 +261,7 @@ export function AnalyticsDashboard({ data }: { data: AnalyticsData }) {
                   </div>
                   <div className="text-right">
                     {activity.amount && (
-                      <p className="text-sm font-medium">${activity.amount}</p>
+                      <p className="text-sm font-medium">{currencySymbol}{activity.amount}</p>
                     )}
                     <Badge variant={
                       activity.status === 'paid' || activity.status === 'accepted' ? 'default' :

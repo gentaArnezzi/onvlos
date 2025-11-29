@@ -24,11 +24,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useRouter } from "next/navigation";
 import { CreateInvoiceDialog } from "./create-invoice-dialog";
 import { updateInvoiceStatus, sendInvoice, duplicateInvoice } from "@/actions/invoices";
+import { getCurrencySymbol } from "@/lib/currency";
 
 interface Invoice {
   id: string;
   invoice_number: string;
   amount: string;
+  currency?: string | null;
   status: string;
   due_date: string | null;
   client_name: string | null;
@@ -228,7 +230,7 @@ export function InvoicesList({ initialInvoices, clients }: InvoicesListProps) {
                     {invoice.due_date ? format(new Date(invoice.due_date), "MMM d, yyyy") : "-"}
                   </TableCell>
                   <TableCell className="text-right pr-6 font-bold text-slate-900 dark:text-white">
-                    ${Number(invoice.amount).toLocaleString()}
+                    {getCurrencySymbol(invoice.currency)}{Number(invoice.amount).toLocaleString()}
                   </TableCell>
                   <TableCell>
                     <DropdownMenu>

@@ -24,15 +24,17 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getCurrencySymbol } from "@/lib/currency";
 
 interface CreateInvoiceDialogProps {
   clients: { id: string; name: string; company_name: string | null }[];
   initialClientId?: string;
+  defaultCurrency?: string;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 }
 
-export function CreateInvoiceDialog({ clients, initialClientId, open: controlledOpen, onOpenChange: setControlledOpen }: CreateInvoiceDialogProps) {
+export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency = "USD", open: controlledOpen, onOpenChange: setControlledOpen }: CreateInvoiceDialogProps) {
   const [internalOpen, setInternalOpen] = useState(false);
   const isControlled = controlledOpen !== undefined;
   const open = isControlled ? controlledOpen : internalOpen;
@@ -41,7 +43,7 @@ export function CreateInvoiceDialog({ clients, initialClientId, open: controlled
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState<Date>();
   const [selectedClient, setSelectedClient] = useState(initialClientId || "");
-  const [currency, setCurrency] = useState("USD");
+  const [currency, setCurrency] = useState(defaultCurrency);
   const [discountType, setDiscountType] = useState<"amount" | "percentage">("amount");
   const [discountValue, setDiscountValue] = useState("");
   const [taxRate, setTaxRate] = useState("");
@@ -56,6 +58,13 @@ export function CreateInvoiceDialog({ clients, initialClientId, open: controlled
       setSelectedClient(initialClientId);
     }
   }, [initialClientId]);
+
+  // Update currency when defaultCurrency changes
+  React.useEffect(() => {
+    if (defaultCurrency) {
+      setCurrency(defaultCurrency);
+    }
+  }, [defaultCurrency]);
 
   const handleAddItem = () => {
     setItems([...items, { name: "", quantity: 1, unit_price: 0 }]);
@@ -170,11 +179,25 @@ export function CreateInvoiceDialog({ clients, initialClientId, open: controlled
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="USD">USD ($)</SelectItem>
-                            <SelectItem value="IDR">IDR (Rp)</SelectItem>
-                            <SelectItem value="SGD">SGD (S$)</SelectItem>
-                            <SelectItem value="AUD">AUD (A$)</SelectItem>
-                            <SelectItem value="EUR">EUR (€)</SelectItem>
+                            <SelectItem value="USD">USD - US Dollar ($)</SelectItem>
+                            <SelectItem value="EUR">EUR - Euro (€)</SelectItem>
+                            <SelectItem value="GBP">GBP - British Pound (£)</SelectItem>
+                            <SelectItem value="IDR">IDR - Indonesian Rupiah (Rp)</SelectItem>
+                            <SelectItem value="SGD">SGD - Singapore Dollar (S$)</SelectItem>
+                            <SelectItem value="AUD">AUD - Australian Dollar (A$)</SelectItem>
+                            <SelectItem value="JPY">JPY - Japanese Yen (¥)</SelectItem>
+                            <SelectItem value="CNY">CNY - Chinese Yuan (¥)</SelectItem>
+                            <SelectItem value="MYR">MYR - Malaysian Ringgit (RM)</SelectItem>
+                            <SelectItem value="THB">THB - Thai Baht (฿)</SelectItem>
+                            <SelectItem value="PHP">PHP - Philippine Peso (₱)</SelectItem>
+                            <SelectItem value="VND">VND - Vietnamese Dong (₫)</SelectItem>
+                            <SelectItem value="INR">INR - Indian Rupee (₹)</SelectItem>
+                            <SelectItem value="KRW">KRW - South Korean Won (₩)</SelectItem>
+                            <SelectItem value="HKD">HKD - Hong Kong Dollar (HK$)</SelectItem>
+                            <SelectItem value="CAD">CAD - Canadian Dollar (C$)</SelectItem>
+                            <SelectItem value="NZD">NZD - New Zealand Dollar (NZ$)</SelectItem>
+                            <SelectItem value="CHF">CHF - Swiss Franc (CHF)</SelectItem>
+                            <SelectItem value="AED">AED - UAE Dirham (د.إ)</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -324,24 +347,24 @@ export function CreateInvoiceDialog({ clients, initialClientId, open: controlled
                         <div className="space-y-1">
                             <div className="flex justify-between text-sm text-slate-600 dark:text-slate-400">
                                 <span>Subtotal:</span>
-                                <span>${calculateTotals().subtotal.toLocaleString()}</span>
+                                <span>{getCurrencySymbol(currency)}{calculateTotals().subtotal.toLocaleString()}</span>
                             </div>
                             {calculateTotals().discount > 0 && (
                                 <div className="flex justify-between text-sm text-slate-600 dark:text-slate-400">
                                     <span>Discount:</span>
-                                    <span className="text-red-600 dark:text-red-400">-${calculateTotals().discount.toLocaleString()}</span>
+                                    <span className="text-red-600 dark:text-red-400">-{getCurrencySymbol(currency)}{calculateTotals().discount.toLocaleString()}</span>
                                 </div>
                             )}
                             {calculateTotals().tax > 0 && (
                                 <div className="flex justify-between text-sm text-slate-600 dark:text-slate-400">
                                     <span>Tax:</span>
-                                    <span>${calculateTotals().tax.toLocaleString()}</span>
+                                    <span>{getCurrencySymbol(currency)}{calculateTotals().tax.toLocaleString()}</span>
                                 </div>
                             )}
                         </div>
                         <div className="text-right">
                             <div className="text-lg font-bold text-slate-900 dark:text-white">
-                                Total: <span className="text-emerald-600 dark:text-emerald-400">${calculateTotals().total.toLocaleString()}</span>
+                                Total: <span className="text-emerald-600 dark:text-emerald-400">{getCurrencySymbol(currency)}{calculateTotals().total.toLocaleString()}</span>
                             </div>
                         </div>
                     </div>

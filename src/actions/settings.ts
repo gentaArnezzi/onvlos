@@ -80,6 +80,7 @@ export async function updateWorkspaceSettings(data: {
   timezone?: string;
   logo_url?: string | null;
   billing_email?: string | null;
+  default_currency?: string;
 }) {
   try {
     const session = await getSession();
@@ -98,6 +99,7 @@ export async function updateWorkspaceSettings(data: {
         ...(data.timezone && { timezone: data.timezone }),
         ...(data.logo_url !== undefined && { logo_url: data.logo_url }),
         ...(data.billing_email !== undefined && { billing_email: data.billing_email }),
+        ...(data.default_currency && { default_currency: data.default_currency }),
         updated_at: new Date(),
       })
       .where(eq(workspaces.id, workspace.id));

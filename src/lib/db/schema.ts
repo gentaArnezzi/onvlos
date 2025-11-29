@@ -57,6 +57,7 @@ export const workspaces = pgTable("workspaces", {
   name: text("name").notNull(),
   logo_url: text("logo_url"),
   timezone: text("timezone").default("UTC"),
+  default_currency: text("default_currency").default("USD"),
   subscription_tier: text("subscription_tier").default("starter"),
   subscription_status: text("subscription_status").default("active"),
   billing_email: text("billing_email"),

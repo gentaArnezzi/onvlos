@@ -14,6 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { getSession } from "@/lib/get-session";
 import { redirect } from "next/navigation";
+import { getCurrencySymbol } from "@/lib/currency";
 import {
   Table,
   TableBody,
@@ -96,10 +97,12 @@ export default async function DashboardPage() {
     : "0";
   const revenueTrendUp = Number(revenueTrend) >= 0;
 
+  const defaultCurrencySymbol = getCurrencySymbol(workspace?.default_currency || "USD");
+  
   const stats = [
     {
       title: "Total Revenue",
-      value: `$${totalRevenue.toLocaleString()}`,
+      value: `${defaultCurrencySymbol}${totalRevenue.toLocaleString()}`,
       description: "Lifetime collected",
       icon: DollarSign,
       trend: `${revenueTrendUp ? '+' : ''}${revenueTrend}%`,
@@ -229,7 +232,7 @@ export default async function DashboardPage() {
               </div>
             </CardHeader>
             <CardContent className="pl-0">
-              <RevenueChart data={analyticsData?.charts?.monthlyRevenue || []} />
+              <RevenueChart data={analyticsData?.charts?.monthlyRevenue || []} currencySymbol={defaultCurrencySymbol} />
             </CardContent>
           </Card>
 
@@ -271,7 +274,7 @@ export default async function DashboardPage() {
                           </TableCell>
                           <TableCell className="text-right pr-6">
                             <div className="flex flex-col items-end">
-                              <span className="font-bold text-white">+${Number(inv.total_amount).toLocaleString()}</span>
+                              <span className="font-bold text-white">+{defaultCurrencySymbol}{Number(inv.total_amount).toLocaleString()}</span>
                               <Badge variant="secondary" className="bg-emerald-900/30 text-emerald-400 border-none text-[10px] px-1.5 py-0 h-5">
                                 Paid
                               </Badge>

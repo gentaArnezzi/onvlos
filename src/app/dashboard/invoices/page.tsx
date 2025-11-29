@@ -1,13 +1,17 @@
 import { getInvoices } from "@/actions/invoices";
 import { getClients } from "@/actions/clients";
+import { getOrCreateWorkspace } from "@/actions/workspace";
 import { CreateInvoiceDialog } from "@/components/dashboard/invoices/create-invoice-dialog";
 import { InvoicesList } from "@/components/dashboard/invoices/invoices-list";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CreditCard, CheckCircle, Clock } from "lucide-react";
+import { getCurrencySymbol } from "@/lib/currency";
 
 export default async function InvoicesPage() {
   const invoices = await getInvoices();
   const clients = await getClients();
+  const workspace = await getOrCreateWorkspace();
+  const defaultCurrencySymbol = getCurrencySymbol(workspace?.default_currency || "USD");
 
   // Calculate stats - filter out archived invoices
   const activeInvoices = invoices.filter(inv => inv.status !== 'archived');
@@ -30,7 +34,7 @@ export default async function InvoicesPage() {
             Manage your billing and financial records.
           </p>
         </div>
-        <CreateInvoiceDialog clients={clients} />
+        <CreateInvoiceDialog clients={clients} defaultCurrency={workspace?.default_currency || "USD"} />
       </div>
 
       {/* Stats Cards */}
@@ -49,7 +53,7 @@ export default async function InvoicesPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-slate-900 dark:text-white">
-              ${totalRevenue.toLocaleString()}
+              {defaultCurrencySymbol}{totalRevenue.toLocaleString()}
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
               All time invoiced amount
@@ -71,7 +75,7 @@ export default async function InvoicesPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-slate-900 dark:text-white">
-              ${paidAmount.toLocaleString()}
+              {defaultCurrencySymbol}{paidAmount.toLocaleString()}
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
               {paidInvoices.length} invoices paid
@@ -93,7 +97,7 @@ export default async function InvoicesPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-slate-900 dark:text-white">
-              ${pendingAmount.toLocaleString()}
+              {defaultCurrencySymbol}{pendingAmount.toLocaleString()}
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
               {pendingInvoices.length} invoices pending

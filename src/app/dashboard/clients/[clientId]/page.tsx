@@ -12,6 +12,7 @@ import { eq, and } from "drizzle-orm";
 import { FileManager } from "@/components/dashboard/files/file-manager";
 import { getSession } from "@/lib/get-session";
 import { redirect } from "next/navigation";
+import { getCurrencySymbol } from "@/lib/currency";
 
 export default async function ClientDetailPage({ params }: { params: Promise<{ clientId: string }> }) {
     // Await params in Next.js 15+
@@ -41,6 +42,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ c
 
     if (!client) return notFound();
 
+    const defaultCurrencySymbol = getCurrencySymbol(workspace?.default_currency || "USD");
     const currentUserId = session.user.id;
 
     const spaceId = await getClientSpaceId(client.id);
@@ -104,7 +106,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ c
                             </CardHeader>
                             <CardContent>
                                 <div className="text-2xl font-bold text-slate-900 dark:text-white">
-                                    ${client.contract_value ? Number(client.contract_value).toLocaleString() : "0"}
+                                    {defaultCurrencySymbol}{client.contract_value ? Number(client.contract_value).toLocaleString() : "0"}
                                 </div>
                             </CardContent>
                         </Card>

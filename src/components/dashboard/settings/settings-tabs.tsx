@@ -27,6 +27,7 @@ interface SettingsTabsProps {
     timezone: string | null;
     logo_url: string | null;
     billing_email: string | null;
+    default_currency: string | null;
   } | null;
   billing: {
     subscription_tier: string;
@@ -48,6 +49,7 @@ export function SettingsTabs({ user, workspace, billing }: SettingsTabsProps) {
   const [workspaceTimezone, setWorkspaceTimezone] = useState(workspace?.timezone || "UTC");
   const [workspaceLogo, setWorkspaceLogo] = useState(workspace?.logo_url || "");
   const [billingEmail, setBillingEmail] = useState(workspace?.billing_email || "");
+  const [defaultCurrency, setDefaultCurrency] = useState(workspace?.default_currency || "USD");
 
   useEffect(() => {
     if (user) {
@@ -59,6 +61,7 @@ export function SettingsTabs({ user, workspace, billing }: SettingsTabsProps) {
       setWorkspaceTimezone(workspace.timezone || "UTC");
       setWorkspaceLogo(workspace.logo_url || "");
       setBillingEmail(workspace.billing_email || "");
+      setDefaultCurrency(workspace.default_currency || "USD");
     }
   }, [user, workspace]);
 
@@ -102,6 +105,7 @@ export function SettingsTabs({ user, workspace, billing }: SettingsTabsProps) {
         timezone: workspaceTimezone,
         logo_url: workspaceLogo.trim() || null,
         billing_email: billingEmail.trim() || null,
+        default_currency: defaultCurrency,
       });
       
       if (result.success) {
@@ -285,6 +289,38 @@ export function SettingsTabs({ user, workspace, billing }: SettingsTabsProps) {
                 placeholder="billing@example.com"
                 className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400" 
               />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-slate-900 dark:text-white">Default Currency</Label>
+              <Select value={defaultCurrency} onValueChange={setDefaultCurrency}>
+                <SelectTrigger className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="USD">USD - US Dollar ($)</SelectItem>
+                  <SelectItem value="EUR">EUR - Euro (€)</SelectItem>
+                  <SelectItem value="GBP">GBP - British Pound (£)</SelectItem>
+                  <SelectItem value="IDR">IDR - Indonesian Rupiah (Rp)</SelectItem>
+                  <SelectItem value="SGD">SGD - Singapore Dollar (S$)</SelectItem>
+                  <SelectItem value="AUD">AUD - Australian Dollar (A$)</SelectItem>
+                  <SelectItem value="JPY">JPY - Japanese Yen (¥)</SelectItem>
+                  <SelectItem value="CNY">CNY - Chinese Yuan (¥)</SelectItem>
+                  <SelectItem value="MYR">MYR - Malaysian Ringgit (RM)</SelectItem>
+                  <SelectItem value="THB">THB - Thai Baht (฿)</SelectItem>
+                  <SelectItem value="PHP">PHP - Philippine Peso (₱)</SelectItem>
+                  <SelectItem value="VND">VND - Vietnamese Dong (₫)</SelectItem>
+                  <SelectItem value="INR">INR - Indian Rupee (₹)</SelectItem>
+                  <SelectItem value="KRW">KRW - South Korean Won (₩)</SelectItem>
+                  <SelectItem value="HKD">HKD - Hong Kong Dollar (HK$)</SelectItem>
+                  <SelectItem value="CAD">CAD - Canadian Dollar (C$)</SelectItem>
+                  <SelectItem value="NZD">NZD - New Zealand Dollar (NZ$)</SelectItem>
+                  <SelectItem value="CHF">CHF - Swiss Franc (CHF)</SelectItem>
+                  <SelectItem value="AED">AED - UAE Dirham (د.إ)</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                This currency will be used as the default for all new invoices.
+              </p>
             </div>
           </CardContent>
           <CardFooter className="bg-slate-50/50 dark:bg-slate-900/30 border-t border-slate-100 dark:border-slate-800 p-6">
