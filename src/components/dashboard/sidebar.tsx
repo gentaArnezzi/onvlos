@@ -96,7 +96,7 @@ export function Sidebar() {
           </div>
           <div className="flex flex-col">
             <h1 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-400 dark:to-blue-400 bg-clip-text text-transparent">
-              Flazy
+              Onvlo
             </h1>
             <p className="text-xs text-slate-500 dark:text-slate-400">Modern Workspace</p>
           </div>
@@ -224,7 +224,7 @@ export function Sidebar() {
                   Admin User
                 </p>
                 <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
-                  admin@flazy.com
+                  admin@onvlo.com
                 </p>
               </div>
             </div>

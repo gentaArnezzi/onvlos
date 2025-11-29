@@ -27,8 +27,8 @@ export default function DocsPage() {
 
   const gettingStarted = [
     {
-      title: "Introduction to Flazy",
-      description: "Learn about Flazy's core features and how it can help your agency",
+      title: "Introduction to Onvlo",
+      description: "Learn about Onvlo's core features and how it can help your agency",
       icon: Book,
       href: "#"
     },
@@ -111,7 +111,7 @@ export default function DocsPage() {
       guides: [
         {
           title: "API Overview",
-          description: "Introduction to Flazy's REST API",
+          description: "Introduction to Onvlo's REST API",
           icon: Code
         },
         {
@@ -126,7 +126,7 @@ export default function DocsPage() {
         },
         {
           title: "Third-party Integrations",
-          description: "Connect Flazy with your favorite tools",
+          description: "Connect Onvlo with your favorite tools",
           icon: Code
         }
       ]
@@ -149,7 +149,7 @@ export default function DocsPage() {
           Documentation
         </h2>
         <p className="text-slate-600 dark:text-slate-400 mt-1">
-          Comprehensive guides and references for all Flazy features.
+          Comprehensive guides and references for all Onvlo features.
         </p>
       </div>
 
@@ -257,7 +257,7 @@ export default function DocsPage() {
                   API Documentation
                 </h3>
                 <p className="text-sm text-slate-600 dark:text-slate-400">
-                  Integrate Flazy with your applications using our REST API.
+                  Integrate Onvlo with your applications using our REST API.
                 </p>
               </div>
             </div>

@@ -1,5 +1,5 @@
 # Product Requirements Document (PRD)
-## Flozy Clone - Client Onboarding & Workspace SaaS
+## Onvlo - Client Onboarding & Workspace SaaS
 
 **Version:** 1.0  
 **Date:** November 2025  
@@ -30,7 +30,7 @@
 
 ## Executive Summary
 
-**Product Name:** Flozy Clone (Working Title: OnboardHub)
+**Product Name:** Onvlo (Working Title: OnboardHub)
 
 **Elevator Pitch:**  
 A unified SaaS platform that streamlines client onboarding and collaboration for agencies, freelancers, and service-based businesses. Consolidates onboarding funnels, invoicing, task management, client portals, automation workflows, and AI-assisted communication into one integrated workspace—replacing Notion, Trello, Slack, Calendly, and invoicing tools.
@@ -74,7 +74,7 @@ To become the "operating system" for client-facing businesses—one platform whe
 5. **Data Intelligence:** AI-powered insights and smart recommendations.
 
 ### Key Differentiators vs. Competitors
-| Aspect | OnboardHub | Notion | Asana | Flozy |
+| Aspect | OnboardHub | Notion | Asana | Onvlo |
 |--------|-----------|--------|-------|-------|
 | **Onboarding Funnels** | ✅ Built-in | ❌ No | ❌ No | ✅ Yes |
 | **Client Portal** | ✅ Native | ⚠️ Complex | ⚠️ Complex | ✅ Yes |
@@ -549,7 +549,7 @@ ClientOnboardingSession {
 ### Feature 2: Client Management & Workspace
 
 #### 2.1 Clients List (CRM)
-**View Type:** Grid cards (like Flozy screenshot)
+**View Type:** Grid cards (like Onvlo screenshot)
 
 **Card Content:**
 - Client logo/avatar (first letter or uploaded)
@@ -2267,7 +2267,7 @@ POST   /api/webhooks/xendit/payment-notification
 ### Pricing & Positioning
 - **Freemium Model:** 14-day free trial (no credit card needed)
 - **Positioning:** "The operating system for client-facing teams"
-- **Competitor Positioning:** Faster setup than Flozy, more integrated than Notion + Stripe combo
+- **Competitor Positioning:** Faster setup than competitors, more integrated than Notion + Stripe combo
 
 ### Sales & Support
 - **Onboarding:** In-app onboarding tutorial, welcome email series
@@ -2287,7 +2287,7 @@ POST   /api/webhooks/xendit/payment-notification
 - **RBAC:** Role-Based Access Control (permissions by role)
 
 ### References
-- Flozy: https://www.flozy.com
+- Competitors: Notion, Asana, Trello, Calendly, HubSpot
 - Competitors: Notion, Asana, Trello, Calendly, HubSpot
 - Tech: Next.js docs, Drizzle docs, Stripe API docs
 

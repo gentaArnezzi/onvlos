@@ -79,7 +79,7 @@ export default function HelpPage() {
       description: "Get help via email within 24 hours",
       icon: Mail,
       action: "Send Email",
-      href: "mailto:support@flazy.com"
+      href: "mailto:support@onvlo.com"
     },
     {
       title: "Live Chat",
@@ -139,7 +139,7 @@ export default function HelpPage() {
           Help & Support
         </h2>
         <p className="text-slate-600 dark:text-slate-400 mt-1">
-          Get help, find answers, and learn how to make the most of Flazy.
+          Get help, find answers, and learn how to make the most of Onvlo.
         </p>
       </div>
 
@@ -273,7 +273,7 @@ export default function HelpPage() {
               className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white"
               asChild
             >
-              <a href="mailto:support@flazy.com">
+              <a href="mailto:support@onvlo.com">
                 <Mail className="mr-2 h-4 w-4" />
                 Contact Support
               </a>

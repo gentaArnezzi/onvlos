@@ -21,8 +21,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Flazy - Modern Client Onboarding Platform",
-  description: "Streamline client onboarding and collaboration with Flazy",
+  title: "Onvlo - Modern Client Onboarding Platform",
+  description: "Streamline client onboarding and collaboration with Onvlo",
 };
 
 export default function RootLayout({
@@ -35,7 +35,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased`}
       >
-        <ThemeProvider defaultTheme="light" storageKey="flazy-theme">
+        <ThemeProvider defaultTheme="light" storageKey="onvlo-theme">
           {children}
           <Toaster />
         </ThemeProvider>

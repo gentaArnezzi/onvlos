@@ -87,7 +87,7 @@ export default function Home() {
             <Sparkles className="w-5 h-5 text-white" />
           </div>
           <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-            Flazy
+            Onvlo
           </span>
         </Link>
         <nav className="ml-auto flex items-center gap-8">
@@ -237,7 +237,7 @@ export default function Home() {
               <h2 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6">
                 How{" "}
                 <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                  Flazy
+                  Onvlo
                 </span>
                 {" "}Works
               </h2>
@@ -302,7 +302,7 @@ export default function Home() {
                 Ready to Transform Your Client Experience?
               </h2>
               <p className="text-xl text-white/90 mb-12 leading-relaxed">
-                Join agencies that have cut onboarding time by 10x and replaced 5+ tools with Flazy.
+                Join agencies that have cut onboarding time by 10x and replaced 5+ tools with Onvlo.
                 Start your journey to better client relationships today.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -332,7 +332,7 @@ export default function Home() {
                 <Sparkles className="w-4 h-4 text-white" />
               </div>
               <span className="text-lg font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                Flazy
+                Onvlo
               </span>
             </div>
             <div className="flex gap-8 text-sm text-slate-600 dark:text-slate-400">
@@ -341,7 +341,7 @@ export default function Home() {
               <Link href="#" className="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Contact</Link>
             </div>
             <div className="text-sm text-slate-500 dark:text-slate-400">
-              © 2024 Flazy. All rights reserved.
+              © 2024 Onvlo. All rights reserved.
             </div>
           </div>
         </div>
