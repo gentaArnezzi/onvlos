@@ -1,0 +1,130 @@
+import { NextRequest, NextResponse } from "next/server";
+import { writeFile, mkdir } from "fs/promises";
+import { existsSync } from "fs";
+import path from "path";
+import { db } from "@/lib/db";
+import { files } from "@/lib/db/schema-files";
+import { getSession } from "@/lib/get-session";
+import { getCurrentWorkspace } from "@/actions/workspace";
+import { eq, and, desc } from "drizzle-orm";
+
+export async function POST(request: NextRequest) {
+  try {
+    // Check authentication
+    const session = await getSession();
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const workspace = await getCurrentWorkspace();
+    if (!workspace) {
+      return NextResponse.json({ error: "No workspace found" }, { status: 400 });
+    }
+
+    const formData = await request.formData();
+    const file = formData.get("file") as File;
+    const clientId = formData.get("clientId") as string | null;
+    const folder = formData.get("folder") as string || "general";
+
+    if (!file) {
+      return NextResponse.json({ error: "No file provided" }, { status: 400 });
+    }
+
+    // Validate file size (max 10MB)
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    if (file.size > maxSize) {
+      return NextResponse.json({ error: "File too large. Maximum size is 10MB" }, { status: 400 });
+    }
+
+    // Create upload directory if it doesn't exist
+    const uploadDir = path.join(process.cwd(), "public", "uploads", workspace.id);
+    if (!existsSync(uploadDir)) {
+      await mkdir(uploadDir, { recursive: true });
+    }
+
+    // Generate unique filename
+    const timestamp = Date.now();
+    const randomString = Math.random().toString(36).substring(2, 15);
+    const extension = path.extname(file.name);
+    const fileName = `${timestamp}-${randomString}${extension}`;
+    const filePath = path.join(uploadDir, fileName);
+
+    // Convert File to Buffer and save
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+    await writeFile(filePath, buffer);
+
+    // Save file info to database
+    const [savedFile] = await db.insert(files).values({
+      workspace_id: workspace.id,
+      client_id: clientId,
+      uploaded_by: session.user.id,
+      file_name: file.name,
+      file_url: `/uploads/${workspace.id}/${fileName}`,
+      file_size: file.size,
+      file_type: file.type || "application/octet-stream",
+      folder: folder
+    }).returning();
+
+    return NextResponse.json({
+      success: true,
+      file: {
+        id: savedFile.id,
+        name: savedFile.file_name,
+        url: savedFile.file_url,
+        size: savedFile.file_size,
+        type: savedFile.file_type
+      }
+    });
+  } catch (error) {
+    console.error("Upload error:", error);
+    return NextResponse.json(
+      { error: "Failed to upload file" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function GET(request: NextRequest) {
+  try {
+    const session = await getSession();
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const workspace = await getCurrentWorkspace();
+    if (!workspace) {
+      return NextResponse.json({ error: "No workspace found" }, { status: 400 });
+    }
+
+    const { searchParams } = new URL(request.url);
+    const clientId = searchParams.get("clientId");
+    const folder = searchParams.get("folder");
+
+    let conditions = [eq(files.workspace_id, workspace.id)];
+
+    if (clientId) {
+      conditions.push(eq(files.client_id, clientId));
+    }
+
+    if (folder) {
+      conditions.push(eq(files.folder, folder));
+    }
+
+    const fileList = await db.select()
+      .from(files)
+      .where(and(...conditions))
+      .orderBy(desc(files.created_at));
+
+    return NextResponse.json({
+      success: true,
+      files: fileList
+    });
+  } catch (error) {
+    console.error("Get files error:", error);
+    return NextResponse.json(
+      { error: "Failed to get files" },
+      { status: 500 }
+    );
+  }
+}

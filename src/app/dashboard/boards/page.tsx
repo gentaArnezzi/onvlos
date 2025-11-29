@@ -1,0 +1,32 @@
+import { getBoards } from "@/actions/boards";
+import { Button } from "@/components/ui/button";
+import { KanbanBoard } from "@/components/dashboard/boards/kanban-board";
+import { Plus } from "lucide-react";
+
+export default async function BoardsPage() {
+  const board = await getBoards();
+
+  return (
+    <div className="flex flex-col h-[calc(100vh-4rem)] p-6 space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between shrink-0">
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-orange-500 to-amber-500 bg-clip-text text-transparent">
+            {board.columns.length > 0 ? "Client Pipeline" : "Boards"}
+          </h2>
+          <p className="text-slate-500 dark:text-slate-400 mt-1">
+            Manage your tasks and project stages visually.
+          </p>
+        </div>
+        {/* <Button className="bg-orange-600 hover:bg-orange-700 text-white">
+            <Plus className="mr-2 h-4 w-4" /> New Board
+        </Button> */}
+      </div>
+
+      {/* Board Area */}
+      <div className="flex-1 overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 backdrop-blur-sm">
+        <KanbanBoard boardId={board.id} initialColumns={board.columns} />
+      </div>
+    </div>
+  );
+}
