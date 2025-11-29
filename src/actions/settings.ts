@@ -16,7 +16,15 @@ export async function getUserProfile() {
       where: eq(users.id, session.user.id)
     });
 
-    return user;
+    if (!user) return null;
+
+    // Map BetterAuth schema to our expected format
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      avatar_url: user.image || null,
+    };
   } catch (error) {
     console.error("Failed to get user profile:", error);
     return null;
@@ -33,11 +41,20 @@ export async function updateUserProfile(data: {
       return { success: false, error: "Not authenticated" };
     }
 
+    const updateData: any = {
+      updatedAt: new Date(),
+    };
+
+    if (data.name) {
+      updateData.name = data.name;
+    }
+
+    if (data.avatar_url !== undefined) {
+      updateData.image = data.avatar_url || null;
+    }
+
     await db.update(users)
-      .set({
-        ...(data.name && { name: data.name }),
-        ...(data.avatar_url !== undefined && { avatar_url: data.avatar_url }),
-      })
+      .set(updateData)
       .where(eq(users.id, session.user.id));
 
     revalidatePath("/dashboard/settings");

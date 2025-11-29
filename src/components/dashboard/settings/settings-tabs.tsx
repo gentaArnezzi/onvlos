@@ -12,6 +12,7 @@ import { Loader2, User, Building, CreditCard, Save } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { updateUserProfile, updateWorkspaceSettings } from "@/actions/settings";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface SettingsTabsProps {
   user: {
@@ -62,36 +63,58 @@ export function SettingsTabs({ user, workspace, billing }: SettingsTabsProps) {
   }, [user, workspace]);
 
   const handleSaveProfile = async () => {
+    if (!profileName.trim()) {
+      toast.error("Name is required");
+      return;
+    }
+
     setLoading(true);
-    const result = await updateUserProfile({
-      name: profileName,
-      avatar_url: profileAvatar || null,
-    });
-    setLoading(false);
-    
-    if (result.success) {
-      alert("Profile updated successfully!");
-      router.refresh();
-    } else {
-      alert(result.error || "Failed to update profile");
+    try {
+      const result = await updateUserProfile({
+        name: profileName.trim(),
+        avatar_url: profileAvatar.trim() || null,
+      });
+      
+      if (result.success) {
+        toast.success("Profile updated successfully!");
+        router.refresh();
+      } else {
+        toast.error(result.error || "Failed to update profile");
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      toast.error("An error occurred. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleSaveWorkspace = async () => {
+    if (!workspaceName.trim()) {
+      toast.error("Workspace name is required");
+      return;
+    }
+
     setLoading(true);
-    const result = await updateWorkspaceSettings({
-      name: workspaceName,
-      timezone: workspaceTimezone,
-      logo_url: workspaceLogo || null,
-      billing_email: billingEmail || null,
-    });
-    setLoading(false);
-    
-    if (result.success) {
-      alert("Workspace settings updated successfully!");
-      router.refresh();
-    } else {
-      alert(result.error || "Failed to update workspace settings");
+    try {
+      const result = await updateWorkspaceSettings({
+        name: workspaceName.trim(),
+        timezone: workspaceTimezone,
+        logo_url: workspaceLogo.trim() || null,
+        billing_email: billingEmail.trim() || null,
+      });
+      
+      if (result.success) {
+        toast.success("Workspace settings updated successfully!");
+        router.refresh();
+      } else {
+        toast.error(result.error || "Failed to update workspace settings");
+      }
+    } catch (error) {
+      console.error("Error updating workspace:", error);
+      toast.error("An error occurred. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 

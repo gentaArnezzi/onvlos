@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -36,6 +37,8 @@ import {
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
+import { SearchDialog } from "./navbar/search-dialog";
+import { NotificationsDropdown } from "./navbar/notifications-dropdown";
 
 const navItems = [
   {
@@ -96,6 +99,7 @@ interface NavbarProps {
 export function Navbar({ user }: NavbarProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const [searchOpen, setSearchOpen] = useState(false);
 
   const handleLogout = async () => {
     await authClient.signOut({
@@ -189,20 +193,14 @@ export function Navbar({ user }: NavbarProps) {
           <Button
             variant="ghost"
             size="icon"
+            onClick={() => setSearchOpen(true)}
             className="text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 rounded-lg"
           >
             <Search className="h-5 w-5" />
           </Button>
 
           {/* Notifications */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="relative text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 rounded-lg"
-          >
-            <Bell className="h-5 w-5" />
-            <span className="absolute top-2.5 right-2.5 h-2 w-2 rounded-full bg-pink-500 ring-2 ring-[#0B0E14]" />
-          </Button>
+          <NotificationsDropdown />
 
           {/* User Menu */}
           <DropdownMenu>
@@ -251,6 +249,9 @@ export function Navbar({ user }: NavbarProps) {
           </DropdownMenu>
         </div>
       </div>
+
+      {/* Search Dialog */}
+      <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
     </div>
   );
 }
