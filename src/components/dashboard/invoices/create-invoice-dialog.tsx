@@ -87,7 +87,7 @@ export function CreateInvoiceDialog({ clients }: CreateInvoiceDialogProps) {
           <Plus className="mr-2 h-4 w-4" /> Create Invoice
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[600px] bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
         <DialogHeader>
           <DialogTitle className="text-slate-900 dark:text-white">Create Invoice</DialogTitle>
           <DialogDescription className="text-slate-600 dark:text-slate-400">
@@ -162,7 +162,7 @@ export function CreateInvoiceDialog({ clients }: CreateInvoiceDialogProps) {
                                     value={item.name} 
                                     onChange={e => handleItemChange(index, 'name', e.target.value)}
                                     placeholder="Service name"
-                                    className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                                    className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
                                     required 
                                 />
                             </div>
@@ -173,7 +173,7 @@ export function CreateInvoiceDialog({ clients }: CreateInvoiceDialogProps) {
                                     value={item.quantity} 
                                     onChange={e => handleItemChange(index, 'quantity', e.target.value)}
                                     min="1"
-                                    className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                                    className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
                                     required 
                                 />
                             </div>
@@ -185,7 +185,7 @@ export function CreateInvoiceDialog({ clients }: CreateInvoiceDialogProps) {
                                     onChange={e => handleItemChange(index, 'unit_price', e.target.value)}
                                     min="0"
                                     step="0.01"
-                                    className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                                    className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
                                     required 
                                 />
                             </div>

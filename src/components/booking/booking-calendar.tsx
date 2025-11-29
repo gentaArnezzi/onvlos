@@ -166,10 +166,10 @@ export function BookingCalendar({ bookings: initialBookings }: BookingCalendarPr
       </Card>
 
       <Dialog open={!!selectedEvent} onOpenChange={(open) => !open && setSelectedEvent(null)}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
           <DialogHeader>
-            <DialogTitle>Booking Details</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-slate-900 dark:text-white">Booking Details</DialogTitle>
+            <DialogDescription className="text-slate-600 dark:text-slate-400">
               View and manage this booking appointment
             </DialogDescription>
           </DialogHeader>
@@ -177,43 +177,43 @@ export function BookingCalendar({ bookings: initialBookings }: BookingCalendarPr
           {selectedEvent && (
             <div className="space-y-4 py-4">
               <div className="flex items-start gap-3">
-                <CalendarIcon className="h-5 w-5 text-muted-foreground mt-0.5" />
+                <CalendarIcon className="h-5 w-5 text-slate-500 dark:text-slate-400 mt-0.5" />
                 <div className="space-y-1">
-                  <p className="font-medium">Date & Time</p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="font-medium text-slate-900 dark:text-white">Date & Time</p>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
                     {format(selectedEvent.start, "PPP")}
                   </p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
                     {format(selectedEvent.start, "p")} - {format(selectedEvent.end, "p")}
                   </p>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <Clock className="h-5 w-5 text-muted-foreground mt-0.5" />
+                <Clock className="h-5 w-5 text-slate-500 dark:text-slate-400 mt-0.5" />
                 <div className="space-y-1">
-                  <p className="font-medium">Duration</p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="font-medium text-slate-900 dark:text-white">Duration</p>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
                     {selectedEvent.resource.duration_minutes} minutes
                   </p>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <User className="h-5 w-5 text-muted-foreground mt-0.5" />
+                <User className="h-5 w-5 text-slate-500 dark:text-slate-400 mt-0.5" />
                 <div className="space-y-1">
-                  <p className="font-medium">Attendee</p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="font-medium text-slate-900 dark:text-white">Attendee</p>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
                     {selectedEvent.resource.booker_name}
                   </p>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <Mail className="h-5 w-5 text-muted-foreground mt-0.5" />
+                <Mail className="h-5 w-5 text-slate-500 dark:text-slate-400 mt-0.5" />
                 <div className="space-y-1">
-                  <p className="font-medium">Email</p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="font-medium text-slate-900 dark:text-white">Email</p>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
                     {selectedEvent.resource.booker_email}
                   </p>
                 </div>
@@ -221,10 +221,10 @@ export function BookingCalendar({ bookings: initialBookings }: BookingCalendarPr
 
               {selectedEvent.resource.location && (
                 <div className="flex items-start gap-3">
-                  <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
+                  <MapPin className="h-5 w-5 text-slate-500 dark:text-slate-400 mt-0.5" />
                   <div className="space-y-1">
-                    <p className="font-medium">Location</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="font-medium text-slate-900 dark:text-white">Location</p>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">
                       {selectedEvent.resource.location}
                     </p>
                   </div>
@@ -249,6 +249,7 @@ export function BookingCalendar({ bookings: initialBookings }: BookingCalendarPr
             <Button
               variant="outline"
               onClick={() => setSelectedEvent(null)}
+              className="border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800"
             >
               Close
             </Button>

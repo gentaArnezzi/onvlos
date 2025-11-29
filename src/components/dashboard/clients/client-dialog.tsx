@@ -43,36 +43,59 @@ export function ClientDialog() {
           <Plus className="mr-2 h-4 w-4" /> Add Client
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
         <DialogHeader>
-          <DialogTitle>Add Client</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-slate-900 dark:text-white">Add Client</DialogTitle>
+          <DialogDescription className="text-slate-600 dark:text-slate-400">
             Add a new client to your workspace.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-right">
+              <Label htmlFor="name" className="text-right text-slate-900 dark:text-white">
                 Name
               </Label>
-              <Input id="name" name="name" placeholder="John Doe" className="col-span-3" required />
+              <Input 
+                id="name" 
+                name="name" 
+                placeholder="John Doe" 
+                className="col-span-3 bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400" 
+                required 
+              />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="email" className="text-right">
+              <Label htmlFor="email" className="text-right text-slate-900 dark:text-white">
                 Email
               </Label>
-              <Input id="email" name="email" type="email" placeholder="john@example.com" className="col-span-3" required />
+              <Input 
+                id="email" 
+                name="email" 
+                type="email" 
+                placeholder="john@example.com" 
+                className="col-span-3 bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400" 
+                required 
+              />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="company_name" className="text-right">
+              <Label htmlFor="company_name" className="text-right text-slate-900 dark:text-white">
                 Company
               </Label>
-              <Input id="company_name" name="company_name" placeholder="Acme Inc." className="col-span-3" required />
+              <Input 
+                id="company_name" 
+                name="company_name" 
+                placeholder="Acme Inc." 
+                className="col-span-3 bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400" 
+                required 
+              />
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" disabled={loading}>
+            <Button 
+              type="submit" 
+              disabled={loading}
+              className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white"
+            >
                 {loading ? "Saving..." : "Save changes"}
             </Button>
           </DialogFooter>

@@ -43,21 +43,27 @@ export function CreateWorkflowDialog() {
           <Plus className="mr-2 h-4 w-4" /> New Workflow
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
         <DialogHeader>
-          <DialogTitle>Create Automation</DialogTitle>
+          <DialogTitle className="text-slate-900 dark:text-white">Create Automation</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="space-y-2">
-              <Label>Name</Label>
-              <Input value={name} onChange={e => setName(e.target.value)} required placeholder="Invoice Follow-up" />
+              <Label className="text-slate-900 dark:text-white">Name</Label>
+              <Input 
+                value={name} 
+                onChange={e => setName(e.target.value)} 
+                required 
+                placeholder="Invoice Follow-up"
+                className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
+              />
             </div>
             
             <div className="space-y-2">
-               <Label>Trigger</Label>
+               <Label className="text-slate-900 dark:text-white">Trigger</Label>
                <Select value={trigger} onValueChange={setTrigger}>
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
                         <SelectValue placeholder="Select a trigger" />
                     </SelectTrigger>
                     <SelectContent>
@@ -70,12 +76,21 @@ export function CreateWorkflowDialog() {
             </div>
 
              <div className="space-y-2">
-              <Label>Description</Label>
-              <Textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Sends a thank you email..." />
+              <Label className="text-slate-900 dark:text-white">Description</Label>
+              <Textarea 
+                value={description} 
+                onChange={e => setDescription(e.target.value)} 
+                placeholder="Sends a thank you email..."
+                className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
+              />
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" disabled={loading}>
+            <Button 
+              type="submit" 
+              disabled={loading}
+              className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white"
+            >
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Create
             </Button>

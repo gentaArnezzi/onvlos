@@ -187,7 +187,7 @@ function AddCardButton({ columnId, onCardAdded }: { columnId: string; onCardAdde
                     <Plus className="mr-2 h-4 w-4" /> Add Card
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[425px] bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
                 <DialogHeader>
                     <DialogTitle className="text-slate-900 dark:text-white">Add New Card</DialogTitle>
                     <DialogDescription className="text-slate-600 dark:text-slate-400">

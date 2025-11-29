@@ -191,47 +191,50 @@ export function ClientsTable({ clients: initialClients }: { clients: Client[] })
 
       {/* Edit Dialog */}
       <Dialog open={!!editingClient} onOpenChange={(open) => !open && setEditingClient(null)}>
-        <DialogContent>
+        <DialogContent className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
           <DialogHeader>
-            <DialogTitle>Edit Client</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-slate-900 dark:text-white">Edit Client</DialogTitle>
+            <DialogDescription className="text-slate-600 dark:text-slate-400">
               Update the client's information below.
             </DialogDescription>
           </DialogHeader>
           {editingClient && (
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
-                <Label htmlFor="name">Contact Name</Label>
+                <Label htmlFor="name" className="text-slate-900 dark:text-white">Contact Name</Label>
                 <Input
                   id="name"
                   value={editingClient.name}
                   onChange={(e) => setEditingClient({ ...editingClient, name: e.target.value })}
+                  className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="company">Company Name</Label>
+                <Label htmlFor="company" className="text-slate-900 dark:text-white">Company Name</Label>
                 <Input
                   id="company"
                   value={editingClient.company_name || ''}
                   onChange={(e) => setEditingClient({ ...editingClient, company_name: e.target.value })}
+                  className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email" className="text-slate-900 dark:text-white">Email</Label>
                 <Input
                   id="email"
                   type="email"
                   value={editingClient.email || ''}
                   onChange={(e) => setEditingClient({ ...editingClient, email: e.target.value })}
+                  className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="status">Status</Label>
+                <Label htmlFor="status" className="text-slate-900 dark:text-white">Status</Label>
                 <Select
                   value={editingClient.status || 'pending'}
                   onValueChange={(value) => setEditingClient({ ...editingClient, status: value })}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -244,10 +247,18 @@ export function ClientsTable({ clients: initialClients }: { clients: Client[] })
             </div>
           )}
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEditingClient(null)}>
+            <Button 
+              variant="outline" 
+              onClick={() => setEditingClient(null)}
+              className="border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800"
+            >
               Cancel
             </Button>
-            <Button onClick={handleUpdate} disabled={loading}>
+            <Button 
+              onClick={handleUpdate} 
+              disabled={loading}
+              className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white"
+            >
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -263,16 +274,20 @@ export function ClientsTable({ clients: initialClients }: { clients: Client[] })
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={!!deletingClientId} onOpenChange={(open) => !open && setDeletingClientId(null)}>
-        <DialogContent>
+        <DialogContent className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
           <DialogHeader>
-            <DialogTitle>Delete Client</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-slate-900 dark:text-white">Delete Client</DialogTitle>
+            <DialogDescription className="text-slate-600 dark:text-slate-400">
               Are you sure you want to delete this client? This action cannot be undone.
               All related data (portal, conversations, files) will be permanently deleted.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDeletingClientId(null)}>
+            <Button 
+              variant="outline" 
+              onClick={() => setDeletingClientId(null)}
+              className="border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800"
+            >
               Cancel
             </Button>
             <Button

@@ -58,21 +58,27 @@ export function CreateTaskDialog({ clients }: CreateTaskDialogProps) {
           <Plus className="mr-2 h-4 w-4" /> New Task
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
         <DialogHeader>
-          <DialogTitle>Create Task</DialogTitle>
+          <DialogTitle className="text-slate-900 dark:text-white">Create Task</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="space-y-2">
-              <Label>Title</Label>
-              <Input value={title} onChange={e => setTitle(e.target.value)} required placeholder="Review deliverables" />
+              <Label className="text-slate-900 dark:text-white">Title</Label>
+              <Input 
+                value={title} 
+                onChange={e => setTitle(e.target.value)} 
+                required 
+                placeholder="Review deliverables"
+                className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
+              />
             </div>
 
             <div className="space-y-2">
-              <Label>Client</Label>
+              <Label className="text-slate-900 dark:text-white">Client</Label>
               <Select value={clientId} onValueChange={setClientId} required>
-                <SelectTrigger>
+                <SelectTrigger className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
                   <SelectValue placeholder="Select client" />
                 </SelectTrigger>
                 <SelectContent>
@@ -87,9 +93,9 @@ export function CreateTaskDialog({ clients }: CreateTaskDialogProps) {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Priority</Label>
+                <Label className="text-slate-900 dark:text-white">Priority</Label>
                 <Select value={priority} onValueChange={setPriority}>
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -100,18 +106,32 @@ export function CreateTaskDialog({ clients }: CreateTaskDialogProps) {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>Due Date</Label>
-                <Input type="date" value={dueDate} onChange={e => setDueDate(e.target.value)} />
+                <Label className="text-slate-900 dark:text-white">Due Date</Label>
+                <Input 
+                  type="date" 
+                  value={dueDate} 
+                  onChange={e => setDueDate(e.target.value)}
+                  className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                />
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label>Description</Label>
-              <Textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Task details..." />
+              <Label className="text-slate-900 dark:text-white">Description</Label>
+              <Textarea 
+                value={description} 
+                onChange={e => setDescription(e.target.value)} 
+                placeholder="Task details..."
+                className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
+              />
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" disabled={loading}>
+            <Button 
+              type="submit" 
+              disabled={loading}
+              className="bg-violet-600 hover:bg-violet-700 text-white"
+            >
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Create Task
             </Button>
