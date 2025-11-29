@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -35,6 +35,7 @@ import {
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Input } from "@/components/ui/input";
+import { authClient } from "@/lib/auth-client";
 
 const navItems = [
   {
@@ -94,6 +95,17 @@ interface NavbarProps {
 
 export function Navbar({ user }: NavbarProps) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/login");
+        },
+      },
+    });
+  };
   const userName = user?.name || "User";
   const userInitials = userName.split(" ").map((n) => n[0]).join("").substring(0, 2).toUpperCase();
 
@@ -221,10 +233,6 @@ export function Navbar({ user }: NavbarProps) {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator className="bg-slate-800" />
-              <DropdownMenuItem className="focus:bg-slate-800 focus:text-white cursor-pointer">
-                <Users className="mr-2 h-4 w-4" />
-                <span>Profile</span>
-              </DropdownMenuItem>
               <DropdownMenuItem className="focus:bg-slate-800 focus:text-white cursor-pointer" asChild>
                 <Link href="/dashboard/settings">
                   <Settings className="mr-2 h-4 w-4" />
@@ -232,7 +240,10 @@ export function Navbar({ user }: NavbarProps) {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator className="bg-slate-800" />
-              <DropdownMenuItem className="text-red-400 focus:bg-red-950/30 focus:text-red-300 cursor-pointer">
+              <DropdownMenuItem 
+                className="text-red-400 focus:bg-red-950/30 focus:text-red-300 cursor-pointer"
+                onClick={handleLogout}
+              >
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>Log out</span>
               </DropdownMenuItem>
