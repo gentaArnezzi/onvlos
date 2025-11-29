@@ -17,6 +17,7 @@ import {
 import {
   restrictToWindowEdges,
   restrictToParentElement,
+  snapCenterToCursor,
 } from "@dnd-kit/modifiers";
 import {
   arrayMove,
@@ -320,15 +321,18 @@ export function KanbanBoard({ boardId, initialColumns }: KanbanBoardProps) {
             }
             
             // Calculate offset from cursor to card top-left for accurate positioning
-            // We'll adjust this in modifier to account for DragOverlay's center positioning
             if (event.activatorEvent instanceof MouseEvent) {
                 const rect = active.rect.current.initial;
                 if (rect) {
-                    // Calculate offset from cursor to top-left of card
+                    const clickX = event.activatorEvent.clientX;
+                    const clickY = event.activatorEvent.clientY;
+                    
+                    // Calculate offset from top-left corner of card to click position
+                    // rect.left and rect.top are relative to viewport
                     // This is the exact point where user clicked/grab the card
                     dragOffsetRef.current = {
-                        x: event.activatorEvent.clientX - rect.left,
-                        y: event.activatorEvent.clientY - rect.top
+                        x: clickX - rect.left,
+                        y: clickY - rect.top
                     };
                     // Store card dimensions for use in modifier
                     cardDimensionsRef.current = {
@@ -336,22 +340,8 @@ export function KanbanBoard({ boardId, initialColumns }: KanbanBoardProps) {
                         height: rect.height
                     };
                 } else {
-                    // Fallback: try to find element by ID
-                    const activeElement = document.querySelector(`[data-id="${active.id}"]`) as HTMLElement;
-                    if (activeElement) {
-                        const elementRect = activeElement.getBoundingClientRect();
-                        dragOffsetRef.current = {
-                            x: event.activatorEvent.clientX - elementRect.left,
-                            y: event.activatorEvent.clientY - elementRect.top
-                        };
-                        cardDimensionsRef.current = {
-                            width: elementRect.width,
-                            height: elementRect.height
-                        };
-                    } else {
-                        dragOffsetRef.current = { x: 0, y: 0 };
-                        cardDimensionsRef.current = null;
-                    }
+                    dragOffsetRef.current = { x: 0, y: 0 };
+                    cardDimensionsRef.current = null;
                 }
             } else {
                 dragOffsetRef.current = { x: 0, y: 0 };
@@ -612,33 +602,22 @@ export function KanbanBoard({ boardId, initialColumns }: KanbanBoardProps) {
                 modifiers={(() => {
                     const offset = dragOffsetRef.current;
                     const dims = cardDimensionsRef.current;
-                    if (!offset || !dims) return [restrictToWindowEdges];
+                    if (!offset || !dims) return [snapCenterToCursor, restrictToWindowEdges];
                     
                     return [
+                        snapCenterToCursor,
                         ({ transform }) => {
-                            // dragOffsetRef.current contains offset from cursor to top-left of card
-                            // DragOverlay positions by center, so we need to adjust:
-                            // If cursor is at grab point (offsetX, offsetY from top-left),
-                            // and DragOverlay centers at cursor, we need to shift by:
-                            // (offsetX - width/2, offsetY - height/2)
+                            // snapCenterToCursor centers the card at cursor
+                            // Now we need to shift so the grab point (where user clicked) stays under the cursor
+                            // offset.x and offset.y = distance from top-left of card to grab point
+                            
                             const width = dims.width;
                             const height = dims.height;
+                            
+                            // After snapCenterToCursor, card is centered at cursor
+                            // To move grab point to cursor, shift by: (offset.x - width/2, offset.y - height/2)
                             const offsetX = offset.x - (width / 2);
                             const offsetY = offset.y - (height / 2);
-                            
-                            // Debug logging (remove in production)
-                            if (process.env.NODE_ENV === 'development') {
-                                console.log('[DragOverlay Modifier]', {
-                                    grabOffset: offset,
-                                    dimensions: { width, height },
-                                    calculatedOffset: { offsetX, offsetY },
-                                    originalTransform: transform,
-                                    newTransform: {
-                                        x: transform.x + offsetX,
-                                        y: transform.y + offsetY,
-                                    }
-                                });
-                            }
                             
                             return {
                                 ...transform,
