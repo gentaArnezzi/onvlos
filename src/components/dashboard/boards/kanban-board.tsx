@@ -11,7 +11,13 @@ import {
   DragStartEvent,
   DragOverEvent,
   DragEndEvent,
+  defaultDropAnimationSideEffects,
+  DropAnimation,
 } from "@dnd-kit/core";
+import {
+  restrictToWindowEdges,
+  restrictToParentElement,
+} from "@dnd-kit/modifiers";
 import {
   arrayMove,
   SortableContext,
@@ -20,7 +26,7 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { useState } from "react";
+import { useState, useMemo, useCallback, useRef, memo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus, Loader2 } from "lucide-react";
@@ -105,7 +111,7 @@ function SortableCard({ card }: { card: BoardCard }) {
     );
 }
 
-function Column({ column, onCardAdded }: { column: BoardColumn; onCardAdded?: () => void }) {
+const Column = memo(function Column({ column, onCardAdded }: { column: BoardColumn; onCardAdded?: (card: BoardCard) => void }) {
     const { setNodeRef } = useSortable({
         id: column.id,
         data: { type: "Column", column },
@@ -148,14 +154,13 @@ function Column({ column, onCardAdded }: { column: BoardColumn; onCardAdded?: ()
             </div>
         </div>
     );
-}
+});
 
-function AddCardButton({ columnId, onCardAdded }: { columnId: string; onCardAdded?: () => void }) {
+function AddCardButton({ columnId, onCardAdded }: { columnId: string; onCardAdded?: (card: BoardCard) => void }) {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -165,14 +170,19 @@ function AddCardButton({ columnId, onCardAdded }: { columnId: string; onCardAdde
         const result = await createCard(columnId, title.trim(), description.trim() || null);
         setLoading(false);
 
-        if (result.success) {
+        if (result.success && result.card) {
             setOpen(false);
             setTitle("");
             setDescription("");
+            // Pass the new card to parent for optimistic update
             if (onCardAdded) {
-                onCardAdded();
-            } else {
-                router.refresh();
+                onCardAdded({
+                    id: result.card.id,
+                    title: result.card.title,
+                    description: result.card.description,
+                    column_id: result.card.column_id,
+                    order: result.card.order
+                });
             }
         }
     };
@@ -260,11 +270,22 @@ function AddCardButton({ columnId, onCardAdded }: { columnId: string; onCardAdde
 export function KanbanBoard({ boardId, initialColumns }: KanbanBoardProps) {
     const [columns, setColumns] = useState(initialColumns);
     const [activeCard, setActiveCard] = useState<BoardCard | null>(null);
-    const router = useRouter();
+    const [dragStartState, setDragStartState] = useState<{ cardId: string; columnId: string; index: number } | null>(null);
+    const dragOverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const lastDragOverState = useRef<{ activeId: string; overId: string } | null>(null);
+    const dragOffsetRef = useRef<{ x: number; y: number } | null>(null);
+    const cardDimensionsRef = useRef<{ width: number; height: number } | null>(null);
 
-    const handleCardAdded = () => {
-        router.refresh();
-    };
+    const handleCardAdded = useCallback((newCard: BoardCard) => {
+        // Optimistic update: add card to the column immediately
+        setColumns(prevColumns => 
+            prevColumns.map(col => 
+                col.id === newCard.column_id
+                    ? { ...col, cards: [...col.cards, newCard] }
+                    : col
+            )
+        );
+    }, []);
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -277,32 +298,99 @@ export function KanbanBoard({ boardId, initialColumns }: KanbanBoardProps) {
         })
     );
 
-    const findColumn = (cardId: string) => {
+    // Memoize findColumn to avoid recalculating on every render
+    const findColumn = useCallback((cardId: string) => {
         return columns.find(col => col.cards.some(c => c.id === cardId));
-    };
+    }, [columns]);
 
-    const handleDragStart = (event: DragStartEvent) => {
+    const handleDragStart = useCallback((event: DragStartEvent) => {
         const { active } = event;
         const card = active.data.current?.card as BoardCard;
         if (card) {
             setActiveCard(card);
+            // Store original position before drag starts
+            const originalColumn = columns.find(col => col.cards.some(c => c.id === card.id));
+            if (originalColumn) {
+                const originalIndex = originalColumn.cards.findIndex(c => c.id === card.id);
+                setDragStartState({
+                    cardId: card.id,
+                    columnId: originalColumn.id,
+                    index: originalIndex
+                });
+            }
+            
+            // Calculate offset from cursor to card top-left for accurate positioning
+            // We'll adjust this in modifier to account for DragOverlay's center positioning
+            if (event.activatorEvent instanceof MouseEvent) {
+                const rect = active.rect.current.initial;
+                if (rect) {
+                    // Calculate offset from cursor to top-left of card
+                    // This is the exact point where user clicked/grab the card
+                    dragOffsetRef.current = {
+                        x: event.activatorEvent.clientX - rect.left,
+                        y: event.activatorEvent.clientY - rect.top
+                    };
+                    // Store card dimensions for use in modifier
+                    cardDimensionsRef.current = {
+                        width: rect.width,
+                        height: rect.height
+                    };
+                } else {
+                    // Fallback: try to find element by ID
+                    const activeElement = document.querySelector(`[data-id="${active.id}"]`) as HTMLElement;
+                    if (activeElement) {
+                        const elementRect = activeElement.getBoundingClientRect();
+                        dragOffsetRef.current = {
+                            x: event.activatorEvent.clientX - elementRect.left,
+                            y: event.activatorEvent.clientY - elementRect.top
+                        };
+                        cardDimensionsRef.current = {
+                            width: elementRect.width,
+                            height: elementRect.height
+                        };
+                    } else {
+                        dragOffsetRef.current = { x: 0, y: 0 };
+                        cardDimensionsRef.current = null;
+                    }
+                }
+            } else {
+                dragOffsetRef.current = { x: 0, y: 0 };
+                cardDimensionsRef.current = null;
+            }
         }
-    };
+    }, [columns]);
 
-    const handleDragOver = (event: DragOverEvent) => {
+    const handleDragOver = useCallback((event: DragOverEvent) => {
         const { active, over } = event;
         if (!over) return;
 
-        const activeId = active.id;
-        const overId = over.id;
+        const activeId = active.id as string;
+        const overId = over.id as string;
 
         if (activeId === overId) return;
 
-        const activeColumn = findColumn(activeId as string);
-        const overColumn = findColumn(overId as string) || columns.find(col => col.id === overId);
+        // Throttle updates - only update if state actually changed
+        const currentState = { activeId, overId };
+        if (lastDragOverState.current && 
+            lastDragOverState.current.activeId === currentState.activeId &&
+            lastDragOverState.current.overId === currentState.overId) {
+            return; // Skip if same state
+        }
+        lastDragOverState.current = currentState;
+
+        // Clear any pending timeout
+        if (dragOverTimeoutRef.current) {
+            clearTimeout(dragOverTimeoutRef.current);
+        }
+
+        // Throttle the actual state update
+        dragOverTimeoutRef.current = setTimeout(() => {
+            const activeColumn = findColumn(activeId);
+            const overColumn = findColumn(overId) || columns.find(col => col.id === overId);
 
         if (!activeColumn || !overColumn) return;
 
+            // Only update for cross-column moves (same-column reorder is handled in handleDragEnd)
         if (activeColumn.id !== overColumn.id) {
             setColumns(prev => {
                 const activeItems = activeColumn.cards;
@@ -310,11 +398,13 @@ export function KanbanBoard({ boardId, initialColumns }: KanbanBoardProps) {
                 const activeIndex = activeItems.findIndex(i => i.id === activeId);
                 const overIndex = overItems.findIndex(i => i.id === overId);
 
-                let newIndex;
+                    if (activeIndex === -1) return prev; // Card not found
+
+                    let newIndex: number;
                 if (overItems.some(i => i.id === overId)) {
-                    newIndex = overIndex >= 0 ? overIndex + (active.rect.current.translated && active.rect.current.translated.top > over.rect.top + over.rect.height ? 1 : 0) : overItems.length + 1;
+                        newIndex = overIndex >= 0 ? overIndex : overItems.length;
                 } else {
-                    newIndex = overItems.length + 1;
+                        newIndex = overItems.length;
                 }
 
                 return prev.map(col => {
@@ -335,54 +425,158 @@ export function KanbanBoard({ boardId, initialColumns }: KanbanBoardProps) {
                 });
             });
         }
-    };
+        }, 16); // ~60fps throttle
+    }, [columns, findColumn]);
 
-    const handleDragEnd = async (event: DragEndEvent) => {
+    const handleDragEnd = useCallback(async (event: DragEndEvent) => {
         const { active, over } = event;
         setActiveCard(null);
+        dragOffsetRef.current = null;
+        cardDimensionsRef.current = null;
+        
+        // Clear drag over timeout
+        if (dragOverTimeoutRef.current) {
+            clearTimeout(dragOverTimeoutRef.current);
+            dragOverTimeoutRef.current = null;
+        }
+        lastDragOverState.current = null;
 
-        if (!over) return;
+        if (!over || !dragStartState) {
+            setDragStartState(null);
+            return;
+        }
 
         const activeId = active.id as string;
         const overId = over.id as string;
+        const originalColumnId = dragStartState.columnId;
+        const originalIndex = dragStartState.index;
 
-        const activeColumn = findColumn(activeId);
-        const overColumn = findColumn(overId) || columns.find(col => col.id === overId); // If dropped on empty column container
+        // Find target column
+        const overColumn = columns.find(col => col.cards.some(c => c.id === overId)) || 
+                          columns.find(col => col.id === overId);
 
-        if (!activeColumn || !overColumn) return;
+        if (!overColumn) {
+            console.error("[handleDragEnd] Could not find target column");
+            setDragStartState(null);
+            return;
+        }
+
+        const isSameColumn = originalColumnId === overColumn.id;
+
+        // Calculate final index
+        let finalIndex: number;
+        const overCardIndex = overColumn.cards.findIndex(c => c.id === overId);
         
-        const activeIndex = activeColumn.cards.findIndex(c => c.id === activeId);
-        const overIndex = overColumn.cards.findIndex(c => c.id === overId);
+        if (overCardIndex >= 0) {
+            // Dropped on a card
+            finalIndex = overCardIndex;
+        } else {
+            // Dropped on empty column area
+            if (isSameColumn) {
+                // Same column - append to end
+                finalIndex = overColumn.cards.filter(c => c.id !== activeId).length;
+            } else {
+                // Cross column - append to end (excluding the card if already there from handleDragOver)
+                const cardsInTarget = overColumn.cards.filter(c => c.id !== activeId);
+                finalIndex = cardsInTarget.length;
+            }
+        }
+
+        // Check if position actually changed
+        const isSamePosition = isSameColumn && originalIndex === finalIndex;
         
-        // Only trigger server update if changed
-        if (activeColumn.id !== overColumn.id || activeIndex !== overIndex) {
-             // Optimistic update already handled in DragOver/DragEnd for local state logic if same column
-             // But for simplicity in this complex hook setup, let's finalize the local state here for same-column reorder
-             
-             if (activeColumn.id === overColumn.id) {
-                 const newIndex = overIndex;
-                 const newCards = arrayMove(activeColumn.cards, activeIndex, newIndex);
-                 
-                 setColumns(prev => prev.map(col => 
-                     col.id === activeColumn.id ? { ...col, cards: newCards } : col
-                 ));
-                 
-                 // Server Action
-                 await moveCard(activeId, activeColumn.id, newIndex);
+        console.log(`[handleDragEnd] Position check:`, {
+            isSameColumn,
+            originalIndex,
+            finalIndex,
+            isSamePosition,
+            originalColumnId,
+            overColumnId: overColumn.id
+        });
+
+        if (isSamePosition) {
+            console.log("[handleDragEnd] No position change, skipping");
+            setDragStartState(null);
+            return;
+        }
+
+        const finalColumnId = overColumn.id;
+
+        // Update local state using functional update to get latest state
+        setColumns(prevColumns => {
+            const originalColumn = prevColumns.find(col => col.id === originalColumnId);
+            if (!originalColumn) {
+                console.error("[handleDragEnd] Original column not found");
+                return prevColumns;
+            }
+
+            // Get the card from original position (before any dragOver changes)
+            // For cross-column moves, card might already be in target column from handleDragOver
+            // So we need to find it in the original column first
+            let cardToMove: BoardCard | undefined;
+            if (isSameColumn) {
+                // Same column - card should still be in original column
+                cardToMove = originalColumn.cards[originalIndex];
+            } else {
+                // Cross column - card might be in target column from handleDragOver
+                // Try to find it in original column first
+                cardToMove = originalColumn.cards.find(c => c.id === activeId);
+                // If not found, it might have been moved by handleDragOver, get from activeCard
+                if (!cardToMove && activeCard) {
+                    cardToMove = activeCard;
+                }
+            }
+
+            if (!cardToMove) {
+                console.error("[handleDragEnd] Card to move not found");
+                return prevColumns;
+            }
+
+            if (isSameColumn) {
+                // Same column reorder
+                const newCards = arrayMove(originalColumn.cards, originalIndex, finalIndex);
+                return prevColumns.map(col => 
+                    col.id === originalColumnId ? { ...col, cards: newCards } : col
+                );
              } else {
                  // Cross column move
-                 // State was technically updated in DragOver, we just need to find the final index in the new column
-                 // Wait, `columns` state is fresh from DragOver.
-                 // We just need to persist the new state.
-                 
-                 const finalColumn = columns.find(c => c.id === overColumn.id);
-                 if (finalColumn) {
-                     const finalIndex = finalColumn.cards.findIndex(c => c.id === activeId);
-                     await moveCard(activeId, overColumn.id, finalIndex);
-                 }
-             }
-        }
-    };
+                return prevColumns.map(col => {
+                    if (col.id === originalColumnId) {
+                        // Remove from source
+                        return { ...col, cards: col.cards.filter(c => c.id !== activeId) };
+                    }
+                    if (col.id === overColumn.id) {
+                        // Add to target - remove card first if it exists (from handleDragOver)
+                        const cardsWithoutMoved = col.cards.filter(c => c.id !== activeId);
+                        const newCards = [...cardsWithoutMoved];
+                        newCards.splice(finalIndex, 0, cardToMove);
+                        return { ...col, cards: newCards };
+                    }
+                    return col;
+                });
+            }
+        });
+
+        // Save to database asynchronously (non-blocking)
+        // UI is already updated optimistically, so we can save in background
+        moveCard(activeId, finalColumnId, finalIndex)
+            .then(result => {
+                if (!result.success) {
+                    console.error("[handleDragEnd] Failed to save:", result.error);
+                    // Only reload on critical errors
+                    if (result.error?.includes("not found") || result.error?.includes("constraint")) {
+                        window.location.reload();
+                    }
+                }
+            })
+            .catch(error => {
+                console.error("[handleDragEnd] Exception saving:", error);
+                // Don't reload on network errors - optimistic update is already shown
+            })
+            .finally(() => {
+                setDragStartState(null);
+            });
+    }, [columns, dragStartState, findColumn]);
 
     return (
         <DndContext
@@ -393,14 +587,77 @@ export function KanbanBoard({ boardId, initialColumns }: KanbanBoardProps) {
             onDragEnd={handleDragEnd}
         >
             <div className="flex h-full space-x-4 overflow-x-auto overflow-y-hidden pb-2 min-w-full scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600 scrollbar-track-transparent">
-                {columns.map((column) => (
+                {useMemo(() => 
+                    columns.map((column) => (
                     <Column key={column.id} column={column} onCardAdded={handleCardAdded} />
-                ))}
+                    )), [columns, handleCardAdded])}
             </div>
             
-            <DragOverlay>
+            <DragOverlay
+                dropAnimation={{
+                    duration: 200,
+                    easing: 'ease-out',
+                    sideEffects: defaultDropAnimationSideEffects({
+                        styles: {
+                            active: {
+                                opacity: '0.5',
+                            },
+                        },
+                    }),
+                }}
+                style={{
+                    cursor: 'grabbing',
+                    pointerEvents: 'none',
+                }}
+                modifiers={(() => {
+                    const offset = dragOffsetRef.current;
+                    const dims = cardDimensionsRef.current;
+                    if (!offset || !dims) return [restrictToWindowEdges];
+                    
+                    return [
+                        ({ transform }) => {
+                            // dragOffsetRef.current contains offset from cursor to top-left of card
+                            // DragOverlay positions by center, so we need to adjust:
+                            // If cursor is at grab point (offsetX, offsetY from top-left),
+                            // and DragOverlay centers at cursor, we need to shift by:
+                            // (offsetX - width/2, offsetY - height/2)
+                            const width = dims.width;
+                            const height = dims.height;
+                            const offsetX = offset.x - (width / 2);
+                            const offsetY = offset.y - (height / 2);
+                            
+                            // Debug logging (remove in production)
+                            if (process.env.NODE_ENV === 'development') {
+                                console.log('[DragOverlay Modifier]', {
+                                    grabOffset: offset,
+                                    dimensions: { width, height },
+                                    calculatedOffset: { offsetX, offsetY },
+                                    originalTransform: transform,
+                                    newTransform: {
+                                        x: transform.x + offsetX,
+                                        y: transform.y + offsetY,
+                                    }
+                                });
+                            }
+                            
+                            return {
+                                ...transform,
+                                x: transform.x + offsetX,
+                                y: transform.y + offsetY,
+                            };
+                        },
+                        restrictToWindowEdges,
+                    ];
+                })()}
+            >
                 {activeCard ? (
-                    <div className="rotate-2 opacity-90">
+                    <div 
+                        className="rotate-2 opacity-90"
+                        style={{
+                            transformOrigin: 'center center',
+                            willChange: 'transform',
+                        }}
+                    >
                         <SortableCard card={activeCard} />
                     </div>
                 ) : null}

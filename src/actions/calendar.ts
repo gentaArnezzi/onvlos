@@ -2,15 +2,18 @@
 
 import { db } from "@/lib/db";
 import { calendar_events } from "@/lib/db/schema";
-import { desc } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { getOrCreateWorkspace } from "@/actions/workspace";
 
 export async function getEvents() {
     try {
-        // Mock workspace
-        const workspaceId = "00000000-0000-0000-0000-000000000000"; 
+        const workspace = await getOrCreateWorkspace();
+        const workspaceId = workspace.id;
         
-        const events = await db.select().from(calendar_events)
+        const events = await db.select()
+            .from(calendar_events)
+            .where(eq(calendar_events.workspace_id, workspaceId))
             .orderBy(desc(calendar_events.start_time));
         
         return events;
@@ -28,7 +31,8 @@ export async function createEvent(data: {
     location?: string;
 }) {
     try {
-         const workspaceId = "00000000-0000-0000-0000-000000000000"; 
+        const workspace = await getOrCreateWorkspace();
+        const workspaceId = workspace.id; 
          
          await db.insert(calendar_events).values({
              workspace_id: workspaceId,

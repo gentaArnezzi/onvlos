@@ -4,9 +4,8 @@ import { db } from "@/lib/db";
 import { conversations, messages, client_spaces, users } from "@/lib/db/schema";
 import { eq, asc, desc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-
-// Mock user for MVP if auth not fully passed
-const MOCK_USER_ID = "00000000-0000-0000-0000-000000000000"; 
+import { getOrCreateWorkspace } from "@/actions/workspace";
+import { getSession } from "@/lib/get-session";
 
 export async function getConversation(clientSpaceId: string) {
     try {
@@ -16,9 +15,9 @@ export async function getConversation(clientSpaceId: string) {
 
         if (!conversation) {
              // Auto-create conversation if it doesn't exist
-             const workspaceId = "00000000-0000-0000-0000-000000000000"; // Mock
+             const workspace = await getOrCreateWorkspace();
              const [newConv] = await db.insert(conversations).values({
-                 workspace_id: workspaceId,
+                 workspace_id: workspace.id,
                  client_space_id: clientSpaceId,
                  title: "General Chat"
              }).returning();
@@ -44,11 +43,19 @@ export async function getConversation(clientSpaceId: string) {
     }
 }
 
-export async function sendMessage(conversationId: string, content: string, userId: string = MOCK_USER_ID) {
+export async function sendMessage(conversationId: string, content: string, userId?: string) {
     try {
+        // Get user ID from session if not provided
+        let messageUserId = userId;
+        if (!messageUserId) {
+            const session = await getSession();
+            if (!session) throw new Error("Not authenticated");
+            messageUserId = session.user.id;
+        }
+        
         await db.insert(messages).values({
             conversation_id: conversationId,
-            user_id: userId,
+            user_id: messageUserId,
             content: content
         });
         

@@ -1,22 +1,15 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { workflows, workflow_executions, workspaces } from "@/lib/db/schema";
+import { workflows, workflow_executions } from "@/lib/db/schema";
 import { eq, and, desc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { getSession } from "@/lib/get-session";
+import { getOrCreateWorkspace } from "@/actions/workspace";
 
 export async function getWorkflows() {
     try {
-        const session = await getSession();
-        if (!session) return [];
-
-        const workspace = await db.query.workspaces.findFirst({
-            where: eq(workspaces.created_by_user_id, session.user.id)
-        });
-
-        if (!workspace) return [];
-
+        const workspace = await getOrCreateWorkspace();
         const data = await db.query.workflows.findMany({
             where: eq(workflows.workspace_id, workspace.id),
             orderBy: [desc(workflows.created_at)]
@@ -34,9 +27,7 @@ export async function getWorkflow(id: string) {
         const session = await getSession();
         if (!session) throw new Error("Not authenticated");
 
-        const workspace = await db.query.workspaces.findFirst({
-            where: eq(workspaces.created_by_user_id, session.user.id)
-        });
+        const workspace = await getOrCreateWorkspace();
 
         if (!workspace) throw new Error("No workspace found");
 
@@ -71,9 +62,7 @@ export async function createWorkflow(data: {
         const session = await getSession();
         if (!session) throw new Error("Not authenticated");
 
-        const workspace = await db.query.workspaces.findFirst({
-            where: eq(workspaces.created_by_user_id, session.user.id)
-        });
+        const workspace = await getOrCreateWorkspace();
 
         if (!workspace) throw new Error("No workspace found");
 
@@ -106,9 +95,7 @@ export async function updateWorkflow(id: string, data: {
         const session = await getSession();
         if (!session) throw new Error("Not authenticated");
 
-        const workspace = await db.query.workspaces.findFirst({
-            where: eq(workspaces.created_by_user_id, session.user.id)
-        });
+        const workspace = await getOrCreateWorkspace();
 
         if (!workspace) throw new Error("No workspace found");
 
@@ -139,9 +126,7 @@ export async function deleteWorkflow(id: string) {
         const session = await getSession();
         if (!session) throw new Error("Not authenticated");
 
-        const workspace = await db.query.workspaces.findFirst({
-            where: eq(workspaces.created_by_user_id, session.user.id)
-        });
+        const workspace = await getOrCreateWorkspace();
 
         if (!workspace) throw new Error("No workspace found");
 
@@ -166,9 +151,7 @@ export async function toggleWorkflow(id: string, enabled: boolean) {
         const session = await getSession();
         if (!session) throw new Error("Not authenticated");
 
-        const workspace = await db.query.workspaces.findFirst({
-            where: eq(workspaces.created_by_user_id, session.user.id)
-        });
+        const workspace = await getOrCreateWorkspace();
 
         if (!workspace) throw new Error("No workspace found");
 

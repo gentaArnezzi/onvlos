@@ -13,9 +13,6 @@ import { FileManager } from "@/components/dashboard/files/file-manager";
 import { getSession } from "@/lib/get-session";
 import { redirect } from "next/navigation";
 
-// Mock user ID for dashboard (Admin)
-const ADMIN_USER_ID = "00000000-0000-0000-0000-000000000000"; 
-
 export default async function ClientDetailPage({ params }: { params: Promise<{ clientId: string }> }) {
     // Await params in Next.js 15+
     const { clientId } = await params;
@@ -43,6 +40,8 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ c
     });
 
     if (!client) return notFound();
+
+    const currentUserId = session.user.id;
 
     const spaceId = await getClientSpaceId(client.id);
     let chatData = null;
@@ -142,7 +141,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ c
                                 <ChatInterface 
                                     conversationId={chatData.conversation.id}
                                     initialMessages={chatData.messages}
-                                    currentUserId={ADMIN_USER_ID}
+                                    currentUserId={currentUserId}
                                     className="h-[600px]"
                                 />
                             </CardContent>

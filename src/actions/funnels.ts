@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { funnels, funnel_steps, client_onboarding_sessions } from "@/lib/db/schema";
 import { desc, eq, sql, count } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { getOrCreateWorkspace } from "./workspace";
+import { getOrCreateWorkspace } from "@/actions/workspace";
 
 export async function getFunnels() {
     try {

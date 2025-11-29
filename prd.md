@@ -2038,8 +2038,8 @@ GET    /api/workspaces/:workspaceId/funnels
 POST   /api/workspaces/:workspaceId/funnels
 GET    /api/workspaces/:workspaceId/funnels/:funnelId
 PATCH  /api/workspaces/:workspaceId/funnels/:funnelId
-POST   /api/funnels/:funnelPublicUrl/submit-step
-GET    /api/funnels/:funnelPublicUrl (public, no auth)
+POST   /api/funnels/public/:funnelPublicUrl/submit-step
+GET    /api/funnels/public/:funnelPublicUrl (public, no auth)
 ```
 
 ### Workflows
