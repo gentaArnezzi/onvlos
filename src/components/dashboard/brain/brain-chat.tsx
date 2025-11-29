@@ -25,9 +25,11 @@ export function BrainChat() {
     ]);
     const [inputValue, setInputValue] = useState("");
     const [loading, setLoading] = useState(false);
+    const [shouldAutoScroll, setShouldAutoScroll] = useState(false);
     const messagesContainerRef = useRef<HTMLDivElement>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+    const isInitialMount = useRef(true);
 
     // Listen for suggested queries from parent
     useEffect(() => {
@@ -43,6 +45,7 @@ export function BrainChat() {
 
                 setMessages(prev => [...prev, userMsg]);
                 setLoading(true);
+                setShouldAutoScroll(true);
 
                 askAi(message).then(({ response }) => {
                     const assistantMsg: Message = {
@@ -52,6 +55,7 @@ export function BrainChat() {
                     };
                     setMessages(prev => [...prev, assistantMsg]);
                     setLoading(false);
+                    setShouldAutoScroll(true);
                 }).catch(() => {
                     const errorMsg: Message = {
                         role: 'assistant',
@@ -60,6 +64,7 @@ export function BrainChat() {
                     };
                     setMessages(prev => [...prev, errorMsg]);
                     setLoading(false);
+                    setShouldAutoScroll(true);
                 });
             }
         };
@@ -70,32 +75,47 @@ export function BrainChat() {
         };
     }, []);
 
-    // Scroll to bottom
-    const scrollToBottom = () => {
+    // Scroll to bottom (only within the messages container, not the page)
+    const scrollToBottom = (smooth = true) => {
         if (messagesContainerRef.current) {
             const container = messagesContainerRef.current;
-            container.scrollTop = container.scrollHeight;
+            if (smooth) {
+                container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+            } else {
+                container.scrollTop = container.scrollHeight;
+            }
         }
-        if (messagesEndRef.current) {
-            messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-        }
+        // Don't use scrollIntoView as it can scroll the entire page
     };
 
-    // Auto-scroll to bottom when messages change
+    // Prevent initial focus and scroll
     useEffect(() => {
-        if (messages.length > 0) {
-            setTimeout(scrollToBottom, 100);
-        }
-    }, [messages, loading]);
-
-    // Focus input after sending
-    useEffect(() => {
-        if (!loading && inputRef.current) {
+        // Prevent any focus on initial mount
+        if (isInitialMount.current && inputRef.current) {
+            inputRef.current.blur();
+            // Mark as no longer initial after a delay
             setTimeout(() => {
-                inputRef.current?.focus();
-            }, 100);
+                isInitialMount.current = false;
+            }, 1000);
         }
-    }, [loading]);
+    }, []);
+
+    // Only auto-scroll if user has interacted or new messages added
+    useEffect(() => {
+        // Skip auto-scroll on initial mount
+        if (isInitialMount.current) {
+            return;
+        }
+
+        // Only auto-scroll if shouldAutoScroll is true (user sent message or new message received)
+        if (shouldAutoScroll && messages.length > 0) {
+            setTimeout(() => scrollToBottom(true), 100);
+            setShouldAutoScroll(false);
+        }
+    }, [messages, loading, shouldAutoScroll]);
+
+    // Focus input after sending (only if user interacted, not on initial mount)
+    // Removed auto-focus to prevent page scroll on initial load
 
     const handleSend = async (e: React.FormEvent, query?: string) => {
         e.preventDefault();
@@ -115,6 +135,7 @@ export function BrainChat() {
             setInputValue("");
         }
         setLoading(true);
+        setShouldAutoScroll(true);
 
         try {
             const { response } = await askAi(message);
@@ -124,6 +145,7 @@ export function BrainChat() {
                 timestamp: new Date()
             };
             setMessages(prev => [...prev, assistantMsg]);
+            setShouldAutoScroll(true);
         } catch (error) {
             const errorMsg: Message = {
                 role: 'assistant',
@@ -131,13 +153,22 @@ export function BrainChat() {
                 timestamp: new Date()
             };
             setMessages(prev => [...prev, errorMsg]);
+            setShouldAutoScroll(true);
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <Card className="border border-slate-200 dark:border-slate-700 shadow-lg bg-white dark:bg-slate-800/50 h-[calc(100vh-280px)] min-h-[700px] flex flex-col overflow-hidden">
+        <Card 
+            className="border border-slate-200 dark:border-slate-700 shadow-lg bg-white dark:bg-slate-800/50 h-[calc(100vh-280px)] min-h-[700px] flex flex-col overflow-hidden"
+            onFocus={(e) => {
+                // Prevent page scroll when any element inside card is focused on initial mount
+                if (isInitialMount.current && e.target !== inputRef.current) {
+                    e.stopPropagation();
+                }
+            }}
+        >
             {/* Header - Fixed */}
             <CardHeader className="p-5 border-b border-slate-200 dark:border-slate-700 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white flex-shrink-0">
                 <div className="flex items-center space-x-3">
@@ -236,6 +267,19 @@ export function BrainChat() {
                         placeholder="Ask me anything about your workspace..."
                         className="flex-1 min-w-0 bg-slate-50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 h-12 text-sm"
                         disabled={loading}
+                        autoFocus={false}
+                        tabIndex={0}
+                        onFocus={(e) => {
+                            // Prevent page scroll when input is focused on initial mount
+                            if (isInitialMount.current) {
+                                e.preventDefault();
+                                e.target.blur();
+                                // Reset after a short delay
+                                setTimeout(() => {
+                                    isInitialMount.current = false;
+                                }, 500);
+                            }
+                        }}
                     />
                     <Button 
                         type="submit" 
