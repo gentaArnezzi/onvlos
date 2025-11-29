@@ -104,7 +104,7 @@ export default async function DashboardPage() {
   ];
 
   return (
-    <div className="flex-1 space-y-8 p-8 max-w-7xl mx-auto">
+    <div className="flex-1 space-y-8 p-8 pt-6 max-w-screen-2xl mx-auto w-full">
       {/* Hero Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -155,9 +155,9 @@ export default async function DashboardPage() {
         ))}
       </div>
 
-      <div className="grid gap-8 md:grid-cols-7">
+      <div className="grid gap-8 grid-cols-1 lg:grid-cols-12">
         {/* Main Content - Left Column */}
-        <div className="col-span-4 space-y-8">
+        <div className="lg:col-span-8 xl:col-span-9 space-y-8">
           {/* Revenue Chart */}
           <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50">
             <CardHeader>
@@ -241,7 +241,7 @@ export default async function DashboardPage() {
         </div>
 
         {/* Sidebar Content - Right Column */}
-        <div className="col-span-3 space-y-8">
+        <div className="lg:col-span-4 xl:col-span-3 space-y-8">
           {/* Quick Actions */}
           <Card className="border-none shadow-lg bg-gradient-to-br from-violet-600 to-indigo-600 text-white">
             <CardHeader>

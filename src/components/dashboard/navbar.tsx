@@ -1,5 +1,8 @@
 "use client";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -10,107 +13,219 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Bell, Search, Command } from "lucide-react";
+import {
+  Bell,
+  Search,
+  LayoutDashboard,
+  Filter,
+  CheckSquare,
+  MessageSquare,
+  Workflow,
+  Users,
+  Kanban,
+  Brain,
+  Receipt,
+  Sparkles,
+  MoreHorizontal,
+  Settings,
+  HelpCircle,
+  FileText,
+  LogOut,
+  ChevronDown
+} from "lucide-react";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Input } from "@/components/ui/input";
 
-export function Navbar() {
+const navItems = [
+  {
+    label: "Dashboard",
+    icon: LayoutDashboard,
+    href: "/dashboard",
+  },
+  {
+    label: "Funnel",
+    icon: Filter,
+    href: "/dashboard/funnels",
+  },
+  {
+    label: "My Tasks",
+    icon: CheckSquare,
+    href: "/dashboard/tasks",
+  },
+  {
+    label: "Chat",
+    icon: MessageSquare,
+    href: "/dashboard/chat",
+  },
+  {
+    label: "Flows",
+    icon: Workflow,
+    href: "/dashboard/workflows",
+  },
+  {
+    label: "Clients",
+    icon: Users,
+    href: "/dashboard/clients",
+  },
+  {
+    label: "Boards",
+    icon: Kanban,
+    href: "/dashboard/boards",
+  },
+  {
+    label: "Brain",
+    icon: Brain,
+    href: "/dashboard/brain",
+  },
+  {
+    label: "Invoices",
+    icon: Receipt,
+    href: "/dashboard/invoices",
+  },
+];
+
+interface NavbarProps {
+  user?: {
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+  };
+}
+
+export function Navbar({ user }: NavbarProps) {
+  const pathname = usePathname();
+  const userName = user?.name || "User";
+  const userInitials = userName.split(" ").map((n) => n[0]).join("").substring(0, 2).toUpperCase();
+
   return (
-    <div className="sticky top-0 z-50 flex items-center gap-4 px-6 py-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800">
-      {/* Search Bar */}
-      <div className="flex-1 max-w-2xl">
-        <div className="relative group">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 dark:text-slate-500 group-focus-within:text-purple-500 dark:group-focus-within:text-purple-400 transition-colors" />
-          <Input
-            placeholder="Search clients, tasks, invoices..."
-            className="pl-10 pr-4 bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:border-purple-500 dark:focus:border-purple-400 rounded-xl transition-all"
-          />
-          <kbd className="absolute right-3 top-1/2 -translate-y-1/2 hidden sm:inline-flex h-5 select-none items-center gap-1 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-1.5 font-mono text-xs text-slate-500 dark:text-slate-400">
-            <Command className="h-3 w-3" />K
-          </kbd>
+    <div className="sticky top-0 z-50 px-6 py-3 bg-[#0B0E14] border-b border-slate-800 text-slate-200">
+      <div className="relative mx-auto w-full max-w-screen-2xl flex items-center justify-between">
+        {/* Left Section: Logo */}
+        <div className="flex items-center gap-8">
+          <Link href="/dashboard" className="flex items-center gap-2 group">
+            <img
+              src="/logo-onvlo.png"
+              alt="Onvlo"
+              className="w-8 h-8 object-contain"
+            />
+            <span className="text-lg font-bold text-white">
+              Onvlo
+            </span>
+          </Link>
         </div>
-      </div>
 
-      {/* Actions */}
-      <div className="flex items-center gap-2">
-        {/* Notifications */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="relative hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl"
-        >
-          <Bell className="h-5 w-5" />
-          <span className="absolute top-2 right-2 flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
-          </span>
-        </Button>
+        {/* Navigation Items */}
+        <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-1">
+          {navItems.map((item) => {
+            const isActive = item.href === "/dashboard"
+              ? pathname === "/dashboard"
+              : (pathname === item.href || pathname?.startsWith(item.href + "/"));
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 whitespace-nowrap",
+                  isActive
+                    ? "bg-[#1d4ed8] text-white shadow-sm"
+                    : "text-slate-400 hover:text-slate-100 hover:bg-slate-800/50"
+                )}
+              >
+                <item.icon className={cn("w-4 h-4", isActive ? "text-white" : "text-slate-400 group-hover:text-slate-100")} />
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
 
-        {/* Theme Toggle */}
-        <ThemeToggle />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 rounded-lg ml-1">
+                <MoreHorizontal className="w-5 h-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-48 bg-[#1A1D24] border-slate-800 text-slate-200">
+              <DropdownMenuItem className="focus:bg-slate-800 focus:text-white cursor-pointer">
+                <Settings className="mr-2 h-4 w-4" />
+                <span>Settings</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="focus:bg-slate-800 focus:text-white cursor-pointer">
+                <HelpCircle className="mr-2 h-4 w-4" />
+                <span>Help & Support</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="focus:bg-slate-800 focus:text-white cursor-pointer">
+                <FileText className="mr-2 h-4 w-4" />
+                <span>Documentation</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </nav>
 
-        {/* User Menu */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              className="relative h-10 w-10 rounded-full hover:ring-2 hover:ring-purple-500/20 transition-all"
-            >
-              <Avatar className="h-10 w-10 ring-2 ring-purple-500/20">
-                <AvatarImage src="/avatars/01.png" alt="@user" />
-                <AvatarFallback className="bg-gradient-to-br from-purple-500 to-blue-500 text-white">
-                  AD
-                </AvatarFallback>
-              </Avatar>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            className="w-64 glass-card"
-            align="end"
-            forceMount
+        {/* Right Section: Actions */}
+        <div className="flex items-center gap-1">
+          {/* Search */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 rounded-lg"
           >
-            <DropdownMenuLabel className="font-normal">
-              <div className="flex flex-col space-y-2">
-                <div className="flex items-center gap-3 pb-2">
-                  <Avatar className="h-12 w-12 ring-2 ring-purple-500/20">
-                    <AvatarImage src="/avatars/01.png" alt="@user" />
-                    <AvatarFallback className="bg-gradient-to-br from-purple-500 to-blue-500 text-white">
-                      AD
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex flex-col">
-                    <p className="text-sm font-semibold leading-none text-slate-900 dark:text-white">
-                      Admin User
-                    </p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                      admin@flazy.com
-                    </p>
-                  </div>
+            <Search className="h-5 w-5" />
+          </Button>
+
+          {/* Notifications */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="relative text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 rounded-lg"
+          >
+            <Bell className="h-5 w-5" />
+            <span className="absolute top-2.5 right-2.5 h-2 w-2 rounded-full bg-pink-500 ring-2 ring-[#0B0E14]" />
+          </Button>
+
+          {/* User Menu */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                suppressHydrationWarning
+                className="flex items-center gap-2 hover:bg-slate-800/50 rounded-full p-1 pr-2 ml-1"
+              >
+                <Avatar className="h-8 w-8">
+                  <AvatarImage src={user?.image || "/avatars/01.png"} alt={userName} />
+                  <AvatarFallback className="bg-blue-600 text-white text-xs font-medium">
+                    {userInitials}
+                  </AvatarFallback>
+                </Avatar>
+                <ChevronDown className="h-4 w-4 text-slate-400" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              className="w-56 bg-[#1A1D24] border-slate-800 text-slate-200"
+              align="end"
+              forceMount
+            >
+              <DropdownMenuLabel className="font-normal">
+                <div className="flex flex-col space-y-1">
+                  <p className="text-sm font-medium leading-none text-white">{userName}</p>
+                  <p className="text-xs leading-none text-slate-400">{user?.email || "user@example.com"}</p>
                 </div>
-                <div className="flex items-center justify-between pt-2 border-t border-slate-200 dark:border-slate-700">
-                  <span className="text-xs text-slate-500 dark:text-slate-400">Active Plan</span>
-                  <span className="text-xs font-semibold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                    Professional
-                  </span>
-                </div>
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800">
-              Profile Settings
-            </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800">
-              Billing & Plans
-            </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800">
-              Workspace Settings
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30">
-              Log out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator className="bg-slate-800" />
+              <DropdownMenuItem className="focus:bg-slate-800 focus:text-white cursor-pointer">
+                <Users className="mr-2 h-4 w-4" />
+                <span>Profile</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="focus:bg-slate-800 focus:text-white cursor-pointer">
+                <Settings className="mr-2 h-4 w-4" />
+                <span>Settings</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator className="bg-slate-800" />
+              <DropdownMenuItem className="text-red-400 focus:bg-red-950/30 focus:text-red-300 cursor-pointer">
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Log out</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </div>
   );
