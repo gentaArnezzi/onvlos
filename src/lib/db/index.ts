@@ -15,13 +15,16 @@ if (!connectionString) {
 }
 
 // Connection pool configuration for better performance and reliability
+// Railway PostgreSQL has a limit of ~100 connections, so we need to be conservative
 const poolConfig: PoolConfig = {
   connectionString,
-  // Connection pool settings
-  max: 20, // Maximum number of clients in the pool
-  min: 5, // Minimum number of clients in the pool
-  idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
-  connectionTimeoutMillis: 10000, // Return an error after 10 seconds if connection could not be established
+  // Connection pool settings - reduced to prevent "too many clients" error
+  max: process.env.NODE_ENV === 'production' ? 10 : 15, // Conservative limits to prevent exhaustion
+  min: 1, // Minimum number of clients in the pool
+  idleTimeoutMillis: 5000, // Close idle clients after 5 seconds (aggressive cleanup)
+  connectionTimeoutMillis: 3000, // Return an error after 3 seconds if connection could not be established
+  // Allow pool to wait for available connections
+  allowExitOnIdle: false,
   // SSL configuration (Railway uses SSL by default)
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
 };
@@ -31,8 +34,29 @@ const pool = new Pool(poolConfig);
 // Handle pool errors
 pool.on('error', (err) => {
   console.error('Unexpected error on idle client', err);
-  process.exit(-1);
+  // Don't exit in development - just log the error
+  if (process.env.NODE_ENV === 'production') {
+    process.exit(-1);
+  }
 });
+
+// Log pool statistics periodically (development only)
+if (process.env.NODE_ENV !== 'production') {
+  setInterval(() => {
+    const stats = {
+      total: pool.totalCount,
+      idle: pool.idleCount,
+      waiting: pool.waitingCount,
+      active: pool.totalCount - pool.idleCount
+    };
+    console.log(`[DB Pool Stats]`, stats);
+    
+    // Warn if pool is getting full
+    if (stats.total >= poolConfig.max! * 0.8) {
+      console.warn(`⚠️  [DB Pool] Pool is ${Math.round((stats.total / poolConfig.max!) * 100)}% full!`);
+    }
+  }, 15000); // Every 15 seconds for better monitoring
+}
 
 // Test connection on startup
 pool.query('SELECT NOW()')
