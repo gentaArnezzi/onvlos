@@ -85,14 +85,14 @@ export default async function BrainPage() {
   ];
 
   return (
-    <div className="flex-1 space-y-6 p-6 md:p-8 max-w-7xl mx-auto">
+    <div className="flex-1 space-y-6 p-6 md:p-8 max-w-[1600px] mx-auto">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-indigo-600 to-purple-500 bg-clip-text text-transparent">
+          <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
             Brain
           </h2>
-          <p className="text-slate-500 dark:text-slate-400 mt-1.5">
+          <p className="text-slate-500 dark:text-slate-400 mt-1.5 text-sm">
             Your AI-powered assistant for insights and automation.
           </p>
         </div>
@@ -101,15 +101,15 @@ export default async function BrainPage() {
       {/* Quick Insights */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {quickInsights.map((insight, index) => (
-          <Card key={index} className="border-none shadow-lg bg-white dark:bg-slate-800/50 relative overflow-hidden border border-slate-200 dark:border-slate-700">
-            <div className="absolute top-0 right-0 p-4 opacity-10">
+          <Card key={index} className="border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow duration-200 bg-white dark:bg-slate-800/50 relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
               <insight.icon className="h-16 w-16 text-slate-400 dark:text-slate-600" />
             </div>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">
                 {insight.title}
               </CardTitle>
-              <div className={`p-2 rounded-lg ${insight.bgColor} ${insight.color}`}>
+              <div className={`p-2 rounded-lg ${insight.bgColor} ${insight.color} transition-transform group-hover:scale-110`}>
                 <insight.icon className="h-4 w-4" />
               </div>
             </CardHeader>
@@ -124,46 +124,52 @@ export default async function BrainPage() {
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid gap-6 lg:grid-cols-5">
-        {/* AI Chat - Takes 3 columns */}
-        <div className="lg:col-span-3 min-h-[600px]">
+      <div className="grid gap-6 lg:grid-cols-12">
+        {/* AI Chat - Takes 8 columns */}
+        <div className="lg:col-span-8">
           <BrainChat />
         </div>
 
-        {/* Sidebar - Suggested Queries & Features */}
-        <div className="lg:col-span-2 space-y-6 flex flex-col">
+        {/* Sidebar - Suggested Queries & Features - Takes 4 columns */}
+        <div className="lg:col-span-4 space-y-6 flex flex-col">
           {/* Suggested Queries */}
           <SuggestedQueries queries={suggestedQueries} />
 
           {/* Coming Soon Features */}
-          <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 border-dashed">
+          <Card className="border border-slate-200 dark:border-slate-700 shadow-sm bg-white dark:bg-slate-800/50">
             <CardHeader>
-              <CardTitle className="text-slate-900 dark:text-white flex items-center gap-2">
-                <FileText className="h-5 w-5 text-slate-400 dark:text-slate-500" />
+              <CardTitle className="text-slate-900 dark:text-white flex items-center gap-2 text-base">
+                <FileText className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
                 Coming Soon
               </CardTitle>
-              <CardDescription className="text-slate-600 dark:text-slate-400">
+              <CardDescription className="text-slate-600 dark:text-slate-400 text-sm">
                 Advanced features in development
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="flex items-start gap-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700">
-                <Upload className="h-4 w-4 text-slate-400 dark:text-slate-500 mt-0.5 flex-shrink-0" />
-                <div>
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-gradient-to-r from-slate-50 to-slate-100/50 dark:from-slate-900/50 dark:to-slate-800/30 border border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors group">
+                <div className="p-2 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-200 dark:group-hover:bg-indigo-900/50 transition-colors">
+                  <Upload className="h-4 w-4" />
+                </div>
+                <div className="flex-1">
                   <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Document Upload</p>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Upload PDFs, proposals, and documents for AI indexing</p>
                 </div>
               </div>
-              <div className="flex items-start gap-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700">
-                <Brain className="h-4 w-4 text-slate-400 dark:text-slate-500 mt-0.5 flex-shrink-0" />
-                <div>
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-gradient-to-r from-slate-50 to-slate-100/50 dark:from-slate-900/50 dark:to-slate-800/30 border border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors group">
+                <div className="p-2 rounded-lg bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 group-hover:bg-purple-200 dark:group-hover:bg-purple-900/50 transition-colors">
+                  <Brain className="h-4 w-4" />
+                </div>
+                <div className="flex-1">
                   <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Knowledge Base</p>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Build a searchable knowledge base from your documents</p>
                 </div>
               </div>
-              <div className="flex items-start gap-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700">
-                <Sparkles className="h-4 w-4 text-slate-400 dark:text-slate-500 mt-0.5 flex-shrink-0" />
-                <div>
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-gradient-to-r from-slate-50 to-slate-100/50 dark:from-slate-900/50 dark:to-slate-800/30 border border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors group">
+                <div className="p-2 rounded-lg bg-pink-100 dark:bg-pink-900/30 text-pink-600 dark:text-pink-400 group-hover:bg-pink-200 dark:group-hover:bg-pink-900/50 transition-colors">
+                  <Sparkles className="h-4 w-4" />
+                </div>
+                <div className="flex-1">
                   <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Content Generation</p>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Generate email templates, proposals, and SOPs</p>
                 </div>
@@ -175,4 +181,3 @@ export default async function BrainPage() {
     </div>
   );
 }
-
