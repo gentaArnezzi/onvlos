@@ -42,7 +42,7 @@ export default async function FunnelsPage() {
           <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent">
             {t("funnels.title", language)}
           </h2>
-          <p className="text-slate-300 mt-1">
+          <p className="text-slate-600 mt-1">
             {t("funnels.description", language)}
           </p>
         </div>
@@ -51,61 +51,61 @@ export default async function FunnelsPage() {
 
       {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-3">
-        <Card className="border border-slate-700/50 shadow-lg bg-slate-800/50 backdrop-blur-sm relative overflow-hidden">
+        <Card className="border border-slate-200 shadow-lg bg-white backdrop-blur-sm relative overflow-hidden">
           <div className="absolute top-0 right-0 p-4 opacity-5">
             <Filter className="h-16 w-16" />
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-300">
+            <CardTitle className="text-sm font-medium text-slate-700">
               {t("funnels.totalFunnels", language)}
             </CardTitle>
-            <div className="p-2 rounded-lg bg-pink-100 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400">
+            <div className="p-2 rounded-lg bg-pink-100 text-pink-600">
               <Filter className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">{totalFunnels}</div>
-            <p className="text-xs text-slate-400 mt-1">
+            <div className="text-2xl font-bold text-slate-900">{totalFunnels}</div>
+            <p className="text-xs text-slate-600 mt-1">
               {t("funnels.activeWorkflows", language)}
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border border-slate-700/50 shadow-lg bg-slate-800/50 backdrop-blur-sm relative overflow-hidden">
+        <Card className="border border-slate-200 shadow-lg bg-white backdrop-blur-sm relative overflow-hidden">
           <div className="absolute top-0 right-0 p-4 opacity-5">
             <Globe className="h-16 w-16" />
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-300">
+            <CardTitle className="text-sm font-medium text-slate-700">
               {t("funnels.published", language)}
             </CardTitle>
-            <div className="p-2 rounded-lg bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
+            <div className="p-2 rounded-lg bg-emerald-100 text-emerald-600">
               <Globe className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">{publishedFunnels}</div>
-            <p className="text-xs text-slate-400 mt-1">
+            <div className="text-2xl font-bold text-slate-900">{publishedFunnels}</div>
+            <p className="text-xs text-slate-600 mt-1">
               {t("funnels.liveAndAccessible", language)}
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border border-slate-700/50 shadow-lg bg-slate-800/50 backdrop-blur-sm relative overflow-hidden">
+        <Card className="border border-slate-200 shadow-lg bg-white backdrop-blur-sm relative overflow-hidden">
           <div className="absolute top-0 right-0 p-4 opacity-5">
             <Lock className="h-16 w-16" />
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-300">
+            <CardTitle className="text-sm font-medium text-slate-700">
               {t("funnels.drafts", language)}
             </CardTitle>
-            <div className="p-2 rounded-lg bg-slate-100 text-slate-600 dark:bg-slate-700/50 dark:text-slate-400">
+            <div className="p-2 rounded-lg bg-slate-100 text-slate-600">
               <Lock className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">{draftFunnels}</div>
-            <p className="text-xs text-slate-400 mt-1">
+            <div className="text-2xl font-bold text-slate-900">{draftFunnels}</div>
+            <p className="text-xs text-slate-600 mt-1">
               {t("funnels.workInProgress", language)}
             </p>
           </CardContent>

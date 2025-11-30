@@ -78,9 +78,9 @@ export function ChatMessages({ clientId, clientName, clientLogo, currentUserId, 
     });
 
     return (
-        <div className="h-full flex flex-col border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 rounded-lg">
+        <div className="h-full flex flex-col border border-slate-200 bg-white rounded-lg">
             {/* Header */}
-            <div className="border-b border-slate-200 dark:border-slate-700 py-4 px-6 flex-shrink-0 bg-white dark:bg-slate-800/50">
+            <div className="border-b border-slate-200 py-4 px-6 flex-shrink-0 bg-white">
                 <div className="flex items-center gap-3">
                     {clientLogo ? (
                         <img
@@ -96,30 +96,30 @@ export function ChatMessages({ clientId, clientName, clientLogo, currentUserId, 
                         </div>
                     )}
                     <div>
-                        <h3 className="font-semibold text-slate-900 dark:text-white">{clientName}</h3>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">{t("chat.client")}</p>
+                        <h3 className="font-semibold text-slate-900">{clientName}</h3>
+                        <p className="text-xs text-slate-600">{t("chat.client")}</p>
                     </div>
                 </div>
             </div>
 
             {/* Messages - Scrollable Area */}
             <div 
-                className="flex-1 overflow-y-auto bg-slate-50 dark:bg-slate-900/30 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600 scrollbar-track-transparent"
+                className="flex-1 overflow-y-auto bg-slate-50 scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent"
                 ref={scrollAreaRef}
                 style={{ minHeight: 0, maxHeight: '100%' }}
             >
                 <div className="p-6 space-y-4">
                     {loading ? (
                         <div className="flex items-center justify-center min-h-[400px]">
-                            <Loader2 className="w-6 h-6 text-slate-400 dark:text-slate-500 animate-spin" />
+                            <Loader2 className="w-6 h-6 text-slate-600 animate-spin" />
                         </div>
                     ) : messages.length === 0 ? (
                         <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
-                            <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-700/30 flex items-center justify-center mb-4">
-                                <Calendar className="w-8 h-8 text-slate-400 dark:text-slate-500" />
+                            <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
+                                <Calendar className="w-8 h-8 text-slate-600" />
                             </div>
-                            <h4 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">{t("chat.noMessagesYet")}</h4>
-                            <p className="text-sm text-slate-500 dark:text-slate-400 max-w-sm">
+                            <h4 className="text-lg font-semibold text-slate-900 mb-2">{t("chat.noMessagesYet")}</h4>
+                            <p className="text-sm text-slate-600 max-w-sm">
                                 {t("chat.startConversation")}
                             </p>
                         </div>
@@ -129,7 +129,7 @@ export function ChatMessages({ clientId, clientName, clientLogo, currentUserId, 
                                 <div key={groupIdx}>
                                     {/* Date separator */}
                                     <div className="flex items-center justify-center my-6">
-                                        <div className="px-3 py-1 rounded-full bg-slate-200 dark:bg-slate-700/50 text-xs text-slate-500 dark:text-slate-400">
+                                        <div className="px-3 py-1 rounded-full bg-slate-200 text-xs text-slate-600">
                                             {format(group.date, "MMMM d, yyyy")}
                                         </div>
                                     </div>
@@ -147,14 +147,14 @@ export function ChatMessages({ clientId, clientName, clientLogo, currentUserId, 
                                                     <div
                                                         className={`max-w-[70%] rounded-2xl px-4 py-2 ${isOwnMessage
                                                             ? "bg-blue-600 text-white"
-                                                            : "bg-white dark:bg-slate-700/50 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-600"
+                                                            : "bg-white text-slate-900 border border-slate-200"
                                                             }`}
                                                     >
                                                         <p className="text-sm whitespace-pre-wrap break-words">
                                                             {message.content}
                                                         </p>
                                                         <p
-                                                            className={`text-xs mt-1 ${isOwnMessage ? "text-blue-100" : "text-slate-500 dark:text-slate-400"
+                                                            className={`text-xs mt-1 ${isOwnMessage ? "text-blue-100" : "text-slate-500"
                                                                 }`}
                                                         >
                                                             {format(new Date(message.created_at), "HH:mm")}
@@ -173,7 +173,7 @@ export function ChatMessages({ clientId, clientName, clientLogo, currentUserId, 
             </div>
 
             {/* Input - Fixed at bottom */}
-            <div className="border-t border-slate-200 dark:border-slate-700 p-4 bg-white dark:bg-slate-800/50 flex-shrink-0 relative z-10">
+            <div className="border-t border-slate-200 p-4 bg-white flex-shrink-0 relative z-10">
                 <ChatInput
                     key={`input-${clientId}`}
                     clientId={clientId}

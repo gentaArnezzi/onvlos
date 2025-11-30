@@ -170,7 +170,7 @@ export function BrainChat({ language: propLanguage }: BrainChatProps) {
 
     return (
         <Card 
-            className="border border-slate-200 dark:border-slate-700 shadow-lg bg-white dark:bg-slate-800/50 h-[calc(100vh-280px)] min-h-[700px] flex flex-col overflow-hidden"
+            className="border border-slate-200 shadow-lg bg-white h-[calc(100vh-280px)] min-h-[700px] flex flex-col overflow-hidden"
             onFocus={(e) => {
                 // Prevent page scroll when any element inside card is focused on initial mount
                 if (isInitialMount.current && e.target !== inputRef.current) {
@@ -179,7 +179,7 @@ export function BrainChat({ language: propLanguage }: BrainChatProps) {
             }}
         >
             {/* Header - Fixed */}
-            <CardHeader className="p-5 border-b border-slate-200 dark:border-slate-700 bg-gradient-to-r from-[#0731c2] via-[#0731c2] to-[#010119] text-white flex-shrink-0">
+            <CardHeader className="p-5 border-b border-slate-200 bg-gradient-to-r from-[#0731c2] via-[#0731c2] to-[#010119] text-white flex-shrink-0">
                 <div className="flex items-center space-x-3">
                     <div className="p-2 rounded-lg bg-white/20 backdrop-blur-sm">
                         <Sparkles className="h-5 w-5" />
@@ -194,7 +194,7 @@ export function BrainChat({ language: propLanguage }: BrainChatProps) {
             {/* Messages Area - Scrollable */}
             <div 
                 ref={messagesContainerRef}
-                className="flex-1 overflow-y-auto p-6 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900/50 dark:to-slate-800/30"
+                className="flex-1 overflow-y-auto p-6 bg-gradient-to-b from-slate-50 to-white"
                 style={{ 
                     minHeight: 0,
                     WebkitOverflowScrolling: 'touch'
@@ -210,7 +210,7 @@ export function BrainChat({ language: propLanguage }: BrainChatProps) {
                             )}
                         >
                             {msg.role === 'assistant' && (
-                                <Avatar className="h-10 w-10 bg-gradient-to-br from-[#0731c2] to-[#010119] border-2 border-white dark:border-slate-700 shadow-lg flex-shrink-0 ring-2 ring-[#0731c2]/20">
+                                <Avatar className="h-10 w-10 bg-gradient-to-br from-[#0731c2] to-[#010119] border-2 border-white shadow-lg flex-shrink-0 ring-2 ring-[#0731c2]/20">
                                     <AvatarFallback className="text-white">
                                         <Bot className="h-5 w-5" />
                                     </AvatarFallback>
@@ -220,21 +220,21 @@ export function BrainChat({ language: propLanguage }: BrainChatProps) {
                                 "p-4 rounded-2xl text-sm max-w-[75%] shadow-md break-words transition-all hover:shadow-lg",
                                 msg.role === 'user' 
                                     ? "bg-gradient-to-r from-[#0731c2] to-[#010119] text-white rounded-tr-sm" 
-                                    : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-tl-sm"
+                                    : "bg-white border border-slate-200 text-slate-900 rounded-tl-sm"
                             )}>
                                 <div className="whitespace-pre-wrap leading-relaxed">{msg.content}</div>
                                 {msg.timestamp && (
                                     <div className={cn(
                                         "text-xs mt-3 opacity-70 flex items-center gap-1",
-                                        msg.role === 'user' ? "text-blue-100" : "text-slate-500 dark:text-slate-400"
+                                        msg.role === 'user' ? "text-blue-100" : "text-slate-500"
                                     )}>
                                         <span>{msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                                     </div>
                                 )}
                             </div>
                             {msg.role === 'user' && (
-                                <Avatar className="h-10 w-10 bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-600 border-2 border-white dark:border-slate-800 flex-shrink-0 shadow-lg">
-                                    <AvatarFallback className="text-slate-700 dark:text-slate-200 text-xs font-semibold">
+                                <Avatar className="h-10 w-10 bg-gradient-to-br from-slate-200 to-slate-300 border-2 border-white flex-shrink-0 shadow-lg">
+                                    <AvatarFallback className="text-slate-700 text-xs font-semibold">
                                         {t("brain.you")}
                                     </AvatarFallback>
                                 </Avatar>
@@ -243,13 +243,13 @@ export function BrainChat({ language: propLanguage }: BrainChatProps) {
                     ))}
                     {loading && (
                         <div className="flex gap-4 justify-start items-start animate-in fade-in slide-in-from-bottom-2 duration-300">
-                            <Avatar className="h-10 w-10 bg-gradient-to-br from-[#0731c2] to-[#010119] border-2 border-white dark:border-slate-700 shadow-lg flex-shrink-0 ring-2 ring-[#0731c2]/20">
+                            <Avatar className="h-10 w-10 bg-gradient-to-br from-[#0731c2] to-[#010119] border-2 border-white shadow-lg flex-shrink-0 ring-2 ring-[#0731c2]/20">
                                 <AvatarFallback className="text-white">
                                     <Bot className="h-5 w-5" />
                                 </AvatarFallback>
                             </Avatar>
-                            <div className="p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 text-sm rounded-tl-sm shadow-md flex items-center gap-3">
-                                <Loader2 className="h-4 w-4 animate-spin text-[#0731c2] dark:text-[#0731c2]" />
+                            <div className="p-4 rounded-2xl bg-white border border-slate-200 text-slate-500 text-sm rounded-tl-sm shadow-md flex items-center gap-3">
+                                <Loader2 className="h-4 w-4 animate-spin text-[#0731c2]" />
                                 <span>{t("brain.thinking")}</span>
                             </div>
                         </div>
@@ -259,7 +259,7 @@ export function BrainChat({ language: propLanguage }: BrainChatProps) {
             </div>
             
             {/* Input Area - Fixed at Bottom */}
-            <div className="p-5 border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex-shrink-0">
+            <div className="p-5 border-t border-slate-200 bg-white flex-shrink-0">
                 <form 
                     onSubmit={(e) => {
                         e.preventDefault();
@@ -274,7 +274,7 @@ export function BrainChat({ language: propLanguage }: BrainChatProps) {
                         value={inputValue} 
                         onChange={e => setInputValue(e.target.value)}
                         placeholder={t("brain.placeholder")}
-                        className="flex-1 min-w-0 bg-slate-50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:ring-2 focus:ring-[#0731c2] dark:focus:ring-[#0731c2] focus:border-[#0731c2] dark:focus:border-[#0731c2] h-12 text-sm"
+                        className="flex-1 min-w-0 bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-500 focus:ring-2 focus:ring-[#0731c2] focus:border-[#0731c2] h-12 text-sm"
                         disabled={loading}
                         autoFocus={false}
                         tabIndex={0}

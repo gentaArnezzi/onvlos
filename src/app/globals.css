@@ -1,9 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-
-@custom-variant dark (&:is(.dark *));
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -119,77 +116,6 @@
     radial-gradient(at 0% 50%, rgb(236, 72, 153) 0px, transparent 50%);
 }
 
-.dark {
-  /* Base Colors - Dark Mode */
-  --background: 1 1 25;
-  --foreground: 237 237 237;
-
-  /* Card Colors */
-  --card: 24 24 32;
-  --card-foreground: 237 237 237;
-
-  /* Popover - Lighter for better visibility */
-  --popover: 51 65 85;
-  --popover-foreground: 237 237 237;
-
-  /* Primary - Blue in Dark Mode */
-  --primary: 7 49 194;
-  --primary-foreground: 255 255 255;
-
-  /* Secondary - Black in Dark Mode */
-  --secondary: 1 1 25;
-  --secondary-foreground: 237 237 237;
-
-  /* Muted */
-  --muted: 30 41 59;
-  --muted-foreground: 148 163 184;
-
-  /* Accent */
-  --accent: 244 114 182;
-  --accent-foreground: 15 23 42;
-
-  /* Destructive */
-  --destructive: 248 113 113;
-  --destructive-foreground: 15 23 42;
-
-  /* Border & Input */
-  --border: 51 65 85;
-  --input: 51 65 85;
-  --ring: 7 49 194;
-
-  /* Chart Colors */
-  --chart-1: 7 49 194;
-  --chart-2: 1 1 25;
-  --chart-3: 244 114 182;
-  --chart-4: 251 191 36;
-  --chart-5: 74 222 128;
-
-  /* Sidebar - Deep Dark with Glass Effect */
-  --sidebar: 1 1 25;
-  --sidebar-foreground: 237 237 237;
-  --sidebar-primary: 7 49 194;
-  --sidebar-primary-foreground: 255 255 255;
-  --sidebar-accent: 30 41 59;
-  --sidebar-accent-foreground: 237 237 237;
-  --sidebar-border: 51 65 85;
-  --sidebar-ring: 7 49 194;
-
-  /* Glassmorphism - Dark Mode */
-  --glass-bg: rgba(255, 255, 255, 0.05);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-
-  /* Gradients - Dark Mode */
-  --gradient-primary: linear-gradient(135deg, rgb(7, 49, 194) 0%, rgb(5, 35, 150) 100%);
-  --gradient-secondary: linear-gradient(135deg, rgb(1, 1, 25) 0%, rgb(0, 0, 15) 100%);
-  --gradient-accent: linear-gradient(135deg, rgb(244, 114, 182) 0%, rgb(236, 72, 153) 100%);
-  --gradient-hero: radial-gradient(circle at top right, rgba(7, 49, 194, 0.2), transparent 50%),
-    radial-gradient(circle at bottom left, rgba(1, 1, 25, 0.2), transparent 50%);
-  --gradient-mesh: radial-gradient(at 40% 20%, rgba(7, 49, 194, 0.3) 0px, transparent 50%),
-    radial-gradient(at 80% 0%, rgba(1, 1, 25, 0.3) 0px, transparent 50%),
-    radial-gradient(at 0% 50%, rgba(244, 114, 182, 0.3) 0px, transparent 50%);
-}
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -200,11 +126,6 @@
     font-family: var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif;
   }
 
-  /* Smooth transitions for theme changes */
-  html {
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-
   /* Glassmorphism Utilities */
   .glass-card {
     background: rgba(255, 255, 255, 0.1);
@@ -213,12 +134,6 @@
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
     border-radius: 0.75rem;
-  }
-
-  .dark .glass-card {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   }
 
   /* Animations */

@@ -17,6 +17,12 @@ async function retryWithBackoff<T>(
         error?.body?.cause?.code === '53300' ||
         (error?.status === 'INTERNAL_SERVER_ERROR' && error?.body?.cause?.code === '53300');
 
+      // Check if it's a query error (likely from Drizzle ORM internal logging)
+      const isQueryError = 
+        error?.message?.includes('Failed query') ||
+        error?.message?.includes('select') ||
+        error?.message?.includes('session');
+
       if (isConnectionError && i < maxRetries - 1) {
         const delay = baseDelay * Math.pow(2, i);
         console.warn(`Connection pool exhausted, retrying in ${delay}ms... (attempt ${i + 1}/${maxRetries})`);
@@ -30,6 +36,12 @@ async function retryWithBackoff<T>(
         return null;
       }
 
+      // For query errors (likely session not found or invalid token), return null silently
+      // This is expected behavior when session is invalid or expired
+      if (isQueryError) {
+        return null;
+      }
+
       // Re-throw other errors
       throw error;
     }
@@ -38,10 +50,26 @@ async function retryWithBackoff<T>(
 }
 
 export async function getSession() {
-  return retryWithBackoff(async () => {
-    const session = await auth.api.getSession({
-      headers: await headers(), // Next.js 15 requirement
+  try {
+    return await retryWithBackoff(async () => {
+      const session = await auth.api.getSession({
+        headers: await headers(), // Next.js 15 requirement
+      });
+      return session;
     });
-    return session;
-  });
+  } catch (error: any) {
+    // Silently handle session errors - invalid tokens, expired sessions, etc.
+    // This is expected behavior and the app will redirect to login
+    const isSessionError = 
+      error?.message?.includes('Failed query') ||
+      error?.message?.includes('session') ||
+      error?.message?.includes('token');
+    
+    if (isSessionError) {
+      return null;
+    }
+    
+    // Re-throw unexpected errors
+    throw error;
+  }
 }

@@ -73,18 +73,18 @@ export function ProposalViewClient({ proposal, currencySymbol }: ProposalViewCli
     <div className="space-y-6">
       {/* Client Info */}
       {proposal.client && (
-        <Card className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+        <Card className="border-slate-200 bg-white">
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
+              <div className="p-2 rounded-lg bg-blue-100 text-blue-600">
                 <User className="h-5 w-5" />
               </div>
               <div>
-                <p className="font-medium text-slate-900 dark:text-white">
+                <p className="font-medium text-slate-900">
                   {proposal.client.name || proposal.client.company_name || "Client"}
                 </p>
                 {proposal.client.email && (
-                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                  <p className="text-sm text-slate-600">
                     {proposal.client.email}
                   </p>
                 )}
@@ -95,9 +95,9 @@ export function ProposalViewClient({ proposal, currencySymbol }: ProposalViewCli
       )}
 
       {/* Proposal Details */}
-      <Card className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+      <Card className="border-slate-200 bg-white">
         <CardHeader>
-          <CardTitle className="text-slate-900 dark:text-white">{t("proposals.details")}</CardTitle>
+          <CardTitle className="text-slate-900">{t("proposals.details")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Content Sections */}
@@ -106,40 +106,40 @@ export function ProposalViewClient({ proposal, currencySymbol }: ProposalViewCli
               {proposal.content.sections
                 .sort((a: any, b: any) => a.order - b.order)
                 .map((section: any, index: number) => (
-                  <div key={section.id || index} className="prose dark:prose-invert max-w-none">
+                  <div key={section.id || index} className="prose max-w-none">
                     {section.type === "header" && (
-                      <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
+                      <h2 className="text-2xl font-bold text-slate-900 mb-4">
                         {typeof section.content === 'string' ? section.content : JSON.stringify(section.content)}
                       </h2>
                     )}
                     {section.type === "text" && (
-                      <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
+                      <p className="text-slate-700 leading-relaxed">
                         {typeof section.content === 'string' ? section.content : JSON.stringify(section.content)}
                       </p>
                     )}
                     {section.type === "pricing" && (
-                      <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg">
-                        <h3 className="font-semibold text-slate-900 dark:text-white mb-2">
+                      <div className="bg-slate-50 p-4 rounded-lg">
+                        <h3 className="font-semibold text-slate-900 mb-2">
                           {section.title || t("proposals.pricing")}
                         </h3>
                         {typeof section.content === 'string' ? (
-                          <p className="text-slate-700 dark:text-slate-300">
+                          <p className="text-slate-700">
                             {section.content}
                           </p>
                         ) : Array.isArray(section.content) ? (
                           <div className="space-y-2">
                             {section.content.map((item: any, idx: number) => {
                               if (typeof item === 'string') {
-                                return <div key={idx} className="text-slate-700 dark:text-slate-300">{item}</div>;
+                                return <div key={idx} className="text-slate-700">{item}</div>;
                               }
                               if (item && typeof item === 'object') {
                                 return (
-                                  <div key={idx} className="text-slate-700 dark:text-slate-300">
+                                  <div key={idx} className="text-slate-700">
                                     {item.name && (
                                       <div className="font-medium">{item.name}</div>
                                     )}
                                     {item.description && (
-                                      <div className="text-sm text-slate-600 dark:text-slate-400">{item.description}</div>
+                                      <div className="text-sm text-slate-600">{item.description}</div>
                                     )}
                                     {item.quantity && item.unit_price && (
                                       <div className="text-sm">
@@ -154,11 +154,11 @@ export function ProposalViewClient({ proposal, currencySymbol }: ProposalViewCli
                             })}
                           </div>
                         ) : section.content && typeof section.content === 'object' ? (
-                          <p className="text-slate-700 dark:text-slate-300">
+                          <p className="text-slate-700">
                             {section.content.name || section.content.title || section.content.description || ''}
                           </p>
                         ) : (
-                          <p className="text-slate-700 dark:text-slate-300">
+                          <p className="text-slate-700">
                             {String(section.content || '')}
                           </p>
                         )}
@@ -172,29 +172,29 @@ export function ProposalViewClient({ proposal, currencySymbol }: ProposalViewCli
           {/* Items */}
           {proposal.items && Array.isArray(proposal.items) && proposal.items.length > 0 && (
             <div className="mt-6">
-              <h3 className="font-semibold text-slate-900 dark:text-white mb-4">{t("proposals.items")}</h3>
+              <h3 className="font-semibold text-slate-900 mb-4">{t("proposals.items")}</h3>
               <div className="space-y-3">
                 {proposal.items.map((item: any, index: number) => {
                   // Ensure item is an object and has required fields
                   if (!item || typeof item !== 'object') return null;
                   
                   return (
-                    <div key={item.id || index} className="flex justify-between items-start p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                    <div key={item.id || index} className="flex justify-between items-start p-4 bg-slate-50 rounded-lg">
                       <div className="flex-1">
-                        <p className="font-medium text-slate-900 dark:text-white">
+                        <p className="font-medium text-slate-900">
                           {item.name || t("proposals.unnamedItem")}
                         </p>
                         {item.description && (
-                          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                          <p className="text-sm text-slate-600 mt-1">
                             {typeof item.description === 'string' ? item.description : String(item.description)}
                           </p>
                         )}
-                        <p className="text-sm text-slate-500 dark:text-slate-500 mt-1">
+                        <p className="text-sm text-slate-600 mt-1">
                           {t("proposals.quantity")}: {item.quantity || 0} × {currencySymbol}{Number(item.unit_price || 0).toLocaleString()}
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="font-semibold text-slate-900 dark:text-white">
+                        <p className="font-semibold text-slate-900">
                           {currencySymbol}{Number(item.total || 0).toLocaleString()}
                         </p>
                       </div>
@@ -206,29 +206,29 @@ export function ProposalViewClient({ proposal, currencySymbol }: ProposalViewCli
           )}
 
           {/* Totals */}
-          <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-800">
+          <div className="mt-6 pt-6 border-t border-slate-200">
             <div className="space-y-2">
               {proposal.subtotal && (
-                <div className="flex justify-between text-slate-700 dark:text-slate-300">
+                <div className="flex justify-between text-slate-700">
                   <span>{t("proposals.subtotal")}</span>
                   <span>{currencySymbol}{Number(proposal.subtotal).toLocaleString()}</span>
                 </div>
               )}
               {proposal.discount_amount && Number(proposal.discount_amount) > 0 && (
-                <div className="flex justify-between text-slate-700 dark:text-slate-300">
+                <div className="flex justify-between text-slate-700">
                   <span>{t("invoices.discount")}</span>
-                  <span className="text-emerald-600 dark:text-emerald-400">
+                  <span className="text-emerald-600">
                     -{currencySymbol}{Number(proposal.discount_amount).toLocaleString()}
                   </span>
                 </div>
               )}
               {proposal.tax_amount && Number(proposal.tax_amount) > 0 && (
-                <div className="flex justify-between text-slate-700 dark:text-slate-300">
+                <div className="flex justify-between text-slate-700">
                   <span>{t("invoices.tax")}</span>
                   <span>{currencySymbol}{Number(proposal.tax_amount).toLocaleString()}</span>
                 </div>
               )}
-              <div className="flex justify-between text-lg font-bold text-slate-900 dark:text-white pt-2 border-t border-slate-200 dark:border-slate-800">
+              <div className="flex justify-between text-lg font-bold text-slate-900 pt-2 border-t border-slate-200">
                 <span>{t("proposals.total")}</span>
                 <span>{currencySymbol}{Number(proposal.total || proposal.subtotal || 0).toLocaleString()}</span>
               </div>
@@ -238,17 +238,17 @@ export function ProposalViewClient({ proposal, currencySymbol }: ProposalViewCli
       </Card>
 
       {/* Validity & Dates */}
-      <Card className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+      <Card className="border-slate-200 bg-white">
         <CardContent className="pt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {proposal.valid_until && (
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400">
+                <div className="p-2 rounded-lg bg-orange-100 text-orange-600">
                   <Calendar className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">{t("proposals.validUntil")}</p>
-                  <p className="font-medium text-slate-900 dark:text-white">
+                  <p className="text-sm text-slate-600">{t("proposals.validUntil")}</p>
+                  <p className="font-medium text-slate-900">
                     {format(new Date(proposal.valid_until), "MMM d, yyyy")}
                   </p>
                 </div>
@@ -256,12 +256,12 @@ export function ProposalViewClient({ proposal, currencySymbol }: ProposalViewCli
             )}
             {proposal.total && (
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400">
+                <div className="p-2 rounded-lg bg-emerald-100 text-emerald-600">
                   <DollarSign className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">{t("proposals.totalAmount")}</p>
-                  <p className="font-medium text-slate-900 dark:text-white">
+                  <p className="text-sm text-slate-600">{t("proposals.totalAmount")}</p>
+                  <p className="font-medium text-slate-900">
                     {currencySymbol}{Number(proposal.total).toLocaleString()}
                   </p>
                 </div>
@@ -273,7 +273,7 @@ export function ProposalViewClient({ proposal, currencySymbol }: ProposalViewCli
 
       {/* Actions */}
       {canAccept && (
-        <Card className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+        <Card className="border-slate-200 bg-white">
           <CardContent className="pt-6">
             {!showDeclineReason ? (
               <div className="flex flex-col sm:flex-row gap-3">
@@ -289,7 +289,7 @@ export function ProposalViewClient({ proposal, currencySymbol }: ProposalViewCli
                   onClick={() => setShowDeclineReason(true)}
                   disabled={loading}
                   variant="outline"
-                  className="flex-1 border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+                  className="flex-1 border-red-200 text-red-600 hover:bg-red-50"
                 >
                   <XCircle className="h-4 w-4 mr-2" />
                   {t("proposals.decline")}
@@ -301,7 +301,7 @@ export function ProposalViewClient({ proposal, currencySymbol }: ProposalViewCli
                   value={declineReason}
                   onChange={(e) => setDeclineReason(e.target.value)}
                   placeholder={t("proposals.declineReason")}
-                  className="w-full min-h-[100px] p-3 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
+                  className="w-full min-h-[100px] p-3 rounded-md border border-slate-200 bg-white text-slate-900 placeholder:text-slate-500"
                 />
                 <div className="flex gap-3">
                   <Button
@@ -332,16 +332,16 @@ export function ProposalViewClient({ proposal, currencySymbol }: ProposalViewCli
 
       {/* Status Messages */}
       {isAccepted && (
-        <Card className="border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/20">
+        <Card className="border-emerald-200 bg-emerald-50">
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+              <CheckCircle2 className="h-5 w-5 text-emerald-600" />
               <div>
-                <p className="font-medium text-emerald-900 dark:text-emerald-300">
+                <p className="font-medium text-emerald-900">
                   {t("proposals.accepted")}
                 </p>
                 {proposal.accepted_at && (
-                  <p className="text-sm text-emerald-700 dark:text-emerald-400">
+                  <p className="text-sm text-emerald-700">
                     {t("proposals.acceptedOn")} {format(new Date(proposal.accepted_at), "MMM d, yyyy 'at' h:mm a")}
                   </p>
                 )}
@@ -352,21 +352,21 @@ export function ProposalViewClient({ proposal, currencySymbol }: ProposalViewCli
       )}
 
       {isDeclined && (
-        <Card className="border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20">
+        <Card className="border-red-200 bg-red-50">
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <XCircle className="h-5 w-5 text-red-600 dark:text-red-400" />
+              <XCircle className="h-5 w-5 text-red-600" />
               <div>
-                <p className="font-medium text-red-900 dark:text-red-300">
+                <p className="font-medium text-red-900">
                   {t("proposals.declined")}
                 </p>
                 {proposal.declined_at && (
-                  <p className="text-sm text-red-700 dark:text-red-400">
+                  <p className="text-sm text-red-700">
                     {t("proposals.declinedOn")} {format(new Date(proposal.declined_at), "MMM d, yyyy 'at' h:mm a")}
                   </p>
                 )}
                 {proposal.decline_reason && (
-                  <p className="text-sm text-red-700 dark:text-red-400 mt-1">
+                  <p className="text-sm text-red-700 mt-1">
                     {t("proposals.reason")}: {proposal.decline_reason}
                   </p>
                 )}
@@ -377,15 +377,15 @@ export function ProposalViewClient({ proposal, currencySymbol }: ProposalViewCli
       )}
 
       {isExpired && !isAccepted && !isDeclined && (
-        <Card className="border-orange-200 dark:border-orange-800 bg-orange-50 dark:bg-orange-900/20">
+        <Card className="border-orange-200 bg-orange-50">
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <Clock className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+              <Clock className="h-5 w-5 text-orange-600" />
               <div>
-                <p className="font-medium text-orange-900 dark:text-orange-300">
+                <p className="font-medium text-orange-900">
                   {t("proposals.expired")}
                 </p>
-                <p className="text-sm text-orange-700 dark:text-orange-400">
+                <p className="text-sm text-orange-700">
                   {t("proposals.expiredMessage")}
                 </p>
               </div>

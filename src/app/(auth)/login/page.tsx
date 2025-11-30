@@ -37,7 +37,7 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 relative overflow-hidden">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-[#ededed] to-blue-50 relative overflow-hidden">
             {/* Animated Background Elements */}
             <div className="absolute inset-0 overflow-hidden">
                 <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#0731c2]/20 rounded-full blur-3xl animate-pulse" />
@@ -45,7 +45,7 @@ export default function LoginPage() {
             </div>
 
             <div className="relative z-10 w-full max-w-md px-4">
-                <Card className="border-slate-800 bg-slate-900/50 backdrop-blur-xl shadow-2xl">
+                <Card className="border-slate-200 bg-white/80 backdrop-blur-xl shadow-2xl">
                     <CardHeader className="space-y-4">
                         <div className="flex justify-center mb-2">
                             <img
@@ -55,10 +55,10 @@ export default function LoginPage() {
                             />
                         </div>
                         <div className="text-center space-y-2">
-                            <CardTitle className="text-3xl font-bold text-white">
+                            <CardTitle className="text-3xl font-bold text-slate-900">
                                 Welcome back
                             </CardTitle>
-                            <CardDescription className="text-slate-400">
+                            <CardDescription className="text-slate-600">
                                 Enter your email to sign in to your account
                             </CardDescription>
                         </div>
@@ -66,19 +66,19 @@ export default function LoginPage() {
                     <form onSubmit={handleLogin}>
                         <CardContent className="space-y-5 pb-6">
                             {error && (
-                                <div className="p-3 text-sm text-red-400 bg-red-950/30 border border-red-900/50 rounded-lg">
+                                <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg">
                                     {error}
                                 </div>
                             )}
                             <div className="space-y-2">
-                                <Label htmlFor="email" className="text-slate-300">
+                                <Label htmlFor="email" className="text-slate-700">
                                     Email
                                 </Label>
                                 <Input 
                                     id="email" 
                                     type="email" 
                                     placeholder="m@example.com"
-                                    className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500 focus:border-[#0731c2] focus:ring-[#0731c2]/20"
+                                    className="bg-white border-slate-300 text-slate-900 placeholder:text-slate-500 focus:border-[#0731c2] focus:ring-[#0731c2]/20"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required 
@@ -86,7 +86,7 @@ export default function LoginPage() {
                             </div>
                             <div className="space-y-2">
                                 <div className="flex items-center justify-between">
-                                    <Label htmlFor="password" className="text-slate-300">
+                                    <Label htmlFor="password" className="text-slate-700">
                                         Password
                                     </Label>
                                     <Link 
@@ -99,7 +99,7 @@ export default function LoginPage() {
                                 <Input 
                                     id="password" 
                                     type="password"
-                                    className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500 focus:border-[#0731c2] focus:ring-[#0731c2]/20"
+                                    className="bg-white border-slate-300 text-slate-900 placeholder:text-slate-500 focus:border-[#0731c2] focus:ring-[#0731c2]/20"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     required 
@@ -115,7 +115,7 @@ export default function LoginPage() {
                                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                 Sign In
                             </Button>
-                            <div className="text-center text-sm text-slate-400">
+                            <div className="text-center text-sm text-slate-600">
                                 Don't have an account?{" "}
                                 <Link 
                                     href="/signup" 

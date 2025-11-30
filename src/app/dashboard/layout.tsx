@@ -16,9 +16,9 @@ export default async function DashboardLayout({
 
   return (
     <LanguageProviderWrapper defaultLanguage={defaultLanguage}>
-      <div className="h-full relative bg-slate-50 dark:bg-slate-950 overflow-x-hidden">
+      <div className="h-full relative bg-slate-50 overflow-x-hidden">
         <Navbar user={session?.user} />
-        <main className="min-h-screen bg-slate-50 dark:bg-slate-950">
+        <main className="min-h-screen bg-slate-50">
           {children}
         </main>
         <AiAssistant />

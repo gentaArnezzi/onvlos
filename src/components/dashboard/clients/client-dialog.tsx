@@ -45,29 +45,29 @@ export function ClientDialog() {
           <Plus className="mr-2 h-4 w-4" /> {t("clients.addClient")}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+      <DialogContent className="sm:max-w-[425px] bg-white border-slate-200">
         <DialogHeader>
-          <DialogTitle className="text-slate-900 dark:text-white">{t("clients.addClient")}</DialogTitle>
-          <DialogDescription className="text-slate-600 dark:text-slate-400">
+          <DialogTitle className="text-slate-900">{t("clients.addClient")}</DialogTitle>
+          <DialogDescription className="text-slate-600">
             {t("clients.addNewClient")}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-right text-slate-900 dark:text-white">
+              <Label htmlFor="name" className="text-right text-slate-900">
                 {t("clients.name")}
               </Label>
               <Input 
                 id="name" 
                 name="name" 
                 placeholder={t("clients.name")} 
-                className="col-span-3 bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400" 
+                className="col-span-3 bg-white border-slate-200 text-slate-900 placeholder:text-slate-500" 
                 required 
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="email" className="text-right text-slate-900 dark:text-white">
+              <Label htmlFor="email" className="text-right text-slate-900">
                 {t("clients.email")}
               </Label>
               <Input 
@@ -75,19 +75,19 @@ export function ClientDialog() {
                 name="email" 
                 type="email" 
                 placeholder={t("clients.email")} 
-                className="col-span-3 bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400" 
+                className="col-span-3 bg-white border-slate-200 text-slate-900 placeholder:text-slate-500" 
                 required 
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="company_name" className="text-right text-slate-900 dark:text-white">
+              <Label htmlFor="company_name" className="text-right text-slate-900">
                 {t("clients.company")}
               </Label>
               <Input 
                 id="company_name" 
                 name="company_name" 
                 placeholder={t("clients.company")} 
-                className="col-span-3 bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400" 
+                className="col-span-3 bg-white border-slate-200 text-slate-900 placeholder:text-slate-500" 
                 required 
               />
             </div>

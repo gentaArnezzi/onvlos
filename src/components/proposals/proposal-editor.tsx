@@ -151,23 +151,23 @@ export function ProposalEditor({ clients, currencySymbol = "$" }: ProposalEditor
   return (
     <div className="space-y-6 bg-transparent">
       {/* Client Selection */}
-      <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 shadow-sm">
+      <Card className="bg-white border-slate-200 shadow-sm">
         <CardHeader>
-          <CardTitle className="text-slate-900 dark:text-white">Client Information</CardTitle>
+          <CardTitle className="text-slate-900">Client Information</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-4">
           <div className="grid gap-2">
-            <Label htmlFor="client" className="text-slate-900 dark:text-white">Select Client *</Label>
+            <Label htmlFor="client" className="text-slate-900">Select Client *</Label>
             <Select
               value={formData.client_id}
               onValueChange={(value) => setFormData({ ...formData, client_id: value })}
             >
-              <SelectTrigger className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
+              <SelectTrigger className="bg-white border-slate-200 text-slate-900">
                 <SelectValue placeholder="Choose a client" />
               </SelectTrigger>
-              <SelectContent className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
+              <SelectContent className="bg-white border-slate-200">
                 {clients.map((client) => (
-                  <SelectItem key={client.id} value={client.id} className="text-slate-900 dark:text-white focus:bg-slate-100 dark:focus:bg-slate-800">
+                  <SelectItem key={client.id} value={client.id} className="text-slate-900 focus:bg-slate-100">
                     {client.company_name || client.name}
                   </SelectItem>
                 ))}
@@ -176,119 +176,119 @@ export function ProposalEditor({ clients, currencySymbol = "$" }: ProposalEditor
           </div>
           
           <div className="grid gap-2">
-            <Label htmlFor="title" className="text-slate-900 dark:text-white">Proposal Title *</Label>
+            <Label htmlFor="title" className="text-slate-900">Proposal Title *</Label>
             <Input
               id="title"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               placeholder="e.g., Website Development Proposal"
-              className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
+              className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
             />
           </div>
           
           <div className="grid gap-2">
-            <Label htmlFor="valid_days" className="text-slate-900 dark:text-white">Valid For (days)</Label>
+            <Label htmlFor="valid_days" className="text-slate-900">Valid For (days)</Label>
             <Input
               id="valid_days"
               type="number"
               value={formData.valid_days}
               onChange={(e) => setFormData({ ...formData, valid_days: parseInt(e.target.value) || 30 })}
-              className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+              className="bg-white border-slate-200 text-slate-900"
             />
           </div>
         </CardContent>
       </Card>
 
       {/* Proposal Content */}
-      <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 shadow-sm">
+      <Card className="bg-white border-slate-200 shadow-sm">
         <CardHeader>
-          <CardTitle className="text-slate-900 dark:text-white">Proposal Content</CardTitle>
+          <CardTitle className="text-slate-900">Proposal Content</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-2">
-            <Label htmlFor="introduction" className="text-slate-900 dark:text-white">Introduction</Label>
+            <Label htmlFor="introduction" className="text-slate-900">Introduction</Label>
             <Textarea
               id="introduction"
               value={formData.introduction}
               onChange={(e) => setFormData({ ...formData, introduction: e.target.value })}
               placeholder="Brief introduction about the proposal..."
               rows={4}
-              className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
+              className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
             />
           </div>
           
           <div className="grid gap-2">
-            <Label htmlFor="scope" className="text-slate-900 dark:text-white">Scope of Work</Label>
+            <Label htmlFor="scope" className="text-slate-900">Scope of Work</Label>
             <Textarea
               id="scope"
               value={formData.scope}
               onChange={(e) => setFormData({ ...formData, scope: e.target.value })}
               placeholder="Detailed scope of work..."
               rows={6}
-              className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
+              className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
             />
           </div>
           
           <div className="grid gap-2">
-            <Label htmlFor="timeline" className="text-slate-900 dark:text-white">Timeline</Label>
+            <Label htmlFor="timeline" className="text-slate-900">Timeline</Label>
             <Textarea
               id="timeline"
               value={formData.timeline}
               onChange={(e) => setFormData({ ...formData, timeline: e.target.value })}
               placeholder="Project timeline and milestones..."
               rows={4}
-              className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
+              className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
             />
           </div>
         </CardContent>
       </Card>
 
       {/* Pricing */}
-      <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 shadow-sm">
+      <Card className="bg-white border-slate-200 shadow-sm">
         <CardHeader>
-          <CardTitle className="text-slate-900 dark:text-white">Pricing</CardTitle>
+          <CardTitle className="text-slate-900">Pricing</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {items.map((item, index) => (
               <div key={index} className="grid grid-cols-12 gap-2 items-end">
                 <div className="col-span-4">
-                  <Label className="text-slate-900 dark:text-white">Item Name</Label>
+                  <Label className="text-slate-900">Item Name</Label>
                   <Input
                     value={item.name}
                     onChange={(e) => updateItem(index, 'name', e.target.value)}
                     placeholder="Service/Product"
-                    className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
+                    className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
                   />
                 </div>
                 <div className="col-span-3">
-                  <Label className="text-slate-900 dark:text-white">Description</Label>
+                  <Label className="text-slate-900">Description</Label>
                   <Input
                     value={item.description}
                     onChange={(e) => updateItem(index, 'description', e.target.value)}
                     placeholder="Brief description"
-                    className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
+                    className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
                   />
                 </div>
                 <div className="col-span-2">
-                  <Label className="text-slate-900 dark:text-white">Quantity</Label>
+                  <Label className="text-slate-900">Quantity</Label>
                   <Input
                     type="number"
                     value={item.quantity}
                     onChange={(e) => updateItem(index, 'quantity', e.target.value)}
                     min="1"
-                    className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                    className="bg-white border-slate-200 text-slate-900"
                   />
                 </div>
                 <div className="col-span-2">
-                  <Label className="text-slate-900 dark:text-white">Unit Price</Label>
+                  <Label className="text-slate-900">Unit Price</Label>
                   <Input
                     type="number"
                     value={item.unit_price}
                     onChange={(e) => updateItem(index, 'unit_price', e.target.value)}
                     min="0"
                     step="0.01"
-                    className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                    className="bg-white border-slate-200 text-slate-900"
                   />
                 </div>
                 <div className="col-span-1">
@@ -298,7 +298,7 @@ export function ProposalEditor({ clients, currencySymbol = "$" }: ProposalEditor
                     size="icon"
                     onClick={() => removeItem(index)}
                     disabled={items.length === 1}
-                    className="text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400"
+                    className="text-slate-600 hover:text-red-600"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -310,14 +310,14 @@ export function ProposalEditor({ clients, currencySymbol = "$" }: ProposalEditor
               type="button"
               variant="outline"
               onClick={addItem}
-              className="w-full border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
+              className="w-full border-slate-200 text-slate-900 hover:bg-slate-100"
             >
               <Plus className="h-4 w-4 mr-2" />
               Add Item
             </Button>
             
-            <div className="text-right pt-4 border-t border-slate-200 dark:border-slate-700">
-              <div className="text-2xl font-bold text-slate-900 dark:text-white">
+            <div className="text-right pt-4 border-t border-slate-200">
+              <div className="text-2xl font-bold text-slate-900">
                 Total: {currencySymbol}{calculateTotal().toFixed(2)}
               </div>
             </div>
@@ -326,9 +326,9 @@ export function ProposalEditor({ clients, currencySymbol = "$" }: ProposalEditor
       </Card>
 
       {/* Terms & Conditions */}
-      <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 shadow-sm">
+      <Card className="bg-white border-slate-200 shadow-sm">
         <CardHeader>
-          <CardTitle className="text-slate-900 dark:text-white">Terms & Conditions</CardTitle>
+          <CardTitle className="text-slate-900">Terms & Conditions</CardTitle>
         </CardHeader>
         <CardContent>
           <Textarea
@@ -336,7 +336,7 @@ export function ProposalEditor({ clients, currencySymbol = "$" }: ProposalEditor
             onChange={(e) => setFormData({ ...formData, terms: e.target.value })}
             placeholder="Terms and conditions..."
             rows={6}
-            className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
+            className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
           />
         </CardContent>
       </Card>
@@ -346,7 +346,7 @@ export function ProposalEditor({ clients, currencySymbol = "$" }: ProposalEditor
         <Button
           variant="outline"
           onClick={() => router.push("/dashboard/proposals")}
-          className="border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
+          className="border-slate-200 text-slate-900 hover:bg-slate-100"
         >
           Cancel
         </Button>

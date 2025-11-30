@@ -55,69 +55,69 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ c
     return (
         <div className="flex-1 space-y-6 p-8 max-w-7xl mx-auto">
             <div className="flex items-center space-x-4 mb-6">
-                <Button variant="ghost" size="icon" asChild className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+                <Button variant="ghost" size="icon" asChild className="text-slate-600 hover:text-slate-900">
                     <Link href="/dashboard/clients">
                         <ArrowLeft className="h-5 w-5" />
                     </Link>
                 </Button>
                 <div>
-                    <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+                    <h2 className="text-2xl font-bold tracking-tight text-slate-900">
                         {client.company_name || "No Company Name"}
                     </h2>
-                    <p className="text-slate-500 dark:text-slate-400 mt-1">
+                    <p className="text-slate-600 mt-1">
                         {client.name} {client.email && `• ${client.email}`}
                     </p>
                 </div>
             </div>
 
             <Tabs defaultValue="overview" className="space-y-4">
-                <TabsList className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
-                    <TabsTrigger value="overview" className="text-slate-700 dark:text-slate-300 data-[state=active]:text-slate-900 dark:data-[state=active]:text-white">
+                <TabsList className="bg-white border-slate-200">
+                    <TabsTrigger value="overview" className="text-slate-700 data-[state=active]:text-slate-900">
                         Overview
                     </TabsTrigger>
-                    <TabsTrigger value="chat" className="text-slate-700 dark:text-slate-300 data-[state=active]:text-slate-900 dark:data-[state=active]:text-white">
+                    <TabsTrigger value="chat" className="text-slate-700 data-[state=active]:text-slate-900">
                         Chat
                     </TabsTrigger>
-                    <TabsTrigger value="tasks" className="text-slate-700 dark:text-slate-300 data-[state=active]:text-slate-900 dark:data-[state=active]:text-white">
+                    <TabsTrigger value="tasks" className="text-slate-700 data-[state=active]:text-slate-900">
                         Tasks
                     </TabsTrigger>
-                    <TabsTrigger value="files" className="text-slate-700 dark:text-slate-300 data-[state=active]:text-slate-900 dark:data-[state=active]:text-white">
+                    <TabsTrigger value="files" className="text-slate-700 data-[state=active]:text-slate-900">
                         Files
                     </TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="overview" className="space-y-4">
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                        <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50">
+                        <Card className="border-none shadow-lg bg-white">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">Status</CardTitle>
-                                <CheckSquare className="h-4 w-4 text-slate-500 dark:text-slate-400" />
+                                <CardTitle className="text-sm font-medium text-slate-700">Status</CardTitle>
+                                <CheckSquare className="h-4 w-4 text-slate-500" />
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold text-slate-900 dark:text-white capitalize">
+                                <div className="text-2xl font-bold text-slate-900 capitalize">
                                     {client.status || "lead"}
                                 </div>
                             </CardContent>
                         </Card>
-                        <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50">
+                        <Card className="border-none shadow-lg bg-white">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">Contract Value</CardTitle>
-                                <FileText className="h-4 w-4 text-slate-500 dark:text-slate-400" />
+                                <CardTitle className="text-sm font-medium text-slate-700">Contract Value</CardTitle>
+                                <FileText className="h-4 w-4 text-slate-500" />
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold text-slate-900 dark:text-white">
+                                <div className="text-2xl font-bold text-slate-900">
                                     {defaultCurrencySymbol}{client.contract_value ? Number(client.contract_value).toLocaleString() : "0"}
                                 </div>
                             </CardContent>
                         </Card>
                         {client.category && (
-                            <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50">
+                            <Card className="border-none shadow-lg bg-white">
                                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                    <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">Category</CardTitle>
-                                    <FileText className="h-4 w-4 text-slate-500 dark:text-slate-400" />
+                                    <CardTitle className="text-sm font-medium text-slate-700">Category</CardTitle>
+                                    <FileText className="h-4 w-4 text-slate-500" />
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="text-2xl font-bold text-slate-900 dark:text-white">
+                                    <div className="text-2xl font-bold text-slate-900">
                                         {client.category}
                                     </div>
                                 </CardContent>
@@ -125,12 +125,12 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ c
                         )}
                     </div>
                     {client.description && (
-                        <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50">
+                        <Card className="border-none shadow-lg bg-white">
                             <CardHeader>
-                                <CardTitle className="text-slate-900 dark:text-white">Description</CardTitle>
+                                <CardTitle className="text-slate-900">Description</CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <p className="text-slate-600 dark:text-slate-400">{client.description}</p>
+                                <p className="text-slate-600">{client.description}</p>
                             </CardContent>
                         </Card>
                     )}
@@ -138,7 +138,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ c
 
                 <TabsContent value="chat" className="h-full">
                     {chatData ? (
-                        <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50">
+                        <Card className="border-none shadow-lg bg-white">
                             <CardContent className="p-0">
                                 <ChatInterface 
                                     conversationId={chatData.conversation.id}
@@ -149,8 +149,8 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ c
                             </CardContent>
                         </Card>
                     ) : (
-                        <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50">
-                            <CardContent className="py-10 text-center text-slate-500 dark:text-slate-400">
+                        <Card className="border-none shadow-lg bg-white">
+                            <CardContent className="py-10 text-center text-slate-600">
                                 No client space found. Please onboard the client first to enable chat.
                             </CardContent>
                         </Card>
@@ -158,15 +158,15 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ c
                 </TabsContent>
                 
                 <TabsContent value="tasks">
-                    <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50">
-                        <CardContent className="py-10 text-center text-slate-500 dark:text-slate-400">
+                    <Card className="border-none shadow-lg bg-white">
+                        <CardContent className="py-10 text-center text-slate-600">
                             Task management for specific client view coming soon.
                         </CardContent>
                     </Card>
                 </TabsContent>
 
                 <TabsContent value="files">
-                    <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50">
+                    <Card className="border-none shadow-lg bg-white">
                         <CardContent>
                             <FileManager clientId={client.id} />
                         </CardContent>

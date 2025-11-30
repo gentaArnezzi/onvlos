@@ -73,39 +73,39 @@ export function InvoiceActions({ invoice }: InvoiceActionsProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon" className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border-slate-200 dark:border-slate-700">
+        <Button variant="outline" size="icon" className="text-slate-600 hover:text-slate-900 border-slate-200">
           <MoreVertical className="h-5 w-5" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
+      <DropdownMenuContent align="end" className="bg-white border-slate-200 text-slate-900">
         {invoice.status === 'draft' && (
-          <DropdownMenuItem onClick={() => router.push(`/dashboard/invoices/${invoice.id}/edit`)} className="text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700">
+          <DropdownMenuItem onClick={() => router.push(`/dashboard/invoices/${invoice.id}/edit`)} className="text-slate-900 hover:bg-slate-100">
             <Edit className="mr-2 h-4 w-4" />
             Edit
           </DropdownMenuItem>
         )}
         {invoice.status !== 'paid' && invoice.status !== 'archived' && invoice.status !== 'sent' && (
-          <DropdownMenuItem onClick={handleSend} className="text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700">
+          <DropdownMenuItem onClick={handleSend} className="text-slate-900 hover:bg-slate-100">
             <Send className="mr-2 h-4 w-4" />
             Send
           </DropdownMenuItem>
         )}
         {invoice.status !== 'paid' && invoice.status !== 'archived' && (
-          <DropdownMenuItem onClick={handleMarkPaid} className="text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700">
+          <DropdownMenuItem onClick={handleMarkPaid} className="text-slate-900 hover:bg-slate-100">
             <CheckCircle className="mr-2 h-4 w-4" />
             Mark as Paid
           </DropdownMenuItem>
         )}
-        <DropdownMenuItem onClick={handleDownload} className="text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700">
+        <DropdownMenuItem onClick={handleDownload} className="text-slate-900 hover:bg-slate-100">
           <Download className="mr-2 h-4 w-4" />
           Download PDF
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleDuplicate} className="text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700">
+        <DropdownMenuItem onClick={handleDuplicate} className="text-slate-900 hover:bg-slate-100">
           <Copy className="mr-2 h-4 w-4" />
           Duplicate
         </DropdownMenuItem>
         {invoice.status !== 'archived' && (
-          <DropdownMenuItem onClick={handleArchive} className="text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20">
+          <DropdownMenuItem onClick={handleArchive} className="text-red-600 hover:bg-red-50">
             <Archive className="mr-2 h-4 w-4" />
             Archive
           </DropdownMenuItem>

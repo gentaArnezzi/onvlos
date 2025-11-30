@@ -111,27 +111,27 @@ export function CreateTaskDialog({ clients, taskToEdit, initialClientId, open: c
           </Button>
         </DialogTrigger>
       )}
-      <DialogContent className="sm:max-w-[425px] bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+      <DialogContent className="sm:max-w-[425px] bg-white border-slate-200">
         <DialogHeader>
-          <DialogTitle className="text-slate-900 dark:text-white">{taskToEdit ? t("tasks.editTask") : t("tasks.createTask")}</DialogTitle>
+          <DialogTitle className="text-slate-900">{taskToEdit ? t("tasks.editTask") : t("tasks.createTask")}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="space-y-2">
-              <Label className="text-slate-900 dark:text-white">{t("tasks.taskTitle")}</Label>
+              <Label className="text-slate-900">{t("tasks.taskTitle")}</Label>
               <Input
                 value={title}
                 onChange={e => setTitle(e.target.value)}
                 required
                 placeholder={t("tasks.reviewDeliverables")}
-                className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
+                className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
               />
             </div>
 
             <div className="space-y-2">
-              <Label className="text-slate-900 dark:text-white">{t("tasks.client")}</Label>
+              <Label className="text-slate-900">{t("tasks.client")}</Label>
               <Select value={clientId} onValueChange={setClientId}>
-                <SelectTrigger className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
+                <SelectTrigger className="bg-white border-slate-200 text-slate-900">
                   <SelectValue placeholder={t("tasks.selectClientOptional")} />
                 </SelectTrigger>
                 <SelectContent>
@@ -146,9 +146,9 @@ export function CreateTaskDialog({ clients, taskToEdit, initialClientId, open: c
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label className="text-slate-900 dark:text-white">{t("tasks.priority")}</Label>
+                <Label className="text-slate-900">{t("tasks.priority")}</Label>
                 <Select value={priority} onValueChange={setPriority}>
-                  <SelectTrigger className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
+                  <SelectTrigger className="bg-white border-slate-200 text-slate-900">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -159,23 +159,23 @@ export function CreateTaskDialog({ clients, taskToEdit, initialClientId, open: c
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label className="text-slate-900 dark:text-white">{t("tasks.dueDate")}</Label>
+                <Label className="text-slate-900">{t("tasks.dueDate")}</Label>
                 <Input
                   type="date"
                   value={dueDate}
                   onChange={e => setDueDate(e.target.value)}
-                  className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                  className="bg-white border-slate-200 text-slate-900"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label className="text-slate-900 dark:text-white">{t("common.description")}</Label>
+              <Label className="text-slate-900">{t("common.description")}</Label>
               <Textarea
                 value={description}
                 onChange={e => setDescription(e.target.value)}
                 placeholder={t("tasks.taskDetails")}
-                className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
+                className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
               />
             </div>
           </div>

@@ -24,19 +24,19 @@ export function StepConfigContract({ config, onUpdate }: StepConfigContractProps
     return (
         <div className="space-y-6">
             <div className="space-y-2">
-                <Label className="text-slate-900 dark:text-white">{t('funnels.editor.contract.title')}</Label>
+                <Label className="text-slate-900">{t('funnels.editor.contract.title')}</Label>
                 <Input
                     value={title}
                     onChange={e => setTitle(e.target.value)}
-                    className="bg-white dark:bg-slate-950 text-slate-900 dark:text-white border-slate-200 dark:border-slate-800"
+                    className="bg-white text-slate-900 border-slate-200"
                 />
             </div>
 
             <div className="space-y-2">
-                <Label className="text-slate-900 dark:text-white">{t('funnels.editor.contract.content')}</Label>
+                <Label className="text-slate-900">{t('funnels.editor.contract.content')}</Label>
                 {/* In a real app, this would be a PDF uploader or Rich Text Editor */}
                 <textarea
-                    className="flex min-h-[200px] w-full rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-slate-900 dark:text-white"
+                    className="flex min-h-[200px] w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-slate-900"
                     value={content}
                     onChange={e => setContent(e.target.value)}
                 />
@@ -47,9 +47,9 @@ export function StepConfigContract({ config, onUpdate }: StepConfigContractProps
                     id="req-sig"
                     checked={requireSignature}
                     onCheckedChange={(c) => setRequireSignature(c as boolean)}
-                    className="border-slate-300 dark:border-slate-600 data-[state=checked]:bg-[#0731c2] data-[state=checked]:border-[#0731c2]"
+                    className="border-slate-300 data-[state=checked]:bg-[#0731c2] data-[state=checked]:border-[#0731c2]"
                 />
-                <Label htmlFor="req-sig" className="text-slate-900 dark:text-white">{t('funnels.editor.contract.requireSignature')}</Label>
+                <Label htmlFor="req-sig" className="text-slate-900">{t('funnels.editor.contract.requireSignature')}</Label>
             </div>
         </div>
     );

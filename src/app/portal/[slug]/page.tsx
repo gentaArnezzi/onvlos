@@ -40,7 +40,7 @@ export default async function PortalPage({ params }: { params: Promise<{ slug: s
   return (
     <div className="space-y-8">
       {/* Welcome Header with Gradient */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-[#0731c2] via-[#0731c2] to-[#010119] dark:from-[#0731c2] dark:via-[#0731c2] dark:to-[#010119] p-8 rounded-xl shadow-lg">
+      <div className="relative overflow-hidden bg-gradient-to-r from-[#0731c2] via-[#0731c2] to-[#010119] p-8 rounded-xl shadow-lg">
         <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:20px_20px]" />
         <div className="relative z-10">
           <h1 className="text-3xl font-bold text-white mb-2">Welcome, {client.company_name || client.name}</h1>
@@ -49,81 +49,81 @@ export default async function PortalPage({ params }: { params: Promise<{ slug: s
       </div>
 
       <Tabs defaultValue="summary" className="space-y-6">
-        <TabsList className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-1 rounded-lg">
-            <TabsTrigger value="summary" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700 dark:text-slate-300">
+        <TabsList className="bg-white border border-slate-200 p-1 rounded-lg">
+            <TabsTrigger value="summary" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700">
                 <TrendingUp className="h-4 w-4" /> Summary
             </TabsTrigger>
-            <TabsTrigger value="tasks" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700 dark:text-slate-300">
+            <TabsTrigger value="tasks" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700">
                 <CheckCircle2 className="h-4 w-4" /> Tasks
             </TabsTrigger>
-            <TabsTrigger value="chat" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700 dark:text-slate-300">
+            <TabsTrigger value="chat" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700">
                 <MessageSquare className="h-4 w-4" /> Chat
             </TabsTrigger>
-            <TabsTrigger value="invoices" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700 dark:text-slate-300">
+            <TabsTrigger value="invoices" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700">
                 <Receipt className="h-4 w-4" /> Invoices
             </TabsTrigger>
-            <TabsTrigger value="files" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700 dark:text-slate-300">
+            <TabsTrigger value="files" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700">
                 <FileText className="h-4 w-4" /> Files
             </TabsTrigger>
         </TabsList>
 
         <TabsContent value="summary" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50">
+            <Card className="border-none shadow-lg bg-white">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">Tasks Completed</CardTitle>
+                <CardTitle className="text-sm font-medium text-slate-700">Tasks Completed</CardTitle>
                 <CheckCircle2 className="h-4 w-4 text-emerald-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-slate-900 dark:text-white">
+                <div className="text-2xl font-bold text-slate-900">
                   {completedTasks} / {totalTasks}
                 </div>
-                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                <p className="text-xs text-slate-600 mt-1">
                   {totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0}% complete
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50">
+            <Card className="border-none shadow-lg bg-white">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">Pending Invoices</CardTitle>
+                <CardTitle className="text-sm font-medium text-slate-700">Pending Invoices</CardTitle>
                 <Clock className="h-4 w-4 text-amber-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-slate-900 dark:text-white">
+                <div className="text-2xl font-bold text-slate-900">
                   {pendingInvoices}
                 </div>
-                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                <p className="text-xs text-slate-600 mt-1">
                   Awaiting payment
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50">
+            <Card className="border-none shadow-lg bg-white">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">Overdue</CardTitle>
+                <CardTitle className="text-sm font-medium text-slate-700">Overdue</CardTitle>
                 <AlertCircle className="h-4 w-4 text-red-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-slate-900 dark:text-white">
+                <div className="text-2xl font-bold text-slate-900">
                   {overdueInvoices}
                 </div>
-                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                <p className="text-xs text-slate-600 mt-1">
                   Requires attention
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50">
+            <Card className="border-none shadow-lg bg-white">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">Total Paid</CardTitle>
+                <CardTitle className="text-sm font-medium text-slate-700">Total Paid</CardTitle>
                 <TrendingUp className="h-4 w-4 text-emerald-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-slate-900 dark:text-white">
+                <div className="text-2xl font-bold text-slate-900">
                   ${invoices.filter(i => i.status === 'paid').reduce((sum, i) => sum + Number(i.total_amount), 0).toLocaleString()}
                 </div>
-                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                <p className="text-xs text-slate-600 mt-1">
                   All time payments
                 </p>
               </CardContent>
@@ -132,36 +132,36 @@ export default async function PortalPage({ params }: { params: Promise<{ slug: s
         </TabsContent>
 
         <TabsContent value="tasks" className="space-y-4">
-            <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50">
+            <Card className="border-none shadow-lg bg-white">
                 <CardHeader>
-                    <CardTitle className="text-slate-900 dark:text-white">Project Tasks</CardTitle>
-                    <CardDescription className="text-slate-600 dark:text-slate-400">Action items and progress tracking.</CardDescription>
+                    <CardTitle className="text-slate-900">Project Tasks</CardTitle>
+                    <CardDescription className="text-slate-600">Action items and progress tracking.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-3">
                         {tasks.length === 0 ? (
                             <div className="text-center py-12">
-                                <Circle className="h-12 w-12 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
-                                <p className="text-slate-500 dark:text-slate-400 mt-2">No tasks assigned yet.</p>
+                                <Circle className="h-12 w-12 text-slate-600 mx-auto mb-4" />
+                                <p className="text-slate-600 mt-2">No tasks assigned yet.</p>
                             </div>
                         ) : (
                             tasks.map(task => (
-                                <div key={task.id} className="flex items-start justify-between p-4 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900/50 hover:shadow-md transition-shadow">
+                                <div key={task.id} className="flex items-start justify-between p-4 border border-slate-200 rounded-lg bg-white hover:shadow-md transition-shadow">
                                     <div className="flex items-start space-x-3 flex-1">
                                         <div className="mt-0.5">
                                             {task.status === 'done' ? (
                                                 <CheckCircle2 className="h-5 w-5 text-emerald-500" />
                                             ) : (
-                                                <Circle className="h-5 w-5 text-slate-300 dark:text-slate-600" />
+                                                <Circle className="h-5 w-5 text-slate-600" />
                                             )}
                                         </div>
                                         <div className="flex-1">
-                                            <div className="font-medium text-slate-900 dark:text-white">{task.title}</div>
+                                            <div className="font-medium text-slate-900">{task.title}</div>
                                             {task.description && (
-                                                <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">{task.description}</p>
+                                                <p className="text-sm text-slate-600 mt-1">{task.description}</p>
                                             )}
                                             {task.due_date && (
-                                                <div className="flex items-center gap-1 mt-2 text-xs text-slate-500 dark:text-slate-500">
+                                                <div className="flex items-center gap-1 mt-2 text-xs text-slate-600">
                                                     <Calendar className="h-3 w-3" />
                                                     Due: {format(new Date(task.due_date), "MMM d, yyyy")}
                                                 </div>
@@ -170,7 +170,7 @@ export default async function PortalPage({ params }: { params: Promise<{ slug: s
                                     </div>
                                     <Badge 
                                         variant={task.status === 'done' ? 'default' : 'secondary'}
-                                        className="ml-4 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800"
+                                        className="ml-4 bg-emerald-100 text-emerald-700 border-emerald-200"
                                     >
                                         {task.status}
                                     </Badge>
@@ -199,35 +199,35 @@ export default async function PortalPage({ params }: { params: Promise<{ slug: s
         </TabsContent>
 
         <TabsContent value="invoices" className="space-y-4">
-            <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50">
+            <Card className="border-none shadow-lg bg-white">
                 <CardHeader>
-                    <CardTitle className="text-slate-900 dark:text-white">Invoices</CardTitle>
-                    <CardDescription className="text-slate-600 dark:text-slate-400">Billing history and outstanding payments.</CardDescription>
+                    <CardTitle className="text-slate-900">Invoices</CardTitle>
+                    <CardDescription className="text-slate-600">Billing history and outstanding payments.</CardDescription>
                 </CardHeader>
                 <CardContent>
                      <div className="space-y-3">
                         {invoices.length === 0 ? (
                             <div className="text-center py-12">
-                                <Receipt className="h-12 w-12 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
-                                <p className="text-slate-500 dark:text-slate-400 mt-2">No invoices generated yet.</p>
+                                <Receipt className="h-12 w-12 text-slate-600 mx-auto mb-4" />
+                                <p className="text-slate-600 mt-2">No invoices generated yet.</p>
                             </div>
                         ) : (
                             invoices.map(invoice => (
-                                <div key={invoice.id} className="flex items-center justify-between p-4 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900/50 hover:shadow-md transition-shadow">
+                                <div key={invoice.id} className="flex items-center justify-between p-4 border border-slate-200 rounded-lg bg-white hover:shadow-md transition-shadow">
                                     <div className="flex items-center space-x-4 flex-1">
                                         <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-[#0731c2] to-[#010119] flex items-center justify-center shadow-sm">
                                             <Receipt className="h-6 w-6 text-white" />
                                         </div>
                                         <div className="flex-1">
-                                            <div className="font-semibold text-slate-900 dark:text-white">{invoice.invoice_number}</div>
-                                            <div className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                                            <div className="font-semibold text-slate-900">{invoice.invoice_number}</div>
+                                            <div className="text-sm text-slate-600 mt-1">
                                                 Due: {format(new Date(invoice.due_date), "MMM d, yyyy")}
                                             </div>
                                         </div>
                                     </div>
                                     <div className="flex items-center space-x-4">
                                         <div className="text-right">
-                                            <div className="font-bold text-lg text-slate-900 dark:text-white">
+                                            <div className="font-bold text-lg text-slate-900">
                                                 ${Number(invoice.total_amount).toLocaleString()}
                                             </div>
                                         </div>
@@ -235,10 +235,10 @@ export default async function PortalPage({ params }: { params: Promise<{ slug: s
                                             variant={invoice.status === 'paid' ? 'default' : invoice.status === 'overdue' ? 'destructive' : 'outline'}
                                             className={
                                                 invoice.status === 'paid' 
-                                                    ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800'
+                                                    ? 'bg-emerald-100 text-emerald-700 border-emerald-200'
                                                     : invoice.status === 'overdue'
-                                                    ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800'
-                                                    : 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800'
+                                                    ? 'bg-red-100 text-red-700 border-red-200'
+                                                    : 'bg-amber-100 text-amber-700 border-amber-200'
                                             }
                                         >
                                             {invoice.status}

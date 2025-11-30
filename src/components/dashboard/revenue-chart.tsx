@@ -2,7 +2,6 @@
 
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useTheme } from "@/components/theme-provider";
 
 interface RevenueChartProps {
     data?: Array<{ month: string; revenue: number }>;
@@ -10,9 +9,6 @@ interface RevenueChartProps {
 }
 
 export function RevenueChart({ data = [], currencySymbol = '$' }: RevenueChartProps) {
-    const { theme } = useTheme();
-
-    const isDark = theme === "dark";
 
     // Transform data to match chart format
     const chartData = data.length > 0 
@@ -59,7 +55,7 @@ export function RevenueChart({ data = [], currencySymbol = '$' }: RevenueChartPr
                 />
                 <Tooltip
                     contentStyle={{
-                        backgroundColor: isDark ? "#1e293b" : "#fff",
+                        backgroundColor: "#fff",
                         borderRadius: "8px",
                         border: "none",
                         boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)"

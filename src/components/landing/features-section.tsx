@@ -67,16 +67,16 @@ export function FeaturesSection() {
           viewport={{ once: true }}
           className="text-center max-w-3xl mx-auto mb-16"
         >
-          <span className="inline-block px-4 py-1 mb-6 text-sm font-medium bg-blue-100 text-[#0731c2] dark:bg-blue-900/50 dark:text-[#0731c2] rounded-full">
+          <span className="inline-block px-4 py-1 mb-6 text-sm font-medium bg-blue-100 text-[#0731c2] rounded-full">
             Features
           </span>
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
             Everything you need to
-            <span className="block bg-clip-text text-transparent bg-gradient-to-r from-[#0731c2] to-[#010119] dark:from-[#0731c2] dark:to-[#010119]">
+            <span className="block bg-clip-text text-transparent bg-gradient-to-r from-[#0731c2] to-[#010119]">
               run your agency
             </span>
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300">
+          <p className="text-xl text-gray-600">
             Powerful features designed to streamline your workflow and delight your clients
           </p>
         </motion.div>
@@ -92,7 +92,7 @@ export function FeaturesSection() {
               viewport={{ once: true }}
               className="group relative"
             >
-              <div className="relative h-full bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-lg border border-gray-200 dark:border-gray-800 overflow-hidden hover:shadow-xl transition-shadow">
+              <div className="relative h-full bg-white rounded-2xl p-8 shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow">
                 {/* Gradient Background */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-5 transition-opacity`} />
                 
@@ -102,10 +102,10 @@ export function FeaturesSection() {
                 </div>
 
                 {/* Content */}
-                <h3 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">
+                <h3 className="text-xl font-semibold mb-3 text-gray-900">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400">
+                <p className="text-gray-600">
                   {feature.description}
                 </p>
 
@@ -128,8 +128,8 @@ export function FeaturesSection() {
             <div className="inline-flex p-3 rounded-lg bg-gradient-to-br from-green-500 to-emerald-500 mb-4">
               <Shield className="w-6 h-6 text-white" />
             </div>
-            <h4 className="font-semibold text-gray-900 dark:text-white">Bank-level Security</h4>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+            <h4 className="font-semibold text-gray-900">Bank-level Security</h4>
+            <p className="text-sm text-gray-600 mt-2">
               256-bit SSL encryption
             </p>
           </div>
@@ -137,8 +137,8 @@ export function FeaturesSection() {
             <div className="inline-flex p-3 rounded-lg bg-gradient-to-br from-[#0731c2] to-[#010119] mb-4">
               <Globe className="w-6 h-6 text-white" />
             </div>
-            <h4 className="font-semibold text-gray-900 dark:text-white">Global CDN</h4>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+            <h4 className="font-semibold text-gray-900">Global CDN</h4>
+            <p className="text-sm text-gray-600 mt-2">
               Lightning fast worldwide
             </p>
           </div>
@@ -146,8 +146,8 @@ export function FeaturesSection() {
             <div className="inline-flex p-3 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 mb-4">
               <Bell className="w-6 h-6 text-white" />
             </div>
-            <h4 className="font-semibold text-gray-900 dark:text-white">Smart Notifications</h4>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+            <h4 className="font-semibold text-gray-900">Smart Notifications</h4>
+            <p className="text-sm text-gray-600 mt-2">
               Never miss an update
             </p>
           </div>
@@ -155,8 +155,8 @@ export function FeaturesSection() {
             <div className="inline-flex p-3 rounded-lg bg-gradient-to-br from-orange-500 to-red-500 mb-4">
               <Rocket className="w-6 h-6 text-white" />
             </div>
-            <h4 className="font-semibold text-gray-900 dark:text-white">API Access</h4>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+            <h4 className="font-semibold text-gray-900">API Access</h4>
+            <p className="text-sm text-gray-600 mt-2">
               Integrate with anything
             </p>
           </div>

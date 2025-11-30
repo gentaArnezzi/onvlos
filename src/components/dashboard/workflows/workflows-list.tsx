@@ -127,7 +127,7 @@ export function WorkflowsList({ workflows, language: propLanguage }: WorkflowsLi
           <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">
             {t("workflows.title")}
           </h2>
-          <p className="text-slate-600 dark:text-slate-400 mt-1">
+          <p className="text-slate-600 mt-1">
             {t("workflows.description")}
           </p>
         </div>
@@ -136,61 +136,61 @@ export function WorkflowsList({ workflows, language: propLanguage }: WorkflowsLi
 
       {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-3">
-        <Card className="border border-slate-200 dark:border-slate-800 shadow-lg bg-white dark:bg-slate-900/50 relative overflow-hidden">
+        <Card className="border border-slate-200 shadow-lg bg-white relative overflow-hidden">
           <div className="absolute top-0 right-0 p-4 opacity-5">
             <Zap className="h-16 w-16 text-amber-500" />
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-600 dark:text-slate-400">
+            <CardTitle className="text-sm font-medium text-slate-600">
               {t("workflows.totalWorkflows")}
             </CardTitle>
-            <div className="p-2 rounded-lg bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400">
+            <div className="p-2 rounded-lg bg-amber-100 text-amber-600">
               <Zap className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900 dark:text-white">{totalWorkflows}</div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <div className="text-2xl font-bold text-slate-900">{totalWorkflows}</div>
+            <p className="text-xs text-slate-600 mt-1">
               {t("workflows.automationRules")}
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border border-slate-200 dark:border-slate-800 shadow-lg bg-white dark:bg-slate-900/50 relative overflow-hidden">
+        <Card className="border border-slate-200 shadow-lg bg-white relative overflow-hidden">
           <div className="absolute top-0 right-0 p-4 opacity-5">
             <Play className="h-16 w-16 text-emerald-500" />
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-600 dark:text-slate-400">
+            <CardTitle className="text-sm font-medium text-slate-600">
               {t("workflows.active")}
             </CardTitle>
-            <div className="p-2 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400">
+            <div className="p-2 rounded-lg bg-emerald-100 text-emerald-600">
               <Play className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900 dark:text-white">{activeWorkflows}</div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <div className="text-2xl font-bold text-slate-900">{activeWorkflows}</div>
+            <p className="text-xs text-slate-600 mt-1">
               {t("workflows.runningAutomatically")}
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border border-slate-200 dark:border-slate-800 shadow-lg bg-white dark:bg-slate-900/50 relative overflow-hidden">
+        <Card className="border border-slate-200 shadow-lg bg-white relative overflow-hidden">
           <div className="absolute top-0 right-0 p-4 opacity-5">
-            <Pause className="h-16 w-16 text-slate-400" />
+            <Pause className="h-16 w-16 text-slate-600" />
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-600 dark:text-slate-400">
+            <CardTitle className="text-sm font-medium text-slate-600">
               {t("workflows.paused")}
             </CardTitle>
-            <div className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
+            <div className="p-2 rounded-lg bg-slate-100 text-slate-500">
               <Pause className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900 dark:text-white">{pausedWorkflows}</div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <div className="text-2xl font-bold text-slate-900">{pausedWorkflows}</div>
+            <p className="text-xs text-slate-600 mt-1">
               {t("workflows.inactiveRules")}
             </p>
           </CardContent>
@@ -200,20 +200,20 @@ export function WorkflowsList({ workflows, language: propLanguage }: WorkflowsLi
       {/* Search and Filter */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-600" />
           <Input
             placeholder={t("workflows.searchPlaceholder")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
+            className="pl-10 bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
           />
         </div>
         <div className="relative">
-          <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+          <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-600" />
           <select
             value={filterTrigger}
             onChange={(e) => setFilterTrigger(e.target.value)}
-            className="pl-10 pr-8 py-2 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/50 text-slate-900 dark:text-white text-sm"
+            className="pl-10 pr-8 py-2 rounded-md border border-slate-200 bg-white text-slate-900 text-sm"
           >
             <option value="all">{t("workflows.allTriggers")}</option>
             {Object.entries(triggerLabels).map(([value, label]) => (
@@ -225,54 +225,54 @@ export function WorkflowsList({ workflows, language: propLanguage }: WorkflowsLi
 
       {/* Workflows Table */}
       {filteredWorkflows.length > 0 ? (
-        <Card className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50">
+        <Card className="border border-slate-200 bg-white">
           <Table>
             <TableHeader>
-              <TableRow className="border-slate-200 dark:border-slate-800">
-                <TableHead className="text-slate-600 dark:text-slate-400">{t("workflows.name")}</TableHead>
-                <TableHead className="text-slate-600 dark:text-slate-400">{t("workflows.trigger")}</TableHead>
-                <TableHead className="text-slate-600 dark:text-slate-400">{t("workflows.actions")}</TableHead>
-                <TableHead className="text-slate-600 dark:text-slate-400">{t("workflows.status")}</TableHead>
-                <TableHead className="text-slate-600 dark:text-slate-400">{t("workflows.lastRun")}</TableHead>
-                <TableHead className="text-right text-slate-600 dark:text-slate-400">{t("common.actions")}</TableHead>
+              <TableRow className="border-slate-200">
+                <TableHead className="text-slate-600">{t("workflows.name")}</TableHead>
+                <TableHead className="text-slate-600">{t("workflows.trigger")}</TableHead>
+                <TableHead className="text-slate-600">{t("workflows.actions")}</TableHead>
+                <TableHead className="text-slate-600">{t("workflows.status")}</TableHead>
+                <TableHead className="text-slate-600">{t("workflows.lastRun")}</TableHead>
+                <TableHead className="text-right text-slate-600">{t("common.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredWorkflows.map((workflow) => (
                 <TableRow 
                   key={workflow.id}
-                  className="border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50"
+                  className="border-slate-200 hover:bg-slate-50"
                 >
-                  <TableCell className="font-medium text-slate-900 dark:text-white">
+                  <TableCell className="font-medium text-slate-900">
                     <div>
                       <div>{workflow.name}</div>
                       {workflow.description && (
-                        <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                        <div className="text-xs text-slate-600 mt-1">
                           {workflow.description}
                         </div>
                       )}
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge variant="outline" className="text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700">
+                    <Badge variant="outline" className="text-xs bg-slate-100 text-slate-700 border-slate-200">
                       {getTriggerLabel(workflow.trigger)}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-sm text-slate-700 dark:text-slate-300">
+                  <TableCell className="text-sm text-slate-700">
                     {getActionsSummary(workflow.actions)}
                   </TableCell>
                   <TableCell>
                     <Badge 
                       variant={workflow.enabled ? "default" : "secondary"}
                       className={workflow.enabled 
-                        ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border-0" 
-                        : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-200 dark:border-slate-700"
+                        ? "bg-emerald-100 text-emerald-700 border-0" 
+                        : "bg-slate-100 text-slate-700 border-slate-200"
                       }
                     >
                       {workflow.enabled ? t("workflows.active") : t("workflows.paused")}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-sm text-slate-500 dark:text-slate-400">
+                  <TableCell className="text-sm text-slate-600">
                     <div className="flex items-center gap-1">
                       <Clock className="h-3 w-3" />
                       {workflow.updated_at 
@@ -284,20 +284,20 @@ export function WorkflowsList({ workflows, language: propLanguage }: WorkflowsLi
                   <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 hover:text-slate-900">
                           <MoreVertical className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+                      <DropdownMenuContent align="end" className="bg-white border-slate-200">
                         <DropdownMenuItem asChild>
-                          <Link href={`/dashboard/workflows/${workflow.id}`} className="flex items-center text-slate-900 dark:text-white">
+                          <Link href={`/dashboard/workflows/${workflow.id}`} className="flex items-center text-slate-900">
                             <Edit className="mr-2 h-4 w-4" />
                             {t("workflows.edit")}
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem 
                           onClick={() => handleToggle(workflow.id, workflow.enabled)}
-                          className="text-slate-900 dark:text-white"
+                          className="text-slate-900"
                         >
                           {workflow.enabled ? (
                             <>
@@ -313,7 +313,7 @@ export function WorkflowsList({ workflows, language: propLanguage }: WorkflowsLi
                         </DropdownMenuItem>
                         <DropdownMenuItem 
                           onClick={() => handleDelete(workflow.id)}
-                          className="text-red-600 dark:text-red-400"
+                          className="text-red-600"
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
                           {t("workflows.delete")}
@@ -327,15 +327,15 @@ export function WorkflowsList({ workflows, language: propLanguage }: WorkflowsLi
           </Table>
         </Card>
       ) : (
-        <Card className="border border-dashed border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/30">
+        <Card className="border border-dashed border-slate-200 bg-slate-50">
           <CardContent className="flex flex-col items-center justify-center py-16">
-            <div className="h-16 w-16 rounded-full bg-amber-100 dark:bg-amber-900/20 flex items-center justify-center mb-4">
-              <Zap className="h-8 w-8 text-amber-600 dark:text-amber-400" />
+            <div className="h-16 w-16 rounded-full bg-amber-100 flex items-center justify-center mb-4">
+              <Zap className="h-8 w-8 text-amber-600" />
             </div>
-            <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
+            <h3 className="text-xl font-semibold text-slate-900 mb-2">
               {searchQuery || filterTrigger !== "all" ? t("workflows.noWorkflowsFound") : t("workflows.noAutomationsYet")}
             </h3>
-            <p className="text-slate-600 dark:text-slate-400 mb-6 max-w-md text-center">
+            <p className="text-slate-600 mb-6 max-w-md text-center">
               {searchQuery || filterTrigger !== "all"
                 ? t("workflows.tryAdjustingSearch")
                 : t("workflows.createFirstWorkflow")}

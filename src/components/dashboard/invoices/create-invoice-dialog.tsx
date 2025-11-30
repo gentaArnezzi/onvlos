@@ -149,10 +149,10 @@ export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency 
           </Button>
         </DialogTrigger>
       )}
-      <DialogContent className="sm:max-w-[600px] bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+      <DialogContent className="sm:max-w-[600px] bg-white border-slate-200">
         <DialogHeader>
-          <DialogTitle className="text-slate-900 dark:text-white">{t("invoices.createInvoice")}</DialogTitle>
-          <DialogDescription className="text-slate-600 dark:text-slate-400">
+          <DialogTitle className="text-slate-900">{t("invoices.createInvoice")}</DialogTitle>
+          <DialogDescription className="text-slate-600">
             {t("invoices.generateNewInvoice")}
           </DialogDescription>
         </DialogHeader>
@@ -160,9 +160,9 @@ export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency 
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-2">
-                    <Label className="text-slate-900 dark:text-white">{t("invoices.client")}</Label>
+                    <Label className="text-slate-900">{t("invoices.client")}</Label>
                     <Select value={selectedClient} onValueChange={setSelectedClient} required>
-                        <SelectTrigger className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
+                        <SelectTrigger className="bg-white border-slate-200 text-slate-900">
                             <SelectValue placeholder={t("invoices.selectClient")} />
                         </SelectTrigger>
                         <SelectContent>
@@ -175,9 +175,9 @@ export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency 
                     </Select>
                 </div>
                 <div className="space-y-2">
-                    <Label className="text-slate-900 dark:text-white">{t("invoices.currency")}</Label>
+                    <Label className="text-slate-900">{t("invoices.currency")}</Label>
                     <Select value={currency} onValueChange={setCurrency}>
-                        <SelectTrigger className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
+                        <SelectTrigger className="bg-white border-slate-200 text-slate-900">
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -187,21 +187,21 @@ export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency 
                     </Select>
                 </div>
                 <div className="space-y-2">
-                    <Label className="text-slate-900 dark:text-white">{t("invoices.dueDate")}</Label>
+                    <Label className="text-slate-900">{t("invoices.dueDate")}</Label>
                     <Popover>
                         <PopoverTrigger asChild>
                             <Button
                             variant={"outline"}
                             className={cn(
-                                "w-full justify-start text-left font-normal bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white",
-                                !date && "text-slate-500 dark:text-slate-400"
+                                "w-full justify-start text-left font-normal bg-white border-slate-200 text-slate-900",
+                                !date && "text-slate-500"
                             )}
                             >
                             <CalendarIcon className="mr-2 h-4 w-4" />
                             {date ? format(date, "PPP") : <span>{t("invoices.pickDate")}</span>}
                             </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 shadow-lg">
+                        <PopoverContent className="w-auto p-0 bg-white border-slate-200 shadow-lg">
                             <Calendar
                             mode="single"
                             selected={date}
@@ -216,51 +216,51 @@ export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency 
 
             <div className="space-y-4 mt-4">
                 <div className="flex items-center justify-between">
-                    <Label className="text-slate-900 dark:text-white">{t("invoices.items")}</Label>
+                    <Label className="text-slate-900">{t("invoices.items")}</Label>
                     <Button 
                         type="button" 
                         variant="ghost" 
                         size="sm" 
                         onClick={handleAddItem}
-                        className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                        className="text-slate-600 hover:text-slate-900"
                     >
                         <Plus className="h-3 w-3 mr-1" /> {t("invoices.addItem")}
                     </Button>
                 </div>
                 
-                <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600 scrollbar-track-transparent">
+                <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent">
                     {items.map((item, index) => (
-                        <div key={index} className="flex gap-2 items-end p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700">
+                        <div key={index} className="flex gap-2 items-end p-3 rounded-lg bg-slate-50 border border-slate-200">
                             <div className="flex-1 space-y-1">
-                                <Label className="text-xs text-slate-700 dark:text-slate-300">{t("invoices.description")}</Label>
+                                <Label className="text-xs text-slate-700">{t("invoices.description")}</Label>
                                 <Input 
                                     value={item.name} 
                                     onChange={e => handleItemChange(index, 'name', e.target.value)}
                                     placeholder={t("invoices.serviceName")}
-                                    className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
+                                    className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
                                     required 
                                 />
                             </div>
                             <div className="w-20 space-y-1">
-                                <Label className="text-xs text-slate-700 dark:text-slate-300">{t("invoices.qty")}</Label>
+                                <Label className="text-xs text-slate-700">{t("invoices.qty")}</Label>
                                 <Input 
                                     type="number" 
                                     value={item.quantity} 
                                     onChange={e => handleItemChange(index, 'quantity', e.target.value)}
                                     min="1"
-                                    className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
+                                    className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
                                     required 
                                 />
                             </div>
                             <div className="w-28 space-y-1">
-                                <Label className="text-xs text-slate-700 dark:text-slate-300">{t("invoices.price")}</Label>
+                                <Label className="text-xs text-slate-700">{t("invoices.price")}</Label>
                                 <Input 
                                     type="number" 
                                     value={item.unit_price} 
                                     onChange={e => handleItemChange(index, 'unit_price', e.target.value)}
                                     min="0"
                                     step="0.01"
-                                    className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
+                                    className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
                                     required 
                                 />
                             </div>
@@ -268,7 +268,7 @@ export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency 
                                 type="button"
                                 variant="ghost" 
                                 size="icon" 
-                                className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 mb-0.5"
+                                className="text-red-600 hover:text-red-700 hover:bg-red-50 mb-0.5"
                                 onClick={() => handleRemoveItem(index)}
                                 disabled={items.length === 1}
                              >
@@ -278,13 +278,13 @@ export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency 
                     ))}
                 </div>
                 
-                <div className="space-y-3 pt-4 border-t border-slate-200 dark:border-slate-700">
+                <div className="space-y-3 pt-4 border-t border-slate-200">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <Label className="text-slate-900 dark:text-white">{t("invoices.discount")}</Label>
+                            <Label className="text-slate-900">{t("invoices.discount")}</Label>
                             <div className="flex gap-2">
                                 <Select value={discountType} onValueChange={(v: "amount" | "percentage") => setDiscountType(v)}>
-                                    <SelectTrigger className="w-24 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
+                                    <SelectTrigger className="w-24 bg-white border-slate-200 text-slate-900">
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -299,12 +299,12 @@ export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency 
                                     placeholder="0"
                                     min="0"
                                     step="0.01"
-                                    className="flex-1 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                                    className="flex-1 bg-white border-slate-200 text-slate-900"
                                 />
                             </div>
                         </div>
                         <div className="space-y-2">
-                            <Label className="text-slate-900 dark:text-white">{t("invoices.taxRate")}</Label>
+                            <Label className="text-slate-900">{t("invoices.taxRate")}</Label>
                             <Input
                                 type="number"
                                 value={taxRate}
@@ -312,54 +312,54 @@ export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency 
                                 placeholder="0"
                                 min="0"
                                 step="0.1"
-                                className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                                className="bg-white border-slate-200 text-slate-900"
                             />
                         </div>
                     </div>
                     
                     <div className="space-y-2">
-                        <Label className="text-slate-900 dark:text-white">{t("invoices.notesTerms")}</Label>
+                        <Label className="text-slate-900">{t("invoices.notesTerms")}</Label>
                         <textarea
                             value={notes}
                             onChange={e => setNotes(e.target.value)}
                             placeholder={t("invoices.paymentTerms")}
                             rows={3}
-                            className="w-full px-3 py-2 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 resize-none"
+                            className="w-full px-3 py-2 rounded-md border border-slate-200 bg-white text-slate-900 placeholder:text-slate-500 resize-none"
                         />
                     </div>
 
                     <div className="flex justify-between items-center pt-2">
                         <div className="space-y-1">
-                            <div className="flex justify-between text-sm text-slate-600 dark:text-slate-400">
+                            <div className="flex justify-between text-sm text-slate-600">
                                 <span>{t("invoices.subtotal")}</span>
                                 <span>{getCurrencySymbol(currency)}{calculateTotals().subtotal.toLocaleString()}</span>
                             </div>
                             {calculateTotals().discount > 0 && (
-                                <div className="flex justify-between text-sm text-slate-600 dark:text-slate-400">
+                                <div className="flex justify-between text-sm text-slate-600">
                                     <span>{t("invoices.discount")}:</span>
-                                    <span className="text-red-600 dark:text-red-400">-{getCurrencySymbol(currency)}{calculateTotals().discount.toLocaleString()}</span>
+                                    <span className="text-red-600">-{getCurrencySymbol(currency)}{calculateTotals().discount.toLocaleString()}</span>
                                 </div>
                             )}
                             {calculateTotals().tax > 0 && (
-                                <div className="flex justify-between text-sm text-slate-600 dark:text-slate-400">
+                                <div className="flex justify-between text-sm text-slate-600">
                                     <span>{t("invoices.tax")}</span>
                                     <span>{getCurrencySymbol(currency)}{calculateTotals().tax.toLocaleString()}</span>
                                 </div>
                             )}
                         </div>
                         <div className="text-right">
-                            <div className="text-lg font-bold text-slate-900 dark:text-white">
-                                {t("invoices.total")} <span className="text-emerald-600 dark:text-emerald-400">{getCurrencySymbol(currency)}{calculateTotals().total.toLocaleString()}</span>
+                            <div className="text-lg font-bold text-slate-900">
+                                {t("invoices.total")} <span className="text-emerald-600">{getCurrencySymbol(currency)}{calculateTotals().total.toLocaleString()}</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <div className="space-y-2 pt-4 border-t border-slate-200 dark:border-slate-700">
-                <Label className="text-slate-900 dark:text-white">{t("invoices.status")}</Label>
+            <div className="space-y-2 pt-4 border-t border-slate-200">
+                <Label className="text-slate-900">{t("invoices.status")}</Label>
                 <Select value={status} onValueChange={(v: "draft" | "sent") => setStatus(v)}>
-                    <SelectTrigger className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
+                    <SelectTrigger className="bg-white border-slate-200 text-slate-900">
                         <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -374,7 +374,7 @@ export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency 
                 type="button"
                 variant="outline" 
                 onClick={() => setOpen(false)}
-                className="border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700"
+                className="border-slate-200 text-slate-900 bg-white hover:bg-slate-50"
             >
                 {t("common.cancel")}
             </Button>

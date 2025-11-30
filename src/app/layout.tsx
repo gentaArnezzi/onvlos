@@ -38,7 +38,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased`}
       >
-        <ThemeProvider defaultTheme="light" storageKey="onvlo-theme">
+        <ThemeProvider>
           {children}
           <Toaster />
         </ThemeProvider>

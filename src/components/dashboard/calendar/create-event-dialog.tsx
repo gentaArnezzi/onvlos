@@ -53,64 +53,64 @@ export function CreateEventDialog() {
           <Plus className="mr-2 h-4 w-4" /> New Event
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+      <DialogContent className="sm:max-w-[425px] bg-white border-slate-200">
         <DialogHeader>
-          <DialogTitle className="text-slate-900 dark:text-white">Schedule Event</DialogTitle>
+          <DialogTitle className="text-slate-900">Schedule Event</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="space-y-2">
-              <Label className="text-slate-900 dark:text-white">Event Title</Label>
+              <Label className="text-slate-900">Event Title</Label>
               <Input 
                 value={title} 
                 onChange={e => setTitle(e.target.value)} 
                 required 
                 placeholder="Weekly Sync"
-                className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
+                className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
               />
             </div>
             
             <div className="space-y-2">
-               <Label className="text-slate-900 dark:text-white">Date</Label>
+               <Label className="text-slate-900">Date</Label>
                <Input 
                  type="date" 
                  value={startDate} 
                  onChange={e => setStartDate(e.target.value)} 
                  required
-                 className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                 className="bg-white border-slate-200 text-slate-900"
                />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                   <Label className="text-slate-900 dark:text-white">Start Time</Label>
+                   <Label className="text-slate-900">Start Time</Label>
                    <Input 
                      type="time" 
                      value={startTime} 
                      onChange={e => setStartTime(e.target.value)} 
                      required
-                     className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                     className="bg-white border-slate-200 text-slate-900"
                    />
                 </div>
                 <div className="space-y-2">
-                   <Label className="text-slate-900 dark:text-white">End Time</Label>
+                   <Label className="text-slate-900">End Time</Label>
                    <Input 
                      type="time" 
                      value={endTime} 
                      onChange={e => setEndTime(e.target.value)} 
                      required
-                     className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                     className="bg-white border-slate-200 text-slate-900"
                    />
                 </div>
             </div>
 
              <div className="space-y-2">
-              <Label className="text-slate-900 dark:text-white">Description</Label>
+              <Label className="text-slate-900">Description</Label>
               <Textarea 
                 value={description} 
                 onChange={e => setDescription(e.target.value)} 
                 placeholder="Meeting agenda..."
-                className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
+                className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
               />
             </div>
           </div>

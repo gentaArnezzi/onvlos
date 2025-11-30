@@ -138,21 +138,21 @@ export default function HelpPage() {
         <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-[#0731c2] via-[#0731c2] to-[#010119] bg-clip-text text-transparent">
           Help & Support
         </h2>
-        <p className="text-slate-600 dark:text-slate-400 mt-1">
+        <p className="text-slate-600 mt-1">
           Get help, find answers, and learn how to make the most of Onvlo.
         </p>
       </div>
 
       {/* Search Bar */}
-      <Card className="border border-slate-200 dark:border-slate-700 shadow-sm bg-white dark:bg-slate-800/50">
+      <Card className="border border-slate-200 shadow-sm bg-white">
         <CardContent className="p-6">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400 dark:text-slate-500" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-600" />
             <Input
               placeholder="Search for help articles, FAQs, or guides..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
+              className="pl-10 bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
             />
           </div>
         </CardContent>
@@ -160,21 +160,21 @@ export default function HelpPage() {
 
       {/* Support Options */}
       <div>
-        <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-          <LifeBuoy className="h-5 w-5 text-[#0731c2] dark:text-[#0731c2]" />
+        <h3 className="text-xl font-semibold text-slate-900 mb-4 flex items-center gap-2">
+          <LifeBuoy className="h-5 w-5 text-[#0731c2]" />
           Get Support
         </h3>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {supportOptions.map((option, index) => (
-            <Card key={index} className="border border-slate-200 dark:border-slate-700 shadow-sm bg-white dark:bg-slate-800/50 hover:shadow-md transition-shadow">
+            <Card key={index} className="border border-slate-200 shadow-sm bg-white hover:shadow-md transition-shadow">
               <CardHeader className="pb-3">
-                <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-[#0731c2] dark:text-[#0731c2] w-fit mb-2">
+                <div className="p-2 rounded-lg bg-blue-100 text-[#0731c2] w-fit mb-2">
                   <option.icon className="h-5 w-5" />
                 </div>
-                <CardTitle className="text-base font-semibold text-slate-900 dark:text-white">
+                <CardTitle className="text-base font-semibold text-slate-900">
                   {option.title}
                 </CardTitle>
-                <CardDescription className="text-sm text-slate-600 dark:text-slate-400">
+                <CardDescription className="text-sm text-slate-600">
                   {option.description}
                 </CardDescription>
               </CardHeader>
@@ -182,7 +182,7 @@ export default function HelpPage() {
                 <Button 
                   variant="outline" 
                   size="sm" 
-                  className="w-full border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800"
+                  className="w-full border-slate-200 text-slate-900 hover:bg-slate-50"
                   asChild
                 >
                   <a href={option.href}>
@@ -198,27 +198,27 @@ export default function HelpPage() {
 
       {/* Quick Start Guides */}
       <div>
-        <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-          <BookOpen className="h-5 w-5 text-[#0731c2] dark:text-[#0731c2]" />
+        <h3 className="text-xl font-semibold text-slate-900 mb-4 flex items-center gap-2">
+          <BookOpen className="h-5 w-5 text-[#0731c2]" />
           Quick Start Guides
         </h3>
         <div className="grid gap-4 md:grid-cols-2">
           {quickStartGuides.map((guide, index) => (
-            <Card key={index} className="border border-slate-200 dark:border-slate-700 shadow-sm bg-white dark:bg-slate-800/50 hover:shadow-md transition-shadow cursor-pointer group">
+            <Card key={index} className="border border-slate-200 shadow-sm bg-white hover:shadow-md transition-shadow cursor-pointer group">
               <CardContent className="p-6">
                 <div className="flex items-start gap-4">
-                  <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-[#0731c2] dark:text-[#0731c2] group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 transition-colors">
+                  <div className="p-2 rounded-lg bg-blue-100 text-[#0731c2] group-hover:bg-blue-200 transition-colors">
                     <guide.icon className="h-5 w-5" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-semibold text-slate-900 dark:text-white mb-1 group-hover:text-[#0731c2] dark:group-hover:text-[#0731c2] transition-colors">
+                    <h4 className="font-semibold text-slate-900 mb-1 group-hover:text-[#0731c2] transition-colors">
                       {guide.title}
                     </h4>
-                    <p className="text-sm text-slate-600 dark:text-slate-400">
+                    <p className="text-sm text-slate-600">
                       {guide.description}
                     </p>
                   </div>
-                  <ChevronRight className="h-5 w-5 text-slate-400 dark:text-slate-500 group-hover:text-[#0731c2] dark:group-hover:text-[#0731c2] transition-colors" />
+                  <ChevronRight className="h-5 w-5 text-slate-600 group-hover:text-[#0731c2] transition-colors" />
                 </div>
               </CardContent>
             </Card>
@@ -228,25 +228,25 @@ export default function HelpPage() {
 
       {/* FAQ Section */}
       <div>
-        <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-          <HelpCircle className="h-5 w-5 text-[#0731c2] dark:text-[#0731c2]" />
+        <h3 className="text-xl font-semibold text-slate-900 mb-4 flex items-center gap-2">
+          <HelpCircle className="h-5 w-5 text-[#0731c2]" />
           Frequently Asked Questions
         </h3>
         <div className="space-y-6">
           {faqCategories.map((category, catIndex) => (
-            <Card key={catIndex} className="border border-slate-200 dark:border-slate-700 shadow-sm bg-white dark:bg-slate-800/50">
+            <Card key={catIndex} className="border border-slate-200 shadow-sm bg-white">
               <CardHeader>
-                <CardTitle className="text-lg font-semibold text-slate-900 dark:text-white">
+                <CardTitle className="text-lg font-semibold text-slate-900">
                   {category.title}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {category.questions.map((faq, faqIndex) => (
-                  <div key={faqIndex} className="border-b border-slate-200 dark:border-slate-700 last:border-0 pb-4 last:pb-0">
-                    <h4 className="font-medium text-slate-900 dark:text-white mb-2">
+                  <div key={faqIndex} className="border-b border-slate-200 last:border-0 pb-4 last:pb-0">
+                    <h4 className="font-medium text-slate-900 mb-2">
                       {faq.q}
                     </h4>
-                    <p className="text-sm text-slate-600 dark:text-slate-400">
+                    <p className="text-sm text-slate-600">
                       {faq.a}
                     </p>
                   </div>
@@ -258,14 +258,14 @@ export default function HelpPage() {
       </div>
 
       {/* Still Need Help */}
-      <Card className="border border-blue-200 dark:border-blue-800 bg-gradient-to-r from-blue-50 to-blue-50 dark:from-blue-950/30 dark:to-blue-950/30">
+      <Card className="border border-blue-200 bg-gradient-to-r from-blue-50 to-blue-50">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-1">
+              <h3 className="text-lg font-semibold text-slate-900 mb-1">
                 Still need help?
               </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-400">
+              <p className="text-sm text-slate-600">
                 Our support team is here to assist you 24/7.
               </p>
             </div>

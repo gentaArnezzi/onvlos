@@ -101,38 +101,38 @@ export function ClientsTable({ clients: initialClients }: { clients: Client[] })
 
   return (
     <>
-      <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 overflow-hidden">
+      <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
         <Table>
-          <TableHeader className="bg-slate-50 dark:bg-slate-900/50">
-            <TableRow className="hover:bg-transparent border-slate-200 dark:border-slate-700">
-              <TableHead className="w-[300px] pl-6 h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Client</TableHead>
-              <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</TableHead>
-              <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Email</TableHead>
-              <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Joined</TableHead>
-              <TableHead className="text-right pr-6 h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Actions</TableHead>
+          <TableHeader className="bg-slate-50">
+            <TableRow className="hover:bg-transparent border-slate-200">
+              <TableHead className="h-12 text-xs font-medium text-slate-600 uppercase tracking-wider">Client</TableHead>
+              <TableHead className="h-12 text-xs font-medium text-slate-600 uppercase tracking-wider">Status</TableHead>
+              <TableHead className="h-12 text-xs font-medium text-slate-600 uppercase tracking-wider">Email</TableHead>
+              <TableHead className="h-12 text-xs font-medium text-slate-600 uppercase tracking-wider">Joined</TableHead>
+              <TableHead className="h-12 text-xs font-medium text-slate-600 uppercase tracking-wider">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {clients.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="h-32 text-center text-slate-500 dark:text-slate-400">
+                <TableCell colSpan={5} className="h-32 text-center text-slate-500">
                   No clients found.
                 </TableCell>
               </TableRow>
             ) : (
               clients.map((client) => (
-                <TableRow key={client.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors border-slate-100 dark:border-slate-800 group">
+                <TableRow key={client.id} className="hover:bg-slate-50 transition-colors border-slate-100 group">
                   <TableCell className="pl-6 py-4">
                     <div className="flex items-center space-x-4">
-                      <Avatar className="h-10 w-10 border-2 border-white dark:border-slate-700 shadow-sm">
+                      <Avatar className="h-10 w-10 border-2 border-white shadow-sm">
                         <AvatarImage src={client.logo_url || ""} />
                         <AvatarFallback className="bg-gradient-to-br from-[#0731c2] to-[#010119] text-white font-medium">
                           {client.name.substring(0, 2).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <div className="font-semibold text-slate-900 dark:text-white">{client.company_name || "No Company"}</div>
-                        <div className="text-sm text-slate-500 dark:text-slate-400">{client.name}</div>
+                        <div className="font-semibold text-slate-900">{client.company_name || "No Company"}</div>
+                        <div className="text-sm text-slate-600">{client.name}</div>
                       </div>
                     </div>
                   </TableCell>
@@ -141,22 +141,22 @@ export function ClientsTable({ clients: initialClients }: { clients: Client[] })
                       variant="outline"
                       className={`
                             capitalize font-medium border-0 px-2.5 py-0.5
-                            ${client.status === 'active' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' : ''}
-                            ${client.status === 'pending' ? 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400' : ''}
-                            ${client.status === 'inactive' ? 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400' : ''}
+                            ${client.status === 'active' ? 'bg-emerald-100 text-emerald-700' : ''}
+                            ${client.status === 'pending' ? 'bg-orange-100 text-orange-700' : ''}
+                            ${client.status === 'inactive' ? 'bg-slate-100 text-slate-700' : ''}
                         `}
                     >
                       {client.status || 'pending'}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-slate-600 dark:text-slate-300">{client.email || '-'}</TableCell>
-                  <TableCell className="text-slate-600 dark:text-slate-300">
+                  <TableCell className="text-slate-600">{client.email || '-'}</TableCell>
+                  <TableCell className="text-slate-600">
                     {client.created_at ? format(new Date(client.created_at), "MMM d, yyyy") : "-"}
                   </TableCell>
                   <TableCell className="text-right pr-6">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8 text-slate-500 hover:text-slate-900 dark:hover:text-white">
+                        <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8 text-slate-500 hover:text-slate-900">
                           <MoreVertical className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
@@ -173,7 +173,7 @@ export function ClientsTable({ clients: initialClients }: { clients: Client[] })
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
-                          className="text-red-600 cursor-pointer focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-900/20"
+                          className="text-red-600 cursor-pointer focus:text-red-600 focus:bg-red-50"
                           onClick={() => setDeletingClientId(client.id)}
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
@@ -191,50 +191,50 @@ export function ClientsTable({ clients: initialClients }: { clients: Client[] })
 
       {/* Edit Dialog */}
       <Dialog open={!!editingClient} onOpenChange={(open) => !open && setEditingClient(null)}>
-        <DialogContent className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+        <DialogContent className="bg-white border-slate-200">
           <DialogHeader>
-            <DialogTitle className="text-slate-900 dark:text-white">Edit Client</DialogTitle>
-            <DialogDescription className="text-slate-600 dark:text-slate-400">
+            <DialogTitle className="text-slate-900">Edit Client</DialogTitle>
+            <DialogDescription className="text-slate-600">
               Update the client's information below.
             </DialogDescription>
           </DialogHeader>
           {editingClient && (
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
-                <Label htmlFor="name" className="text-slate-900 dark:text-white">Contact Name</Label>
+                <Label htmlFor="name" className="text-slate-900">Contact Name</Label>
                 <Input
                   id="name"
                   value={editingClient.name}
                   onChange={(e) => setEditingClient({ ...editingClient, name: e.target.value })}
-                  className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                  className="bg-white border-slate-200 text-slate-900"
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="company" className="text-slate-900 dark:text-white">Company Name</Label>
+                <Label htmlFor="company" className="text-slate-900">Company Name</Label>
                 <Input
                   id="company"
                   value={editingClient.company_name || ''}
                   onChange={(e) => setEditingClient({ ...editingClient, company_name: e.target.value })}
-                  className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                  className="bg-white border-slate-200 text-slate-900"
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="email" className="text-slate-900 dark:text-white">Email</Label>
+                <Label htmlFor="email" className="text-slate-900">Email</Label>
                 <Input
                   id="email"
                   type="email"
                   value={editingClient.email || ''}
                   onChange={(e) => setEditingClient({ ...editingClient, email: e.target.value })}
-                  className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                  className="bg-white border-slate-200 text-slate-900"
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="status" className="text-slate-900 dark:text-white">Status</Label>
+                <Label htmlFor="status" className="text-slate-900">Status</Label>
                 <Select
                   value={editingClient.status || 'pending'}
                   onValueChange={(value) => setEditingClient({ ...editingClient, status: value })}
                 >
-                  <SelectTrigger className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
+                  <SelectTrigger className="bg-white border-slate-200 text-slate-900">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -250,7 +250,7 @@ export function ClientsTable({ clients: initialClients }: { clients: Client[] })
             <Button 
               variant="outline" 
               onClick={() => setEditingClient(null)}
-              className="border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800"
+              className="border-slate-200 text-slate-900 hover:bg-slate-50"
             >
               Cancel
             </Button>
@@ -274,10 +274,10 @@ export function ClientsTable({ clients: initialClients }: { clients: Client[] })
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={!!deletingClientId} onOpenChange={(open) => !open && setDeletingClientId(null)}>
-        <DialogContent className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+        <DialogContent className="bg-white border-slate-200">
           <DialogHeader>
-            <DialogTitle className="text-slate-900 dark:text-white">Delete Client</DialogTitle>
-            <DialogDescription className="text-slate-600 dark:text-slate-400">
+            <DialogTitle className="text-slate-900">Delete Client</DialogTitle>
+            <DialogDescription className="text-slate-600">
               Are you sure you want to delete this client? This action cannot be undone.
               All related data (portal, conversations, files) will be permanently deleted.
             </DialogDescription>
@@ -286,7 +286,7 @@ export function ClientsTable({ clients: initialClients }: { clients: Client[] })
             <Button 
               variant="outline" 
               onClick={() => setDeletingClientId(null)}
-              className="border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800"
+              className="border-slate-200 text-slate-900 hover:bg-slate-50"
             >
               Cancel
             </Button>

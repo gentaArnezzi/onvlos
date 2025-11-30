@@ -82,7 +82,7 @@ export function ChatInput({ clientId, onMessageSent, language: propLanguage }: C
                         onChange={(e) => setMessage(e.target.value)}
                         onKeyDown={handleKeyDown}
                         placeholder={t("chat.placeholderWithHint")}
-                        className="min-h-[60px] max-h-[120px] bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 resize-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+                        className="min-h-[60px] max-h-[120px] bg-white border-slate-200 text-slate-900 placeholder:text-slate-500 resize-none focus:ring-2 focus:ring-blue-500"
                         disabled={sending}
                     />
                 </div>
@@ -92,7 +92,7 @@ export function ChatInput({ clientId, onMessageSent, language: propLanguage }: C
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="text-slate-400 hover:text-slate-200"
+                    className="text-slate-600 hover:text-slate-900"
                     disabled={sending}
                 >
                     <Paperclip className="w-5 h-5" />

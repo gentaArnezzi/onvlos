@@ -50,9 +50,9 @@ export function InvoiceQuickActions({ invoice }: InvoiceQuickActionsProps) {
   return (
     <>
       {/* Quick Actions */}
-      <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50">
+      <Card className="border-none shadow-lg bg-white">
         <CardHeader>
-          <CardTitle className="text-slate-900 dark:text-white">Quick Actions</CardTitle>
+          <CardTitle className="text-slate-900">Quick Actions</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           {invoice.status === 'draft' && (
@@ -68,7 +68,7 @@ export function InvoiceQuickActions({ invoice }: InvoiceQuickActionsProps) {
             <Button 
               onClick={handleMarkPaid}
               variant="outline"
-              className="w-full border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700"
+              className="w-full border-slate-200 text-slate-900 bg-white hover:bg-slate-50"
             >
               <CheckCircle className="mr-2 h-4 w-4" />
               Mark as Paid
@@ -77,7 +77,7 @@ export function InvoiceQuickActions({ invoice }: InvoiceQuickActionsProps) {
           <Button 
             onClick={handleDownload}
             variant="outline"
-            className="w-full border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700"
+            className="w-full border-slate-200 text-slate-900 bg-white hover:bg-slate-50"
           >
             <Download className="mr-2 h-4 w-4" />
             Download PDF
@@ -87,9 +87,9 @@ export function InvoiceQuickActions({ invoice }: InvoiceQuickActionsProps) {
 
       {/* Payment Info */}
       {(invoice.status === 'sent' || invoice.status === 'overdue') && invoice.client?.id && (
-        <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50">
+        <Card className="border-none shadow-lg bg-white">
           <CardHeader>
-            <CardTitle className="text-slate-900 dark:text-white">Payment</CardTitle>
+            <CardTitle className="text-slate-900">Payment</CardTitle>
           </CardHeader>
           <CardContent>
             <Link href={`/portal/${invoice.client.id}/invoices/${invoice.id}/payment`}>

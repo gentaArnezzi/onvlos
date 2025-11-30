@@ -38,29 +38,29 @@ export function TaskDetailDialog({ task, open, onOpenChange }: TaskDetailDialogP
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-[600px] bg-slate-800 border-slate-700">
+            <DialogContent className="sm:max-w-[600px] bg-white border-slate-200">
                 <DialogHeader>
-                    <DialogTitle className="text-white text-xl">{task.title}</DialogTitle>
+                    <DialogTitle className="text-slate-900 text-xl">{task.title}</DialogTitle>
                 </DialogHeader>
 
                 <div className="space-y-6 py-4">
                     {/* Status and Priority */}
                     <div className="flex items-center gap-4">
                         <div>
-                            <p className="text-xs text-slate-400 mb-1">{t('tasks.status')}</p>
-                            <Badge variant="secondary" className="capitalize bg-slate-700 text-slate-200">
+                            <p className="text-xs text-slate-600 mb-1">{t('tasks.status')}</p>
+                            <Badge variant="secondary" className="capitalize bg-slate-100 text-slate-700">
                                 {getStatusLabel(task.status || 'todo')}
                             </Badge>
                         </div>
                         <div>
-                            <p className="text-xs text-slate-400 mb-1">{t('tasks.priority')}</p>
+                            <p className="text-xs text-slate-600 mb-1">{t('tasks.priority')}</p>
                             <Badge
                                 variant="outline"
                                 className={`
                   capitalize font-medium border-0
-                  ${task.priority === 'high' ? 'bg-red-900/30 text-red-400' : ''}
-                  ${task.priority === 'medium' ? 'bg-orange-900/30 text-orange-400' : ''}
-                  ${task.priority === 'low' ? 'bg-blue-900/30 text-blue-400' : ''}
+                  ${task.priority === 'high' ? 'bg-red-100 text-red-700' : ''}
+                  ${task.priority === 'medium' ? 'bg-orange-100 text-orange-700' : ''}
+                  ${task.priority === 'low' ? 'bg-blue-100 text-blue-700' : ''}
                 `}
                             >
                                 {getPriorityLabel(task.priority || 'low')}
@@ -72,10 +72,10 @@ export function TaskDetailDialog({ task, open, onOpenChange }: TaskDetailDialogP
                     {task.description && (
                         <div>
                             <div className="flex items-center gap-2 mb-2">
-                                <FileText className="h-4 w-4 text-slate-400" />
-                                <p className="text-sm font-medium text-slate-300">{t('common.description')}</p>
+                                <FileText className="h-4 w-4 text-slate-600" />
+                                <p className="text-sm font-medium text-slate-700">{t('common.description')}</p>
                             </div>
-                            <p className="text-slate-400 text-sm leading-relaxed pl-6">
+                            <p className="text-slate-700 text-sm leading-relaxed pl-6">
                                 {task.description}
                             </p>
                         </div>
@@ -85,14 +85,14 @@ export function TaskDetailDialog({ task, open, onOpenChange }: TaskDetailDialogP
                     {task.client_name && (
                         <div>
                             <div className="flex items-center gap-2 mb-2">
-                                <User className="h-4 w-4 text-slate-400" />
-                                <p className="text-sm font-medium text-slate-300">{t('tasks.client')}</p>
+                                <User className="h-4 w-4 text-slate-600" />
+                                <p className="text-sm font-medium text-slate-700">{t('tasks.client')}</p>
                             </div>
                             <div className="flex items-center gap-2 pl-6">
-                                <div className="h-8 w-8 rounded-full bg-slate-700 flex items-center justify-center text-sm font-medium text-slate-300">
+                                <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center text-sm font-medium text-slate-700">
                                     {task.client_name.substring(0, 1)}
                                 </div>
-                                <span className="text-slate-300">{task.client_name}</span>
+                                <span className="text-slate-900">{task.client_name}</span>
                             </div>
                         </div>
                     )}
@@ -101,10 +101,10 @@ export function TaskDetailDialog({ task, open, onOpenChange }: TaskDetailDialogP
                     {task.due_date && (
                         <div>
                             <div className="flex items-center gap-2 mb-2">
-                                <Calendar className="h-4 w-4 text-slate-400" />
-                                <p className="text-sm font-medium text-slate-300">{t('tasks.dueDate')}</p>
+                                <Calendar className="h-4 w-4 text-slate-600" />
+                                <p className="text-sm font-medium text-slate-700">{t('tasks.dueDate')}</p>
                             </div>
-                            <p className="text-slate-400 text-sm pl-6">
+                            <p className="text-slate-700 text-sm pl-6">
                                 {format(new Date(task.due_date), "MMMM d, yyyy")}
                             </p>
                         </div>
@@ -114,10 +114,10 @@ export function TaskDetailDialog({ task, open, onOpenChange }: TaskDetailDialogP
                     {task.created_at && (
                         <div>
                             <div className="flex items-center gap-2 mb-2">
-                                <Clock className="h-4 w-4 text-slate-400" />
-                                <p className="text-sm font-medium text-slate-300">{t('tasks.created')}</p>
+                                <Clock className="h-4 w-4 text-slate-600" />
+                                <p className="text-sm font-medium text-slate-700">{t('tasks.created')}</p>
                             </div>
-                            <p className="text-slate-400 text-sm pl-6">
+                            <p className="text-slate-700 text-sm pl-6">
                                 {format(new Date(task.created_at), "MMMM d, yyyy 'at' h:mm a")}
                             </p>
                         </div>

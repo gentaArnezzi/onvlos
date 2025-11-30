@@ -28,7 +28,7 @@ export default async function CalendarPage() {
           <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-[#0731c2] to-[#010119] bg-clip-text text-transparent">
             Calendar & Bookings
           </h2>
-          <p className="text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-slate-600 mt-1">
             Manage your schedule and appointment types.
           </p>
         </div>
@@ -40,61 +40,61 @@ export default async function CalendarPage() {
 
       {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-3">
-        <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50 relative overflow-hidden">
+        <Card className="border-none shadow-lg bg-white relative overflow-hidden">
           <div className="absolute top-0 right-0 p-4 opacity-10">
             <CalendarIcon className="h-16 w-16" />
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">
+            <CardTitle className="text-sm font-medium text-slate-700">
               Upcoming Events
             </CardTitle>
-            <div className="p-2 rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
+            <div className="p-2 rounded-lg bg-blue-100 text-blue-600">
               <CalendarIcon className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900 dark:text-white">{totalEvents}</div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <div className="text-2xl font-bold text-slate-900">{totalEvents}</div>
+            <p className="text-xs text-slate-600 mt-1">
               Scheduled on calendar
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50 relative overflow-hidden">
+        <Card className="border-none shadow-lg bg-white relative overflow-hidden">
           <div className="absolute top-0 right-0 p-4 opacity-10">
             <Users className="h-16 w-16" />
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">
+            <CardTitle className="text-sm font-medium text-slate-700">
               Total Bookings
             </CardTitle>
-            <div className="p-2 rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
+            <div className="p-2 rounded-lg bg-blue-100 text-blue-600">
               <Users className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900 dark:text-white">{totalBookings}</div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <div className="text-2xl font-bold text-slate-900">{totalBookings}</div>
+            <p className="text-xs text-slate-600 mt-1">
               Client appointments
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50 relative overflow-hidden">
+        <Card className="border-none shadow-lg bg-white relative overflow-hidden">
           <div className="absolute top-0 right-0 p-4 opacity-10">
             <Link2 className="h-16 w-16" />
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">
+            <CardTitle className="text-sm font-medium text-slate-700">
               Active Links
             </CardTitle>
-            <div className="p-2 rounded-lg bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
+            <div className="p-2 rounded-lg bg-emerald-100 text-emerald-600">
               <Link2 className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900 dark:text-white">{activeLinks}</div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <div className="text-2xl font-bold text-slate-900">{activeLinks}</div>
+            <p className="text-xs text-slate-600 mt-1">
               Booking pages live
             </p>
           </CardContent>
@@ -118,7 +118,7 @@ export default async function CalendarPage() {
         </TabsList>
 
         <TabsContent value="calendar" className="flex-1 mt-0">
-          <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50">
+          <Card className="border-none shadow-lg bg-white">
             <CardContent className="p-0">
               <CalendarView events={events} />
             </CardContent>
@@ -126,7 +126,7 @@ export default async function CalendarPage() {
         </TabsContent>
 
         <TabsContent value="bookings" className="flex-1 mt-0">
-          <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50">
+          <Card className="border-none shadow-lg bg-white">
             <CardContent className="p-0">
               <BookingCalendar bookings={bookings} />
             </CardContent>
@@ -140,13 +140,13 @@ export default async function CalendarPage() {
             ))}
 
             {bookingLinks.length === 0 && (
-              <Card className="col-span-full border-dashed border-2 bg-slate-50 dark:bg-slate-800/30">
+              <Card className="col-span-full border-dashed border-2 bg-slate-50">
                 <CardContent className="flex flex-col items-center justify-center py-16">
-                  <div className="h-16 w-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-4">
-                    <Link2 className="h-8 w-8 text-slate-400" />
+                  <div className="h-16 w-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
+                    <Link2 className="h-8 w-8 text-slate-600" />
                   </div>
-                  <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">No booking links yet</h3>
-                  <p className="text-slate-500 dark:text-slate-400 mb-6">Create your first booking link to start accepting appointments.</p>
+                  <h3 className="text-lg font-semibold text-slate-900 mb-2">No booking links yet</h3>
+                  <p className="text-slate-600 mb-6">Create your first booking link to start accepting appointments.</p>
                   <BookingLinkDialog />
                 </CardContent>
               </Card>

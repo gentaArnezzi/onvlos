@@ -38,15 +38,15 @@ export function PaymentForm({ invoiceId, amount }: PaymentFormProps) {
     if (success) {
         return (
             <div className="text-center py-8 space-y-4 animate-in zoom-in">
-                <div className="h-16 w-16 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto">
+                <div className="h-16 w-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
                     <Lock className="h-8 w-8" />
                 </div>
-                <h3 className="text-xl font-semibold text-slate-900 dark:text-white">Payment Successful!</h3>
-                <p className="text-slate-600 dark:text-slate-400">Thank you for your business.</p>
+                <h3 className="text-xl font-semibold text-slate-900">Payment Successful!</h3>
+                <p className="text-slate-600">Thank you for your business.</p>
                 <Button 
                     variant="outline" 
                     onClick={() => router.back()}
-                    className="border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700"
+                    className="border-slate-200 text-slate-900 bg-white hover:bg-slate-50"
                 >
                     Return to Dashboard
                 </Button>
@@ -57,19 +57,19 @@ export function PaymentForm({ invoiceId, amount }: PaymentFormProps) {
     return (
         <form onSubmit={handlePay} className="space-y-5">
             <div className="space-y-2">
-                <Label className="text-slate-900 dark:text-white font-medium">Cardholder Name</Label>
+                <Label className="text-slate-900 font-medium">Cardholder Name</Label>
                 <Input 
                     placeholder="John Doe" 
                     required 
-                    className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 h-11"
+                    className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500 h-11"
                 />
             </div>
             <div className="space-y-2">
-                <Label className="text-slate-900 dark:text-white font-medium">Card Number</Label>
+                <Label className="text-slate-900 font-medium">Card Number</Label>
                 <div className="relative">
-                    <CreditCard className="absolute left-3 top-3.5 h-4 w-4 text-slate-500 dark:text-slate-400" />
+                    <CreditCard className="absolute left-3 top-3.5 h-4 w-4 text-slate-500" />
                     <Input 
-                        className="pl-9 bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 h-11" 
+                        className="pl-9 bg-white border-slate-200 text-slate-900 placeholder:text-slate-500 h-11" 
                         placeholder="0000 0000 0000 0000" 
                         required 
                     />
@@ -77,19 +77,19 @@ export function PaymentForm({ invoiceId, amount }: PaymentFormProps) {
             </div>
             <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                    <Label className="text-slate-900 dark:text-white font-medium">Expiry</Label>
+                    <Label className="text-slate-900 font-medium">Expiry</Label>
                     <Input 
                         placeholder="MM/YY" 
                         required 
-                        className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 h-11"
+                        className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500 h-11"
                     />
                 </div>
                 <div className="space-y-2">
-                    <Label className="text-slate-900 dark:text-white font-medium">CVC</Label>
+                    <Label className="text-slate-900 font-medium">CVC</Label>
                     <Input 
                         placeholder="123" 
                         required 
-                        className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 h-11"
+                        className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500 h-11"
                     />
                 </div>
             </div>
@@ -108,8 +108,8 @@ export function PaymentForm({ invoiceId, amount }: PaymentFormProps) {
                 )}
             </Button>
             
-            <div className="text-xs text-center text-slate-600 dark:text-slate-400 flex items-center justify-center pt-2">
-                <Lock className="h-3 w-3 mr-1.5 text-slate-500 dark:text-slate-500" /> 
+            <div className="text-xs text-center text-slate-600 flex items-center justify-center pt-2">
+                <Lock className="h-3 w-3 mr-1.5 text-slate-500" /> 
                 Secured by 256-bit SSL encryption
             </div>
         </form>

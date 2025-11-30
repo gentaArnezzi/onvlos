@@ -122,7 +122,7 @@ export function Navbar({ user }: NavbarProps) {
   const userInitials = userName.split(" ").map((n) => n[0]).join("").substring(0, 2).toUpperCase();
 
   return (
-    <div className="sticky top-0 z-50 px-6 py-3 bg-[#0B0E14] border-b border-slate-800 text-slate-200">
+    <div className="sticky top-0 z-50 px-6 py-3 bg-white border-b border-slate-200 text-slate-900">
       <div className="relative mx-auto w-full max-w-screen-2xl flex items-center justify-between">
         {/* Left Section: Logo */}
         <div className="flex items-center gap-8">
@@ -132,7 +132,7 @@ export function Navbar({ user }: NavbarProps) {
               alt="Onvlo"
               className="w-8 h-8 object-contain"
             />
-            <span className="text-lg font-bold text-white">
+            <span className="text-lg font-bold bg-gradient-to-r from-[#0731c2] to-[#010119] bg-clip-text text-transparent">
               Onvlo
             </span>
           </Link>
@@ -151,11 +151,11 @@ export function Navbar({ user }: NavbarProps) {
                 className={cn(
                   "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 whitespace-nowrap",
                   isActive
-                    ? "bg-[#1d4ed8] text-white shadow-sm"
-                    : "text-slate-400 hover:text-slate-100 hover:bg-slate-800/50"
+                    ? "bg-[#0731c2] text-white shadow-sm"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
                 )}
               >
-                <item.icon className={cn("w-4 h-4", isActive ? "text-white" : "text-slate-400 group-hover:text-slate-100")} />
+                <item.icon className={cn("w-4 h-4", isActive ? "text-white" : "text-slate-600 group-hover:text-slate-900")} />
                 <span>{t(item.key)}</span>
               </Link>
             );
@@ -167,25 +167,25 @@ export function Navbar({ user }: NavbarProps) {
                 variant="ghost"
                 size="icon"
                 suppressHydrationWarning
-                className="text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 rounded-lg ml-1"
+                className="text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg ml-1"
               >
                 <MoreHorizontal className="w-5 h-5" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-48 bg-[#1A1D24] border-slate-800 text-slate-200">
-              <DropdownMenuItem className="focus:bg-slate-800 focus:text-white cursor-pointer" asChild>
+            <DropdownMenuContent align="start" className="w-48 bg-white border-slate-200 text-slate-900">
+              <DropdownMenuItem className="focus:bg-slate-100 focus:text-slate-900 cursor-pointer" asChild>
                 <Link href="/dashboard/settings">
                   <Settings className="mr-2 h-4 w-4" />
                   <span>{t("nav.settings")}</span>
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className="focus:bg-slate-800 focus:text-white cursor-pointer" asChild>
+              <DropdownMenuItem className="focus:bg-slate-100 focus:text-slate-900 cursor-pointer" asChild>
                 <Link href="/dashboard/help">
                   <HelpCircle className="mr-2 h-4 w-4" />
                   <span>Help & Support</span>
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className="focus:bg-slate-800 focus:text-white cursor-pointer" asChild>
+              <DropdownMenuItem className="focus:bg-slate-100 focus:text-slate-900 cursor-pointer" asChild>
                 <Link href="/dashboard/docs">
                   <FileText className="mr-2 h-4 w-4" />
                   <span>Documentation</span>
@@ -202,7 +202,7 @@ export function Navbar({ user }: NavbarProps) {
             variant="ghost"
             size="icon"
             onClick={() => setSearchOpen(true)}
-            className="text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 rounded-lg"
+            className="text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg"
           >
             <Search className="h-5 w-5" />
           </Button>
@@ -216,7 +216,7 @@ export function Navbar({ user }: NavbarProps) {
               <Button
                 variant="ghost"
                 suppressHydrationWarning
-                className="flex items-center gap-2 hover:bg-slate-800/50 rounded-full p-1 pr-2 ml-1"
+                className="flex items-center gap-2 hover:bg-slate-100 rounded-full p-1 pr-2 ml-1"
               >
                 <Avatar className="h-8 w-8">
                   <AvatarImage src={user?.image || "/avatars/01.png"} alt={userName} />
@@ -224,30 +224,30 @@ export function Navbar({ user }: NavbarProps) {
                     {userInitials}
                   </AvatarFallback>
                 </Avatar>
-                <ChevronDown className="h-4 w-4 text-slate-400" />
+                <ChevronDown className="h-4 w-4 text-slate-600" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-              className="w-56 bg-[#1A1D24] border-slate-800 text-slate-200"
+              className="w-56 bg-white border-slate-200 text-slate-900"
               align="end"
               forceMount
             >
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none text-white">{userName}</p>
-                  <p className="text-xs leading-none text-slate-400">{user?.email || "user@example.com"}</p>
+                  <p className="text-sm font-medium leading-none text-slate-900">{userName}</p>
+                  <p className="text-xs leading-none text-slate-600">{user?.email || "user@example.com"}</p>
                 </div>
               </DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-slate-800" />
-              <DropdownMenuItem className="focus:bg-slate-800 focus:text-white cursor-pointer" asChild>
+              <DropdownMenuSeparator className="bg-slate-200" />
+              <DropdownMenuItem className="focus:bg-slate-100 focus:text-slate-900 cursor-pointer" asChild>
                 <Link href="/dashboard/settings">
                   <Settings className="mr-2 h-4 w-4" />
                   <span>{t("nav.settings")}</span>
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuSeparator className="bg-slate-800" />
+              <DropdownMenuSeparator className="bg-slate-200" />
               <DropdownMenuItem 
-                className="text-red-400 focus:bg-red-950/30 focus:text-red-300 cursor-pointer"
+                className="text-red-600 focus:bg-red-50 focus:text-red-700 cursor-pointer"
                 onClick={handleLogout}
               >
                 <LogOut className="mr-2 h-4 w-4" />

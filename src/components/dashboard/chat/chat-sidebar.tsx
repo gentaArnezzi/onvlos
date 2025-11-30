@@ -40,16 +40,16 @@ export function ChatSidebar({
     const { t, language: contextLanguage } = useTranslation();
     const language = propLanguage || contextLanguage;
     return (
-        <Card className="h-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 backdrop-blur-sm flex flex-col overflow-hidden">
+        <Card className="h-full border border-slate-200 bg-white backdrop-blur-sm flex flex-col overflow-hidden">
             {/* Search */}
-            <div className="p-4 border-b border-slate-200 dark:border-slate-700 flex-shrink-0">
+            <div className="p-4 border-b border-slate-200 flex-shrink-0">
                 <div className="relative">
-                    <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400 dark:text-slate-500" />
+                    <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-600" />
                     <Input
                         placeholder={t("chat.searchClients")}
                         value={searchQuery}
                         onChange={(e) => onSearchChange(e.target.value)}
-                        className="pl-9 bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
+                        className="pl-9 bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
                     />
                 </div>
             </div>
@@ -58,20 +58,20 @@ export function ChatSidebar({
             <ScrollArea className="flex-1 min-h-0">
                 {conversations.length === 0 ? (
                     <div className="p-8 text-center">
-                        <div className="mx-auto w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-700/30 flex items-center justify-center mb-3">
-                            <Building2 className="w-6 h-6 text-slate-400 dark:text-slate-500" />
+                        <div className="mx-auto w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mb-3">
+                            <Building2 className="w-6 h-6 text-slate-600" />
                         </div>
-                        <p className="text-sm text-slate-500 dark:text-slate-400">{t("chat.noClientsFound")}</p>
+                        <p className="text-sm text-slate-600">{t("chat.noClientsFound")}</p>
                     </div>
                 ) : (
-                    <div className="divide-y divide-slate-200 dark:divide-slate-700/50">
+                    <div className="divide-y divide-slate-200">
                         {conversations.map((conversation) => (
                             <button
                                 key={conversation.clientId}
                                 onClick={() => onSelectClient(conversation.clientId)}
                                 className={cn(
-                                    "w-full p-4 text-left hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors",
-                                    selectedClientId === conversation.clientId && "bg-slate-100 dark:bg-slate-700/50"
+                                    "w-full p-4 text-left hover:bg-slate-50 transition-colors",
+                                    selectedClientId === conversation.clientId && "bg-slate-100"
                                 )}
                             >
                                 <div className="flex items-start gap-3">
@@ -95,21 +95,21 @@ export function ChatSidebar({
                                     {/* Content */}
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-baseline justify-between gap-2 mb-1">
-                                            <h4 className="font-semibold text-slate-900 dark:text-white text-sm truncate">
+                                            <h4 className="font-semibold text-slate-900 text-sm truncate">
                                                 {conversation.clientName}
                                             </h4>
                                             {conversation.lastMessageTime && (
-                                                <span className="text-xs text-slate-500 dark:text-slate-400 flex-shrink-0">
+                                                <span className="text-xs text-slate-600 flex-shrink-0">
                                                     {formatDistanceToNow(new Date(conversation.lastMessageTime), { addSuffix: true })}
                                                 </span>
                                             )}
                                         </div>
                                         {conversation.lastMessage ? (
-                                            <p className="text-xs text-slate-600 dark:text-slate-400 truncate">
+                                            <p className="text-xs text-slate-600 truncate">
                                                 {conversation.lastMessage}
                                             </p>
                                         ) : (
-                                            <p className="text-xs text-slate-500 dark:text-slate-500 italic">
+                                            <p className="text-xs text-slate-600 italic">
                                                 {t("chat.noMessagesYet")}
                                             </p>
                                         )}

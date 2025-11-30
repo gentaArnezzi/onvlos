@@ -100,45 +100,45 @@ export function CreateWorkflowDialog({ language: propLanguage }: CreateWorkflowD
           <Plus className="mr-2 h-4 w-4" /> {t("workflows.newWorkflow")}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px] bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[600px] bg-white border-slate-200 max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-slate-900 dark:text-white">{t("workflows.createAutomation")}</DialogTitle>
+          <DialogTitle className="text-slate-900">{t("workflows.createAutomation")}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="space-y-2">
-              <Label className="text-slate-900 dark:text-white">{t("workflows.name")}</Label>
+              <Label className="text-slate-900">{t("workflows.name")}</Label>
               <Input 
                 value={name} 
                 onChange={e => setName(e.target.value)} 
                 required 
                 placeholder={t("workflows.invoiceFollowUp")}
-                className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
+                className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
               />
             </div>
             
             <div className="space-y-2">
-              <Label className="text-slate-900 dark:text-white">{t("common.description")}</Label>
+              <Label className="text-slate-900">{t("common.description")}</Label>
               <Textarea 
                 value={description} 
                 onChange={e => setDescription(e.target.value)} 
                 placeholder={t("workflows.thankYouEmailPlaceholder")}
-                className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
+                className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
               />
             </div>
 
             <div className="space-y-2">
-              <Label className="text-slate-900 dark:text-white">{t("workflows.trigger")}</Label>
+              <Label className="text-slate-900">{t("workflows.trigger")}</Label>
               <Select value={triggerType} onValueChange={setTriggerType}>
-                <SelectTrigger className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
+                <SelectTrigger className="bg-white border-slate-200 text-slate-900">
                   <SelectValue placeholder={t("workflows.selectTrigger")} />
                 </SelectTrigger>
-                <SelectContent className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+                <SelectContent className="bg-white border-slate-200">
                   {triggerOptions.map((option) => (
                     <SelectItem 
                       key={option.value} 
                       value={option.value}
-                      className="text-slate-900 dark:text-white focus:bg-slate-100 dark:focus:bg-slate-700"
+                      className="text-slate-900 focus:bg-slate-100"
                     >
                       {option.label}
                     </SelectItem>
@@ -148,23 +148,23 @@ export function CreateWorkflowDialog({ language: propLanguage }: CreateWorkflowD
             </div>
 
             <div className="space-y-2">
-              <Label className="text-slate-900 dark:text-white">{t("workflows.actions")}</Label>
+              <Label className="text-slate-900">{t("workflows.actions")}</Label>
               <div className="space-y-2">
                 {actions.map((action, index) => (
-                  <div key={index} className="flex gap-2 items-center p-2 border border-slate-200 dark:border-slate-700 rounded-md">
+                  <div key={index} className="flex gap-2 items-center p-2 border border-slate-200 rounded-md">
                     <Select 
                       value={action.type} 
                       onValueChange={(value) => updateAction(index, { type: value })}
                     >
-                      <SelectTrigger className="flex-1 bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
+                      <SelectTrigger className="flex-1 bg-white border-slate-200 text-slate-900">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+                      <SelectContent className="bg-white border-slate-200">
                         {actionOptions.map((option) => (
                           <SelectItem 
                             key={option.value} 
                             value={option.value}
-                            className="text-slate-900 dark:text-white focus:bg-slate-100 dark:focus:bg-slate-700"
+                            className="text-slate-900 focus:bg-slate-100"
                           >
                             {option.label}
                           </SelectItem>
@@ -177,7 +177,7 @@ export function CreateWorkflowDialog({ language: propLanguage }: CreateWorkflowD
                         variant="ghost"
                         size="icon"
                         onClick={() => removeAction(index)}
-                        className="text-red-600 dark:text-red-400"
+                        className="text-red-600"
                       >
                         <Plus className="h-4 w-4 rotate-45" />
                       </Button>
@@ -188,7 +188,7 @@ export function CreateWorkflowDialog({ language: propLanguage }: CreateWorkflowD
                   type="button"
                   variant="outline"
                   onClick={addAction}
-                  className="w-full bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800"
+                  className="w-full bg-white border-slate-200 text-slate-900 hover:bg-slate-50"
                 >
                   <Plus className="mr-2 h-4 w-4" />
                   {t("workflows.addAction")}
@@ -201,7 +201,7 @@ export function CreateWorkflowDialog({ language: propLanguage }: CreateWorkflowD
               type="button"
               variant="outline"
               onClick={() => setOpen(false)}
-              className="border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700"
+              className="border-slate-200 text-slate-900 bg-white hover:bg-slate-50"
             >
               {t("common.cancel")}
             </Button>

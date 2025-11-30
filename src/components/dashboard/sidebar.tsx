@@ -82,7 +82,7 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <div className="relative h-full flex flex-col bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 border-r border-slate-200 dark:border-slate-800">
+    <div className="relative h-full flex flex-col bg-gradient-to-b from-slate-50 to-white border-r border-slate-200">
       {/* Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#0731c2]/5 via-transparent to-[#010119]/5 pointer-events-none" />
 
@@ -97,16 +97,16 @@ export function Sidebar() {
             />
           </div>
           <div className="flex flex-col">
-            <h1 className="text-xl font-bold bg-gradient-to-r from-[#0731c2] to-[#010119] dark:from-[#0731c2] dark:to-[#010119] bg-clip-text text-transparent">
+            <h1 className="text-xl font-bold bg-gradient-to-r from-[#0731c2] to-[#010119] bg-clip-text text-transparent">
               Onvlo
             </h1>
-            <p className="text-xs text-slate-500 dark:text-slate-400">Modern Workspace</p>
+            <p className="text-xs text-slate-600">Modern Workspace</p>
           </div>
         </Link>
 
         {/* Navigation */}
         <nav className="flex-1 space-y-2">
-          <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider px-3 mb-3">
+          <div className="text-xs font-semibold text-slate-600 uppercase tracking-wider px-3 mb-3">
             Main Menu
           </div>
           {routes.slice(0, 4).map((route) => {
@@ -118,8 +118,8 @@ export function Sidebar() {
                 className={cn(
                   "group relative flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200",
                   isActive
-                    ? "text-white dark:text-white shadow-lg"
-                    : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50"
+                    ? "text-white shadow-lg"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
                 )}
               >
                 {/* Active Background Gradient */}
@@ -153,7 +153,7 @@ export function Sidebar() {
           })}
 
           <div className="pt-4">
-            <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider px-3 mb-3">
+            <div className="text-xs font-semibold text-slate-600 uppercase tracking-wider px-3 mb-3">
               Tools
             </div>
             {routes.slice(4).map((route) => {
@@ -165,8 +165,8 @@ export function Sidebar() {
                   className={cn(
                     "group relative flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200",
                     isActive
-                      ? "text-white dark:text-white shadow-lg"
-                      : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50"
+                      ? "text-white shadow-lg"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
                   )}
                 >
                   {isActive && (
@@ -198,15 +198,15 @@ export function Sidebar() {
         </nav>
 
         {/* Bottom Section */}
-        <div className="pt-4 mt-auto space-y-2 border-t border-slate-200 dark:border-slate-800">
+        <div className="pt-4 mt-auto space-y-2 border-t border-slate-200">
           {/* Settings */}
           <Link
             href="/dashboard/settings"
             className={cn(
               "group flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200",
               pathname === "/dashboard/settings"
-                ? "text-white bg-gradient-to-r from-slate-700 to-slate-600 dark:from-slate-700 dark:to-slate-600"
-                : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/50"
+                ? "text-white bg-gradient-to-r from-slate-700 to-slate-600"
+                : "text-slate-600 hover:bg-slate-100"
             )}
           >
             <Settings className="h-5 w-5" />
@@ -222,10 +222,10 @@ export function Sidebar() {
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">
+                <p className="text-sm font-semibold text-slate-900 truncate">
                   Admin User
                 </p>
-                <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                <p className="text-xs text-slate-600 truncate">
                   admin@onvlo.com
                 </p>
               </div>
@@ -235,7 +235,7 @@ export function Sidebar() {
           {/* Logout Button */}
           <Button
             variant="ghost"
-            className="w-full justify-start text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-950/30"
+            className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
             size="sm"
           >
             <LogOut className="h-4 w-4 mr-2" />

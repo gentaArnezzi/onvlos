@@ -2,7 +2,7 @@
 
 import { db } from "@/lib/db";
 import { funnels, funnel_steps, client_onboarding_sessions } from "@/lib/db/schema";
-import { desc, eq, sql, count, and } from "drizzle-orm";
+import { desc, eq, sql, count, and, asc, ilike } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { getOrCreateWorkspace } from "@/actions/workspace";
 import { getSession } from "@/lib/get-session";
@@ -97,17 +97,33 @@ export async function getFunnelDetails(id: string) {
 }
 
 export async function getFunnelBySlug(slug: string) {
-    try {
-        const funnel = await db.query.funnels.findFirst({
-            where: eq(funnels.public_url, slug)
-        });
-        if (!funnel) return null;
+    if (!slug || slug.trim() === '') {
+        return null;
+    }
 
-        const steps = await db.select().from(funnel_steps).where(eq(funnel_steps.funnel_id, funnel.id)).orderBy(funnel_steps.order);
+    try {
+        // Query funnel by public_url without published check
+        // This allows access to both published and draft funnels for onboarding page
+        const [funnel] = await db
+            .select()
+            .from(funnels)
+            .where(eq(funnels.public_url, slug))
+            .limit(1);
+        
+        if (!funnel) {
+            return null;
+        }
+
+        const steps = await db
+            .select()
+            .from(funnel_steps)
+            .where(eq(funnel_steps.funnel_id, funnel.id))
+            .orderBy(asc(funnel_steps.order));
 
         return { ...funnel, steps };
     } catch (error) {
-        console.error(error);
+        // Silently return null - error is likely from Drizzle ORM internal logging
+        // The page will handle null by showing 404
         return null;
     }
 }

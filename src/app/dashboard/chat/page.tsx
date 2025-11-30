@@ -23,7 +23,7 @@ export default async function ChatPage() {
                     <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
                         {t("chat.title", language)}
                     </h2>
-                    <p className="text-slate-500 dark:text-slate-400 mt-1">
+                    <p className="text-slate-600 mt-1">
                         {t("chat.description", language)}
                     </p>
                 </div>

@@ -22,10 +22,10 @@ export function TaskStatusBadge({ taskId, status }: TaskStatusBadgeProps) {
     const router = useRouter();
     
     const statusConfig: Record<string, { label: string; className: string }> = {
-        todo: { label: t("tasks.toDo"), className: "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400" },
-        in_progress: { label: t("tasks.inProgress"), className: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400" },
-        in_review: { label: t("tasks.inReview"), className: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400" },
-        done: { label: t("tasks.done"), className: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400" },
+        todo: { label: t("tasks.toDo"), className: "bg-slate-100 text-slate-600" },
+        in_progress: { label: t("tasks.inProgress"), className: "bg-blue-100 text-blue-700" },
+        in_review: { label: t("tasks.inReview"), className: "bg-blue-100 text-blue-700" },
+        done: { label: t("tasks.done"), className: "bg-emerald-100 text-emerald-700" },
     };
     
     const currentConfig = statusConfig[status] || statusConfig.todo;
@@ -42,12 +42,12 @@ export function TaskStatusBadge({ taskId, status }: TaskStatusBadgeProps) {
                     {currentConfig.label}
                 </Badge>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-slate-800 border-slate-700">
+            <DropdownMenuContent align="end" className="bg-white border-slate-200">
                 {Object.entries(statusConfig).map(([key, config]) => (
                     <DropdownMenuItem
                         key={key}
                         onClick={() => handleStatusChange(key)}
-                        className="text-slate-200 hover:bg-slate-700 cursor-pointer"
+                        className="text-slate-900 hover:bg-slate-100 cursor-pointer"
                     >
                         <Badge variant="secondary" className={cn("mr-2", config.className)}>
                             {config.label}

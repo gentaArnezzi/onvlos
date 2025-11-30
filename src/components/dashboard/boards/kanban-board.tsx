@@ -96,17 +96,17 @@ function SortableCard({ card }: { card: BoardCard }) {
             {...listeners} 
             className={cn(
                 "cursor-grab active:cursor-grabbing hover:shadow-lg transition-all duration-200 touch-none",
-                "bg-white dark:bg-slate-800/90 border-slate-200 dark:border-slate-700",
-                "hover:border-orange-300 dark:hover:border-orange-600",
+                "bg-white border-slate-200",
+                "hover:border-orange-300",
                 "hover:scale-[1.02]"
             )}
         >
             <CardContent className="p-4">
-                <div className="font-semibold text-slate-900 dark:text-white text-sm leading-tight">
+                <div className="font-semibold text-slate-900 text-sm leading-tight">
                     {card.title}
                 </div>
                 {card.description && (
-                    <div className="text-xs text-slate-600 dark:text-slate-300 mt-2 line-clamp-2">
+                    <div className="text-xs text-slate-600 mt-2 line-clamp-2">
                         {card.description}
                     </div>
                 )}
@@ -146,10 +146,10 @@ const Column = memo(function Column({ column, onCardAdded }: { column: BoardColu
     const translatedColumnName = translateColumnName(column.name, t);
 
     return (
-        <div className="w-80 flex flex-col bg-white dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 h-full max-h-full shadow-sm">
-            <div className="p-4 font-semibold text-sm flex items-center justify-between border-b border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/30 rounded-t-xl">
-                <span className="text-slate-900 dark:text-white">{translatedColumnName}</span>
-                <span className="text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-200 dark:bg-slate-700 px-2.5 py-1 rounded-full min-w-[24px] text-center">
+        <div className="w-80 flex flex-col bg-white rounded-xl border border-slate-200 h-full max-h-full shadow-sm">
+            <div className="p-4 font-semibold text-sm flex items-center justify-between border-b border-slate-200 bg-slate-50/50 rounded-t-xl">
+                <span className="text-slate-900">{translatedColumnName}</span>
+                <span className="text-xs font-medium text-slate-600 bg-slate-200 px-2.5 py-1 rounded-full min-w-[24px] text-center">
                     {column.cards.length}
                 </span>
             </div>
@@ -158,15 +158,15 @@ const Column = memo(function Column({ column, onCardAdded }: { column: BoardColu
                 ref={setNodeRef} 
                 className={cn(
                     "flex-1 p-3 space-y-3 overflow-y-auto min-h-[100px]",
-                    "scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600 scrollbar-track-transparent"
+                    "scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent"
                 )}
             >
                 {column.cards.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-8 text-center">
-                        <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-3">
-                            <Plus className="w-5 h-5 text-slate-400 dark:text-slate-500" />
+                        <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mb-3">
+                            <Plus className="w-5 h-5 text-slate-600" />
                         </div>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">{t("boards.noCardsYet")}</p>
+                        <p className="text-xs text-slate-600">{t("boards.noCardsYet")}</p>
                     </div>
                 ) : (
                     <SortableContext items={column.cards.map(c => c.id)} strategy={verticalListSortingStrategy}>
@@ -177,7 +177,7 @@ const Column = memo(function Column({ column, onCardAdded }: { column: BoardColu
                 )}
             </div>
             
-            <div className="p-3 border-t border-slate-200 dark:border-slate-700 rounded-b-xl">
+            <div className="p-3 border-t border-slate-200 rounded-b-xl">
                 <AddCardButton columnId={column.id} onCardAdded={onCardAdded} />
             </div>
         </div>
@@ -221,22 +221,22 @@ function AddCardButton({ columnId, onCardAdded }: { columnId: string; onCardAdde
             <DialogTrigger asChild>
                 <Button 
                     variant="ghost" 
-                    className="w-full justify-start text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700/50 transition-colors"
+                    className="w-full justify-start text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
                 >
                     <Plus className="mr-2 h-4 w-4" /> {t("boards.addCard")}
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px] bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+            <DialogContent className="sm:max-w-[425px] bg-white border-slate-200">
                 <DialogHeader>
-                    <DialogTitle className="text-slate-900 dark:text-white">{t("boards.addNewCard")}</DialogTitle>
-                    <DialogDescription className="text-slate-600 dark:text-slate-400">
+                    <DialogTitle className="text-slate-900">{t("boards.addNewCard")}</DialogTitle>
+                    <DialogDescription className="text-slate-600">
                         {t("boards.createNewCard")}
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit}>
                     <div className="grid gap-4 py-4">
                         <div className="space-y-2">
-                            <Label htmlFor="title" className="text-slate-900 dark:text-white">
+                            <Label htmlFor="title" className="text-slate-900">
                                 {t("common.title")}
                             </Label>
                             <Input
@@ -244,13 +244,13 @@ function AddCardButton({ columnId, onCardAdded }: { columnId: string; onCardAdde
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
                                 placeholder={t("boards.enterCardTitle")}
-                                className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                                className="bg-white border-slate-200 text-slate-900"
                                 required
                                 autoFocus
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="description" className="text-slate-900 dark:text-white">
+                            <Label htmlFor="description" className="text-slate-900">
                                 {t("common.description")} ({t("common.optional")})
                             </Label>
                             <Textarea
@@ -258,7 +258,7 @@ function AddCardButton({ columnId, onCardAdded }: { columnId: string; onCardAdde
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
                                 placeholder={t("boards.enterCardDescription")}
-                                className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white resize-none"
+                                className="bg-white border-slate-200 text-slate-900 resize-none"
                                 rows={3}
                             />
                         </div>
@@ -268,7 +268,7 @@ function AddCardButton({ columnId, onCardAdded }: { columnId: string; onCardAdde
                             type="button"
                             variant="outline"
                             onClick={() => setOpen(false)}
-                            className="border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700"
+                            className="border-slate-200 text-slate-900 bg-white hover:bg-slate-50"
                         >
                             {t("common.cancel")}
                         </Button>
@@ -604,7 +604,7 @@ export function KanbanBoard({ boardId, initialColumns }: KanbanBoardProps) {
             onDragOver={handleDragOver}
             onDragEnd={handleDragEnd}
         >
-            <div className="flex h-full space-x-4 overflow-x-auto overflow-y-hidden pb-2 min-w-full scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600 scrollbar-track-transparent">
+            <div className="flex h-full space-x-4 overflow-x-auto overflow-y-hidden pb-2 min-w-full scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent">
                 {useMemo(() => 
                     columns.map((column) => (
                     <Column key={column.id} column={column} onCardAdded={handleCardAdded} />

@@ -74,11 +74,11 @@ interface ClientsGridProps {
 }
 
 const statusColors: Record<string, string> = {
-  active: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
-  lead: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400",
-  onboarding: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
-  completed: "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400",
-  archived: "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400",
+  active: "bg-emerald-100 text-emerald-700",
+  lead: "bg-orange-100 text-orange-700",
+  onboarding: "bg-blue-100 text-blue-700",
+  completed: "bg-slate-100 text-slate-700",
+  archived: "bg-slate-100 text-slate-700",
 };
 
 export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
@@ -172,46 +172,46 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
             placeholder={t("clients.searchPlaceholder")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
+            className="pl-10 bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
           />
-          <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+          <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-600" />
         </div>
         <div className="flex gap-2">
           <Select value={filterStatus} onValueChange={setFilterStatus}>
-            <SelectTrigger className="w-[140px] bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
+            <SelectTrigger className="w-[140px] bg-white border-slate-200 text-slate-900">
               <SelectValue placeholder={t("clients.status")} />
             </SelectTrigger>
-            <SelectContent className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
-              <SelectItem value="all" className="text-slate-900 dark:text-white">{t("clients.allStatus")}</SelectItem>
-              <SelectItem value="active" className="text-slate-900 dark:text-white">{t("clients.active")}</SelectItem>
-              <SelectItem value="lead" className="text-slate-900 dark:text-white">{t("clients.lead")}</SelectItem>
-              <SelectItem value="onboarding" className="text-slate-900 dark:text-white">{t("clients.onboarding")}</SelectItem>
-              <SelectItem value="completed" className="text-slate-900 dark:text-white">{t("clients.completed")}</SelectItem>
-              <SelectItem value="archived" className="text-slate-900 dark:text-white">{t("clients.archived")}</SelectItem>
+            <SelectContent className="bg-white border-slate-200">
+              <SelectItem value="all" className="text-slate-900">{t("clients.allStatus")}</SelectItem>
+              <SelectItem value="active" className="text-slate-900">{t("clients.active")}</SelectItem>
+              <SelectItem value="lead" className="text-slate-900">{t("clients.lead")}</SelectItem>
+              <SelectItem value="onboarding" className="text-slate-900">{t("clients.onboarding")}</SelectItem>
+              <SelectItem value="completed" className="text-slate-900">{t("clients.completed")}</SelectItem>
+              <SelectItem value="archived" className="text-slate-900">{t("clients.archived")}</SelectItem>
             </SelectContent>
           </Select>
           <Select value={filterCategory} onValueChange={setFilterCategory}>
-            <SelectTrigger className="w-[140px] bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
+            <SelectTrigger className="w-[140px] bg-white border-slate-200 text-slate-900">
               <SelectValue placeholder={t("clients.category")} />
             </SelectTrigger>
-            <SelectContent className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
-              <SelectItem value="all" className="text-slate-900 dark:text-white">{t("clients.allCategories")}</SelectItem>
+            <SelectContent className="bg-white border-slate-200">
+              <SelectItem value="all" className="text-slate-900">{t("clients.allCategories")}</SelectItem>
               {categories.map((cat) => (
-                <SelectItem key={cat} value={cat || ""} className="text-slate-900 dark:text-white">
+                <SelectItem key={cat} value={cat || ""} className="text-slate-900">
                   {cat}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
           <Select value={sortBy} onValueChange={setSortBy}>
-            <SelectTrigger className="w-[140px] bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
+            <SelectTrigger className="w-[140px] bg-white border-slate-200 text-slate-900">
               <SelectValue placeholder={t("clients.sortBy")} />
             </SelectTrigger>
-            <SelectContent className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
-              <SelectItem value="created" className="text-slate-900 dark:text-white">{t("clients.newest")}</SelectItem>
-              <SelectItem value="updated" className="text-slate-900 dark:text-white">{t("clients.recentlyUpdated")}</SelectItem>
-              <SelectItem value="name" className="text-slate-900 dark:text-white">{t("clients.name")}</SelectItem>
-              <SelectItem value="value" className="text-slate-900 dark:text-white">{t("clients.contractValue")}</SelectItem>
+            <SelectContent className="bg-white border-slate-200">
+              <SelectItem value="created" className="text-slate-900">{t("clients.newest")}</SelectItem>
+              <SelectItem value="updated" className="text-slate-900">{t("clients.recentlyUpdated")}</SelectItem>
+              <SelectItem value="name" className="text-slate-900">{t("clients.name")}</SelectItem>
+              <SelectItem value="value" className="text-slate-900">{t("clients.contractValue")}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -232,13 +232,13 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
             return (
               <Card
                 key={client.id}
-                className="group relative overflow-hidden border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 hover:shadow-lg transition-all duration-200"
+                className="group relative overflow-hidden border-slate-200 bg-white hover:shadow-lg transition-all duration-200"
               >
                 <CardContent className="p-6">
                   {/* Header */}
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center space-x-3 flex-1 min-w-0">
-                      <Avatar className="h-12 w-12 border-2 border-slate-200 dark:border-slate-700 flex-shrink-0">
+                      <Avatar className="h-12 w-12 border-2 border-slate-200 flex-shrink-0">
                         <AvatarImage src={client.logo_url || ""} />
                         <AvatarFallback className="bg-gradient-to-br from-[#0731c2] to-[#010119] text-white font-semibold text-sm">
                           {initials}
@@ -246,11 +246,11 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
                       </Avatar>
                       <div className="flex-1 min-w-0">
                         <Link href={`/dashboard/clients/${client.id}`}>
-                          <h3 className="font-semibold text-slate-900 dark:text-white truncate hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                          <h3 className="font-semibold text-slate-900 truncate hover:text-blue-600 transition-colors">
                             {client.company_name || t("clients.noCompany")}
                           </h3>
                         </Link>
-                        <p className="text-sm text-slate-500 dark:text-slate-400 truncate">
+                        <p className="text-sm text-slate-600 truncate">
                           {client.name}
                         </p>
                       </div>
@@ -260,16 +260,16 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity text-slate-500 hover:text-slate-900 dark:hover:text-white"
+                          className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity text-slate-500 hover:text-slate-900"
                         >
                           <MoreVertical className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-48 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 shadow-lg">
+                      <DropdownMenuContent align="end" className="w-48 bg-white border-slate-200 shadow-lg">
                         {client.space_public_url && (
-                          <DropdownMenuItem asChild className="text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700 focus:bg-slate-100 dark:focus:bg-slate-700">
+                          <DropdownMenuItem asChild className="text-slate-900 hover:bg-slate-100 focus:bg-slate-100">
                             <Link href={`/portal/${client.space_public_url}`} target="_blank" className="cursor-pointer flex items-center">
-                              <ExternalLink className="mr-2 h-4 w-4 text-slate-600 dark:text-slate-400" />
+                              <ExternalLink className="mr-2 h-4 w-4 text-slate-600" />
                               {t("clients.openSpace")}
                             </Link>
                           </DropdownMenuItem>
@@ -279,9 +279,9 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
                             setSelectedClientForAction(client.id);
                             setInvoiceDialogOpen(true);
                           }}
-                          className="cursor-pointer text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700 focus:bg-slate-100 dark:focus:bg-slate-700"
+                          className="cursor-pointer text-slate-900 hover:bg-slate-100 focus:bg-slate-100"
                         >
-                          <FileText className="mr-2 h-4 w-4 text-slate-600 dark:text-slate-400" />
+                          <FileText className="mr-2 h-4 w-4 text-slate-600" />
                           {t("clients.newInvoice")}
                         </DropdownMenuItem>
                         <DropdownMenuItem
@@ -289,28 +289,28 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
                             setSelectedClientForAction(client.id);
                             setTaskDialogOpen(true);
                           }}
-                          className="cursor-pointer text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700 focus:bg-slate-100 dark:focus:bg-slate-700"
+                          className="cursor-pointer text-slate-900 hover:bg-slate-100 focus:bg-slate-100"
                         >
-                          <CheckSquare className="mr-2 h-4 w-4 text-slate-600 dark:text-slate-400" />
+                          <CheckSquare className="mr-2 h-4 w-4 text-slate-600" />
                           {t("clients.newTask")}
                         </DropdownMenuItem>
-                        <DropdownMenuItem asChild className="text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700 focus:bg-slate-100 dark:focus:bg-slate-700">
+                        <DropdownMenuItem asChild className="text-slate-900 hover:bg-slate-100 focus:bg-slate-100">
                           <Link href={`/dashboard/funnels`} className="cursor-pointer flex items-center">
-                            <Zap className="mr-2 h-4 w-4 text-slate-600 dark:text-slate-400" />
+                            <Zap className="mr-2 h-4 w-4 text-slate-600" />
                             {t("clients.startFunnel")}
                           </Link>
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator className="bg-slate-200 dark:bg-slate-700" />
+                        <DropdownMenuSeparator className="bg-slate-200" />
                         <DropdownMenuItem
                           onClick={() => handleArchive(client.id)}
-                          className="cursor-pointer text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 focus:bg-slate-100 dark:focus:bg-slate-700"
+                          className="cursor-pointer text-slate-600 hover:bg-slate-100 focus:bg-slate-100"
                         >
                           <Archive className="mr-2 h-4 w-4" />
                           {t("clients.archive")}
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => setDeletingClientId(client.id)}
-                          className="cursor-pointer text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 focus:bg-red-50 dark:focus:bg-red-900/20"
+                          className="cursor-pointer text-red-600 hover:bg-red-50 focus:bg-red-50"
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
                           {t("clients.delete")}
@@ -324,7 +324,7 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
                     <div className="mb-3">
                       <Badge
                         variant="outline"
-                        className="text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700"
+                        className="text-xs bg-slate-100 text-slate-700 border-slate-200"
                       >
                         {client.category}
                       </Badge>
@@ -333,7 +333,7 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
 
                   {/* Description */}
                   {client.description && (
-                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-4 line-clamp-2">
+                    <p className="text-sm text-slate-600 mb-4 line-clamp-2">
                       {client.description}
                     </p>
                   )}
@@ -341,14 +341,14 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
                   {/* Engagement Bar */}
                   <div className="mb-4">
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{t("clients.engagement")}</span>
-                      <span className="text-xs text-slate-500 dark:text-slate-500">{engagement}%</span>
+                      <span className="text-xs font-medium text-slate-600">{t("clients.engagement")}</span>
+                      <span className="text-xs text-slate-600">{engagement}%</span>
                     </div>
                     <Progress value={engagement} className="h-2" />
                   </div>
 
                   {/* Stats */}
-                  <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-4">
+                  <div className="flex items-center justify-between text-xs text-slate-600 mb-4">
                     <div className="flex items-center gap-1">
                       <CheckSquare className="h-3 w-3" />
                       <span>{client.task_count || 0} {t("clients.tasks")}</span>
@@ -360,7 +360,7 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
                   </div>
 
                   {/* Footer */}
-                  <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
+                  <div className="flex items-center justify-between pt-4 border-t border-slate-100">
                     <Badge
                       variant="outline"
                       className={cn(
@@ -371,7 +371,7 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
                       {client.status || "lead"}
                     </Badge>
                     {client.created_at && (
-                      <span className="text-xs text-slate-500 dark:text-slate-400">
+                      <span className="text-xs text-slate-600">
                         {format(new Date(client.created_at), "MMM d, yyyy")}
                       </span>
                     )}
@@ -382,17 +382,17 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
           })}
         </div>
       ) : (
-        <Card className="border-dashed border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/30">
+        <Card className="border-dashed border-slate-200 bg-slate-50">
           <CardContent className="flex flex-col items-center justify-center py-16">
-            <div className="h-16 w-16 rounded-full bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center mb-4">
-              <Users className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+            <div className="h-16 w-16 rounded-full bg-blue-100 flex items-center justify-center mb-4">
+              <Users className="h-8 w-8 text-blue-600" />
             </div>
-            <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
+            <h3 className="text-xl font-semibold text-slate-900 mb-2">
               {searchQuery || filterStatus !== "all" || filterCategory !== "all" 
                 ? t("clients.noClients") 
                 : t("clients.noClientsYet")}
             </h3>
-            <p className="text-slate-600 dark:text-slate-400 mb-6 max-w-md text-center">
+            <p className="text-slate-600 mb-6 max-w-md text-center">
               {searchQuery || filterStatus !== "all" || filterCategory !== "all"
                 ? t("clients.tryAdjustingSearch")
                 : t("clients.getStartedByAdding")}
@@ -431,10 +431,10 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={!!deletingClientId} onOpenChange={(open) => !open && setDeletingClientId(null)}>
-        <DialogContent className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+        <DialogContent className="bg-white border-slate-200">
           <DialogHeader>
-            <DialogTitle className="text-slate-900 dark:text-white">{t("clients.deleteClient")}</DialogTitle>
-            <DialogDescription className="text-slate-600 dark:text-slate-400">
+            <DialogTitle className="text-slate-900">{t("clients.deleteClient")}</DialogTitle>
+            <DialogDescription className="text-slate-600">
               {t("clients.deleteConfirm")}
             </DialogDescription>
           </DialogHeader>
@@ -442,7 +442,7 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
             <Button
               variant="outline"
               onClick={() => setDeletingClientId(null)}
-              className="border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800"
+              className="border-slate-200 text-slate-900 hover:bg-slate-50"
             >
               {t("common.cancel")}
             </Button>

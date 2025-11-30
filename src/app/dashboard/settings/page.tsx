@@ -18,7 +18,7 @@ export default async function SettingsPage() {
         <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-[#0731c2] via-[#0731c2] to-[#010119] bg-clip-text text-transparent">
           {t("settings.title", language)}
         </h2>
-        <p className="text-slate-600 dark:text-slate-400 mt-1">
+        <p className="text-slate-600 mt-1">
           {t("settings.description", language)}
         </p>
       </div>

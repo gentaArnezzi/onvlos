@@ -122,7 +122,7 @@ export function FileManager({ clientId }: { clientId?: string }) {
     return (
         <div className="space-y-4">
             <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Files</h3>
+                <h3 className="text-lg font-semibold text-slate-900">Files</h3>
                 <div className="flex gap-2">
                     <input
                         ref={fileInputRef}
@@ -154,41 +154,41 @@ export function FileManager({ clientId }: { clientId?: string }) {
             <div className="space-y-2">
                 {loading ? (
                     <div className="text-center py-8">
-                        <Loader2 className="h-8 w-8 animate-spin mx-auto text-slate-500 dark:text-slate-400" />
+                        <Loader2 className="h-8 w-8 animate-spin mx-auto text-slate-500" />
                     </div>
                 ) : files.length === 0 ? (
-                    <div className="text-center py-12 text-slate-500 dark:text-slate-400 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-900/30">
+                    <div className="text-center py-12 text-slate-500 border-2 border-dashed border-slate-200 rounded-lg bg-slate-50">
                         No files uploaded yet.
                     </div>
                 ) : (
                     files.map((file) => {
                         const FileIcon = getFileIcon(file.file_type);
                         return (
-                            <div key={file.id} className="flex items-center justify-between p-3 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group">
+                            <div key={file.id} className="flex items-center justify-between p-3 border border-slate-200 rounded-lg bg-white hover:bg-slate-50 transition-colors group">
                                 <div className="flex items-center space-x-3">
-                                    <div className="h-10 w-10 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded flex items-center justify-center">
+                                    <div className="h-10 w-10 bg-blue-100 text-blue-600 rounded flex items-center justify-center">
                                         <FileIcon className="h-5 w-5" />
                                     </div>
                                     <div>
-                                        <div className="font-medium text-sm text-slate-900 dark:text-white">{file.file_name}</div>
-                                        <div className="text-xs text-slate-500 dark:text-slate-400">
+                                        <div className="font-medium text-sm text-slate-900">{file.file_name}</div>
+                                        <div className="text-xs text-slate-600">
                                             {formatFileSize(file.file_size)} • {format(new Date(file.created_at), "MMM d, yyyy")}
                                         </div>
                                     </div>
                                 </div>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
-                                        <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity text-slate-500 hover:text-slate-900 dark:hover:text-white">
+                                        <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity text-slate-500 hover:text-slate-900">
                                             <MoreVertical className="h-4 w-4" />
                                         </Button>
                                     </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end" className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
-                                        <DropdownMenuItem asChild className="text-slate-900 dark:text-white">
+                                    <DropdownMenuContent align="end" className="bg-white border-slate-200">
+                                        <DropdownMenuItem asChild className="text-slate-900">
                                             <a href={file.file_url} download={file.file_name}>
                                                 <Download className="h-4 w-4 mr-2" /> Download
                                             </a>
                                         </DropdownMenuItem>
-                                        <DropdownMenuItem className="text-red-600 dark:text-red-400" onClick={() => handleDelete(file.id)}>
+                                        <DropdownMenuItem className="text-red-600" onClick={() => handleDelete(file.id)}>
                                             <Trash2 className="h-4 w-4 mr-2" /> Delete
                                         </DropdownMenuItem>
                                     </DropdownMenuContent>
