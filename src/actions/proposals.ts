@@ -3,7 +3,7 @@
 import { db } from "@/lib/db";
 import { proposals, proposal_items, contracts, signature_logs } from "@/lib/db/schema-proposals";
 import { workspaces, client_companies } from "@/lib/db/schema";
-import { eq, and, desc } from "drizzle-orm";
+import { eq, and, desc, asc } from "drizzle-orm";
 import { getSession } from "@/lib/get-session";
 import { revalidatePath } from "next/cache";
 import { sendEmail } from "@/lib/email";
@@ -335,5 +335,96 @@ export async function getContracts() {
   } catch (error) {
     console.error("Failed to fetch contracts:", error);
     return [];
+  }
+}
+
+// Decline proposal
+export async function declineProposal(proposalId: string, reason: string) {
+  try {
+    const proposal = await db.query.proposals.findFirst({
+      where: eq(proposals.id, proposalId)
+    });
+    
+    if (!proposal) {
+      return { success: false, error: "Proposal not found" };
+    }
+    
+    if (proposal.status === "accepted" || proposal.status === "declined") {
+      return { success: false, error: "Proposal cannot be declined" };
+    }
+    
+    await db.update(proposals)
+      .set({
+        status: "declined",
+        declined_at: new Date(),
+        decline_reason: reason,
+        updated_at: new Date()
+      })
+      .where(eq(proposals.id, proposalId));
+    
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to decline proposal:", error);
+    return { success: false, error: "Failed to decline proposal" };
+  }
+}
+
+// Get proposal by ID or public_url (for public viewing)
+export async function getProposalByIdOrSlug(idOrSlug: string) {
+  try {
+    // Try to find by ID first
+    let proposal = await db.query.proposals.findFirst({
+      where: eq(proposals.id, idOrSlug)
+    });
+
+    // If not found by ID, try by public_url
+    if (!proposal) {
+      proposal = await db.query.proposals.findFirst({
+        where: eq(proposals.public_url, idOrSlug)
+      });
+    }
+
+    if (!proposal) {
+      return null;
+    }
+
+    // Get client info
+    const client = await db.query.client_companies.findFirst({
+      where: eq(client_companies.id, proposal.client_id)
+    });
+
+    // Get proposal items
+    const items = await db.select().from(proposal_items)
+      .where(eq(proposal_items.proposal_id, proposal.id))
+      .orderBy(asc(proposal_items.order));
+
+    // Update view count and viewed_at if not already viewed
+    if (!proposal.viewed_at) {
+      await db.update(proposals)
+        .set({
+          viewed_at: new Date(),
+          view_count: (proposal.view_count || 0) + 1,
+          status: proposal.status === "draft" ? "sent" : proposal.status,
+          updated_at: new Date()
+        })
+        .where(eq(proposals.id, proposal.id));
+    } else {
+      // Just increment view count
+      await db.update(proposals)
+        .set({
+          view_count: (proposal.view_count || 0) + 1,
+          updated_at: new Date()
+        })
+        .where(eq(proposals.id, proposal.id));
+    }
+
+    return {
+      ...proposal,
+      client,
+      items
+    };
+  } catch (error) {
+    console.error("Failed to fetch proposal:", error);
+    return null;
   }
 }
