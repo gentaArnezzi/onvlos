@@ -1,37 +1,90 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { processPayment } from "@/actions/payments";
-import { Loader2, CreditCard, Lock } from "lucide-react";
+import { Loader2, Lock } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { createMidtransPaymentLink } from "@/actions/payments";
+import { toast } from "sonner";
 
 interface PaymentFormProps {
     invoiceId: string;
     amount: string;
+    currency?: string;
 }
 
-export function PaymentForm({ invoiceId, amount }: PaymentFormProps) {
+declare global {
+    interface Window {
+        snap: any;
+    }
+}
+
+export function PaymentForm({ invoiceId, amount, currency = "IDR" }: PaymentFormProps) {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const router = useRouter();
 
-    const handlePay = async (e: React.FormEvent) => {
-        e.preventDefault();
+    // Load Midtrans Snap.js
+    useEffect(() => {
+        const script = document.createElement("script");
+        script.src = "https://app.sandbox.midtrans.com/snap/snap.js";
+        script.setAttribute("data-client-key", process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY || "");
+        script.async = true;
+        document.body.appendChild(script);
+
+        return () => {
+            document.body.removeChild(script);
+        };
+    }, []);
+
+    const handlePay = async () => {
         setLoading(true);
         
-        const res = await processPayment(invoiceId, amount, "card");
-        
-        setLoading(false);
-        if (res.success) {
-            setSuccess(true);
-            setTimeout(() => {
-                router.refresh(); // Refresh to show paid status
-            }, 1500);
-        } else {
-            alert("Payment failed. Please try again.");
+        try {
+            const result = await createMidtransPaymentLink(invoiceId);
+            
+            if (!result.success || !result.token) {
+                toast.error(result.error || "Failed to create payment link");
+                setLoading(false);
+                return;
+            }
+
+            // Open Midtrans Snap popup
+            if (window.snap) {
+                window.snap.pay(result.token, {
+                    onSuccess: function(result: any) {
+                        setSuccess(true);
+                        toast.success("Payment successful!");
+                        setTimeout(() => {
+                            router.refresh();
+                        }, 1500);
+                    },
+                    onPending: function(result: any) {
+                        toast.info("Payment is pending. Please complete the payment.");
+                        setLoading(false);
+                    },
+                    onError: function(result: any) {
+                        toast.error("Payment failed. Please try again.");
+                        setLoading(false);
+                    },
+                    onClose: function() {
+                        toast.info("Payment popup closed");
+                        setLoading(false);
+                    }
+                });
+            } else {
+                // Fallback: redirect to Midtrans payment page
+                if (result.redirectUrl) {
+                    window.location.href = result.redirectUrl;
+                } else {
+                    toast.error("Payment gateway not available");
+                    setLoading(false);
+                }
+            }
+        } catch (error) {
+            console.error("Payment error:", error);
+            toast.error("An error occurred. Please try again.");
+            setLoading(false);
         }
     };
 
@@ -54,49 +107,15 @@ export function PaymentForm({ invoiceId, amount }: PaymentFormProps) {
         );
     }
 
+    const currencySymbol = currency === "IDR" ? "Rp" : "$";
+    const displayAmount = Number(amount).toLocaleString("id-ID");
+
     return (
-        <form onSubmit={handlePay} className="space-y-5">
-            <div className="space-y-2">
-                <Label className="text-slate-900 font-medium">Cardholder Name</Label>
-                <Input 
-                    placeholder="John Doe" 
-                    required 
-                    className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500 h-11"
-                />
-            </div>
-            <div className="space-y-2">
-                <Label className="text-slate-900 font-medium">Card Number</Label>
-                <div className="relative">
-                    <CreditCard className="absolute left-3 top-3.5 h-4 w-4 text-slate-500" />
-                    <Input 
-                        className="pl-9 bg-white border-slate-200 text-slate-900 placeholder:text-slate-500 h-11" 
-                        placeholder="0000 0000 0000 0000" 
-                        required 
-                    />
-                </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                    <Label className="text-slate-900 font-medium">Expiry</Label>
-                    <Input 
-                        placeholder="MM/YY" 
-                        required 
-                        className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500 h-11"
-                    />
-                </div>
-                <div className="space-y-2">
-                    <Label className="text-slate-900 font-medium">CVC</Label>
-                    <Input 
-                        placeholder="123" 
-                        required 
-                        className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500 h-11"
-                    />
-                </div>
-            </div>
-            
+        <div className="space-y-5">
             <Button 
                 className="w-full bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-700 hover:to-teal-600 text-white shadow-lg shadow-emerald-500/20 h-12 text-base font-semibold" 
                 size="lg" 
+                onClick={handlePay}
                 disabled={loading}
             >
                 {loading ? (
@@ -104,14 +123,14 @@ export function PaymentForm({ invoiceId, amount }: PaymentFormProps) {
                         <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Processing...
                     </>
                 ) : (
-                    `Pay $${Number(amount).toLocaleString()}`
+                    `Pay ${currencySymbol} ${displayAmount}`
                 )}
             </Button>
             
             <div className="text-xs text-center text-slate-600 flex items-center justify-center pt-2">
                 <Lock className="h-3 w-3 mr-1.5 text-slate-500" /> 
-                Secured by 256-bit SSL encryption
+                Secured by Midtrans payment gateway
             </div>
-        </form>
+        </div>
     );
 }

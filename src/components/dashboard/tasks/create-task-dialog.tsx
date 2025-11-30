@@ -17,6 +17,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { createTask } from "@/actions/tasks";
 import { Plus, Loader2 } from "lucide-react";
 import { useTranslation } from "@/lib/i18n/context";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface CreateTaskDialogProps {
   clients: { id: string; name: string; company_name: string | null }[];
@@ -31,6 +33,7 @@ import { useEffect } from "react";
 
 export function CreateTaskDialog({ clients, taskToEdit, initialClientId, open: controlledOpen, onOpenChange: setControlledOpen }: CreateTaskDialogProps) {
   const { t } = useTranslation();
+  const router = useRouter();
   const [internalOpen, setInternalOpen] = useState(false);
   const isControlled = controlledOpen !== undefined;
   const open = isControlled ? controlledOpen : internalOpen;
@@ -72,33 +75,50 @@ export function CreateTaskDialog({ clients, taskToEdit, initialClientId, open: c
     e.preventDefault();
     setLoading(true);
 
-    if (taskToEdit) {
-      await updateTask(taskToEdit.id, {
-        title,
-        client_id: clientId || null,
-        priority,
-        due_date: dueDate ? new Date(dueDate) : null,
-        description
-      });
-    } else {
-      await createTask({
-        title,
-        client_id: clientId,
-        priority,
-        due_date: dueDate ? new Date(dueDate) : undefined,
-        description
-      });
-    }
+    try {
+      if (taskToEdit) {
+        const result = await updateTask(taskToEdit.id, {
+          title,
+          client_id: clientId || null,
+          priority,
+          due_date: dueDate ? new Date(dueDate) : null,
+          description
+        });
+        if (result.success) {
+          toast.success(t("tasks.taskUpdated") || "Task updated successfully");
+          router.refresh();
+        } else {
+          toast.error(result.error || "Failed to update task");
+        }
+      } else {
+        const result = await createTask({
+          title,
+          client_id: clientId,
+          priority,
+          due_date: dueDate ? new Date(dueDate) : undefined,
+          description
+        });
+        if (result.success) {
+          toast.success(t("tasks.taskCreated") || "Task created successfully");
+          router.refresh();
+        } else {
+          toast.error(result.error || "Failed to create task");
+        }
+      }
 
-    setLoading(false);
-    if (setOpen) {
-      setOpen(false);
-    }
-    if (!taskToEdit) {
-      setTitle("");
-      setDescription("");
-      setClientId("");
-      setDueDate("");
+      if (setOpen) {
+        setOpen(false);
+      }
+      if (!taskToEdit) {
+        setTitle("");
+        setDescription("");
+        setClientId("");
+        setDueDate("");
+      }
+    } catch (error) {
+      toast.error("An error occurred");
+    } finally {
+      setLoading(false);
     }
   };
 

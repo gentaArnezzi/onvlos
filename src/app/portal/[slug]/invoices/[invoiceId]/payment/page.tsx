@@ -36,7 +36,7 @@ export default async function PaymentPage({ params }: { params: Promise<{ slug: 
                         This invoice has already been paid.
                     </div>
                 ) : (
-                    <PaymentForm invoiceId={invoice.id} amount={invoice.total_amount} />
+                    <PaymentForm invoiceId={invoice.id} amount={invoice.total_amount} currency={invoice.currency || "IDR"} />
                 )}
             </CardContent>
         </Card>

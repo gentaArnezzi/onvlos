@@ -15,6 +15,7 @@ import {
 } from "@/lib/db/schema";
 import { eq, and, isNull } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { sendEmail } from "@/lib/email";
 
 export async function startOnboarding(funnelId: string, email: string) {
   // Create or find onboarding session
@@ -214,6 +215,21 @@ export async function completeOnboarding(sessionId: string) {
       completed_at: new Date()
     })
     .where(eq(client_onboarding_sessions.id, sessionId));
+
+  // Send funnel completion email
+  try {
+    if (newClient.email) {
+      const portalUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/portal/${slug}`;
+      await sendEmail(newClient.email, 'funnelCompletion', {
+        clientName: newClient.name || newClient.company_name || 'Client',
+        funnelName: funnel.name,
+        portalUrl,
+      });
+    }
+  } catch (emailError) {
+    console.error("Failed to send funnel completion email:", emailError);
+    // Don't fail the whole operation if email fails
+  }
 
   revalidatePath("/dashboard/clients");
   

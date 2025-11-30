@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,7 +9,7 @@ import { Bot, Send, Loader2, Sparkles } from "lucide-react";
 import { askAi } from "@/actions/ai";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/lib/i18n/context";
-import { Language } from "@/lib/i18n/translations";
+import { Language, getTranslation } from "@/lib/i18n/translations";
 
 interface Message {
     role: 'user' | 'assistant';
@@ -22,13 +22,31 @@ interface BrainChatProps {
 }
 
 export function BrainChat({ language: propLanguage }: BrainChatProps) {
-    const { t, language: contextLanguage } = useTranslation();
+    const { t: contextT, language: contextLanguage } = useTranslation();
     const language = propLanguage || contextLanguage;
+    
+    // Use getTranslation directly with the language prop to ensure server/client consistency
+    // Use useMemo to ensure the function is stable and uses the correct language
+    const t = useMemo(() => {
+        return (key: string) => {
+            if (propLanguage) {
+                return getTranslation(key, propLanguage);
+            }
+            return contextT(key);
+        };
+    }, [propLanguage, contextT]);
+    
+    // Initialize messages with the correct translation using the language prop
+    // Use propLanguage directly to ensure server/client consistency
+    const initialMessage = useMemo(() => {
+        const lang = propLanguage || "en"; // Default to "en" for initial render consistency
+        return getTranslation("brain.welcomeMessage", lang);
+    }, [propLanguage]);
     
     const [messages, setMessages] = useState<Message[]>([
         { 
             role: 'assistant', 
-            content: t("brain.welcomeMessage"),
+            content: initialMessage,
             timestamp: new Date()
         }
     ]);
@@ -184,9 +202,13 @@ export function BrainChat({ language: propLanguage }: BrainChatProps) {
                     <div className="p-2 rounded-lg bg-white/20 backdrop-blur-sm">
                         <Sparkles className="h-5 w-5" />
                     </div>
-                    <div>
-                        <CardTitle className="text-lg font-semibold">{t("brain.aiAssistant")}</CardTitle>
-                        <p className="text-xs text-white/80 mt-0.5">{t("brain.poweredByAI")}</p>
+                    <div suppressHydrationWarning>
+                        <CardTitle className="text-lg font-semibold" suppressHydrationWarning>
+                            {propLanguage ? getTranslation("brain.aiAssistant", propLanguage) : t("brain.aiAssistant")}
+                        </CardTitle>
+                        <p className="text-xs text-white/80 mt-0.5" suppressHydrationWarning>
+                            {propLanguage ? getTranslation("brain.poweredByAI", propLanguage) : t("brain.poweredByAI")}
+                        </p>
                     </div>
                 </div>
             </CardHeader>

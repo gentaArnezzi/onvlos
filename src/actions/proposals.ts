@@ -163,11 +163,9 @@ export async function sendProposal(proposalId: string) {
     
     // Send email
     const proposalUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/proposal/${proposal.public_url}`;
-    await sendEmail(client.email, 'invoiceCreated', {
-      clientName: client.name || 'Client',
-      invoiceNumber: proposal.proposal_number,
-      amount: `$${proposal.total}`,
-      dueDate: proposal.valid_until ? new Date(proposal.valid_until).toLocaleDateString() : '',
+    await sendEmail(client.email, 'proposalSent', {
+      clientName: client.name || client.company_name || 'Client',
+      proposalTitle: proposal.title,
       viewUrl: proposalUrl
     });
     
@@ -195,8 +193,10 @@ export async function acceptProposal(
       return { success: false, error: "Proposal not found" };
     }
     
-    // Only allow acceptance if proposal is sent (not draft)
-    if (proposal.status !== "sent") {
+    // Removed restriction - anyone can accept proposal via public URL
+    
+    // Only allow acceptance if proposal is sent or viewed (not draft)
+    if (proposal.status !== "sent" && proposal.status !== "viewed") {
       return { success: false, error: "Proposal must be sent before it can be accepted" };
     }
     
@@ -615,8 +615,10 @@ export async function declineProposal(proposalId: string, reason: string) {
       return { success: false, error: "Proposal not found" };
     }
     
-    // Only allow decline if proposal is sent (not draft)
-    if (proposal.status !== "sent") {
+    // Removed restriction - anyone can decline proposal via public URL
+    
+    // Only allow decline if proposal is sent or viewed (not draft)
+    if (proposal.status !== "sent" && proposal.status !== "viewed") {
       return { success: false, error: "Proposal must be sent before it can be declined" };
     }
     
@@ -673,9 +675,24 @@ export async function getProposalByIdOrSlug(idOrSlug: string) {
       .where(eq(proposal_items.proposal_id, proposal.id))
       .orderBy(asc(proposal_items.order));
 
-    // Update view count and viewed_at if not already viewed
-    // Only update status to "viewed" if proposal is already "sent" (not draft)
-    if (!proposal.viewed_at && proposal.status === "sent") {
+    // Update view count and status
+    // If proposal is draft and accessed via public URL, update to "sent" (it means it was shared)
+    // If proposal is sent and not yet viewed, update to "viewed"
+    if (proposal.status === "draft") {
+      // If accessed via public URL, it means it was shared, so update to "sent"
+      await db.update(proposals)
+        .set({
+          status: "sent",
+          sent_at: new Date(),
+          view_count: (proposal.view_count || 0) + 1,
+          updated_at: new Date()
+        })
+        .where(eq(proposals.id, proposal.id));
+      // Update proposal object for return
+      proposal.status = "sent";
+      proposal.sent_at = new Date();
+    } else if (!proposal.viewed_at && proposal.status === "sent") {
+      // Update to "viewed" if not already viewed
       await db.update(proposals)
         .set({
           viewed_at: new Date(),
@@ -684,6 +701,9 @@ export async function getProposalByIdOrSlug(idOrSlug: string) {
           updated_at: new Date()
         })
         .where(eq(proposals.id, proposal.id));
+      // Update proposal object for return
+      proposal.viewed_at = new Date();
+      proposal.status = "viewed";
     } else {
       // Just increment view count (don't change status)
       await db.update(proposals)

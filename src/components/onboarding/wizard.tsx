@@ -10,6 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { CheckCircle2, FileText, FileSignature, Receipt, Zap, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import SignatureCanvas from 'react-signature-canvas';
+import { toast } from "sonner";
 
 interface FormField {
   id: string;
@@ -68,16 +69,16 @@ export function OnboardingWizard({ steps }: OnboardingWizardProps) {
     
     if (currentStep.step_type === 'contract') {
       if (!agreed) {
-        alert("Please agree to the terms and conditions");
+        toast.error("Please agree to the terms and conditions");
         return;
       }
       if (config.requireSignature) {
         if (!sigCanvas.current || sigCanvas.current.isEmpty()) {
-          alert("Please sign the contract");
+          toast.error("Please sign the contract");
           return;
         }
         if (!signerName || !signerEmail) {
-          alert("Please provide your name and email");
+          toast.error("Please provide your name and email");
           return;
         }
         // Get signature data

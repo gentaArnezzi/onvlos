@@ -1,9 +1,9 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { invoices, payments, client_spaces } from "@/lib/db/schema";
+import { invoices, invoice_items, client_companies } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
+import { createPaymentLink } from "@/lib/payments/midtrans";
 
 export async function getInvoicePaymentDetails(invoiceId: string) {
     try {
@@ -18,12 +18,8 @@ export async function getInvoicePaymentDetails(invoiceId: string) {
     }
 }
 
-export async function processPayment(invoiceId: string, amount: string, method: string) {
+export async function createMidtransPaymentLink(invoiceId: string) {
     try {
-        // Note: This function is used by portal (public access), so we don't check workspace
-        // The portal access is already protected by the slug-based access
-        // However, we should verify the invoice exists before processing payment
-        
         const invoice = await db.query.invoices.findFirst({
             where: eq(invoices.id, invoiceId)
         });
@@ -32,42 +28,66 @@ export async function processPayment(invoiceId: string, amount: string, method: 
             return { success: false, error: "Invoice not found" };
         }
 
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 2000));
-
-        // Create payment record
-        await db.insert(payments).values({
-            invoice_id: invoiceId,
-            gateway: "stripe_mock",
-            gateway_payment_id: "pay_" + Math.random().toString(36).substring(7),
-            amount: amount,
-            currency: "USD",
-            status: "completed",
-            paid_at: new Date()
+        // Get client details
+        const client = await db.query.client_companies.findFirst({
+            where: eq(client_companies.id, invoice.client_id)
         });
 
-        // Update invoice status
-        await db.update(invoices)
-            .set({ 
-                status: 'paid', 
-                paid_date: new Date().toISOString() // Drizzle date string handling
-            })
-            .where(eq(invoices.id, invoiceId));
-
-        // Find workspace to revalidate portal
-        const space = await db.query.client_spaces.findFirst({
-            where: eq(client_spaces.client_id, invoice.client_id)
-        });
-        
-        if (space) {
-            revalidatePath(`/portal/${space.public_url}`);
+        if (!client) {
+            return { success: false, error: "Client not found" };
         }
-        
-        revalidatePath("/dashboard/invoices");
 
-        return { success: true };
+        // Get invoice items
+        const items = await db.query.invoice_items.findMany({
+            where: eq(invoice_items.invoice_id, invoiceId)
+        });
+
+        // Prepare customer details
+        const clientName = client.name || client.company_name || "Customer";
+        const nameParts = clientName.split(" ");
+        const firstName = nameParts[0] || "Customer";
+        const lastName = nameParts.slice(1).join(" ") || "";
+
+        // Prepare item details for Midtrans
+        const itemDetails = items.map((item, index) => ({
+            id: item.id || `item-${index}`,
+            price: parseFloat(item.unit_price || "0"),
+            quantity: item.quantity || 1,
+            name: item.name || "Item",
+        }));
+
+        // If no items, add a single item with total amount
+        if (itemDetails.length === 0) {
+            itemDetails.push({
+                id: "invoice-total",
+                price: parseFloat(invoice.total_amount || "0"),
+                quantity: 1,
+                name: `Invoice ${invoice.invoice_number}`,
+            });
+        }
+
+        // Create payment link
+        const result = await createPaymentLink({
+            invoiceId: invoice.id,
+            amount: parseFloat(invoice.total_amount || "0"),
+            currency: invoice.currency || "IDR",
+            customerDetails: {
+                first_name: firstName,
+                last_name: lastName,
+                email: client.email || "",
+                phone: "",
+            },
+            itemDetails,
+            returnUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/portal/payment/success`,
+            cancelUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/portal/payment/cancel`,
+        });
+
+        return result;
     } catch (error) {
-        console.error("Payment Failed:", error);
-        return { success: false, error: "Payment processing failed" };
+        console.error("Create payment link error:", error);
+        return {
+            success: false,
+            error: error instanceof Error ? error.message : "Failed to create payment link",
+        };
     }
 }

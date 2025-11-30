@@ -7,23 +7,33 @@ import { revalidatePath } from "next/cache";
 import { getSession } from "@/lib/get-session";
 import { sendEmail } from "@/lib/email";
 
-export async function getClients() {
+export async function getClients(page: number = 1, limit: number = 12) {
   try {
     const session = await getSession();
-    if (!session) return [];
+    if (!session) return { clients: [], total: 0, totalPages: 0 };
     
     // Get user's workspace
     const workspace = await db.query.workspaces.findFirst({
       where: eq(workspaces.created_by_user_id, session.user.id)
     });
     
-    if (!workspace) return [];
+    if (!workspace) return { clients: [], total: 0, totalPages: 0 };
     
-    // Get clients with related data
+    // Get total count
+    const totalResult = await db.select({ count: sql<number>`count(*)` })
+      .from(client_companies)
+      .where(eq(client_companies.workspace_id, workspace.id));
+    const total = Number(totalResult[0]?.count || 0);
+    const totalPages = Math.ceil(total / limit);
+    
+    // Get clients with pagination
+    const offset = (page - 1) * limit;
     const clients = await db.select()
       .from(client_companies)
       .where(eq(client_companies.workspace_id, workspace.id))
-      .orderBy(desc(client_companies.created_at));
+      .orderBy(desc(client_companies.created_at))
+      .limit(limit)
+      .offset(offset);
 
     // Enrich with client space and additional data
     const enrichedClients = await Promise.all(
@@ -50,10 +60,10 @@ export async function getClients() {
       })
     );
 
-    return enrichedClients;
+    return { clients: enrichedClients, total, totalPages };
   } catch (error) {
     console.error("Failed to fetch clients:", error);
-    return [];
+    return { clients: [], total: 0, totalPages: 0 };
   }
 }
 

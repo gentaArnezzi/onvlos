@@ -66,8 +66,8 @@ export function InvoiceActions({ invoice }: InvoiceActionsProps) {
   };
 
   const handleDownload = () => {
-    // TODO: Implement PDF download
-    alert("PDF download functionality coming soon");
+    // Open PDF in new tab
+    window.open(`/api/invoices/${invoice.id}/pdf`, "_blank");
   };
 
   return (

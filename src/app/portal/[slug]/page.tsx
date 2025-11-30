@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, Circle, FileText, Receipt, MessageSquare, Calendar, TrendingUp, Clock, AlertCircle, FileSignature } from "lucide-react";
+import { CheckCircle2, Circle, FileText, Receipt, MessageSquare, Calendar, TrendingUp, Clock, AlertCircle, FileSignature, FileCheck } from "lucide-react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { getConversationForPortal } from "@/actions/chat";
@@ -24,7 +24,7 @@ export default async function PortalPage({ params }: { params: Promise<{ slug: s
     );
   }
 
-  const { client, space, tasks, invoices, contracts } = data;
+  const { client, space, tasks, invoices, contracts, proposals } = data;
   const chatData = await getConversationForPortal(space.id);
   
   // Portal client user ID - will be resolved in getConversationForPortal
@@ -38,6 +38,8 @@ export default async function PortalPage({ params }: { params: Promise<{ slug: s
   const overdueInvoices = invoices.filter(i => i.status === 'overdue').length;
   const activeContracts = contracts.filter(c => c.status === 'sent' || c.status === 'viewed' || c.status === 'signed').length;
   const fullySignedContracts = contracts.filter(c => c.fully_signed).length;
+  const activeProposals = proposals.filter(p => p.status === 'sent' || p.status === 'viewed').length;
+  const acceptedProposals = proposals.filter(p => p.status === 'accepted').length;
 
   return (
     <div className="space-y-8">
@@ -66,6 +68,9 @@ export default async function PortalPage({ params }: { params: Promise<{ slug: s
             </TabsTrigger>
             <TabsTrigger value="files" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700">
                 <FileText className="h-4 w-4" /> Files
+            </TabsTrigger>
+            <TabsTrigger value="proposals" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700">
+                <FileCheck className="h-4 w-4" /> Proposals
             </TabsTrigger>
             <TabsTrigger value="contracts" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700">
                 <FileSignature className="h-4 w-4" /> Contracts
@@ -283,6 +288,74 @@ export default async function PortalPage({ params }: { params: Promise<{ slug: s
 
         <TabsContent value="files" className="space-y-4">
              <FileManager clientId={space.client_id} />
+        </TabsContent>
+
+        <TabsContent value="proposals" className="space-y-4">
+            <Card className="border-none shadow-lg bg-white">
+                <CardHeader>
+                    <CardTitle className="text-slate-900">Proposals</CardTitle>
+                    <CardDescription className="text-slate-600">View and manage your proposals.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                     <div className="space-y-3">
+                        {proposals.length === 0 ? (
+                            <div className="text-center py-12">
+                                <FileCheck className="h-12 w-12 text-slate-600 mx-auto mb-4" />
+                                <p className="text-slate-600 mt-2">No proposals available yet.</p>
+                            </div>
+                        ) : (
+                            proposals.map(proposal => (
+                                <div key={proposal.id} className="flex items-center justify-between p-4 border border-slate-200 rounded-lg bg-white hover:shadow-md transition-shadow">
+                                    <div className="flex items-center space-x-4 flex-1">
+                                        <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-[#0731c2] to-[#010119] flex items-center justify-center shadow-sm">
+                                            <FileCheck className="h-6 w-6 text-white" />
+                                        </div>
+                                        <div className="flex-1">
+                                            <div className="font-semibold text-slate-900">{proposal.title}</div>
+                                            <div className="text-sm text-slate-600 mt-1">
+                                                {proposal.proposal_number}
+                                            </div>
+                                            {proposal.valid_until && (
+                                                <div className="text-xs text-slate-500 mt-1">
+                                                    Valid until: {format(new Date(proposal.valid_until), "MMM d, yyyy")}
+                                                </div>
+                                            )}
+                                            {proposal.total && (
+                                                <div className="text-sm font-medium text-slate-900 mt-1">
+                                                    ${Number(proposal.total).toLocaleString()}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center space-x-4">
+                                        <Badge 
+                                            variant={proposal.status === 'accepted' ? 'default' : proposal.status === 'declined' ? 'destructive' : 'outline'}
+                                            className={
+                                                proposal.status === 'accepted'
+                                                    ? 'bg-emerald-100 text-emerald-700 border-emerald-200'
+                                                    : proposal.status === 'declined'
+                                                    ? 'bg-red-100 text-red-700 border-red-200'
+                                                    : proposal.status === 'sent' || proposal.status === 'viewed'
+                                                    ? 'bg-blue-100 text-blue-700 border-blue-200'
+                                                    : 'bg-slate-100 text-slate-700 border-slate-200'
+                                            }
+                                        >
+                                            {proposal.status}
+                                        </Badge>
+                                        <Button 
+                                            size="sm" 
+                                            variant="outline"
+                                            asChild
+                                        >
+                                            <a href={`/proposal/${proposal.public_url}`} target="_blank">View</a>
+                                        </Button>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                </CardContent>
+            </Card>
         </TabsContent>
 
         <TabsContent value="contracts" className="space-y-4">

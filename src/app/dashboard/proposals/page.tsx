@@ -32,7 +32,8 @@ import { getCurrencySymbol } from "@/lib/currency";
 export default async function ProposalsPage() {
   const proposals = await getProposals();
   const contracts = await getContracts();
-  const clients = await getClients();
+  const clientsResult = await getClients(1, 1000);
+  const clients = clientsResult.clients || [];
   const workspace = await getOrCreateWorkspace();
   const defaultCurrencySymbol = getCurrencySymbol(workspace?.default_currency || "USD");
   const language = (workspace?.default_language as Language) || "en";

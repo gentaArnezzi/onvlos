@@ -7,16 +7,16 @@ import { revalidatePath } from "next/cache";
 import { getSession } from "@/lib/get-session";
 import { sendEmail } from "@/lib/email";
 
-export async function getTasks(search?: string, status?: string) {
+export async function getTasks(search?: string, status?: string, page: number = 1, limit: number = 20) {
     try {
         const session = await getSession();
-        if (!session) return [];
+        if (!session) return { tasks: [], total: 0, totalPages: 0 };
 
         const workspace = await db.query.workspaces.findFirst({
             where: eq(workspaces.created_by_user_id, session.user.id)
         });
 
-        if (!workspace) return [];
+        if (!workspace) return { tasks: [], total: 0, totalPages: 0 };
 
         const conditions = [eq(tasks.workspace_id, workspace.id)];
 
@@ -24,14 +24,20 @@ export async function getTasks(search?: string, status?: string) {
             conditions.push(eq(tasks.status, status));
         }
 
-        // Note: Drizzle doesn't have a simple ILIKE for all drivers, but for Postgres we can use sql operator or ilike if available.
-        // Assuming standard drizzle-orm/postgres-js usage where ilike is imported or we use sql.
-        // For simplicity and broad compatibility, let's use a basic filter if possible, or sql for search.
         if (search) {
-            // Using sql for case-insensitive search on title or description
             conditions.push(sql`(${tasks.title} ILIKE ${`%${search}%`} OR ${tasks.description} ILIKE ${`%${search}%`})`);
         }
 
+        // Get total count
+        const totalResult = await db.select({ count: sql<number>`count(*)` })
+            .from(tasks)
+            .leftJoin(client_companies, eq(tasks.client_id, client_companies.id))
+            .where(and(...conditions));
+        const total = Number(totalResult[0]?.count || 0);
+        const totalPages = Math.ceil(total / limit);
+
+        // Get paginated data
+        const offset = (page - 1) * limit;
         const data = await db.select({
             id: tasks.id,
             title: tasks.title,
@@ -46,12 +52,14 @@ export async function getTasks(search?: string, status?: string) {
             .from(tasks)
             .leftJoin(client_companies, eq(tasks.client_id, client_companies.id))
             .where(and(...conditions))
-            .orderBy(desc(tasks.created_at));
+            .orderBy(desc(tasks.created_at))
+            .limit(limit)
+            .offset(offset);
 
-        return data;
+        return { tasks: data, total, totalPages };
     } catch (error) {
         console.error("Failed to fetch tasks:", error);
-        return [];
+        return { tasks: [], total: 0, totalPages: 0 };
     }
 }
 

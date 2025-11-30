@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import { existsSync } from "fs";
-import path from "path";
 import { db } from "@/lib/db";
 import { files } from "@/lib/db/schema-files";
 import { getSession } from "@/lib/get-session";
 import { getCurrentWorkspace } from "@/actions/workspace";
 import { eq, and, desc } from "drizzle-orm";
+import { uploadFile } from "@/lib/storage/cloudinary";
 
 export async function POST(request: NextRequest) {
   try {
@@ -36,23 +34,30 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "File too large. Maximum size is 10MB" }, { status: 400 });
     }
 
-    // Create upload directory if it doesn't exist
-    const uploadDir = path.join(process.cwd(), "public", "uploads", workspace.id);
-    if (!existsSync(uploadDir)) {
-      await mkdir(uploadDir, { recursive: true });
-    }
-
-    // Generate unique filename
-    const timestamp = Date.now();
-    const randomString = Math.random().toString(36).substring(2, 15);
-    const extension = path.extname(file.name);
-    const fileName = `${timestamp}-${randomString}${extension}`;
-    const filePath = path.join(uploadDir, fileName);
-
-    // Convert File to Buffer and save
+    // Convert File to Buffer
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    await writeFile(filePath, buffer);
+
+    // Generate unique filename for Cloudinary
+    const timestamp = Date.now();
+    const randomString = Math.random().toString(36).substring(2, 15);
+    const extension = file.name.split('.').pop() || '';
+    const fileName = `${timestamp}-${randomString}`;
+    const publicId = `flazy/${workspace.id}/${folder}/${fileName}`;
+
+    // Upload to Cloudinary
+    const uploadResult = await uploadFile(buffer, {
+      folder: `flazy/${workspace.id}/${folder}`,
+      publicId: publicId,
+      resourceType: "auto",
+    });
+
+    if (!uploadResult.success || !uploadResult.url) {
+      return NextResponse.json(
+        { error: uploadResult.error || "Failed to upload file to Cloudinary" },
+        { status: 500 }
+      );
+    }
 
     // Save file info to database
     const [savedFile] = await db.insert(files).values({
@@ -60,7 +65,7 @@ export async function POST(request: NextRequest) {
       client_id: clientId,
       uploaded_by: session.user.id,
       file_name: file.name,
-      file_url: `/uploads/${workspace.id}/${fileName}`,
+      file_url: uploadResult.url,
       file_size: file.size,
       file_type: file.type || "application/octet-stream",
       folder: folder

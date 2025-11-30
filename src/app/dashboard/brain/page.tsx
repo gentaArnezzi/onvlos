@@ -12,11 +12,15 @@ import { t } from "@/lib/i18n/server";
 import { Language } from "@/lib/i18n/translations";
 
 export default async function BrainPage() {
-  const clients = await getClients();
-  const invoices = await getInvoices();
-  const tasks = await getTasks();
+  const clientsResult = await getClients(1, 1000);
+  const invoicesResult = await getInvoices(undefined, undefined, 1, 1000);
+  const tasksResult = await getTasks(undefined, undefined, 1, 1000);
   const analytics = await getAnalyticsData();
   const workspace = await getOrCreateWorkspace();
+
+  const clients = clientsResult.clients || [];
+  const invoices = invoicesResult.invoices || [];
+  const tasks = tasksResult.tasks || [];
 
   // Calculate quick stats
   const totalClients = clients.length;

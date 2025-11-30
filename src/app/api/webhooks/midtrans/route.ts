@@ -1,9 +1,7 @@
 import { NextRequest } from "next/server";
 import { successResponse, errorResponse, handleApiError } from "@/lib/api/utils";
-import { InvoiceService } from "@/services/invoice.service";
 import { getRequestBody } from "@/lib/api/middleware";
-import { triggerWorkflows } from "@/lib/workflows/engine";
-// import midtransClient from "midtrans-client";
+import { verifyWebhook, handlePaymentSuccess } from "@/lib/payments/midtrans";
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,34 +10,35 @@ export async function POST(request: NextRequest) {
       return errorResponse("Request body is required", 400);
     }
 
-    // TODO: Verify Midtrans notification
-    // const snap = new midtransClient.Snap({
-    //   isProduction: process.env.MIDTRANS_IS_PRODUCTION === "true",
-    //   serverKey: process.env.MIDTRANS_SERVER_KEY!,
-    // });
+    // Verify webhook signature
+    const isValid = await verifyWebhook(body);
+    if (!isValid) {
+      return errorResponse("Invalid webhook signature", 401);
+    }
 
-    // const statusResponse = await snap.transaction.notification(body);
+    // Extract invoice ID from custom_field1
+    const invoiceId = body.custom_field1;
+    if (!invoiceId) {
+      return errorResponse("Invoice ID not found in webhook", 400);
+    }
 
     // Handle payment success
     if (body.transaction_status === "settlement" || body.transaction_status === "capture") {
-      const invoiceId = body.custom_field1; // Assuming invoice ID is passed in custom_field1
+      const result = await handlePaymentSuccess(invoiceId, body);
       
-      if (invoiceId) {
-        const invoice = await InvoiceService.markAsPaid(invoiceId);
-        
-        // Trigger workflow "invoice_paid"
-        if (invoice) {
-          await triggerWorkflows("invoice_paid", {
-            invoice_id: invoiceId,
-            amount: parseFloat(invoice.total_amount || "0"),
-            client_id: invoice.client_id,
-            workspace_id: invoice.workspace_id,
-          });
-        }
+      if (!result.success) {
+        console.error("Failed to handle payment success:", result.error);
+        return errorResponse(result.error || "Failed to process payment", 500);
       }
     }
 
-    return successResponse({ received: true });
+    // Handle other transaction statuses (pending, cancel, expire, deny)
+    // Log for monitoring but don't update invoice status yet
+    if (["pending", "cancel", "expire", "deny"].includes(body.transaction_status)) {
+      console.log(`Payment ${body.transaction_status} for invoice ${invoiceId}`);
+    }
+
+    return successResponse({ received: true, status: body.transaction_status });
   } catch (error) {
     console.error("Midtrans webhook error:", error);
     return handleApiError(error);

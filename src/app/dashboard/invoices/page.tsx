@@ -9,15 +9,23 @@ import { getCurrencySymbol } from "@/lib/currency";
 import { t } from "@/lib/i18n/server";
 import { Language } from "@/lib/i18n/translations";
 
-export default async function InvoicesPage() {
-  const invoices = await getInvoices();
-  const clients = await getClients();
+export default async function InvoicesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string; status?: string; search?: string }>;
+}) {
+  const params = await searchParams;
+  const page = parseInt(params.page || "1", 10);
+  const { invoices, total, totalPages } = await getInvoices(params.search, params.status, page, 20);
+  const allClientsResult = await getClients(1, 1000);
+  const clients = allClientsResult.clients;
   const workspace = await getOrCreateWorkspace();
   const defaultCurrencySymbol = getCurrencySymbol(workspace?.default_currency || "USD");
   const language = (workspace?.default_language as Language) || "en";
 
-  // Calculate stats - filter out archived invoices
-  const activeInvoices = invoices.filter(inv => inv.status !== 'archived');
+  // Calculate stats - need all invoices for stats
+  const allInvoicesResult = await getInvoices(undefined, undefined, 1, 1000);
+  const activeInvoices = allInvoicesResult.invoices.filter(inv => inv.status !== 'archived');
   const totalRevenue = activeInvoices.reduce((sum, inv) => sum + Number(inv.amount || 0), 0);
   const paidInvoices = activeInvoices.filter(inv => inv.status === 'paid');
   const paidAmount = paidInvoices.reduce((sum, inv) => sum + Number(inv.amount || 0), 0);
@@ -115,7 +123,7 @@ export default async function InvoicesPage() {
           <CardTitle className="text-slate-900">{t("stats.invoiceHistory", language)}</CardTitle>
         </CardHeader>
         <CardContent>
-          <InvoicesList initialInvoices={invoices} clients={clients} />
+          <InvoicesList initialInvoices={invoices} clients={clients} totalPages={totalPages} currentPage={page} />
         </CardContent>
       </Card>
     </div>

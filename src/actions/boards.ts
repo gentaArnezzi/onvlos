@@ -207,3 +207,116 @@ export async function createCard(columnId: string, title: string, description: s
         return { success: false, card: null, error: "Failed to create card" };
     }
 }
+
+export async function updateCard(cardId: string, data: {
+    title?: string;
+    description?: string | null;
+    client_id?: string | null;
+    due_date?: string | null;
+}) {
+    try {
+        const session = await getSession();
+        if (!session) {
+            return { success: false, error: "Not authenticated" };
+        }
+
+        const workspace = await getOrCreateWorkspace();
+        if (!workspace) {
+            return { success: false, error: "Workspace not found" };
+        }
+
+        // Verify card belongs to user's workspace
+        const card = await db.query.cards.findFirst({
+            where: eq(cards.id, cardId)
+        });
+
+        if (!card) {
+            return { success: false, error: "Card not found" };
+        }
+
+        // Get the column that contains this card
+        const column = await db.query.board_columns.findFirst({
+            where: eq(board_columns.id, card.column_id)
+        });
+
+        if (!column) {
+            return { success: false, error: "Column not found" };
+        }
+
+        // Get the board that contains this column
+        const board = await db.query.boards.findFirst({
+            where: eq(boards.id, column.board_id)
+        });
+
+        if (!board || board.workspace_id !== workspace.id) {
+            return { success: false, error: "Card not found or access denied" };
+        }
+
+        const updateData: any = {};
+        if (data.title !== undefined) updateData.title = data.title;
+        if (data.description !== undefined) updateData.description = data.description;
+        if (data.client_id !== undefined) updateData.client_id = data.client_id;
+        if (data.due_date !== undefined) updateData.due_date = data.due_date;
+        updateData.updated_at = new Date();
+
+        const [updatedCard] = await db.update(cards)
+            .set(updateData)
+            .where(eq(cards.id, cardId))
+            .returning();
+        
+        revalidatePath("/dashboard/boards");
+        return { success: true, card: updatedCard };
+    } catch (error) {
+        console.error("Failed to update card:", error);
+        return { success: false, error: "Failed to update card" };
+    }
+}
+
+export async function deleteCard(cardId: string) {
+    try {
+        const session = await getSession();
+        if (!session) {
+            return { success: false, error: "Not authenticated" };
+        }
+
+        const workspace = await getOrCreateWorkspace();
+        if (!workspace) {
+            return { success: false, error: "Workspace not found" };
+        }
+
+        // Verify card belongs to user's workspace
+        const card = await db.query.cards.findFirst({
+            where: eq(cards.id, cardId)
+        });
+
+        if (!card) {
+            return { success: false, error: "Card not found" };
+        }
+
+        // Get the column that contains this card
+        const column = await db.query.board_columns.findFirst({
+            where: eq(board_columns.id, card.column_id)
+        });
+
+        if (!column) {
+            return { success: false, error: "Column not found" };
+        }
+
+        // Get the board that contains this column
+        const board = await db.query.boards.findFirst({
+            where: eq(boards.id, column.board_id)
+        });
+
+        if (!board || board.workspace_id !== workspace.id) {
+            return { success: false, error: "Card not found or access denied" };
+        }
+
+        await db.delete(cards).where(eq(cards.id, cardId));
+        
+        revalidatePath("/dashboard/boards");
+        return { success: true };
+    } catch (error) {
+        console.error("Failed to delete card:", error);
+        return { success: false, error: "Failed to delete card" };
+    }
+}

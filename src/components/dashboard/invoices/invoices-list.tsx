@@ -18,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CreditCard, Search, MoreVertical, Eye, Edit, Send, CheckCircle, Archive, Copy, Download } from "lucide-react";
+import { toast } from "sonner";
 import { format } from "date-fns";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -26,6 +27,8 @@ import { CreateInvoiceDialog } from "./create-invoice-dialog";
 import { updateInvoiceStatus, sendInvoice, duplicateInvoice } from "@/actions/invoices";
 import { getCurrencySymbol } from "@/lib/currency";
 import { useTranslation } from "@/lib/i18n/context";
+import { Pagination } from "@/components/ui/pagination";
+import { useSearchParams } from "next/navigation";
 
 interface Invoice {
   id: string;
@@ -42,14 +45,23 @@ interface Invoice {
 interface InvoicesListProps {
   initialInvoices: Invoice[];
   clients: { id: string; name: string; company_name: string | null }[];
+  totalPages?: number;
+  currentPage?: number;
 }
 
-export function InvoicesList({ initialInvoices, clients }: InvoicesListProps) {
+export function InvoicesList({ initialInvoices, clients, totalPages = 1, currentPage = 1 }: InvoicesListProps) {
   const { t } = useTranslation();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [invoices, setInvoices] = useState<Invoice[]>(initialInvoices);
+  
+  const handlePageChange = (page: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", page.toString());
+    router.push(`/dashboard/invoices?${params.toString()}`);
+  };
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const router = useRouter();
 
   // Helper function to translate status
   const translateStatus = (status: string): string => {
@@ -97,20 +109,20 @@ export function InvoicesList({ initialInvoices, clients }: InvoicesListProps) {
   const handleSend = async (invoiceId: string) => {
     const result = await sendInvoice(invoiceId);
     if (result.success) {
-      alert(t("invoices.invoiceSent"));
+      toast.success(t("invoices.invoiceSent"));
       router.refresh();
     } else {
-      alert(result.error || t("invoices.failedToSend"));
+      toast.error(result.error || t("invoices.failedToSend"));
     }
   };
 
   const handleMarkPaid = async (invoiceId: string) => {
     const result = await updateInvoiceStatus(invoiceId, 'paid');
     if (result.success) {
-      alert(t("invoices.invoiceMarkedPaid"));
+      toast.success(t("invoices.invoiceMarkedPaid"));
       router.refresh();
     } else {
-      alert(result.error || t("invoices.failedToUpdate"));
+      toast.error(result.error || t("invoices.failedToUpdate"));
     }
   };
 
@@ -119,26 +131,26 @@ export function InvoicesList({ initialInvoices, clients }: InvoicesListProps) {
     
     const result = await updateInvoiceStatus(invoiceId, 'archived');
     if (result.success) {
-      alert(t("invoices.invoiceArchived"));
+      toast.success(t("invoices.invoiceArchived"));
       router.refresh();
     } else {
-      alert(result.error || t("invoices.failedToArchive"));
+      toast.error(result.error || t("invoices.failedToArchive"));
     }
   };
 
   const handleDuplicate = async (invoiceId: string) => {
     const result = await duplicateInvoice(invoiceId);
     if (result.success) {
-      alert(t("invoices.invoiceDuplicated"));
+      toast.success(t("invoices.invoiceDuplicated"));
       router.refresh();
     } else {
-      alert(result.error || t("invoices.failedToDuplicate"));
+      toast.error(result.error || t("invoices.failedToDuplicate"));
     }
   };
 
   const handleDownload = async (invoiceId: string) => {
-    // TODO: Implement PDF download
-    alert(t("common.comingSoon") || "PDF download functionality coming soon");
+    // Open PDF in new tab
+    window.open(`/api/invoices/${invoiceId}/pdf`, "_blank");
   };
 
   return (

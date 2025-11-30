@@ -12,6 +12,7 @@ import { deleteTask } from "@/actions/tasks";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CreateTaskDialog } from "./create-task-dialog";
+import { toast } from "sonner";
 
 interface TaskActionsProps {
     task: any;
@@ -24,8 +25,13 @@ export function TaskActions({ task, clients }: TaskActionsProps) {
 
     const handleDelete = async () => {
         if (confirm("Are you sure you want to delete this task?")) {
-            await deleteTask(task.id);
-            router.refresh();
+            const result = await deleteTask(task.id);
+            if (result.success) {
+                toast.success("Task deleted successfully");
+                router.refresh();
+            } else {
+                toast.error(result.error || "Failed to delete task");
+            }
         }
     };
 

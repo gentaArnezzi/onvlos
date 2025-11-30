@@ -207,6 +207,173 @@ export const emailTemplates = {
         </body>
       </html>
     `
+  }),
+
+  funnelCompletion: (clientName: string, funnelName: string, portalUrl: string) => ({
+    subject: `Funnel Completed: ${funnelName}`,
+    html: `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
+            .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; overflow: hidden; }
+            .header { background: #10b981; color: white; padding: 30px; text-align: center; }
+            .content { padding: 30px; }
+            .button { display: inline-block; padding: 12px 24px; background: #10b981; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>Funnel Completed!</h1>
+            </div>
+            <div class="content">
+              <h2>Hello ${clientName},</h2>
+              <p>Congratulations! You have successfully completed the funnel: <strong>${funnelName}</strong></p>
+              <p>All required steps have been completed and your information has been processed.</p>
+              <center><a href="${portalUrl}" class="button">View Your Portal</a></center>
+            </div>
+          </div>
+        </body>
+      </html>
+    `
+  }),
+
+  proposalSent: (clientName: string, proposalTitle: string, viewUrl: string) => ({
+    subject: `New Proposal: ${proposalTitle}`,
+    html: `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
+            .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; overflow: hidden; }
+            .header { background: #0731c2; color: white; padding: 30px; text-align: center; }
+            .content { padding: 30px; }
+            .proposal-box { background: #f3f4f6; padding: 20px; border-radius: 5px; margin: 20px 0; }
+            .button { display: inline-block; padding: 12px 24px; background: #0731c2; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>New Proposal</h1>
+            </div>
+            <div class="content">
+              <h2>Hello ${clientName},</h2>
+              <p>A new proposal has been sent to you for review:</p>
+              <div class="proposal-box">
+                <strong>${proposalTitle}</strong>
+              </div>
+              <center><a href="${viewUrl}" class="button">View Proposal</a></center>
+              <p>Please review the proposal and let us know if you have any questions.</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `
+  }),
+
+  contractSigned: (clientName: string, contractTitle: string, viewUrl: string) => ({
+    subject: `Contract Signed: ${contractTitle}`,
+    html: `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
+            .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; overflow: hidden; }
+            .header { background: #10b981; color: white; padding: 30px; text-align: center; }
+            .content { padding: 30px; }
+            .success-box { background: #d1fae5; border: 1px solid #10b981; padding: 20px; border-radius: 5px; text-align: center; }
+            .button { display: inline-block; padding: 12px 24px; background: #10b981; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>Contract Signed</h1>
+            </div>
+            <div class="content">
+              <h2>Hello ${clientName},</h2>
+              <div class="success-box">
+                <h3>✓ Contract Successfully Signed</h3>
+                <p><strong>${contractTitle}</strong></p>
+              </div>
+              <p>The contract has been fully signed by all parties and is now active.</p>
+              <center><a href="${viewUrl}" class="button">View Contract</a></center>
+            </div>
+          </div>
+        </body>
+      </html>
+    `
+  }),
+
+  passwordReset: (userName: string, resetUrl: string) => ({
+    subject: 'Password Reset Request',
+    html: `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
+            .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; overflow: hidden; }
+            .header { background: #ef4444; color: white; padding: 30px; text-align: center; }
+            .content { padding: 30px; }
+            .warning { background: #fef2f2; border: 1px solid #ef4444; padding: 15px; border-radius: 5px; margin: 20px 0; }
+            .button { display: inline-block; padding: 12px 24px; background: #ef4444; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>Password Reset</h1>
+            </div>
+            <div class="content">
+              <h2>Hello ${userName},</h2>
+              <p>You have requested to reset your password. Click the button below to create a new password:</p>
+              <center><a href="${resetUrl}" class="button">Reset Password</a></center>
+              <div class="warning">
+                <strong>Security Notice:</strong> This link will expire in 1 hour. If you didn't request this, please ignore this email.
+              </div>
+            </div>
+          </div>
+        </body>
+      </html>
+    `
+  }),
+
+  emailVerification: (userName: string, verificationUrl: string) => ({
+    subject: 'Verify Your Email Address',
+    html: `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
+            .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; overflow: hidden; }
+            .header { background: #0731c2; color: white; padding: 30px; text-align: center; }
+            .content { padding: 30px; }
+            .button { display: inline-block; padding: 12px 24px; background: #0731c2; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>Verify Your Email</h1>
+            </div>
+            <div class="content">
+              <h2>Hello ${userName},</h2>
+              <p>Thank you for signing up! Please verify your email address by clicking the button below:</p>
+              <center><a href="${verificationUrl}" class="button">Verify Email</a></center>
+              <p>If the button doesn't work, copy and paste this link into your browser:</p>
+              <p style="word-break: break-all; color: #666;">${verificationUrl}</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `
   })
 };
 
@@ -236,31 +403,72 @@ export async function sendEmail(
       case 'paymentReceived':
         emailContent = emailTemplates.paymentReceived(data.clientName, data.invoiceNumber, data.amount);
         break;
+      case 'funnelCompletion':
+        emailContent = emailTemplates.funnelCompletion(data.clientName, data.funnelName, data.portalUrl);
+        break;
+      case 'proposalSent':
+        emailContent = emailTemplates.proposalSent(data.clientName, data.proposalTitle, data.viewUrl);
+        break;
+      case 'contractSigned':
+        emailContent = emailTemplates.contractSigned(data.clientName, data.contractTitle, data.viewUrl);
+        break;
+      case 'passwordReset':
+        emailContent = emailTemplates.passwordReset(data.userName, data.resetUrl);
+        break;
+      case 'emailVerification':
+        emailContent = emailTemplates.emailVerification(data.userName, data.verificationUrl);
+        break;
       default:
         throw new Error(`Unknown email template: ${template}`);
     }
     const from = process.env.EMAIL_FROM || 'noreply@onboardhub.com';
 
-    if (emailProvider === 'resend' && resend) {
-      // Use Resend
-      const result = await resend.emails.send({
-        from,
-        to,
-        subject: emailContent.subject,
-        html: emailContent.html,
-      });
-      return { success: true, messageId: result.data?.id };
+    // Prioritize Resend, fallback to SMTP
+    if (resend) {
+      try {
+        // Use Resend as primary
+        const result = await resend.emails.send({
+          from,
+          to,
+          subject: emailContent.subject,
+          html: emailContent.html,
+        });
+        return { success: true, messageId: result.data?.id, provider: 'resend' };
+      } catch (resendError) {
+        console.warn('Resend failed, trying SMTP fallback:', resendError);
+        // Fallback to SMTP if Resend fails
+        if (smtpTransporter) {
+          try {
+            const result = await smtpTransporter.sendMail({
+              from,
+              to,
+              subject: emailContent.subject,
+              html: emailContent.html,
+            });
+            return { success: true, messageId: result.messageId, provider: 'smtp' };
+          } catch (smtpError) {
+            console.error('SMTP fallback also failed:', smtpError);
+            return { success: false, error: 'Both email providers failed' };
+          }
+        }
+        return { success: false, error: 'Resend failed and no SMTP fallback available' };
+      }
     } else if (smtpTransporter) {
-      // Use SMTP if transporter is available
-      const result = await smtpTransporter.sendMail({
-        from,
-        to,
-        subject: emailContent.subject,
-        html: emailContent.html,
-      });
-      return { success: true, messageId: result.messageId };
+      // Use SMTP if Resend is not configured
+      try {
+        const result = await smtpTransporter.sendMail({
+          from,
+          to,
+          subject: emailContent.subject,
+          html: emailContent.html,
+        });
+        return { success: true, messageId: result.messageId, provider: 'smtp' };
+      } catch (smtpError) {
+        console.error('SMTP failed:', smtpError);
+        return { success: false, error: 'SMTP sending failed' };
+      }
     } else {
-      // No email provider configured - return success but log warning
+      // No email provider configured
       console.warn('Email not sent: No email provider configured (missing SMTP credentials or RESEND_API_KEY)');
       return { success: false, error: 'No email provider configured' };
     }
@@ -314,5 +522,65 @@ export async function processEmailQueue() {
       email.retries!++;
       emailQueue.push(email);
     }
+  }
+}
+
+// Send custom email (for workflows and other custom content)
+export async function sendCustomEmail(
+  to: string,
+  subject: string,
+  html: string
+) {
+  try {
+    const from = process.env.EMAIL_FROM || 'noreply@onboardhub.com';
+
+    // Prioritize Resend, fallback to SMTP
+    if (resend) {
+      try {
+        const result = await resend.emails.send({
+          from,
+          to,
+          subject,
+          html,
+        });
+        return { success: true, messageId: result.data?.id, provider: 'resend' };
+      } catch (resendError) {
+        console.warn('Resend failed, trying SMTP fallback:', resendError);
+        if (smtpTransporter) {
+          try {
+            const result = await smtpTransporter.sendMail({
+              from,
+              to,
+              subject,
+              html,
+            });
+            return { success: true, messageId: result.messageId, provider: 'smtp' };
+          } catch (smtpError) {
+            console.error('SMTP fallback also failed:', smtpError);
+            return { success: false, error: 'Both email providers failed' };
+          }
+        }
+        return { success: false, error: 'Resend failed and no SMTP fallback available' };
+      }
+    } else if (smtpTransporter) {
+      try {
+        const result = await smtpTransporter.sendMail({
+          from,
+          to,
+          subject,
+          html,
+        });
+        return { success: true, messageId: result.messageId, provider: 'smtp' };
+      } catch (smtpError) {
+        console.error('SMTP failed:', smtpError);
+        return { success: false, error: 'SMTP sending failed' };
+      }
+    } else {
+      console.warn('Email not sent: No email provider configured');
+      return { success: false, error: 'No email provider configured' };
+    }
+  } catch (error) {
+    console.error('Email sending error:', error);
+    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
   }
 }

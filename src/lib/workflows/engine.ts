@@ -190,12 +190,13 @@ async function executeSendEmailAction(config: any, triggerData: any) {
             emailSubject = emailSubject.replace(new RegExp(placeholder, 'g'), String(value));
         });
 
-        // Send email
-        await sendEmail({
-            to: recipientEmail,
-            subject: emailSubject,
-            html: emailBody
-        });
+        // Send custom email using sendCustomEmail helper
+        const { sendCustomEmail } = await import("@/lib/email");
+        const result = await sendCustomEmail(recipientEmail, emailSubject, emailBody);
+        
+        if (!result.success) {
+            throw new Error(result.error || "Failed to send email");
+        }
 
         return { success: true, message: `Email sent to ${recipientEmail}` };
     } catch (error) {

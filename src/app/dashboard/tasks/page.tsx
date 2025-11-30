@@ -31,16 +31,21 @@ export default function TasksPage() {
   const [clients, setClients] = useState<any[]>([]);
   const [selectedTask, setSelectedTask] = useState<any>(null);
   const [detailOpen, setDetailOpen] = useState(false);
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const { t } = useTranslation();
 
   useEffect(() => {
     const fetchData = async () => {
       const search = searchParams.get("search") || undefined;
       const status = searchParams.get("status") || undefined;
-      const tasksData = await getTasks(search, status);
-      const clientsData = await getClients();
-      setTasks(tasksData);
-      setClients(clientsData);
+      const page = parseInt(searchParams.get("page") || "1", 10);
+      const tasksResult = await getTasks(search, status, page, 20);
+      const clientsResult = await getClients(1, 1000);
+      setTasks(tasksResult.tasks);
+      setClients(clientsResult.clients);
+      setTotalPages(tasksResult.totalPages);
+      setCurrentPage(page);
     };
     fetchData();
   }, [searchParams]);
@@ -61,8 +66,10 @@ export default function TasksPage() {
     await updateTask(task.id, { status: newStatus });
     const search = searchParams.get("search") || undefined;
     const status = searchParams.get("status") || undefined;
-    const tasksData = await getTasks(search, status);
-    setTasks(tasksData);
+    const page = parseInt(searchParams.get("page") || "1", 10);
+    const tasksResult = await getTasks(search, status, page, 20);
+    setTasks(tasksResult.tasks);
+    setTotalPages(tasksResult.totalPages);
   };
 
   return (

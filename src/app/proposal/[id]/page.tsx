@@ -13,6 +13,7 @@ import { LanguageProviderWrapper } from "@/components/language-provider-wrapper"
 import { db } from "@/lib/db";
 import { workspaces, client_companies } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
+import { getSession } from "@/lib/get-session";
 
 export default async function ProposalPage({ 
   params 
@@ -35,6 +36,8 @@ export default async function ProposalPage({
   const client = await db.query.client_companies.findFirst({
     where: eq(client_companies.id, proposal.client_id)
   });
+  
+  // Always show accept/reject buttons (removed restriction)
   
   const language = (workspace?.default_language as Language) || "en";
   // Always use workspace default currency, fallback to USD
@@ -118,6 +121,7 @@ export default async function ProposalPage({
               content: proposal.content || { sections: [] }
             }}
             currencySymbol={currencySymbol}
+            isWorkspaceOwner={false}
           />
         </div>
       </div>

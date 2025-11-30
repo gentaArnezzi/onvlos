@@ -71,6 +71,8 @@ interface Client {
 
 interface ClientsGridProps {
   clients: Client[];
+  totalPages?: number;
+  currentPage?: number;
 }
 
 const statusColors: Record<string, string> = {
@@ -81,7 +83,7 @@ const statusColors: Record<string, string> = {
   archived: "bg-slate-100 text-slate-700",
 };
 
-export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
+export function ClientsGrid({ clients: initialClients, totalPages = 1, currentPage = 1 }: ClientsGridProps) {
   const { t } = useTranslation();
   const router = useRouter();
   const [clients, setClients] = useState(initialClients);
@@ -463,6 +465,17 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="mt-6 flex justify-center">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        </div>
+      )}
     </>
   );
 }

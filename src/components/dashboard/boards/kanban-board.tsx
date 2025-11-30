@@ -30,8 +30,8 @@ import { CSS } from "@dnd-kit/utilities";
 import { useState, useMemo, useCallback, useRef, memo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Loader2 } from "lucide-react";
-import { createCard, moveCard } from "@/actions/boards";
+import { Plus, Loader2, Pencil, Trash2, MoreVertical } from "lucide-react";
+import { createCard, moveCard, updateCard, deleteCard } from "@/actions/boards";
 import { cn } from "@/lib/utils";
 import {
   Dialog,
@@ -48,6 +48,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/lib/i18n/context";
 import { Language } from "@/lib/i18n/translations";
+import { toast } from "sonner";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 // --- Types ---
 interface BoardCard {
@@ -72,7 +79,18 @@ interface KanbanBoardProps {
 
 // --- Components ---
 
-function SortableCard({ card }: { card: BoardCard }) {
+function SortableCard({ card, onCardUpdated, onCardDeleted }: { 
+    card: BoardCard; 
+    onCardUpdated?: () => void;
+    onCardDeleted?: () => void;
+}) {
+    const { t } = useTranslation();
+    const router = useRouter();
+    const [isEditOpen, setIsEditOpen] = useState(false);
+    const [editTitle, setEditTitle] = useState(card.title);
+    const [editDescription, setEditDescription] = useState(card.description || "");
+    const [isDeleting, setIsDeleting] = useState(false);
+
     const {
         attributes,
         listeners,
@@ -88,30 +106,150 @@ function SortableCard({ card }: { card: BoardCard }) {
         opacity: isDragging ? 0.5 : 1,
     };
 
+    const handleEdit = async () => {
+        const result = await updateCard(card.id, {
+            title: editTitle,
+            description: editDescription || null,
+        });
+        if (result.success) {
+            toast.success(t("boards.cardUpdated") || "Card updated successfully");
+            setIsEditOpen(false);
+            router.refresh();
+            onCardUpdated?.();
+        } else {
+            toast.error(result.error || "Failed to update card");
+        }
+    };
+
+    const handleDelete = async () => {
+        if (!confirm(t("boards.deleteCardConfirm") || "Are you sure you want to delete this card?")) {
+            return;
+        }
+        setIsDeleting(true);
+        const result = await deleteCard(card.id);
+        setIsDeleting(false);
+        if (result.success) {
+            toast.success(t("boards.cardDeleted") || "Card deleted successfully");
+            router.refresh();
+            onCardDeleted?.();
+        } else {
+            toast.error(result.error || "Failed to delete card");
+        }
+    };
+
     return (
-        <Card 
-            ref={setNodeRef} 
-            style={style} 
-            {...attributes} 
-            {...listeners} 
-            className={cn(
-                "cursor-grab active:cursor-grabbing hover:shadow-lg transition-all duration-200 touch-none",
-                "bg-white border-slate-200",
-                "hover:border-orange-300",
-                "hover:scale-[1.02]"
-            )}
-        >
-            <CardContent className="p-4">
-                <div className="font-semibold text-slate-900 text-sm leading-tight">
-                    {card.title}
-                </div>
-                {card.description && (
-                    <div className="text-xs text-slate-600 mt-2 line-clamp-2">
-                        {card.description}
-                    </div>
+        <>
+            <Card 
+                ref={setNodeRef} 
+                style={style} 
+                {...attributes} 
+                className={cn(
+                    "hover:shadow-lg transition-all duration-200",
+                    "bg-white border-slate-200",
+                    "hover:border-orange-300",
+                    isDragging && "opacity-50"
                 )}
-            </CardContent>
-        </Card>
+            >
+                <CardContent className="p-4">
+                    <div className="flex items-start justify-between gap-2">
+                        <div 
+                            {...listeners}
+                            className={cn(
+                                "flex-1 cursor-grab active:cursor-grabbing",
+                                "touch-none"
+                            )}
+                        >
+                            <div className="font-semibold text-slate-900 text-sm leading-tight">
+                                {card.title}
+                            </div>
+                            {card.description && (
+                                <div className="text-xs text-slate-600 mt-2 line-clamp-2">
+                                    {card.description}
+                                </div>
+                            )}
+                        </div>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                                <Button 
+                                    variant="ghost" 
+                                    size="icon" 
+                                    className="h-6 w-6 text-slate-500 hover:text-slate-900"
+                                    onClick={(e) => e.stopPropagation()}
+                                >
+                                    <MoreVertical className="h-4 w-4" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="bg-white border-slate-200">
+                                <DropdownMenuItem 
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setIsEditOpen(true);
+                                    }}
+                                    className="text-slate-900 hover:bg-slate-100 cursor-pointer"
+                                >
+                                    <Pencil className="mr-2 h-4 w-4" />
+                                    {t("common.edit") || "Edit"}
+                                </DropdownMenuItem>
+                                <DropdownMenuItem 
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDelete();
+                                    }}
+                                    disabled={isDeleting}
+                                    className="text-red-600 hover:bg-red-50 cursor-pointer"
+                                >
+                                    <Trash2 className="mr-2 h-4 w-4" />
+                                    {t("common.delete") || "Delete"}
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
+                </CardContent>
+            </Card>
+
+            {/* Edit Dialog */}
+            <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+                <DialogContent className="sm:max-w-[425px] bg-white border-slate-200">
+                    <DialogHeader>
+                        <DialogTitle className="text-slate-900">{t("boards.editCard") || "Edit Card"}</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                        <div className="space-y-2">
+                            <Label className="text-slate-900">{t("boards.cardTitle") || "Title"}</Label>
+                            <Input
+                                value={editTitle}
+                                onChange={(e) => setEditTitle(e.target.value)}
+                                className="bg-white border-slate-200 text-slate-900"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label className="text-slate-900">{t("common.description") || "Description"}</Label>
+                            <Textarea
+                                value={editDescription}
+                                onChange={(e) => setEditDescription(e.target.value)}
+                                className="bg-white border-slate-200 text-slate-900"
+                                rows={3}
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button
+                            variant="outline"
+                            onClick={() => setIsEditOpen(false)}
+                            className="border-slate-200 text-slate-900 bg-white hover:bg-slate-50"
+                        >
+                            {t("common.cancel") || "Cancel"}
+                        </Button>
+                        <Button
+                            onClick={handleEdit}
+                            className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white"
+                        >
+                            {t("common.save") || "Save"}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+        </>
     );
 }
 
@@ -171,7 +309,20 @@ const Column = memo(function Column({ column, onCardAdded }: { column: BoardColu
                 ) : (
                     <SortableContext items={column.cards.map(c => c.id)} strategy={verticalListSortingStrategy}>
                         {column.cards.map((card) => (
-                            <SortableCard key={card.id} card={card} />
+                            <SortableCard 
+                                key={card.id} 
+                                card={card}
+                                onCardUpdated={() => {
+                                    // Refresh will be handled by router.refresh() in SortableCard
+                                }}
+                                onCardDeleted={() => {
+                                    // Remove card from local state
+                                    setColumns(prev => prev.map(col => ({
+                                        ...col,
+                                        cards: col.cards.filter(c => c.id !== card.id)
+                                    })));
+                                }}
+                            />
                         ))}
                     </SortableContext>
                 )}

@@ -44,7 +44,7 @@ export function InvoiceQuickActions({ invoice }: InvoiceQuickActionsProps) {
 
   const handleDownload = () => {
     // TODO: Implement PDF download
-    alert("PDF download functionality coming soon");
+    window.open(`/api/invoices/${invoiceId}/pdf`, "_blank");
   };
 
   return (

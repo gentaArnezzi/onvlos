@@ -73,11 +73,11 @@ export function FileManager({ clientId }: { clientId?: string }) {
                     fileInputRef.current.value = "";
                 }
             } else {
-                alert(data.error || "Upload failed");
+                toast.error(data.error || "Upload failed");
             }
         } catch (error) {
             console.error("Upload error:", error);
-            alert("Failed to upload file");
+            toast.error("Failed to upload file");
         } finally {
             setUploading(false);
         }

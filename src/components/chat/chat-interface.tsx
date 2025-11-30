@@ -10,6 +10,7 @@ import { sendMessage, sendMessageFromPortal } from "@/actions/chat";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { useSocket } from "@/hooks/useSocket";
+import { toast } from "sonner";
 
 interface Message {
     id: string;
@@ -59,7 +60,7 @@ export function ChatInterface({ conversationId, initialMessages, currentUserId, 
         // Listen for errors
         socket.on("error", (error: { message: string }) => {
             console.error("Socket error:", error);
-            alert(error.message || "An error occurred");
+            toast.error(error.message || "An error occurred");
         });
 
         // Listen for typing indicators
@@ -185,14 +186,14 @@ export function ChatInterface({ conversationId, initialMessages, currentUserId, 
                         // Remove temp message if send failed
                         setMessages(prev => prev.filter(m => m.id !== tempMessageId));
                         console.error("Failed to send message:", result.error);
-                        alert(result.error || "Failed to send message. Please try again.");
+                        toast.error(result.error || "Failed to send message. Please try again.");
                     }
                     // Note: Real message will come via socket if connected, or we'll need to refresh
                 } catch (error) {
                     // Remove temp message on error
                     setMessages(prev => prev.filter(m => m.id !== tempMessageId));
                     console.error("Error sending message:", error);
-                    alert("Failed to send message. Please try again.");
+                    toast.error("Failed to send message. Please try again.");
                 }
             }
         } else {

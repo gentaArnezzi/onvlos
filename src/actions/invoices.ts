@@ -1,19 +1,21 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { invoices, invoice_items, client_companies } from "@/lib/db/schema";
+import { invoices, invoice_items, client_companies, client_spaces } from "@/lib/db/schema";
 import { desc, eq, and, or, like } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { getOrCreateWorkspace } from "./workspace";
 import { getSession } from "@/lib/get-session";
+import { sendEmail } from "@/lib/email";
+import { getCurrencySymbol } from "@/lib/currency";
 
-export async function getInvoices(search?: string, status?: string) {
+export async function getInvoices(search?: string, status?: string, page: number = 1, limit: number = 20) {
   try {
     const session = await getSession();
-    if (!session) return [];
+    if (!session) return { invoices: [], total: 0, totalPages: 0 };
 
     const workspace = await getOrCreateWorkspace();
-    if (!workspace) return [];
+    if (!workspace) return { invoices: [], total: 0, totalPages: 0 };
 
     const conditions = [eq(invoices.workspace_id, workspace.id)];
 
@@ -38,27 +40,29 @@ export async function getInvoices(search?: string, status?: string) {
     .leftJoin(client_companies, eq(invoices.client_id, client_companies.id))
     .where(and(...conditions));
 
-    if (search && search.trim()) {
-      // Note: Drizzle doesn't support LIKE with joins easily, so we'll filter in memory for now
-      // For production, consider using a more sophisticated search
-    }
-
-    const data = await query.orderBy(desc(invoices.created_at));
+    const allData = await query.orderBy(desc(invoices.created_at));
 
     // Filter by search term if provided
+    let filteredData = allData;
     if (search && search.trim()) {
       const searchLower = search.toLowerCase();
-      return data.filter(inv => 
+      filteredData = allData.filter(inv => 
         inv.invoice_number?.toLowerCase().includes(searchLower) ||
         inv.client_name?.toLowerCase().includes(searchLower) ||
         inv.client_company_name?.toLowerCase().includes(searchLower)
       );
     }
 
-    return data;
+    // Pagination
+    const total = filteredData.length;
+    const totalPages = Math.ceil(total / limit);
+    const offset = (page - 1) * limit;
+    const paginatedData = filteredData.slice(offset, offset + limit);
+
+    return { invoices: paginatedData, total, totalPages };
   } catch (error) {
     console.error(error);
-    return [];
+    return { invoices: [], total: 0, totalPages: 0 };
   }
 }
 

@@ -7,15 +7,23 @@ import { getOrCreateWorkspace } from "@/actions/workspace";
 import { t } from "@/lib/i18n/server";
 import { Language } from "@/lib/i18n/translations";
 
-export default async function ClientsPage() {
+export default async function ClientsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
   const workspace = await getOrCreateWorkspace();
   const language = (workspace?.default_language as Language) || "en";
-  const clients = await getClients();
+  const params = await searchParams;
+  const page = parseInt(params.page || "1", 10);
+  const { clients, total, totalPages } = await getClients(page, 12);
 
-  // Calculate stats
-  const totalClients = clients.length;
-  const activeClients = clients.filter(c => c.status === 'active').length;
-  const pendingClients = clients.filter(c => c.status === 'pending' || c.status === 'lead').length;
+  // Calculate stats - need to fetch all for stats
+  const allClientsResult = await getClients(1, 1000);
+  const allClients = allClientsResult.clients;
+  const totalClients = allClients.length;
+  const activeClients = allClients.filter(c => c.status === 'active').length;
+  const pendingClients = allClients.filter(c => c.status === 'pending' || c.status === 'lead').length;
 
   return (
     <div className="flex-1 space-y-8 p-8 max-w-7xl mx-auto">
@@ -96,7 +104,7 @@ export default async function ClientsPage() {
       </div>
 
       {/* Main Content - Grid Cards */}
-      <ClientsGrid clients={clients} />
+      <ClientsGrid clients={clients} totalPages={totalPages} currentPage={page} />
     </div>
   );
 }

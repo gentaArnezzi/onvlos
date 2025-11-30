@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { CheckCircle2, XCircle, Clock, FileText, User, Calendar, DollarSign } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { acceptProposal, declineProposal } from "@/actions/proposals";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -14,20 +14,23 @@ import { useTranslation } from "@/lib/i18n/context";
 interface ProposalViewClientProps {
   proposal: any;
   currencySymbol: string;
+  isWorkspaceOwner?: boolean; // If true, hide accept/reject buttons (only client should see them)
 }
 
-export function ProposalViewClient({ proposal, currencySymbol }: ProposalViewClientProps) {
+export function ProposalViewClient({ proposal, currencySymbol, isWorkspaceOwner = false }: ProposalViewClientProps) {
   const router = useRouter();
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [showDeclineReason, setShowDeclineReason] = useState(false);
   const [declineReason, setDeclineReason] = useState("");
-
+  
   const isExpired = proposal.valid_until && new Date(proposal.valid_until) < new Date();
   const isAccepted = proposal.status === "accepted";
   const isDeclined = proposal.status === "declined";
-  // Only allow accept/decline if proposal is sent (not draft) and not already accepted/declined/expired
-  const canAccept = proposal.status === "sent" && !isAccepted && !isDeclined && !isExpired;
+  const isDraft = proposal.status === "draft";
+  
+  // Allow accept/decline if proposal is sent, viewed, or draft and not already accepted/declined/expired
+  const canAccept = !isAccepted && !isDeclined && !isExpired && (proposal.status === "sent" || proposal.status === "viewed" || isDraft);
 
   const handleAccept = async () => {
     if (!canAccept) return;
@@ -300,10 +303,17 @@ export function ProposalViewClient({ proposal, currencySymbol }: ProposalViewCli
         </Card>
       )}
 
-      {/* Actions - Only show if proposal is sent */}
+      {/* Actions - Show if proposal can be accepted/rejected */}
       {canAccept && (
         <Card className="border-slate-200 bg-white">
           <CardContent className="pt-6">
+            {isDraft && (
+              <div className="mb-4 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-700">
+                <p className="text-sm text-amber-700 dark:text-amber-300">
+                  This proposal is still in draft. You can review and accept or decline it.
+                </p>
+              </div>
+            )}
             <div className="mb-4 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
               <p className="text-sm text-slate-700 dark:text-slate-300">
                 {t("proposals.acceptanceNotice")}
