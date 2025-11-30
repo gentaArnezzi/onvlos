@@ -22,11 +22,11 @@ export function StatusFilter() {
 
     return (
         <Tabs value={currentStatus} onValueChange={handleStatusChange} className="w-full md:w-auto">
-            <TabsList className="bg-slate-100 border border-slate-200">
-                <TabsTrigger value="all" className="data-[state=active]:bg-[#0731c2] text-slate-700 data-[state=active]:text-white hover:text-slate-900">{t("tasks.all")}</TabsTrigger>
-                <TabsTrigger value="todo" className="data-[state=active]:bg-[#0731c2] text-slate-700 data-[state=active]:text-white hover:text-slate-900">{t("tasks.toDo")}</TabsTrigger>
-                <TabsTrigger value="in_progress" className="data-[state=active]:bg-[#0731c2] text-slate-700 data-[state=active]:text-white hover:text-slate-900">{t("tasks.inProgress")}</TabsTrigger>
-                <TabsTrigger value="done" className="data-[state=active]:bg-[#0731c2] text-slate-700 data-[state=active]:text-white hover:text-slate-900">{t("tasks.done")}</TabsTrigger>
+            <TabsList className="bg-[#EDEDED] border border-[#EDEDED]">
+                <TabsTrigger value="all" className="data-[state=active]:bg-[#0A33C6] font-primary text-[#606170] data-[state=active]:text-white hover:font-primary text-[#02041D]">{t("tasks.all")}</TabsTrigger>
+                <TabsTrigger value="todo" className="data-[state=active]:bg-[#0A33C6] font-primary text-[#606170] data-[state=active]:text-white hover:font-primary text-[#02041D]">{t("tasks.toDo")}</TabsTrigger>
+                <TabsTrigger value="in_progress" className="data-[state=active]:bg-[#0A33C6] font-primary text-[#606170] data-[state=active]:text-white hover:font-primary text-[#02041D]">{t("tasks.inProgress")}</TabsTrigger>
+                <TabsTrigger value="done" className="data-[state=active]:bg-[#0A33C6] font-primary text-[#606170] data-[state=active]:text-white hover:font-primary text-[#02041D]">{t("tasks.done")}</TabsTrigger>
             </TabsList>
         </Tabs>
     );

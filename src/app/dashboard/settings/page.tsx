@@ -15,10 +15,10 @@ export default async function SettingsPage() {
     <div className="flex-1 space-y-8 p-8 max-w-7xl mx-auto">
       {/* Header */}
       <div>
-        <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-[#0731c2] via-[#0731c2] to-[#010119] bg-clip-text text-transparent">
+        <h2 className="text-3xl font-bold tracking-tight font-primary text-[#0A33C6]">
           {t("settings.title", language)}
         </h2>
-        <p className="text-slate-600 mt-1">
+        <p className="font-primary text-[#606170] mt-1">
           {t("settings.description", language)}
         </p>
       </div>

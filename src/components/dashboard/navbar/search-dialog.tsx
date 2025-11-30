@@ -99,16 +99,16 @@ export function SearchDialog({ open, onOpenChange }: { open: boolean; onOpenChan
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px] bg-white border-slate-200 p-0">
+      <DialogContent className="sm:max-w-[600px] bg-white border-[#EDEDED] p-0">
         <DialogTitle className="sr-only">Search</DialogTitle>
-        <div className="p-4 border-b border-slate-200">
+        <div className="p-4 border-b border-[#EDEDED]">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-600" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 font-primary text-[#606170]" />
             <Input
               placeholder="Search clients, tasks, invoices..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="pl-9 bg-white border-slate-200 text-slate-900 placeholder:text-slate-500 h-12"
+              className="pl-9 bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170] h-12"
               autoFocus
             />
           </div>
@@ -117,16 +117,16 @@ export function SearchDialog({ open, onOpenChange }: { open: boolean; onOpenChan
         <div className="max-h-[400px] overflow-y-auto">
           {loading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-6 w-6 animate-spin text-slate-600" />
+              <Loader2 className="h-6 w-6 animate-spin font-primary text-[#606170]" />
             </div>
           ) : query.trim() && results.length === 0 ? (
-            <div className="text-center py-12 text-slate-500">
+            <div className="text-center py-12 font-primary text-[#606170]">
               <p>No results found</p>
               <p className="text-sm mt-1">Try a different search term</p>
             </div>
           ) : !query.trim() ? (
-            <div className="text-center py-12 text-slate-500">
-              <Search className="h-12 w-12 mx-auto mb-4 text-slate-600 opacity-50" />
+            <div className="text-center py-12 font-primary text-[#606170]">
+              <Search className="h-12 w-12 mx-auto mb-4 font-primary text-[#606170] opacity-50" />
               <p>Start typing to search...</p>
               <p className="text-sm mt-1">Search across clients, tasks, invoices, and more</p>
             </div>
@@ -138,22 +138,22 @@ export function SearchDialog({ open, onOpenChange }: { open: boolean; onOpenChan
                   <button
                     key={`${result.type}-${result.id}`}
                     onClick={() => handleSelect(result)}
-                    className="w-full flex items-start gap-3 p-3 rounded-lg hover:bg-slate-100 transition-colors text-left"
+                    className="w-full flex items-start gap-3 p-3 rounded-lg hover:bg-[#EDEDED] transition-colors text-left"
                   >
-                    <div className="p-2 rounded-lg bg-slate-100 flex-shrink-0">
-                      <IconComponent className="h-4 w-4 text-slate-600" />
+                    <div className="p-2 rounded-lg bg-[#EDEDED] flex-shrink-0">
+                      <IconComponent className="h-4 w-4 font-primary text-[#606170]" />
                     </div>
                     <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <p className="font-medium text-slate-900 truncate">
+                      <p className="font-medium font-primary text-[#02041D] truncate">
                         {result.title}
                       </p>
-                      <span className="text-xs px-2 py-0.5 rounded bg-slate-200 text-slate-600">
+                      <span className="text-xs px-2 py-0.5 rounded bg-slate-200 font-primary text-[#606170]">
                         {getTypeLabel(result.type)}
                       </span>
                     </div>
                     {result.subtitle && (
-                      <p className="text-sm text-slate-600 truncate">
+                      <p className="text-sm font-primary text-[#606170] truncate">
                         {result.subtitle}
                       </p>
                     )}
@@ -166,7 +166,7 @@ export function SearchDialog({ open, onOpenChange }: { open: boolean; onOpenChan
         </div>
 
         {query.trim() && results.length > 0 && (
-          <div className="p-3 border-t border-slate-200 text-xs text-slate-600 text-center">
+          <div className="p-3 border-t border-[#EDEDED] text-xs font-primary text-[#606170] text-center">
             {results.length} result{results.length !== 1 ? "s" : ""} found
           </div>
         )}

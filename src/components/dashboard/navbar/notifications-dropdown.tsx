@@ -85,7 +85,7 @@ export function NotificationsDropdown() {
         <Button
           variant="ghost"
           size="icon"
-          className="relative text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg"
+          className="relative font-primary text-[#606170] hover:font-primary text-[#02041D] hover:bg-[#EDEDED] rounded-lg"
         >
           <Bell className="h-5 w-5" />
           {unreadCount > 0 && (
@@ -95,10 +95,10 @@ export function NotificationsDropdown() {
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className="w-80 bg-white border-slate-200 text-slate-900 max-h-[500px] overflow-y-auto"
+        className="w-80 bg-white border-[#EDEDED] font-primary text-[#02041D] max-h-[500px] overflow-y-auto"
       >
         <DropdownMenuLabel className="flex items-center justify-between">
-          <span className="text-slate-900">Notifications</span>
+          <span className="font-primary text-[#02041D]">Notifications</span>
           {unreadCount > 0 && (
             <span className="text-xs px-2 py-0.5 rounded-full bg-pink-500 text-white">
               {unreadCount} new
@@ -109,10 +109,10 @@ export function NotificationsDropdown() {
 
         {loading ? (
           <div className="flex items-center justify-center py-8">
-            <div className="h-5 w-5 border-2 border-slate-300 border-t-slate-600 rounded-full animate-spin" />
+            <div className="h-5 w-5 border-2 border-[#EDEDED] border-t-slate-600 rounded-full animate-spin" />
           </div>
         ) : notifications.length === 0 ? (
-          <div className="text-center py-8 text-slate-600">
+          <div className="text-center py-8 font-primary text-[#606170]">
             <Bell className="h-8 w-8 mx-auto mb-2 opacity-50" />
             <p className="text-sm">No notifications</p>
           </div>
@@ -123,21 +123,21 @@ export function NotificationsDropdown() {
                 key={notification.id}
                 onClick={() => handleNotificationClick(notification)}
                 className={`
-                  flex items-start gap-3 p-3 cursor-pointer focus:bg-slate-100 focus:text-slate-900
+                  flex items-start gap-3 p-3 cursor-pointer focus:bg-[#EDEDED] focus:font-primary text-[#02041D]
                   ${!notification.read ? "bg-blue-50" : ""}
                 `}
               >
-                <div className={`mt-0.5 ${!notification.read ? "text-blue-600" : "text-slate-600"}`}>
+                <div className={`mt-0.5 ${!notification.read ? "text-[#0A33C6]" : "font-primary text-[#606170]"}`}>
                   {getNotificationIcon(notification.type)}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className={`text-sm font-medium ${!notification.read ? "text-slate-900" : "text-slate-700"}`}>
+                  <p className={`text-sm font-medium ${!notification.read ? "font-primary text-[#02041D]" : "font-primary text-[#606170]"}`}>
                     {notification.title}
                   </p>
-                  <p className="text-xs text-slate-600 mt-0.5 line-clamp-2">
+                  <p className="text-xs font-primary text-[#606170] mt-0.5 line-clamp-2">
                     {notification.message}
                   </p>
-                  <p className="text-xs text-slate-600 mt-1">
+                  <p className="text-xs font-primary text-[#606170] mt-1">
                     {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
                   </p>
                 </div>

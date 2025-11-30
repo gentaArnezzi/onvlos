@@ -55,33 +55,33 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ c
     return (
         <div className="flex-1 space-y-6 p-8 max-w-7xl mx-auto">
             <div className="flex items-center space-x-4 mb-6">
-                <Button variant="ghost" size="icon" asChild className="text-slate-600 hover:text-slate-900">
+                <Button variant="ghost" size="icon" asChild className="font-primary text-[#606170] hover:font-primary text-[#02041D]">
                     <Link href="/dashboard/clients">
                         <ArrowLeft className="h-5 w-5" />
                     </Link>
                 </Button>
                 <div>
-                    <h2 className="text-2xl font-bold tracking-tight text-slate-900">
+                    <h2 className="text-2xl font-bold tracking-tight font-primary text-[#02041D]">
                         {client.company_name || "No Company Name"}
                     </h2>
-                    <p className="text-slate-600 mt-1">
+                    <p className="font-primary text-[#606170] mt-1">
                         {client.name} {client.email && `• ${client.email}`}
                     </p>
                 </div>
             </div>
 
             <Tabs defaultValue="overview" className="space-y-4">
-                <TabsList className="bg-white border-slate-200">
-                    <TabsTrigger value="overview" className="text-slate-700 data-[state=active]:text-slate-900">
+                <TabsList className="bg-white border-[#EDEDED]">
+                    <TabsTrigger value="overview" className="font-primary text-[#606170] data-[state=active]:font-primary text-[#02041D]">
                         Overview
                     </TabsTrigger>
-                    <TabsTrigger value="chat" className="text-slate-700 data-[state=active]:text-slate-900">
+                    <TabsTrigger value="chat" className="font-primary text-[#606170] data-[state=active]:font-primary text-[#02041D]">
                         Chat
                     </TabsTrigger>
-                    <TabsTrigger value="tasks" className="text-slate-700 data-[state=active]:text-slate-900">
+                    <TabsTrigger value="tasks" className="font-primary text-[#606170] data-[state=active]:font-primary text-[#02041D]">
                         Tasks
                     </TabsTrigger>
-                    <TabsTrigger value="files" className="text-slate-700 data-[state=active]:text-slate-900">
+                    <TabsTrigger value="files" className="font-primary text-[#606170] data-[state=active]:font-primary text-[#02041D]">
                         Files
                     </TabsTrigger>
                 </TabsList>
@@ -90,22 +90,22 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ c
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                         <Card className="border-none shadow-lg bg-white">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium text-slate-700">Status</CardTitle>
+                                <CardTitle className="text-sm font-medium font-primary text-[#606170]">Status</CardTitle>
                                 <CheckSquare className="h-4 w-4 text-slate-500" />
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold text-slate-900 capitalize">
+                                <div className="text-2xl font-bold font-primary text-[#02041D] capitalize">
                                     {client.status || "lead"}
                                 </div>
                             </CardContent>
                         </Card>
                         <Card className="border-none shadow-lg bg-white">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium text-slate-700">Contract Value</CardTitle>
+                                <CardTitle className="text-sm font-medium font-primary text-[#606170]">Contract Value</CardTitle>
                                 <FileText className="h-4 w-4 text-slate-500" />
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold text-slate-900">
+                                <div className="text-2xl font-bold font-primary text-[#02041D]">
                                     {defaultCurrencySymbol}{client.contract_value ? Number(client.contract_value).toLocaleString() : "0"}
                                 </div>
                             </CardContent>
@@ -113,11 +113,11 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ c
                         {client.category && (
                             <Card className="border-none shadow-lg bg-white">
                                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                    <CardTitle className="text-sm font-medium text-slate-700">Category</CardTitle>
+                                    <CardTitle className="text-sm font-medium font-primary text-[#606170]">Category</CardTitle>
                                     <FileText className="h-4 w-4 text-slate-500" />
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="text-2xl font-bold text-slate-900">
+                                    <div className="text-2xl font-bold font-primary text-[#02041D]">
                                         {client.category}
                                     </div>
                                 </CardContent>
@@ -127,10 +127,10 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ c
                     {client.description && (
                         <Card className="border-none shadow-lg bg-white">
                             <CardHeader>
-                                <CardTitle className="text-slate-900">Description</CardTitle>
+                                <CardTitle className="font-primary text-[#02041D]">Description</CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <p className="text-slate-600">{client.description}</p>
+                                <p className="font-primary text-[#606170]">{client.description}</p>
                             </CardContent>
                         </Card>
                     )}
@@ -150,7 +150,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ c
                         </Card>
                     ) : (
                         <Card className="border-none shadow-lg bg-white">
-                            <CardContent className="py-10 text-center text-slate-600">
+                            <CardContent className="py-10 text-center font-primary text-[#606170]">
                                 No client space found. Please onboard the client first to enable chat.
                             </CardContent>
                         </Card>
@@ -159,7 +159,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ c
                 
                 <TabsContent value="tasks">
                     <Card className="border-none shadow-lg bg-white">
-                        <CardContent className="py-10 text-center text-slate-600">
+                        <CardContent className="py-10 text-center font-primary text-[#606170]">
                             Task management for specific client view coming soon.
                         </CardContent>
                     </Card>

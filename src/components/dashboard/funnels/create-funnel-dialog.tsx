@@ -46,40 +46,40 @@ export function CreateFunnelDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-[#0731c2] hover:bg-[#0525a0] text-white">
+        <Button className="bg-[#0A33C6] hover:bg-[#0A33C6]/90 text-white">
           <Plus className="mr-2 h-4 w-4" /> {t("funnels.newFunnel")}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-white border-slate-200">
+      <DialogContent className="sm:max-w-[425px] bg-white border-[#EDEDED]">
         <DialogHeader>
-          <DialogTitle className="text-slate-900">{t("funnels.createFunnel")}</DialogTitle>
-          <DialogDescription className="text-slate-600">
+          <DialogTitle className="font-primary text-[#02041D]">{t("funnels.createFunnel")}</DialogTitle>
+          <DialogDescription className="font-primary text-[#606170]">
             {t("funnels.startNewFlow")}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-right text-slate-900">
+              <Label htmlFor="name" className="text-right font-primary text-[#02041D]">
                 {t("funnels.name")}
               </Label>
               <Input 
                 id="name" 
                 name="name" 
                 placeholder="Website Design Onboarding" 
-                className="col-span-3 bg-white border-slate-200 text-slate-900 placeholder:text-slate-500" 
+                className="col-span-3 bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]" 
                 required 
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="description" className="text-right text-slate-900">
+              <Label htmlFor="description" className="text-right font-primary text-[#02041D]">
                 {t("common.description")}
               </Label>
               <Textarea 
                 id="description" 
                 name="description" 
                 placeholder="Standard flow for new clients" 
-                className="col-span-3 bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
+                className="col-span-3 bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]"
               />
             </div>
           </div>
@@ -87,7 +87,7 @@ export function CreateFunnelDialog() {
             <Button 
               type="submit" 
               disabled={loading}
-              className="bg-[#0731c2] hover:bg-[#0525a0] text-white"
+              className="bg-[#0A33C6] hover:bg-[#0A33C6]/90 text-white"
             >
               {loading ? t("funnels.creating") : t("funnels.createFunnel")}
             </Button>

@@ -68,22 +68,22 @@ export default function ResetPasswordPage() {
 
     if (success) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-[#ededed] to-blue-50 relative overflow-hidden">
-                <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
+            <div className="min-h-screen flex items-center justify-center bg-[#EDEDED] relative overflow-hidden">
+                <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-10 -z-10" />
                 
-                <Card className="w-full max-w-md border-none shadow-2xl bg-white/95 backdrop-blur-sm">
+                <Card className="w-full max-w-md border-[#EDEDED] shadow-2xl bg-white/80 backdrop-blur-sm">
                     <CardContent className="pt-6">
                         <div className="space-y-4 text-center py-4">
                             <div className="mx-auto w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center">
                                 <Lock className="w-8 h-8 text-emerald-600" />
                             </div>
-                            <h3 className="text-lg font-semibold text-slate-900">Password Reset Successful!</h3>
-                            <p className="text-sm text-slate-600">
+                            <h3 className="text-lg font-semibold font-primary text-[#02041D]">Password Reset Successful!</h3>
+                            <p className="text-sm font-primary text-[#606170]">
                                 Your password has been reset successfully. You can now log in with your new password.
                             </p>
                             <Button
                                 onClick={() => router.push("/login")}
-                                className="w-full mt-4 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white"
+                                className="w-full mt-4 bg-[#0A33C6] hover:bg-[#0A33C6]/90 text-white font-primary font-bold"
                             >
                                 Go to Login
                             </Button>
@@ -95,20 +95,20 @@ export default function ResetPasswordPage() {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-[#ededed] to-blue-50 relative overflow-hidden">
+        <div className="min-h-screen flex items-center justify-center bg-[#EDEDED] via-[#ededed]  relative overflow-hidden">
             <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
             
             <Card className="w-full max-w-md border-none shadow-2xl bg-white/95 backdrop-blur-sm">
                 <CardHeader className="space-y-1 text-center">
-                    <CardTitle className="text-2xl font-bold text-slate-900">Reset Password</CardTitle>
-                    <CardDescription className="text-slate-600">
+                    <CardTitle className="text-2xl font-bold font-primary text-[#02041D]">Reset Password</CardTitle>
+                    <CardDescription className="font-primary text-[#606170]">
                         Enter your new password below.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="space-y-2">
-                            <Label htmlFor="password" className="text-slate-900">New Password</Label>
+                            <Label htmlFor="password" className="font-primary text-[#02041D]">New Password</Label>
                             <Input
                                 id="password"
                                 type="password"
@@ -117,13 +117,13 @@ export default function ResetPasswordPage() {
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
                                 minLength={8}
-                                className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
+                                className="bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:text-[#606170] focus:border-[#0A33C6] focus:ring-[#0A33C6]/20"
                                 disabled={loading}
                             />
-                            <p className="text-xs text-slate-500">Must be at least 8 characters</p>
+                            <p className="text-xs font-primary text-[#A2A2AA]">Must be at least 8 characters</p>
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="confirmPassword" className="text-slate-900">Confirm Password</Label>
+                            <Label htmlFor="confirmPassword" className="font-primary text-[#02041D]">Confirm Password</Label>
                             <Input
                                 id="confirmPassword"
                                 type="password"
@@ -132,13 +132,13 @@ export default function ResetPasswordPage() {
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                                 required
                                 minLength={8}
-                                className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
+                                className="bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:text-[#606170] focus:border-[#0A33C6] focus:ring-[#0A33C6]/20"
                                 disabled={loading}
                             />
                         </div>
                         <Button
                             type="submit"
-                            className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white"
+                            className="w-full bg-[#0A33C6] hover:bg-[#0A33C6]/90 text-white font-primary font-bold"
                             disabled={loading || !password || !confirmPassword}
                         >
                             {loading ? (
@@ -153,7 +153,7 @@ export default function ResetPasswordPage() {
                     </form>
                 </CardContent>
                 <CardFooter className="flex flex-col space-y-4">
-                    <Link href="/login" className="flex items-center justify-center text-sm text-slate-600 hover:text-slate-900">
+                    <Link href="/login" className="flex items-center justify-center text-sm font-primary text-[#606170] hover:text-[#02041D]">
                         <ArrowLeft className="mr-2 h-4 w-4" />
                         Back to login
                     </Link>

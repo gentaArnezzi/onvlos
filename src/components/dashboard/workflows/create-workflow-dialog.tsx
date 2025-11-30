@@ -96,49 +96,49 @@ export function CreateWorkflowDialog({ language: propLanguage }: CreateWorkflowD
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white shadow-lg shadow-amber-500/20 border-0">
+        <Button className="bg-gradient-to-r from-[#0A33C6] to-[#0A33C6] hover:from-amber-600 hover:to-orange-700 text-white shadow-lg shadow-amber-500/20 border-0">
           <Plus className="mr-2 h-4 w-4" /> {t("workflows.newWorkflow")}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px] bg-white border-slate-200 max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[600px] bg-white border-[#EDEDED] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-slate-900">{t("workflows.createAutomation")}</DialogTitle>
+          <DialogTitle className="font-primary text-[#02041D]">{t("workflows.createAutomation")}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="space-y-2">
-              <Label className="text-slate-900">{t("workflows.name")}</Label>
+              <Label className="font-primary text-[#02041D]">{t("workflows.name")}</Label>
               <Input 
                 value={name} 
                 onChange={e => setName(e.target.value)} 
                 required 
                 placeholder={t("workflows.invoiceFollowUp")}
-                className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
+                className="bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]"
               />
             </div>
             
             <div className="space-y-2">
-              <Label className="text-slate-900">{t("common.description")}</Label>
+              <Label className="font-primary text-[#02041D]">{t("common.description")}</Label>
               <Textarea 
                 value={description} 
                 onChange={e => setDescription(e.target.value)} 
                 placeholder={t("workflows.thankYouEmailPlaceholder")}
-                className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
+                className="bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]"
               />
             </div>
 
             <div className="space-y-2">
-              <Label className="text-slate-900">{t("workflows.trigger")}</Label>
+              <Label className="font-primary text-[#02041D]">{t("workflows.trigger")}</Label>
               <Select value={triggerType} onValueChange={setTriggerType}>
-                <SelectTrigger className="bg-white border-slate-200 text-slate-900">
+                <SelectTrigger className="bg-white border-[#EDEDED] font-primary text-[#02041D]">
                   <SelectValue placeholder={t("workflows.selectTrigger")} />
                 </SelectTrigger>
-                <SelectContent className="bg-white border-slate-200">
+                <SelectContent className="bg-white border-[#EDEDED]">
                   {triggerOptions.map((option) => (
                     <SelectItem 
                       key={option.value} 
                       value={option.value}
-                      className="text-slate-900 focus:bg-slate-100"
+                      className="font-primary text-[#02041D] focus:bg-[#EDEDED]"
                     >
                       {option.label}
                     </SelectItem>
@@ -148,23 +148,23 @@ export function CreateWorkflowDialog({ language: propLanguage }: CreateWorkflowD
             </div>
 
             <div className="space-y-2">
-              <Label className="text-slate-900">{t("workflows.actions")}</Label>
+              <Label className="font-primary text-[#02041D]">{t("workflows.actions")}</Label>
               <div className="space-y-2">
                 {actions.map((action, index) => (
-                  <div key={index} className="flex gap-2 items-center p-2 border border-slate-200 rounded-md">
+                  <div key={index} className="flex gap-2 items-center p-2 border border-[#EDEDED] rounded-md">
                     <Select 
                       value={action.type} 
                       onValueChange={(value) => updateAction(index, { type: value })}
                     >
-                      <SelectTrigger className="flex-1 bg-white border-slate-200 text-slate-900">
+                      <SelectTrigger className="flex-1 bg-white border-[#EDEDED] font-primary text-[#02041D]">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-white border-slate-200">
+                      <SelectContent className="bg-white border-[#EDEDED]">
                         {actionOptions.map((option) => (
                           <SelectItem 
                             key={option.value} 
                             value={option.value}
-                            className="text-slate-900 focus:bg-slate-100"
+                            className="font-primary text-[#02041D] focus:bg-[#EDEDED]"
                           >
                             {option.label}
                           </SelectItem>
@@ -188,7 +188,7 @@ export function CreateWorkflowDialog({ language: propLanguage }: CreateWorkflowD
                   type="button"
                   variant="outline"
                   onClick={addAction}
-                  className="w-full bg-white border-slate-200 text-slate-900 hover:bg-slate-50"
+                  className="w-full bg-white border-[#EDEDED] font-primary text-[#02041D] hover:bg-[#EDEDED]"
                 >
                   <Plus className="mr-2 h-4 w-4" />
                   {t("workflows.addAction")}
@@ -201,14 +201,14 @@ export function CreateWorkflowDialog({ language: propLanguage }: CreateWorkflowD
               type="button"
               variant="outline"
               onClick={() => setOpen(false)}
-              className="border-slate-200 text-slate-900 bg-white hover:bg-slate-50"
+              className="border-[#EDEDED] font-primary text-[#02041D] bg-white hover:bg-[#EDEDED]"
             >
               {t("common.cancel")}
             </Button>
             <Button 
               type="submit" 
               disabled={loading}
-              className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white"
+              className="bg-gradient-to-r from-[#0A33C6] to-[#0A33C6] hover:from-amber-600 hover:to-orange-700 text-white"
             >
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {t("workflows.createAndConfigure")}

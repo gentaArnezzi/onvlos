@@ -94,12 +94,12 @@ export function PaymentForm({ invoiceId, amount, currency = "IDR" }: PaymentForm
                 <div className="h-16 w-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
                     <Lock className="h-8 w-8" />
                 </div>
-                <h3 className="text-xl font-semibold text-slate-900">Payment Successful!</h3>
-                <p className="text-slate-600">Thank you for your business.</p>
+                <h3 className="text-xl font-semibold font-primary text-[#02041D]">Payment Successful!</h3>
+                <p className="font-primary text-[#606170]">Thank you for your business.</p>
                 <Button 
                     variant="outline" 
                     onClick={() => router.back()}
-                    className="border-slate-200 text-slate-900 bg-white hover:bg-slate-50"
+                    className="border-[#EDEDED] font-primary text-[#02041D] bg-white hover:bg-[#EDEDED]"
                 >
                     Return to Dashboard
                 </Button>
@@ -127,8 +127,8 @@ export function PaymentForm({ invoiceId, amount, currency = "IDR" }: PaymentForm
                 )}
             </Button>
             
-            <div className="text-xs text-center text-slate-600 flex items-center justify-center pt-2">
-                <Lock className="h-3 w-3 mr-1.5 text-slate-500" /> 
+            <div className="text-xs text-center font-primary text-[#606170] flex items-center justify-center pt-2">
+                <Lock className="h-3 w-3 mr-1.5 font-primary text-[#606170]" /> 
                 Secured by Midtrans payment gateway
             </div>
         </div>

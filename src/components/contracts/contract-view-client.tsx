@@ -121,7 +121,7 @@ export function ContractViewClient({ contract }: ContractViewClientProps) {
       {sections.length > 0 && (
         <Card className="border-none shadow-lg bg-white relative overflow-hidden">
           <CardHeader>
-            <CardTitle className="text-sm font-medium text-slate-700">
+            <CardTitle className="text-sm font-medium font-primary text-[#606170]">
               {t("contracts.content")}
             </CardTitle>
           </CardHeader>
@@ -129,20 +129,20 @@ export function ContractViewClient({ contract }: ContractViewClientProps) {
             {sections
               .sort((a: any, b: any) => (a.order || 0) - (b.order || 0))
               .map((section: any) => (
-                <div key={section.id} className="border-b border-slate-200 pb-6 last:border-0 last:pb-0">
+                <div key={section.id} className="border-b border-[#EDEDED] pb-6 last:border-0 last:pb-0">
                   {section.type === "header" && (
-                    <h2 className="text-2xl font-bold text-slate-900 mb-4">
+                    <h2 className="text-2xl font-bold font-primary text-[#02041D] mb-4">
                       {section.content}
                     </h2>
                   )}
                   {section.type === "clause" && (
                     <div>
                       {section.title && (
-                        <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                        <h3 className="text-lg font-semibold font-primary text-[#02041D] mb-2">
                           {section.title}
                         </h3>
                       )}
-                      <p className="text-slate-700 whitespace-pre-line">
+                      <p className="font-primary text-[#606170] whitespace-pre-line">
                         {section.content}
                       </p>
                     </div>
@@ -150,11 +150,11 @@ export function ContractViewClient({ contract }: ContractViewClientProps) {
                   {section.type === "terms" && (
                     <div>
                       {section.title && (
-                        <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                        <h3 className="text-lg font-semibold font-primary text-[#02041D] mb-2">
                           {section.title}
                         </h3>
                       )}
-                      <p className="text-slate-700 whitespace-pre-line">
+                      <p className="font-primary text-[#606170] whitespace-pre-line">
                         {section.content}
                       </p>
                     </div>
@@ -162,11 +162,11 @@ export function ContractViewClient({ contract }: ContractViewClientProps) {
                   {section.type === "signature" && (
                     <div>
                       {section.title && (
-                        <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                        <h3 className="text-lg font-semibold font-primary text-[#02041D] mb-2">
                           {section.title}
                         </h3>
                       )}
-                      <p className="text-slate-700 whitespace-pre-line">
+                      <p className="font-primary text-[#606170] whitespace-pre-line">
                         {section.content}
                       </p>
                     </div>
@@ -181,15 +181,15 @@ export function ContractViewClient({ contract }: ContractViewClientProps) {
       {parties.length > 0 && (
         <Card className="border-none shadow-lg bg-white relative overflow-hidden">
           <CardHeader>
-            <CardTitle className="text-sm font-medium text-slate-700">
+            <CardTitle className="text-sm font-medium font-primary text-[#606170]">
               {t("contracts.parties")}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {parties.map((party: any) => (
-              <div key={party.id} className="flex items-center justify-between p-4 bg-slate-50 rounded-lg border border-slate-200">
+              <div key={party.id} className="flex items-center justify-between p-4 bg-[#EDEDED] rounded-lg border border-[#EDEDED]">
                 <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg ${party.type === "company" ? "bg-blue-100 text-blue-600" : "bg-purple-100 text-purple-600"}`}>
+                  <div className={`p-2 rounded-lg ${party.type === "company" ? "bg-[#EDEDED] text-[#0A33C6]" : "bg-purple-100 text-purple-600"}`}>
                     {party.type === "company" ? (
                       <Building2 className="h-5 w-5" />
                     ) : (
@@ -197,13 +197,13 @@ export function ContractViewClient({ contract }: ContractViewClientProps) {
                     )}
                   </div>
                   <div>
-                    <p className="font-semibold text-slate-900">
+                    <p className="font-semibold font-primary text-[#02041D]">
                       {party.name}
                     </p>
-                    <p className="text-sm text-slate-600">
+                    <p className="text-sm font-primary text-[#606170]">
                       {party.email}
                     </p>
-                    <p className="text-xs text-slate-500 mt-1">
+                    <p className="text-xs font-primary text-[#606170] mt-1">
                       {party.role}
                     </p>
                   </div>
@@ -217,17 +217,17 @@ export function ContractViewClient({ contract }: ContractViewClientProps) {
                       </Badge>
                       {party.signature_data && (
                         <div className="mt-2">
-                          <p className="text-xs text-slate-500 mb-1">
+                          <p className="text-xs font-primary text-[#606170] mb-1">
                             {t("contracts.signature")}:
                           </p>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={party.signature_data}
                             alt="Signature"
-                            className="border border-slate-200 rounded-md max-w-[150px] h-auto"
+                            className="border border-[#EDEDED] rounded-md max-w-[150px] h-auto"
                           />
                           {party.signed_at && (
-                            <p className="text-xs text-slate-500 mt-1">
+                            <p className="text-xs font-primary text-[#606170] mt-1">
                               {format(new Date(party.signed_at), "MMM d, yyyy HH:mm")}
                             </p>
                           )}
@@ -235,7 +235,7 @@ export function ContractViewClient({ contract }: ContractViewClientProps) {
                       )}
                     </div>
                   ) : (
-                    <Badge className="bg-slate-100 text-slate-700 border-0">
+                    <Badge className="bg-[#EDEDED] font-primary text-[#606170] border-0">
                       <Clock className="h-3 w-3 mr-1" />
                       {t("contracts.pending")}
                     </Badge>
@@ -261,7 +261,7 @@ export function ContractViewClient({ contract }: ContractViewClientProps) {
       {/* Contract Details */}
       <Card className="border-none shadow-lg bg-white relative overflow-hidden">
         <CardHeader>
-          <CardTitle className="text-sm font-medium text-slate-700">
+          <CardTitle className="text-sm font-medium font-primary text-[#606170]">
             {t("contracts.details")}
           </CardTitle>
         </CardHeader>
@@ -269,40 +269,40 @@ export function ContractViewClient({ contract }: ContractViewClientProps) {
           <div className="grid grid-cols-2 gap-4">
             {contract.effective_date && (
               <div>
-                <p className="text-sm text-slate-500 mb-1">
+                <p className="text-sm font-primary text-[#606170] mb-1">
                   {t("contracts.effectiveDate")}
                 </p>
-                <p className="font-medium text-slate-900">
+                <p className="font-medium font-primary text-[#02041D]">
                   {format(new Date(contract.effective_date), "MMM d, yyyy")}
                 </p>
               </div>
             )}
             {contract.expiry_date && (
               <div>
-                <p className="text-sm text-slate-500 mb-1">
+                <p className="text-sm font-primary text-[#606170] mb-1">
                   {t("contracts.expiryDate")}
                 </p>
-                <p className="font-medium text-slate-900">
+                <p className="font-medium font-primary text-[#02041D]">
                   {format(new Date(contract.expiry_date), "MMM d, yyyy")}
                 </p>
               </div>
             )}
             {contract.fully_signed_at && (
               <div>
-                <p className="text-sm text-slate-500 mb-1">
+                <p className="text-sm font-primary text-[#606170] mb-1">
                   {t("contracts.fullySignedAt")}
                 </p>
-                <p className="font-medium text-slate-900">
+                <p className="font-medium font-primary text-[#02041D]">
                   {format(new Date(contract.fully_signed_at), "MMM d, yyyy")}
                 </p>
               </div>
             )}
             {contract.view_count !== undefined && (
               <div>
-                <p className="text-sm text-slate-500 mb-1">
+                <p className="text-sm font-primary text-[#606170] mb-1">
                   {t("contracts.viewCount")}
                 </p>
-                <p className="font-medium text-slate-900">
+                <p className="font-medium font-primary text-[#02041D]">
                   {contract.view_count}
                 </p>
               </div>
@@ -313,7 +313,7 @@ export function ContractViewClient({ contract }: ContractViewClientProps) {
 
       {/* Actions */}
       {canSend && (
-        <Card className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+        <Card className="border-[#EDEDED] dark:border-slate-800 bg-white dark:bg-slate-900">
           <CardContent className="pt-6">
             <Button
               onClick={handleSend}
@@ -339,10 +339,10 @@ export function ContractViewClient({ contract }: ContractViewClientProps) {
       }}>
         <DialogContent className="sm:max-w-[600px] bg-white">
           <DialogHeader>
-            <DialogTitle className="text-xl font-semibold text-slate-900">
+            <DialogTitle className="text-xl font-semibold font-primary text-[#02041D]">
               {t("contracts.signContract")}
             </DialogTitle>
-            <DialogDescription className="text-slate-600">
+            <DialogDescription className="font-primary text-[#606170]">
               {t("contracts.signContractDescription")}
             </DialogDescription>
           </DialogHeader>
@@ -350,14 +350,14 @@ export function ContractViewClient({ contract }: ContractViewClientProps) {
           <div className="space-y-6 py-4">
             {/* Name Field */}
             <div className="space-y-2">
-              <Label htmlFor="signerName" className="text-sm font-medium text-slate-700">
+              <Label htmlFor="signerName" className="text-sm font-medium font-primary text-[#606170]">
                 {t("contracts.enterYourName")}
               </Label>
               <Input
                 id="signerName"
                 value={signerName}
                 onChange={(e) => setSignerName(e.target.value)}
-                className="w-full bg-white border-slate-300 text-slate-900 focus:ring-2 focus:ring-emerald-500"
+                className="w-full bg-white border-[#EDEDED] font-primary text-[#02041D] focus:ring-2 focus:ring-emerald-500"
                 placeholder="Masukkan nama lengkap"
                 required
               />
@@ -365,7 +365,7 @@ export function ContractViewClient({ contract }: ContractViewClientProps) {
 
             {/* Email Field */}
             <div className="space-y-2">
-              <Label htmlFor="signerEmail" className="text-sm font-medium text-slate-700">
+              <Label htmlFor="signerEmail" className="text-sm font-medium font-primary text-[#606170]">
                 {t("contracts.enterYourEmail")}
               </Label>
               <Input
@@ -373,7 +373,7 @@ export function ContractViewClient({ contract }: ContractViewClientProps) {
                 type="email"
                 value={signerEmail}
                 onChange={(e) => setSignerEmail(e.target.value)}
-                className="w-full bg-white border-slate-300 text-slate-900 focus:ring-2 focus:ring-emerald-500"
+                className="w-full bg-white border-[#EDEDED] font-primary text-[#02041D] focus:ring-2 focus:ring-emerald-500"
                 placeholder="Masukkan email"
                 required
               />
@@ -381,11 +381,11 @@ export function ContractViewClient({ contract }: ContractViewClientProps) {
 
             {/* Signature Canvas */}
             <div className="space-y-2">
-              <Label className="text-sm font-medium text-slate-700">
+              <Label className="text-sm font-medium font-primary text-[#606170]">
                 {t("contracts.signHere")}
               </Label>
-              <div className="border-2 border-dashed border-slate-300 rounded-lg p-2 bg-slate-50">
-                <div className="bg-white rounded-md overflow-hidden border border-slate-200">
+              <div className="border-2 border-dashed border-[#EDEDED] rounded-lg p-2 bg-[#EDEDED]">
+                <div className="bg-white rounded-md overflow-hidden border border-[#EDEDED]">
                   <SignatureCanvas
                     ref={sigCanvas}
                     penColor='#1e293b'
@@ -404,7 +404,7 @@ export function ContractViewClient({ contract }: ContractViewClientProps) {
                   variant="outline" 
                   size="sm"
                   onClick={clearSignature} 
-                  className="text-slate-600 border-slate-300 hover:bg-slate-100"
+                  className="font-primary text-[#606170] border-[#EDEDED] hover:bg-[#EDEDED]"
                 >
                   {t("contracts.clearSignature")}
                 </Button>
@@ -422,7 +422,7 @@ export function ContractViewClient({ contract }: ContractViewClientProps) {
                 setSignerName("");
                 setSignerEmail("");
               }} 
-              className="text-slate-700 border-slate-300 hover:bg-slate-100"
+              className="font-primary text-[#606170] border-[#EDEDED] hover:bg-[#EDEDED]"
             >
               {t("contracts.cancel")}
             </Button>
@@ -453,7 +453,7 @@ export function ContractViewClient({ contract }: ContractViewClientProps) {
           <CardContent className="pt-6">
             <Button
               asChild
-              className="w-full bg-gradient-to-r from-[#0731c2] to-[#010119] hover:from-[#0525a0] hover:to-[#000000] text-white shadow-lg shadow-[#0731c2]/20"
+              className="w-full bg-gradient-to-r from-[#0A33C6] to-[#0A33C6] hover:from-[#0A33C6]/90 hover:to-[#000000] text-white shadow-lg shadow-[#0731c2]/20"
             >
               <Link href={`/proposal/${contract.proposal.public_url || contract.proposal.id}`}>
                 <Eye className="h-4 w-4 mr-2" />

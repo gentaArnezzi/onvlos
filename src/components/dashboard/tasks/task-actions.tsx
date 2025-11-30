@@ -39,12 +39,12 @@ export function TaskActions({ task, clients }: TaskActionsProps) {
         <>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-600 hover:text-slate-900">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 font-primary text-[#606170] hover:font-primary text-[#02041D]">
                         <MoreVertical className="h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="bg-white border-slate-200">
-                    <DropdownMenuItem onClick={() => setIsEditOpen(true)} className="text-slate-900 hover:bg-slate-100 cursor-pointer">
+                <DropdownMenuContent align="end" className="bg-white border-[#EDEDED]">
+                    <DropdownMenuItem onClick={() => setIsEditOpen(true)} className="font-primary text-[#02041D] hover:bg-[#EDEDED] cursor-pointer">
                         <Pencil className="mr-2 h-4 w-4" />
                         Edit
                     </DropdownMenuItem>

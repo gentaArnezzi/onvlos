@@ -38,10 +38,10 @@ export default async function InvoicesPage({
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">
+          <h2 className="text-3xl font-bold font-primary tracking-tight text-[#0A33C6]">
             {t("invoices.title", language)}
           </h2>
-          <p className="text-slate-600 mt-1">
+          <p className="font-primary text-[#606170] mt-1">
             {t("invoices.description", language)}
           </p>
         </div>
@@ -55,18 +55,18 @@ export default async function InvoicesPage({
             <CreditCard className="h-16 w-16" />
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-700">
+            <CardTitle className="text-sm font-medium font-primary text-[#606170]">
               {t("stats.totalRevenue", language)}
             </CardTitle>
-            <div className="p-2 rounded-lg bg-emerald-100 text-emerald-600">
+            <div className="p-2 rounded-lg bg-[#EDEDED] text-[#0A33C6]">
               <CreditCard className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900">
+            <div className="text-2xl font-bold font-primary text-[#02041D]">
               {defaultCurrencySymbol}{totalRevenue.toLocaleString()}
             </div>
-            <p className="text-xs text-slate-600 mt-1">
+            <p className="text-xs font-primary text-[#606170] mt-1">
               {t("stats.allTimeInvoiced", language)}
             </p>
           </CardContent>
@@ -77,18 +77,18 @@ export default async function InvoicesPage({
             <CheckCircle className="h-16 w-16" />
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-700">
+            <CardTitle className="text-sm font-medium font-primary text-[#606170]">
               {t("stats.paid", language)}
             </CardTitle>
-            <div className="p-2 rounded-lg bg-blue-100 text-blue-600">
+            <div className="p-2 rounded-lg bg-[#EDEDED] text-[#0A33C6]">
               <CheckCircle className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900">
+            <div className="text-2xl font-bold font-primary text-[#02041D]">
               {defaultCurrencySymbol}{paidAmount.toLocaleString()}
             </div>
-            <p className="text-xs text-slate-600 mt-1">
+            <p className="text-xs font-primary text-[#606170] mt-1">
               {paidInvoices.length} {t("stats.invoicesPaid", language)}
             </p>
           </CardContent>
@@ -99,18 +99,18 @@ export default async function InvoicesPage({
             <Clock className="h-16 w-16" />
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-700">
+            <CardTitle className="text-sm font-medium font-primary text-[#606170]">
               {t("stats.pending", language)}
             </CardTitle>
-            <div className="p-2 rounded-lg bg-orange-100 text-orange-600">
+            <div className="p-2 rounded-lg bg-[#EDEDED] text-[#0A33C6]">
               <Clock className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900">
+            <div className="text-2xl font-bold font-primary text-[#02041D]">
               {defaultCurrencySymbol}{pendingAmount.toLocaleString()}
             </div>
-            <p className="text-xs text-slate-600 mt-1">
+            <p className="text-xs font-primary text-[#606170] mt-1">
               {pendingInvoices.length} {t("stats.invoicesPending", language)}
             </p>
           </CardContent>
@@ -120,7 +120,7 @@ export default async function InvoicesPage({
       {/* Main Content */}
       <Card className="border-none shadow-lg bg-white">
         <CardHeader>
-          <CardTitle className="text-slate-900">{t("stats.invoiceHistory", language)}</CardTitle>
+          <CardTitle className="font-primary text-[#02041D]">{t("stats.invoiceHistory", language)}</CardTitle>
         </CardHeader>
         <CardContent>
           <InvoicesList initialInvoices={invoices} clients={clients} totalPages={totalPages} currentPage={page} />

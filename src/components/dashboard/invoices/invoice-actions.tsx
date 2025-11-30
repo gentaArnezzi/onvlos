@@ -73,34 +73,34 @@ export function InvoiceActions({ invoice }: InvoiceActionsProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon" className="text-slate-600 hover:text-slate-900 border-slate-200">
+        <Button variant="outline" size="icon" className="font-primary text-[#606170] hover:font-primary text-[#02041D] border-[#EDEDED]">
           <MoreVertical className="h-5 w-5" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="bg-white border-slate-200 text-slate-900">
+      <DropdownMenuContent align="end" className="bg-white border-[#EDEDED] font-primary text-[#02041D]">
         {invoice.status === 'draft' && (
-          <DropdownMenuItem onClick={() => router.push(`/dashboard/invoices/${invoice.id}/edit`)} className="text-slate-900 hover:bg-slate-100">
+          <DropdownMenuItem onClick={() => router.push(`/dashboard/invoices/${invoice.id}/edit`)} className="font-primary text-[#02041D] hover:bg-[#EDEDED]">
             <Edit className="mr-2 h-4 w-4" />
             Edit
           </DropdownMenuItem>
         )}
         {invoice.status !== 'paid' && invoice.status !== 'archived' && invoice.status !== 'sent' && (
-          <DropdownMenuItem onClick={handleSend} className="text-slate-900 hover:bg-slate-100">
+          <DropdownMenuItem onClick={handleSend} className="font-primary text-[#02041D] hover:bg-[#EDEDED]">
             <Send className="mr-2 h-4 w-4" />
             Send
           </DropdownMenuItem>
         )}
         {invoice.status !== 'paid' && invoice.status !== 'archived' && (
-          <DropdownMenuItem onClick={handleMarkPaid} className="text-slate-900 hover:bg-slate-100">
+          <DropdownMenuItem onClick={handleMarkPaid} className="font-primary text-[#02041D] hover:bg-[#EDEDED]">
             <CheckCircle className="mr-2 h-4 w-4" />
             Mark as Paid
           </DropdownMenuItem>
         )}
-        <DropdownMenuItem onClick={handleDownload} className="text-slate-900 hover:bg-slate-100">
+        <DropdownMenuItem onClick={handleDownload} className="font-primary text-[#02041D] hover:bg-[#EDEDED]">
           <Download className="mr-2 h-4 w-4" />
           Download PDF
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleDuplicate} className="text-slate-900 hover:bg-slate-100">
+        <DropdownMenuItem onClick={handleDuplicate} className="font-primary text-[#02041D] hover:bg-[#EDEDED]">
           <Copy className="mr-2 h-4 w-4" />
           Duplicate
         </DropdownMenuItem>

@@ -104,11 +104,11 @@ export function BookingLinkDialog() {
           New Booking Link
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-white border-slate-200">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-white border-[#EDEDED]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle className="text-slate-900">Create Booking Link</DialogTitle>
-            <DialogDescription className="text-slate-600">
+            <DialogTitle className="font-primary text-[#02041D]">Create Booking Link</DialogTitle>
+            <DialogDescription className="font-primary text-[#606170]">
               Create a booking link that clients can use to schedule time with you
             </DialogDescription>
           </DialogHeader>
@@ -117,45 +117,45 @@ export function BookingLinkDialog() {
             {/* Basic Info */}
             <div className="space-y-4">
               <div className="grid gap-2">
-                <Label htmlFor="title" className="text-slate-900">Event Title *</Label>
+                <Label htmlFor="title" className="font-primary text-[#02041D]">Event Title *</Label>
                 <Input
                   id="title"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   placeholder="e.g., 30 Minute Consultation"
                   required
-                  className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
+                  className="bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]"
                 />
               </div>
               
               <div className="grid gap-2">
-                <Label htmlFor="description" className="text-slate-900">Description</Label>
+                <Label htmlFor="description" className="font-primary text-[#02041D]">Description</Label>
                 <Textarea
                   id="description"
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="Brief description of what this meeting is about"
                   rows={3}
-                  className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
+                  className="bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]"
                 />
               </div>
             </div>
 
             {/* Duration Settings */}
-            <div className="space-y-4 border-t border-slate-200 pt-4">
-              <h3 className="font-medium flex items-center gap-2 text-slate-900">
+            <div className="space-y-4 border-t border-[#EDEDED] pt-4">
+              <h3 className="font-medium flex items-center gap-2 font-primary text-[#02041D]">
                 <Clock className="h-4 w-4" />
                 Duration Settings
               </h3>
               
               <div className="grid grid-cols-2 gap-4">
                 <div className="grid gap-2">
-                  <Label htmlFor="duration" className="text-slate-900">Duration (minutes) *</Label>
+                  <Label htmlFor="duration" className="font-primary text-[#02041D]">Duration (minutes) *</Label>
                   <Select
                     value={String(formData.duration_minutes)}
                     onValueChange={(value) => setFormData({ ...formData, duration_minutes: parseInt(value) })}
                   >
-                    <SelectTrigger className="bg-white border-slate-200 text-slate-900">
+                    <SelectTrigger className="bg-white border-[#EDEDED] font-primary text-[#02041D]">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -170,12 +170,12 @@ export function BookingLinkDialog() {
                 </div>
                 
                 <div className="grid gap-2">
-                  <Label htmlFor="buffer" className="text-slate-900">Buffer Time (minutes)</Label>
+                  <Label htmlFor="buffer" className="font-primary text-[#02041D]">Buffer Time (minutes)</Label>
                   <Select
                     value={String(formData.buffer_minutes)}
                     onValueChange={(value) => setFormData({ ...formData, buffer_minutes: parseInt(value) })}
                   >
-                    <SelectTrigger className="bg-white border-slate-200 text-slate-900">
+                    <SelectTrigger className="bg-white border-[#EDEDED] font-primary text-[#02041D]">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -191,19 +191,19 @@ export function BookingLinkDialog() {
             </div>
 
             {/* Location Settings */}
-            <div className="space-y-4 border-t border-slate-200 pt-4">
-              <h3 className="font-medium flex items-center gap-2 text-slate-900">
+            <div className="space-y-4 border-t border-[#EDEDED] pt-4">
+              <h3 className="font-medium flex items-center gap-2 font-primary text-[#02041D]">
                 <MapPin className="h-4 w-4" />
                 Location
               </h3>
               
               <div className="grid gap-2">
-                <Label htmlFor="location_type" className="text-slate-900">Meeting Location *</Label>
+                <Label htmlFor="location_type" className="font-primary text-[#02041D]">Meeting Location *</Label>
                 <Select
                   value={formData.location_type}
                   onValueChange={(value) => setFormData({ ...formData, location_type: value })}
                 >
-                  <SelectTrigger className="bg-white border-slate-200 text-slate-900">
+                  <SelectTrigger className="bg-white border-[#EDEDED] font-primary text-[#02041D]">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -218,33 +218,33 @@ export function BookingLinkDialog() {
               
               {formData.location_type === 'custom' && (
                 <div className="grid gap-2">
-                  <Label htmlFor="location_details" className="text-slate-900">Location Details</Label>
+                  <Label htmlFor="location_details" className="font-primary text-[#02041D]">Location Details</Label>
                   <Input
                     id="location_details"
                     value={formData.location_details}
                     onChange={(e) => setFormData({ ...formData, location_details: e.target.value })}
                     placeholder="Enter meeting location or link"
-                    className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
+                    className="bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]"
                   />
                 </div>
               )}
             </div>
 
             {/* Availability */}
-            <div className="space-y-4 border-t border-slate-200 pt-4">
-              <h3 className="font-medium text-slate-900">Availability</h3>
+            <div className="space-y-4 border-t border-[#EDEDED] pt-4">
+              <h3 className="font-medium font-primary text-[#02041D]">Availability</h3>
               <div className="space-y-2">
                 {Object.entries(formData.availability.schedule).map(([day, schedule]) => (
-                  <div key={day} className="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50">
+                  <div key={day} className="flex items-center justify-between p-2 rounded-lg hover:bg-[#EDEDED]">
                     <div className="flex items-center gap-3">
                       <Switch
                         checked={schedule.enabled}
                         onCheckedChange={() => toggleDay(day)}
                       />
-                      <span className="capitalize font-medium text-slate-900">{day}</span>
+                      <span className="capitalize font-medium font-primary text-[#02041D]">{day}</span>
                     </div>
                     {schedule.enabled && (
-                      <span className="text-sm text-slate-600">
+                      <span className="text-sm font-primary text-[#606170]">
                         {schedule.slots[0]?.start} - {schedule.slots[0]?.end}
                       </span>
                     )}
@@ -259,7 +259,7 @@ export function BookingLinkDialog() {
               type="button" 
               variant="outline" 
               onClick={() => setOpen(false)}
-              className="border-slate-200 text-slate-900 hover:bg-slate-50"
+              className="border-[#EDEDED] font-primary text-[#02041D] hover:bg-[#EDEDED]"
             >
               Cancel
             </Button>

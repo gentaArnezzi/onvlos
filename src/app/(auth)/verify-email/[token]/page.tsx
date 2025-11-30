@@ -55,34 +55,34 @@ export default function VerifyEmailPage() {
     }, [token, router]);
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-[#ededed] to-blue-50 relative overflow-hidden">
-            <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
+        <div className="min-h-screen flex items-center justify-center bg-[#EDEDED] relative overflow-hidden">
+            <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-10 -z-10" />
             
-            <Card className="w-full max-w-md border-none shadow-2xl bg-white/95 backdrop-blur-sm">
+            <Card className="w-full max-w-md border-[#EDEDED] shadow-2xl bg-white/80 backdrop-blur-sm">
                 <CardHeader className="space-y-1 text-center">
-                    <CardTitle className="text-2xl font-bold text-slate-900">Email Verification</CardTitle>
-                    <CardDescription className="text-slate-600">
+                    <CardTitle className="text-2xl font-bold font-primary text-[#02041D]">Email Verification</CardTitle>
+                    <CardDescription className="font-primary text-[#606170]">
                         {loading ? "Verifying your email..." : verified ? "Email verified!" : "Verification failed"}
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
                     {loading ? (
                         <div className="space-y-4 text-center py-8">
-                            <Loader2 className="h-12 w-12 animate-spin text-blue-600 mx-auto" />
-                            <p className="text-sm text-slate-600">Please wait while we verify your email...</p>
+                            <Loader2 className="h-12 w-12 animate-spin text-[#0A33C6] mx-auto" />
+                            <p className="text-sm font-primary text-[#606170]">Please wait while we verify your email...</p>
                         </div>
                     ) : verified ? (
                         <div className="space-y-4 text-center py-4">
                             <div className="mx-auto w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center">
                                 <CheckCircle className="w-8 h-8 text-emerald-600" />
                             </div>
-                            <h3 className="text-lg font-semibold text-slate-900">Email Verified!</h3>
-                            <p className="text-sm text-slate-600">
+                            <h3 className="text-lg font-semibold font-primary text-[#02041D]">Email Verified!</h3>
+                            <p className="text-sm font-primary text-[#606170]">
                                 Your email has been successfully verified. Redirecting to dashboard...
                             </p>
                             <Button
                                 onClick={() => router.push("/dashboard")}
-                                className="w-full mt-4 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white"
+                                className="w-full mt-4 bg-[#0A33C6] hover:bg-[#0A33C6]/90 text-white font-primary font-bold"
                             >
                                 Go to Dashboard
                             </Button>
@@ -92,18 +92,18 @@ export default function VerifyEmailPage() {
                             <div className="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
                                 <XCircle className="w-8 h-8 text-red-600" />
                             </div>
-                            <h3 className="text-lg font-semibold text-slate-900">Verification Failed</h3>
-                            <p className="text-sm text-slate-600">
+                            <h3 className="text-lg font-semibold font-primary text-[#02041D]">Verification Failed</h3>
+                            <p className="text-sm font-primary text-[#606170]">
                                 {error || "The verification link is invalid or has expired."}
                             </p>
                             <div className="space-y-2">
                                 <Button
                                     onClick={() => router.push("/login")}
-                                    className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white"
+                                    className="w-full bg-[#0A33C6] hover:bg-[#0A33C6]/90 text-white font-primary font-bold"
                                 >
                                     Go to Login
                                 </Button>
-                                <Link href="/signup" className="block text-sm text-blue-600 hover:text-blue-700">
+                                <Link href="/signup" className="block text-sm font-primary text-[#0A33C6] hover:text-[#0A33C6]/80">
                                     Sign up again
                                 </Link>
                             </div>

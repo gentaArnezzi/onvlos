@@ -176,8 +176,8 @@ export function OnboardingWizard({ steps }: OnboardingWizardProps) {
           <div className="h-16 w-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle2 className="h-8 w-8 text-green-600" />
           </div>
-          <h3 className="text-2xl font-bold text-slate-900 mb-2">Onboarding Complete!</h3>
-          <p className="text-slate-600 mb-6">
+          <h3 className="text-2xl font-bold font-primary text-[#02041D] mb-2">Onboarding Complete!</h3>
+          <p className="font-primary text-[#606170] mb-6">
             Thank you for completing the onboarding process. You will receive an email with your portal access shortly.
           </p>
           <Button asChild>
@@ -192,7 +192,7 @@ export function OnboardingWizard({ steps }: OnboardingWizardProps) {
     return (
       <Card>
         <CardContent className="p-6 text-center">
-          <p className="text-slate-600">No steps configured for this funnel.</p>
+          <p className="font-primary text-[#606170]">No steps configured for this funnel.</p>
         </CardContent>
       </Card>
     );
@@ -215,7 +215,7 @@ export function OnboardingWizard({ steps }: OnboardingWizardProps) {
               <div className={cn(
                 "flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all",
                 isCompleted ? "bg-green-600 border-green-600 text-white" : 
-                isCurrent ? "border-primary bg-primary/10 text-primary" : "border-slate-200 text-slate-600"
+                isCurrent ? "border-primary bg-primary/10 text-primary" : "border-[#EDEDED] font-primary text-[#606170]"
               )}>
                 {isCompleted ? <CheckCircle2 className="h-5 w-5" /> : <Icon className="h-5 w-5" />}
               </div>
@@ -298,7 +298,7 @@ export function OnboardingWizard({ steps }: OnboardingWizardProps) {
           {/* Contract Step */}
           {currentStep.step_type === 'contract' && (
             <div className="space-y-4">
-              <div className="bg-slate-50 rounded-lg p-6 max-h-[300px] overflow-y-auto prose prose-sm">
+              <div className="bg-[#EDEDED] rounded-lg p-6 max-h-[300px] overflow-y-auto prose prose-sm">
                 {config.content ? (
                   <div dangerouslySetInnerHTML={{ __html: config.content.replace(/\n/g, '<br/>') }} />
                 ) : (
@@ -352,7 +352,7 @@ export function OnboardingWizard({ steps }: OnboardingWizardProps) {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="signature">Sign Here *</Label>
-                      <div className="border border-slate-300 dark:border-slate-700 rounded-md">
+                      <div className="border border-[#EDEDED] dark:border-slate-700 rounded-md">
                         <SignatureCanvas
                           ref={sigCanvas}
                           penColor='black'
@@ -378,27 +378,27 @@ export function OnboardingWizard({ steps }: OnboardingWizardProps) {
           {/* Invoice Step */}
           {currentStep.step_type === 'invoice' && (
             <div className="space-y-6">
-              <div className="bg-slate-50 rounded-lg p-6 text-center">
-                <p className="text-sm text-slate-600 mb-2">Amount Due</p>
-                <p className="text-4xl font-bold text-slate-900">
+              <div className="bg-[#EDEDED] rounded-lg p-6 text-center">
+                <p className="text-sm font-primary text-[#606170] mb-2">Amount Due</p>
+                <p className="text-4xl font-bold font-primary text-[#02041D]">
                   {config.currency || '$'}{(config.amount || 5000).toLocaleString()}
                 </p>
               </div>
-              <div className="border border-slate-200 rounded-lg divide-y divide-slate-200">
+              <div className="border border-[#EDEDED] rounded-lg divide-y divide-slate-200">
                 <div className="p-4 flex justify-between">
-                  <span className="text-slate-600">Service Package</span>
-                  <span className="font-medium text-slate-900">{config.currency || '$'}{(config.amount || 5000).toLocaleString()}</span>
+                  <span className="font-primary text-[#606170]">Service Package</span>
+                  <span className="font-medium font-primary text-[#02041D]">{config.currency || '$'}{(config.amount || 5000).toLocaleString()}</span>
                 </div>
                 <div className="p-4 flex justify-between">
-                  <span className="text-slate-600">Tax</span>
-                  <span className="font-medium text-slate-900">$0</span>
+                  <span className="font-primary text-[#606170]">Tax</span>
+                  <span className="font-medium font-primary text-[#02041D]">$0</span>
                 </div>
-                <div className="p-4 flex justify-between bg-slate-50">
-                  <span className="font-semibold text-slate-900">Total</span>
-                  <span className="font-bold text-slate-900">{config.currency || '$'}{(config.amount || 5000).toLocaleString()}</span>
+                <div className="p-4 flex justify-between bg-[#EDEDED]">
+                  <span className="font-semibold font-primary text-[#02041D]">Total</span>
+                  <span className="font-bold font-primary text-[#02041D]">{config.currency || '$'}{(config.amount || 5000).toLocaleString()}</span>
                 </div>
               </div>
-              <p className="text-sm text-slate-600 text-center">
+              <p className="text-sm font-primary text-[#606170] text-center">
                 Click "Pay Now" to proceed to secure payment
               </p>
             </div>
@@ -410,8 +410,8 @@ export function OnboardingWizard({ steps }: OnboardingWizardProps) {
               <div className="animate-pulse mb-4">
                 <Zap className="h-12 w-12 text-yellow-500" />
               </div>
-              <h3 className="text-lg font-semibold text-slate-900 mb-2">Setting Up Your Account</h3>
-              <p className="text-slate-600 text-center max-w-md">
+              <h3 className="text-lg font-semibold font-primary text-[#02041D] mb-2">Setting Up Your Account</h3>
+              <p className="font-primary text-[#606170] text-center max-w-md">
                 We're creating your client portal, setting up your workspace, and preparing everything for you.
               </p>
             </div>

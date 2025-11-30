@@ -21,13 +21,13 @@ const features = [
     icon: Users,
     title: "Client Management",
     description: "Organize all your clients in one place with detailed profiles and interaction history.",
-    gradient: "from-blue-500 to-cyan-500",
+    gradient: "bg-[#EDEDED]0 to-cyan-500",
   },
   {
     icon: FileText,
     title: "Proposals & Contracts",
     description: "Create beautiful proposals and get them signed electronically in minutes.",
-    gradient: "from-[#0731c2] to-[#010119]",
+    gradient: "from-[#0A33C6] to-[#0A33C6]",
   },
   {
     icon: Calendar,
@@ -45,7 +45,7 @@ const features = [
     icon: MessageSquare,
     title: "Real-time Chat",
     description: "Communicate with clients instantly through integrated messaging.",
-    gradient: "from-[#0731c2] to-[#010119]",
+    gradient: "from-[#0A33C6] to-[#0A33C6]",
   },
   {
     icon: CreditCard,
@@ -57,7 +57,7 @@ const features = [
 
 export function FeaturesSection() {
   return (
-    <section className="py-20 lg:py-32 relative">
+    <section className="py-20 lg:py-32 relative bg-[#EDEDED]">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <motion.div
@@ -67,16 +67,16 @@ export function FeaturesSection() {
           viewport={{ once: true }}
           className="text-center max-w-3xl mx-auto mb-16"
         >
-          <span className="inline-block px-4 py-1 mb-6 text-sm font-medium bg-blue-100 text-[#0731c2] rounded-full">
+          <span className="inline-block px-4 py-1 mb-6 text-sm font-medium font-primary bg-white/80 backdrop-blur-sm border border-[#EDEDED] text-[#0A33C6] rounded-full">
             Features
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+          <h2 className="text-4xl md:text-5xl font-bold font-primary text-[#02041D] mb-6">
             Everything you need to
-            <span className="block bg-clip-text text-transparent bg-gradient-to-r from-[#0731c2] to-[#010119]">
+            <span className="block text-[#0A33C6]">
               run your agency
             </span>
           </h2>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl font-primary text-[#606170]">
             Powerful features designed to streamline your workflow and delight your clients
           </p>
         </motion.div>
@@ -92,20 +92,17 @@ export function FeaturesSection() {
               viewport={{ once: true }}
               className="group relative"
             >
-              <div className="relative h-full bg-white rounded-2xl p-8 shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow">
-                {/* Gradient Background */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-5 transition-opacity`} />
-                
+              <div className="relative h-full bg-white rounded-2xl p-8 shadow-lg border border-[#EDEDED] overflow-hidden hover:shadow-xl transition-shadow">
                 {/* Icon */}
-                <div className={`inline-flex p-3 rounded-lg bg-gradient-to-br ${feature.gradient} mb-4`}>
+                <div className="inline-flex p-3 rounded-lg bg-[#0A33C6] mb-4">
                   <feature.icon className="w-6 h-6 text-white" />
                 </div>
 
                 {/* Content */}
-                <h3 className="text-xl font-semibold mb-3 text-gray-900">
+                <h3 className="text-xl font-semibold font-primary mb-3 text-[#02041D]">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600">
+                <p className="font-primary text-[#606170]">
                   {feature.description}
                 </p>
 
@@ -128,35 +125,35 @@ export function FeaturesSection() {
             <div className="inline-flex p-3 rounded-lg bg-gradient-to-br from-green-500 to-emerald-500 mb-4">
               <Shield className="w-6 h-6 text-white" />
             </div>
-            <h4 className="font-semibold text-gray-900">Bank-level Security</h4>
-            <p className="text-sm text-gray-600 mt-2">
+            <h4 className="font-semibold font-primary text-[#02041D]">Bank-level Security</h4>
+            <p className="text-sm font-primary text-[#606170] mt-2">
               256-bit SSL encryption
             </p>
           </div>
           <div>
-            <div className="inline-flex p-3 rounded-lg bg-gradient-to-br from-[#0731c2] to-[#010119] mb-4">
+            <div className="inline-flex p-3 rounded-lg bg-[#0A33C6] mb-4">
               <Globe className="w-6 h-6 text-white" />
             </div>
-            <h4 className="font-semibold text-gray-900">Global CDN</h4>
-            <p className="text-sm text-gray-600 mt-2">
+            <h4 className="font-semibold font-primary text-[#02041D]">Global CDN</h4>
+            <p className="text-sm font-primary text-[#606170] mt-2">
               Lightning fast worldwide
             </p>
           </div>
           <div>
-            <div className="inline-flex p-3 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 mb-4">
+            <div className="inline-flex p-3 rounded-lg bg-[#0A33C6] mb-4">
               <Bell className="w-6 h-6 text-white" />
             </div>
-            <h4 className="font-semibold text-gray-900">Smart Notifications</h4>
-            <p className="text-sm text-gray-600 mt-2">
+            <h4 className="font-semibold font-primary text-[#02041D]">Smart Notifications</h4>
+            <p className="text-sm font-primary text-[#606170] mt-2">
               Never miss an update
             </p>
           </div>
           <div>
-            <div className="inline-flex p-3 rounded-lg bg-gradient-to-br from-orange-500 to-red-500 mb-4">
+            <div className="inline-flex p-3 rounded-lg bg-[#0A33C6] mb-4">
               <Rocket className="w-6 h-6 text-white" />
             </div>
-            <h4 className="font-semibold text-gray-900">API Access</h4>
-            <p className="text-sm text-gray-600 mt-2">
+            <h4 className="font-semibold font-primary text-[#02041D]">API Access</h4>
+            <p className="text-sm font-primary text-[#606170] mt-2">
               Integrate with anything
             </p>
           </div>

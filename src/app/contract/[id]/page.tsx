@@ -50,10 +50,10 @@ export default async function ContractPage({
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-[#0731c2] to-[#010119] bg-clip-text text-transparent">
+            <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-[#0A33C6] to-[#0A33C6] bg-clip-text text-transparent">
               {contract.title}
             </h2>
-            <p className="text-slate-600 mt-1">
+            <p className="font-primary text-[#606170] mt-1">
               {contract.contract_number}
             </p>
           </div>
@@ -83,7 +83,7 @@ export default async function ContractPage({
               </Badge>
             )}
             {contract.status === "draft" && (
-              <Badge className="bg-slate-100 text-slate-700 border-0">
+              <Badge className="bg-[#EDEDED] font-primary text-[#606170] border-0">
                 <FileText className="h-3 w-3 mr-1" />
                 {t("contracts.status.draft", language)}
               </Badge>
@@ -109,11 +109,11 @@ export default async function ContractPage({
                   <p className="text-sm text-slate-500">
                     {t("contracts.client", language)}
                   </p>
-                  <p className="font-semibold text-slate-900">
+                  <p className="font-semibold font-primary text-[#02041D]">
                     {client.company_name || client.name}
                   </p>
                   {client.email && (
-                    <p className="text-sm text-slate-600">
+                    <p className="text-sm font-primary text-[#606170]">
                       {client.email}
                     </p>
                   )}

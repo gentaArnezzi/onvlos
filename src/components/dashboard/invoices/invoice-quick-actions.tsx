@@ -44,7 +44,7 @@ export function InvoiceQuickActions({ invoice }: InvoiceQuickActionsProps) {
 
   const handleDownload = () => {
     // TODO: Implement PDF download
-    window.open(`/api/invoices/${invoiceId}/pdf`, "_blank");
+    window.open(`/api/invoices/${invoice.id}/pdf`, "_blank");
   };
 
   return (
@@ -52,13 +52,13 @@ export function InvoiceQuickActions({ invoice }: InvoiceQuickActionsProps) {
       {/* Quick Actions */}
       <Card className="border-none shadow-lg bg-white">
         <CardHeader>
-          <CardTitle className="text-slate-900">Quick Actions</CardTitle>
+          <CardTitle className="font-primary text-[#02041D]">Quick Actions</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           {invoice.status === 'draft' && (
             <Button 
               onClick={handleSend}
-              className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white"
+              className="w-full bg-[#0A33C6] hover:bg-[#0A33C6]/90 text-white"
             >
               <Send className="mr-2 h-4 w-4" />
               Send Invoice
@@ -68,7 +68,7 @@ export function InvoiceQuickActions({ invoice }: InvoiceQuickActionsProps) {
             <Button 
               onClick={handleMarkPaid}
               variant="outline"
-              className="w-full border-slate-200 text-slate-900 bg-white hover:bg-slate-50"
+              className="w-full border-[#EDEDED] font-primary text-[#02041D] bg-white hover:bg-[#EDEDED]"
             >
               <CheckCircle className="mr-2 h-4 w-4" />
               Mark as Paid
@@ -77,7 +77,7 @@ export function InvoiceQuickActions({ invoice }: InvoiceQuickActionsProps) {
           <Button 
             onClick={handleDownload}
             variant="outline"
-            className="w-full border-slate-200 text-slate-900 bg-white hover:bg-slate-50"
+            className="w-full border-[#EDEDED] font-primary text-[#02041D] bg-white hover:bg-[#EDEDED]"
           >
             <Download className="mr-2 h-4 w-4" />
             Download PDF
@@ -89,11 +89,11 @@ export function InvoiceQuickActions({ invoice }: InvoiceQuickActionsProps) {
       {(invoice.status === 'sent' || invoice.status === 'overdue') && invoice.client?.id && (
         <Card className="border-none shadow-lg bg-white">
           <CardHeader>
-            <CardTitle className="text-slate-900">Payment</CardTitle>
+            <CardTitle className="font-primary text-[#02041D]">Payment</CardTitle>
           </CardHeader>
           <CardContent>
             <Link href={`/portal/${invoice.client.id}/invoices/${invoice.id}/payment`}>
-              <Button className="w-full bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-700 hover:to-teal-600 text-white">
+              <Button className="w-full bg-[#0A33C6] hover:bg-[#0A33C6]/90 text-white">
                 View Payment Page
               </Button>
             </Link>

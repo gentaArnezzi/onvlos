@@ -37,15 +37,15 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-[#ededed] to-blue-50 relative overflow-hidden">
+        <div className="min-h-screen flex items-center justify-center bg-[#EDEDED] relative overflow-hidden">
             {/* Animated Background Elements */}
             <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#0731c2]/20 rounded-full blur-3xl animate-pulse" />
-                <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#010119]/20 rounded-full blur-3xl animate-pulse delay-1000" />
+                <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#0A33C6]/10 rounded-full blur-3xl animate-pulse" />
+                <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#0A33C6]/10 rounded-full blur-3xl animate-pulse delay-1000" />
             </div>
 
             <div className="relative z-10 w-full max-w-md px-4">
-                <Card className="border-slate-200 bg-white/80 backdrop-blur-xl shadow-2xl">
+                <Card className="border-[#EDEDED] bg-white/80 backdrop-blur-xl shadow-2xl">
                     <CardHeader className="space-y-4">
                         <div className="flex justify-center mb-2">
                             <img
@@ -55,10 +55,10 @@ export default function LoginPage() {
                             />
                         </div>
                         <div className="text-center space-y-2">
-                            <CardTitle className="text-3xl font-bold text-slate-900">
+                            <CardTitle className="text-3xl font-bold font-primary text-[#02041D]">
                                 Welcome back
                             </CardTitle>
-                            <CardDescription className="text-slate-600">
+                            <CardDescription className="font-primary text-[#606170]">
                                 Enter your email to sign in to your account
                             </CardDescription>
                         </div>
@@ -71,14 +71,14 @@ export default function LoginPage() {
                                 </div>
                             )}
                             <div className="space-y-2">
-                                <Label htmlFor="email" className="text-slate-700">
+                                <Label htmlFor="email" className="font-primary text-[#02041D]">
                                     Email
                                 </Label>
                                 <Input 
                                     id="email" 
                                     type="email" 
                                     placeholder="m@example.com"
-                                    className="bg-white border-slate-300 text-slate-900 placeholder:text-slate-500 focus:border-[#0731c2] focus:ring-[#0731c2]/20"
+                                    className="bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:text-[#606170] focus:border-[#0A33C6] focus:ring-[#0A33C6]/20"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required 
@@ -86,12 +86,12 @@ export default function LoginPage() {
                             </div>
                             <div className="space-y-2">
                                 <div className="flex items-center justify-between">
-                                    <Label htmlFor="password" className="text-slate-700">
+                                    <Label htmlFor="password" className="font-primary text-[#02041D]">
                                         Password
                                     </Label>
                                     <Link 
                                         href="/forgot-password" 
-                                        className="text-sm text-[#0731c2] hover:text-[#0525a0] hover:underline transition-colors"
+                                        className="text-sm font-primary text-[#0A33C6] hover:text-[#0A33C6]/80 hover:underline transition-colors"
                                     >
                                         Forgot password?
                                     </Link>
@@ -99,7 +99,7 @@ export default function LoginPage() {
                                 <Input 
                                     id="password" 
                                     type="password"
-                                    className="bg-white border-slate-300 text-slate-900 placeholder:text-slate-500 focus:border-[#0731c2] focus:ring-[#0731c2]/20"
+                                    className="bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:text-[#606170] focus:border-[#0A33C6] focus:ring-[#0A33C6]/20"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     required 
@@ -108,18 +108,18 @@ export default function LoginPage() {
                         </CardContent>
                         <CardFooter className="flex flex-col space-y-4 pt-6">
                             <Button 
-                                className="w-full bg-gradient-to-r from-[#0731c2] to-[#010119] hover:from-[#0525a0] hover:to-[#00000f] text-white shadow-lg shadow-[#0731c2]/30 hover:shadow-xl hover:shadow-[#0731c2]/40 transition-all" 
+                                className="w-full bg-[#0A33C6] hover:bg-[#0A33C6]/90 text-white shadow-lg shadow-[#0A33C6]/30 hover:shadow-xl hover:shadow-[#0A33C6]/40 transition-all font-primary font-bold" 
                                 type="submit" 
                                 disabled={loading}
                             >
                                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                 Sign In
                             </Button>
-                            <div className="text-center text-sm text-slate-600">
+                            <div className="text-center text-sm font-primary text-[#606170]">
                                 Don't have an account?{" "}
                                 <Link 
                                     href="/signup" 
-                                    className="text-[#0731c2] hover:text-[#0525a0] hover:underline font-medium transition-colors"
+                                    className="text-[#0A33C6] hover:text-[#0A33C6]/80 hover:underline font-medium transition-colors"
                                 >
                                     Sign up
                                 </Link>

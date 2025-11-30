@@ -8,9 +8,9 @@ import { ArrowRight, Sparkles, Zap, Shield, Globe, Users, BarChart3 } from "luci
 export function HeroSection() {
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
-      {/* Animated Background Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-blue-50">
-        <div className="absolute inset-0 bg-grid-slate-100 [mask-image:radial-gradient(ellipse_at_center,white,transparent)]" />
+      {/* Animated Background */}
+      <div className="absolute inset-0 bg-[#EDEDED]">
+        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-10" />
       </div>
       
       {/* Floating Elements */}
@@ -25,7 +25,7 @@ export function HeroSection() {
             repeat: Infinity,
             ease: "easeInOut",
           }}
-          className="absolute top-20 left-10 w-64 h-64 bg-[#0731c2] rounded-full mix-blend-multiply filter blur-xl opacity-70"
+          className="absolute top-20 left-10 w-64 h-64 bg-[#0A33C6]/10 rounded-full blur-3xl"
         />
         <motion.div
           animate={{
@@ -37,19 +37,7 @@ export function HeroSection() {
             repeat: Infinity,
             ease: "easeInOut",
           }}
-          className="absolute bottom-20 right-10 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-70"
-        />
-        <motion.div
-          animate={{
-            y: [0, 30, 0],
-            x: [0, 30, 0],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute top-40 right-40 w-80 h-80 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-70"
+          className="absolute bottom-20 right-10 w-72 h-72 bg-[#0A33C6]/10 rounded-full blur-3xl"
         />
       </div>
 
@@ -62,7 +50,7 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-blue-100 text-[#0731c2] mb-6">
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium font-primary bg-white/80 backdrop-blur-sm border border-[#EDEDED] text-[#0A33C6] mb-6">
               <Sparkles className="w-4 h-4" />
               The Future of Client Management
             </span>
@@ -73,13 +61,13 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight"
+            className="text-5xl md:text-6xl lg:text-7xl font-bold font-primary tracking-tight"
           >
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#0731c2] to-[#010119]">
+            <span className="text-[#0A33C6]">
               All-in-One Platform
             </span>
             <br />
-            <span className="text-gray-900">
+            <span className="text-[#02041D]">
               for Modern Agencies
             </span>
           </motion.h1>
@@ -89,7 +77,7 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="mt-6 text-xl text-gray-600 max-w-3xl mx-auto"
+            className="mt-6 text-xl font-primary text-[#606170] max-w-3xl mx-auto"
           >
             Replace dozens of tools with one powerful platform. Manage clients, projects, 
             invoices, and team collaboration in a single, beautiful interface.
@@ -104,7 +92,7 @@ export function HeroSection() {
           >
             <Button
               size="lg"
-              className="bg-gradient-to-r from-[#0731c2] to-[#010119] hover:from-[#0525a0] hover:to-[#00000f] text-white shadow-lg shadow-[#0731c2]/25 group"
+              className="bg-[#0A33C6] hover:bg-[#0A33C6]/90 text-white shadow-lg shadow-[#0A33C6]/25 group font-primary font-bold"
               asChild
             >
               <Link href="/signup">
@@ -115,7 +103,7 @@ export function HeroSection() {
             <Button
               size="lg"
               variant="outline"
-              className="border-gray-300"
+              className="border-2 border-[#0A33C6] text-[#0A33C6] hover:bg-[#0A33C6]/10 font-primary"
               asChild
             >
               <Link href="#demo">
@@ -131,20 +119,20 @@ export function HeroSection() {
             transition={{ duration: 0.5, delay: 0.4 }}
             className="mt-16 flex flex-wrap items-center justify-center gap-8"
           >
-            <div className="flex items-center gap-2 text-gray-600">
+            <div className="flex items-center gap-2 font-primary text-[#606170]">
               <Shield className="w-5 h-5 text-green-500" />
               <span>SOC 2 Compliant</span>
             </div>
-            <div className="flex items-center gap-2 text-gray-600">
-              <Users className="w-5 h-5 text-blue-500" />
+            <div className="flex items-center gap-2 font-primary text-[#606170]">
+              <Users className="w-5 h-5 text-[#0A33C6]" />
               <span>10,000+ Teams</span>
             </div>
-            <div className="flex items-center gap-2 text-gray-600">
-              <Globe className="w-5 h-5 text-[#0731c2]" />
+            <div className="flex items-center gap-2 font-primary text-[#606170]">
+              <Globe className="w-5 h-5 text-[#0A33C6]" />
               <span>150+ Countries</span>
             </div>
-            <div className="flex items-center gap-2 text-gray-600">
-              <Zap className="w-5 h-5 text-yellow-500" />
+            <div className="flex items-center gap-2 font-primary text-[#606170]">
+              <Zap className="w-5 h-5 text-[#0A33C6]" />
               <span>99.9% Uptime</span>
             </div>
           </motion.div>
@@ -158,13 +146,13 @@ export function HeroSection() {
           >
             <div className="relative mx-auto max-w-6xl">
               <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent" />
-              <div className="rounded-xl overflow-hidden shadow-2xl border border-gray-200 bg-white">
-                <div className="p-2 bg-gray-100 flex items-center gap-2">
+              <div className="rounded-xl overflow-hidden shadow-2xl border border-[#EDEDED] bg-white">
+                <div className="p-2 bg-[#EDEDED] flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-red-500" />
                   <div className="w-3 h-3 rounded-full bg-yellow-500" />
                   <div className="w-3 h-3 rounded-full bg-green-500" />
                 </div>
-                <div className="p-8 bg-gradient-to-br from-blue-50 to-blue-50">
+                <div className="p-8 bg-[#EDEDED]">
                   <div className="grid grid-cols-3 gap-4 mb-4">
                     <div className="h-32 bg-white/50 rounded-lg backdrop-blur" />
                     <div className="h-32 bg-white/50 rounded-lg backdrop-blur" />

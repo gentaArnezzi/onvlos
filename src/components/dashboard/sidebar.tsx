@@ -25,41 +25,41 @@ const routes = [
     icon: LayoutDashboard,
     href: "/dashboard",
     color: "text-blue-500",
-    gradient: "from-blue-500 to-cyan-500",
+    gradient: "bg-[#EDEDED]0 to-cyan-500",
   },
   {
     label: "Clients",
     icon: Users,
     href: "/dashboard/clients",
-    color: "text-[#0731c2]",
-    gradient: "from-[#0731c2] to-[#010119]",
+    color: "text-[#0A33C6]",
+    gradient: "from-[#0A33C6] to-[#0A33C6]",
   },
   {
     label: "Funnels",
     icon: Filter,
     href: "/dashboard/funnels",
     color: "text-pink-500",
-    gradient: "from-pink-500 to-rose-500",
+    gradient: "from-[#0A33C6] to-[#0A33C6]",
   },
   {
     label: "Boards",
     icon: Kanban,
     href: "/dashboard/boards",
     color: "text-orange-500",
-    gradient: "from-orange-500 to-amber-500",
+    gradient: "from-[#0A33C6] to-[#0A33C6]",
   },
   {
     label: "Tasks",
     icon: CheckSquare,
     href: "/dashboard/tasks",
-    color: "text-[#0731c2]",
-    gradient: "from-[#0731c2] to-[#010119]",
+    color: "text-[#0A33C6]",
+    gradient: "from-[#0A33C6] to-[#0A33C6]",
   },
   {
     label: "Invoices",
     icon: Receipt,
     href: "/dashboard/invoices",
-    color: "text-emerald-500",
+    color: "text-[#0A33C6]",
     gradient: "from-emerald-500 to-teal-500",
   },
   {
@@ -67,7 +67,7 @@ const routes = [
     icon: Calendar,
     href: "/dashboard/calendar",
     color: "text-sky-500",
-    gradient: "from-sky-500 to-blue-500",
+    gradient: "from-sky-500 0",
   },
   {
     label: "Automations",
@@ -82,9 +82,9 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <div className="relative h-full flex flex-col bg-gradient-to-b from-slate-50 to-white border-r border-slate-200">
+    <div className="relative h-full flex flex-col bg-white border-r border-[#EDEDED]">
       {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0731c2]/5 via-transparent to-[#010119]/5 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0A33C6]/5 via-transparent to-[#0A33C6]/5 pointer-events-none" />
 
       <div className="relative px-6 py-6 flex flex-col h-full">
         {/* Logo */}
@@ -97,16 +97,16 @@ export function Sidebar() {
             />
           </div>
           <div className="flex flex-col">
-            <h1 className="text-xl font-bold bg-gradient-to-r from-[#0731c2] to-[#010119] bg-clip-text text-transparent">
+            <h1 className="text-xl font-bold font-primary text-[#0A33C6]">
               Onvlo
             </h1>
-            <p className="text-xs text-slate-600">Modern Workspace</p>
+            <p className="text-xs font-primary text-[#606170]">Modern Workspace</p>
           </div>
         </Link>
 
         {/* Navigation */}
         <nav className="flex-1 space-y-2">
-          <div className="text-xs font-semibold text-slate-600 uppercase tracking-wider px-3 mb-3">
+          <div className="text-xs font-semibold font-primary text-[#606170] uppercase tracking-wider px-3 mb-3">
             Main Menu
           </div>
           {routes.slice(0, 4).map((route) => {
@@ -119,15 +119,12 @@ export function Sidebar() {
                   "group relative flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200",
                   isActive
                     ? "text-white shadow-lg"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                    : "font-primary text-[#606170] hover:text-[#02041D] hover:bg-[#EDEDED]"
                 )}
               >
-                {/* Active Background Gradient */}
+                {/* Active Background */}
                 {isActive && (
-                  <div className={cn(
-                    "absolute inset-0 rounded-xl bg-gradient-to-r opacity-100 transition-opacity",
-                    `bg-gradient-to-r ${route.gradient}`
-                  )} />
+                  <div className="absolute inset-0 rounded-xl bg-[#0A33C6] opacity-100 transition-opacity" />
                 )}
 
                 {/* Icon */}
@@ -146,14 +143,14 @@ export function Sidebar() {
 
                 {/* Hover Glow */}
                 {!isActive && (
-                  <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-r from-[#0731c2]/10 to-[#010119]/10" />
+                  <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity bg-[#0A33C6]/10" />
                 )}
               </Link>
             );
           })}
 
           <div className="pt-4">
-            <div className="text-xs font-semibold text-slate-600 uppercase tracking-wider px-3 mb-3">
+            <div className="text-xs font-semibold font-primary text-[#606170] uppercase tracking-wider px-3 mb-3">
               Tools
             </div>
             {routes.slice(4).map((route) => {
@@ -166,14 +163,11 @@ export function Sidebar() {
                     "group relative flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200",
                     isActive
                       ? "text-white shadow-lg"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                      : "font-primary text-[#606170] hover:text-[#02041D] hover:bg-[#EDEDED]"
                   )}
                 >
                   {isActive && (
-                    <div className={cn(
-                      "absolute inset-0 rounded-xl bg-gradient-to-r opacity-100 transition-opacity",
-                      `bg-gradient-to-r ${route.gradient}`
-                    )} />
+                    <div className="absolute inset-0 rounded-xl bg-[#0A33C6] opacity-100 transition-opacity" />
                   )}
 
                   <div className="relative z-10">
@@ -189,7 +183,7 @@ export function Sidebar() {
                   </span>
 
                   {!isActive && (
-                    <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-r from-[#0731c2]/10 to-[#010119]/10" />
+                    <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity bg-[#0A33C6]/10" />
                   )}
                 </Link>
               );
@@ -198,15 +192,15 @@ export function Sidebar() {
         </nav>
 
         {/* Bottom Section */}
-        <div className="pt-4 mt-auto space-y-2 border-t border-slate-200">
+        <div className="pt-4 mt-auto space-y-2 border-t border-[#EDEDED]">
           {/* Settings */}
           <Link
             href="/dashboard/settings"
             className={cn(
-              "group flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200",
+              "group flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium font-primary transition-all duration-200",
               pathname === "/dashboard/settings"
-                ? "text-white bg-gradient-to-r from-slate-700 to-slate-600"
-                : "text-slate-600 hover:bg-slate-100"
+                ? "text-white bg-[#0A33C6]"
+                : "text-[#606170] hover:bg-[#EDEDED]"
             )}
           >
             <Settings className="h-5 w-5" />
@@ -214,18 +208,18 @@ export function Sidebar() {
           </Link>
 
           {/* User Profile Card */}
-          <div className="glass-card p-3 mt-2">
+          <div className="bg-white/80 backdrop-blur-sm border border-[#EDEDED] rounded-xl p-3 mt-2">
             <div className="flex items-center gap-3">
-              <Avatar className="h-9 w-9 ring-2 ring-[#0731c2]/20">
-                <AvatarFallback className="bg-gradient-to-br from-[#0731c2] to-[#010119] text-white text-sm font-semibold">
+              <Avatar className="h-9 w-9 ring-2 ring-[#0A33C6]/20">
+                <AvatarFallback className="bg-[#0A33C6] text-white text-sm font-semibold font-primary">
                   AD
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-slate-900 truncate">
+                <p className="text-sm font-semibold font-primary text-[#02041D] truncate">
                   Admin User
                 </p>
-                <p className="text-xs text-slate-600 truncate">
+                <p className="text-xs font-primary text-[#606170] truncate">
                   admin@onvlo.com
                 </p>
               </div>

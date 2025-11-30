@@ -92,15 +92,15 @@ function SortableStepItem({
             className={cn(
                 "group relative flex items-center p-3 rounded-xl border transition-all duration-200 cursor-pointer",
                 isSelected
-                    ? "bg-blue-50/50 border-blue-200 shadow-sm"
-                    : "bg-white border-slate-200 hover:border-slate-300 hover:shadow-sm"
+                    ? "bg-blue-50/50 border-[#EDEDED] shadow-sm"
+                    : "bg-white border-[#EDEDED] hover:border-[#EDEDED] hover:shadow-sm"
             )}
             onClick={onSelect}
         >
             <div
                 {...attributes}
                 {...listeners}
-                className="mr-3 cursor-grab active:cursor-grabbing text-slate-500 hover:text-slate-700"
+                className="mr-3 cursor-grab active:cursor-grabbing font-primary text-[#606170] hover:font-primary text-[#606170]"
             >
                 <GripVertical className="h-4 w-4" />
             </div>
@@ -108,17 +108,17 @@ function SortableStepItem({
             <div className={cn(
                 "h-8 w-8 rounded-lg flex items-center justify-center text-xs font-bold flex-shrink-0 mr-3 transition-colors",
                 isSelected
-                    ? "bg-[#0731c2] text-white shadow-sm"
-                    : "bg-slate-100 text-slate-600"
+                    ? "bg-[#0A33C6] text-white shadow-sm"
+                    : "bg-[#EDEDED] font-primary text-[#606170]"
             )}>
                 {index + 1}
             </div>
 
             <div className="flex-1 min-w-0">
-                <div className="font-medium text-sm text-slate-900 truncate">
+                <div className="font-medium text-sm font-primary text-[#02041D] truncate">
                     {step.config?.title || getStepTypeLabel(step.step_type)}
                 </div>
-                <div className="text-xs text-slate-600 flex items-center mt-0.5">
+                <div className="text-xs font-primary text-[#606170] flex items-center mt-0.5">
                     {getStepTypeLabel(step.step_type)}
                 </div>
             </div>
@@ -126,14 +126,14 @@ function SortableStepItem({
             <Button
                 variant="ghost"
                 size="icon"
-                className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity text-slate-500 hover:text-red-600 hover:bg-red-50"
+                className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity font-primary text-[#606170] hover:text-red-600 hover:bg-red-50"
                 onClick={onDelete}
             >
                 <Trash2 className="h-3.5 w-3.5" />
             </Button>
 
             {isSelected && (
-                <div className="absolute -right-[1px] top-1/2 -translate-y-1/2 w-1 h-8 bg-[#0731c2] rounded-l-full" />
+                <div className="absolute -right-[1px] top-1/2 -translate-y-1/2 w-1 h-8 bg-[#0A33C6] rounded-l-full" />
             )}
         </div>
     );
@@ -219,24 +219,24 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
     const selectedStep = steps.find((s: any) => s.id === selectedStepId);
 
     return (
-        <div className="flex flex-col h-full bg-slate-50">
+        <div className="flex flex-col h-full bg-[#EDEDED]">
             {/* Top Navigation Bar */}
-            <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 flex-shrink-0 z-20">
+            <header className="h-16 bg-white border-b border-[#EDEDED] flex items-center justify-between px-6 flex-shrink-0 z-20">
                 <div className="flex items-center space-x-4">
-                    <Button variant="ghost" size="icon" asChild className="hover:bg-slate-100">
+                    <Button variant="ghost" size="icon" asChild className="hover:bg-[#EDEDED]">
                         <Link href="/dashboard/funnels">
-                            <ArrowLeft className="h-5 w-5 text-slate-500" />
+                            <ArrowLeft className="h-5 w-5 font-primary text-[#606170]" />
                         </Link>
                     </Button>
                     <div className="h-6 w-px bg-slate-200" />
                     <div>
-                        <h1 className="text-sm font-semibold text-slate-900 flex items-center">
+                        <h1 className="text-sm font-semibold font-primary text-[#02041D] flex items-center">
                             {funnel.name}
                             <span className={cn(
                                 "ml-2 px-2 py-0.5 rounded-full text-[10px] uppercase tracking-wider font-bold",
                                 published
-                                    ? "bg-emerald-100 text-emerald-700"
-                                    : "bg-slate-100 text-slate-600"
+                                    ? "bg-[#EDEDED] text-emerald-700"
+                                    : "bg-[#EDEDED] font-primary text-[#606170]"
                             )}>
                                 {published ? t('funnels.live') : t('funnels.draft')}
                             </span>
@@ -244,7 +244,7 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
                         <a
                             href={`/onboard/${funnel.public_url}`}
                             target="_blank"
-                            className="text-xs text-slate-600 hover:text-[#0731c2] flex items-center mt-0.5 transition-colors"
+                            className="text-xs font-primary text-[#606170] hover:text-[#0A33C6] flex items-center mt-0.5 transition-colors"
                         >
                             onvlo.com/onboard/{funnel.public_url}
                             <Eye className="h-3 w-3 ml-1" />
@@ -253,14 +253,14 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
                 </div>
 
                 <div className="flex items-center space-x-3">
-                    <div className="bg-slate-100 p-1 rounded-lg flex items-center">
+                    <div className="bg-[#EDEDED] p-1 rounded-lg flex items-center">
                         <button
                             onClick={() => togglePublished(false)}
                             className={cn(
                                 "h-7 px-3 text-xs font-medium rounded-md transition-all flex items-center justify-center",
                                 !published
-                                    ? "bg-white text-slate-900 shadow-sm"
-                                    : "text-slate-500 hover:text-slate-900"
+                                    ? "bg-white font-primary text-[#02041D] shadow-sm"
+                                    : "font-primary text-[#606170] hover:font-primary text-[#02041D]"
                             )}
                         >
                             {t('funnels.draft')}
@@ -271,7 +271,7 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
                                 "h-7 px-3 text-xs font-medium rounded-md transition-all flex items-center justify-center",
                                 published
                                     ? "bg-emerald-500 text-white shadow-sm"
-                                    : "text-slate-500 hover:text-slate-900"
+                                    : "font-primary text-[#606170] hover:font-primary text-[#02041D]"
                             )}
                         >
                             {t('funnels.live')}
@@ -280,14 +280,14 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
 
                     <div className="h-6 w-px bg-slate-200" />
 
-                    <div className="bg-slate-100 p-1 rounded-lg flex items-center space-x-1">
+                    <div className="bg-[#EDEDED] p-1 rounded-lg flex items-center space-x-1">
                         <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => setPreviewMode('desktop')}
                             className={cn(
-                                "h-7 px-2 text-slate-500 hover:text-slate-900",
-                                previewMode === 'desktop' && "bg-white text-slate-900 shadow-sm"
+                                "h-7 px-2 font-primary text-[#606170] hover:font-primary text-[#02041D]",
+                                previewMode === 'desktop' && "bg-white font-primary text-[#02041D] shadow-sm"
                             )}
                         >
                             <Monitor className="h-4 w-4" />
@@ -297,8 +297,8 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
                             size="sm"
                             onClick={() => setPreviewMode('mobile')}
                             className={cn(
-                                "h-7 px-2 text-slate-500 hover:text-slate-900",
-                                previewMode === 'mobile' && "bg-white text-slate-900 shadow-sm"
+                                "h-7 px-2 font-primary text-[#606170] hover:font-primary text-[#02041D]",
+                                previewMode === 'mobile' && "bg-white font-primary text-[#02041D] shadow-sm"
                             )}
                         >
                             <Smartphone className="h-4 w-4" />
@@ -311,7 +311,7 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
                         onClick={saveConfig}
                         disabled={saving || !selectedStep}
                         className={cn(
-                            "bg-[#0731c2] hover:bg-[#0525a0] text-white shadow-md shadow-[#0731c2]/20 transition-all",
+                            "bg-[#0A33C6] hover:bg-[#0A33C6]/90 text-white shadow-md shadow-[#0731c2]/20 transition-all",
                             saving && "opacity-80"
                         )}
                     >
@@ -327,10 +327,10 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
 
             <div className="flex-1 flex overflow-hidden">
                 {/* Left Sidebar: Steps Timeline */}
-                <aside className="w-80 bg-white border-r border-slate-200 flex flex-col z-10">
-                    <div className="p-5 border-b border-slate-100">
-                        <h2 className="text-sm font-semibold text-slate-900 mb-1">{t('funnels.editor.funnelSteps')}</h2>
-                        <p className="text-xs text-slate-600">{t('funnels.editor.manageClientJourney')}</p>
+                <aside className="w-80 bg-white border-r border-[#EDEDED] flex flex-col z-10">
+                    <div className="p-5 border-b border-[#EDEDED]">
+                        <h2 className="text-sm font-semibold font-primary text-[#02041D] mb-1">{t('funnels.editor.funnelSteps')}</h2>
+                        <p className="text-xs font-primary text-[#606170]">{t('funnels.editor.manageClientJourney')}</p>
                     </div>
 
                     <div className="flex-1 overflow-y-auto p-4 space-y-3">
@@ -360,21 +360,21 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
                             </DndContext>
                         ) : (
                             <div className="flex flex-col items-center justify-center py-12 text-center px-4">
-                                <div className="p-4 rounded-full bg-slate-50 mb-4">
-                                    <Layout className="h-8 w-8 text-slate-500" />
+                                <div className="p-4 rounded-full bg-[#EDEDED] mb-4">
+                                    <Layout className="h-8 w-8 font-primary text-[#606170]" />
                                 </div>
-                                <p className="text-sm font-medium text-slate-900 mb-1">
+                                <p className="text-sm font-medium font-primary text-[#02041D] mb-1">
                                     {t('funnels.editor.emptyFunnel')}
                                 </p>
-                                <p className="text-xs text-slate-600">
+                                <p className="text-xs font-primary text-[#606170]">
                                     {t('funnels.editor.addFirstStep')}
                                 </p>
                             </div>
                         )}
 
                         {/* Add Step Button Area */}
-                        <div className="pt-4 mt-2 border-t border-slate-100">
-                            <p className="text-xs font-medium text-slate-600 mb-3 px-1 uppercase tracking-wider">
+                        <div className="pt-4 mt-2 border-t border-[#EDEDED]">
+                            <p className="text-xs font-medium font-primary text-[#606170] mb-3 px-1 uppercase tracking-wider">
                                 {t('funnels.editor.addStep')}
                             </p>
                     <div className="grid grid-cols-2 gap-2">
@@ -383,10 +383,10 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
                                 key={t.type} 
                                 onClick={() => handleAddStep(t.type)}
                                 disabled={loading}
-                                        className="flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200 hover:border-[#0731c2] hover:bg-blue-50 transition-all group text-center"
+                                        className="flex flex-col items-center justify-center p-3 rounded-xl border border-[#EDEDED] hover:border-[#0731c2] hover:bg-blue-50 transition-all group text-center"
                                     >
-                                        <t.icon className="h-5 w-5 text-slate-500 group-hover:text-[#0731c2] mb-2" />
-                                        <span className="text-xs font-medium text-slate-700 group-hover:text-[#0731c2]">
+                                        <t.icon className="h-5 w-5 font-primary text-[#606170] group-hover:text-[#0A33C6] mb-2" />
+                                        <span className="text-xs font-medium font-primary text-[#606170] group-hover:text-[#0A33C6]">
                                             {t.label}
                                         </span>
                                     </button>
@@ -397,23 +397,23 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
                 </aside>
 
                 {/* Center Canvas: Preview */}
-                <main className="flex-1 bg-slate-50/50 relative overflow-hidden flex flex-col items-center justify-center p-8">
+                <main className="flex-1 bg-[#EDEDED]/50 relative overflow-hidden flex flex-col items-center justify-center p-8">
                     <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-[0.03] pointer-events-none" />
 
                 {selectedStep ? (
                         <div className={cn(
-                            "relative transition-all duration-500 ease-in-out flex flex-col shadow-2xl rounded-2xl overflow-hidden bg-white border border-slate-200",
+                            "relative transition-all duration-500 ease-in-out flex flex-col shadow-2xl rounded-2xl overflow-hidden bg-white border border-[#EDEDED]",
                             previewMode === 'mobile' ? "w-[375px] h-[667px]" : "w-full max-w-4xl h-full max-h-[800px]"
                         )}>
                             {/* Browser/Device Header Simulation */}
-                            <div className="h-8 bg-slate-100 border-b border-slate-200 flex items-center px-4 space-x-2">
+                            <div className="h-8 bg-[#EDEDED] border-b border-[#EDEDED] flex items-center px-4 space-x-2">
                                 <div className="flex space-x-1.5">
                                     <div className="w-2.5 h-2.5 rounded-full bg-red-400/80" />
                                     <div className="w-2.5 h-2.5 rounded-full bg-amber-400/80" />
                                     <div className="w-2.5 h-2.5 rounded-full bg-emerald-400/80" />
                                 </div>
                                 <div className="flex-1 text-center">
-                                    <div className="inline-flex items-center px-3 py-0.5 rounded-md bg-white text-[10px] text-slate-600 font-medium border border-slate-200 max-w-[200px] truncate">
+                                    <div className="inline-flex items-center px-3 py-0.5 rounded-md bg-white text-[10px] font-primary text-[#606170] font-medium border border-[#EDEDED] max-w-[200px] truncate">
                                         onvlo.com/onboard/{funnel.public_url}
                                     </div>
                                 </div>
@@ -426,13 +426,13 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
                         </div>
                     ) : (
                         <div className="text-center max-w-md">
-                            <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse">
-                                <Layout className="h-10 w-10 text-[#0731c2]" />
+                            <div className="w-24 h-24 bg-[#EDEDED] rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse">
+                                <Layout className="h-10 w-10 text-[#0A33C6]" />
                             </div>
-                            <h3 className="text-xl font-bold text-slate-900 mb-2">
+                            <h3 className="text-xl font-bold font-primary text-[#02041D] mb-2">
                                 {t('funnels.editor.selectStepToEdit')}
                             </h3>
-                            <p className="text-slate-600">
+                            <p className="font-primary text-[#606170]">
                                 {t('funnels.editor.clickStepToConfigure')}
                             </p>
                         </div>
@@ -441,15 +441,15 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
 
                 {/* Right Sidebar: Configuration */}
                 {selectedStep && (
-                    <aside className="w-96 bg-white border-l border-slate-200 flex flex-col z-10 shadow-xl shadow-slate-200/50">
-                        <div className="h-14 border-b border-slate-100 flex items-center px-6 justify-between bg-white">
+                    <aside className="w-96 bg-white border-l border-[#EDEDED] flex flex-col z-10 shadow-xl shadow-slate-200/50">
+                        <div className="h-14 border-b border-[#EDEDED] flex items-center px-6 justify-between bg-white">
                             <div className="flex items-center space-x-2">
-                                <Settings className="h-4 w-4 text-slate-600" />
-                                <h3 className="font-semibold text-sm text-slate-900">
+                                <Settings className="h-4 w-4 font-primary text-[#606170]" />
+                                <h3 className="font-semibold text-sm font-primary text-[#02041D]">
                                     {t('funnels.editor.configuration')}
                                 </h3>
                             </div>
-                            <div className="text-xs font-medium px-2 py-1 rounded bg-slate-100 text-slate-600 capitalize">
+                            <div className="text-xs font-medium px-2 py-1 rounded bg-[#EDEDED] font-primary text-[#606170] capitalize">
                                 {selectedStep.step_type}
                             </div>
                         </div>

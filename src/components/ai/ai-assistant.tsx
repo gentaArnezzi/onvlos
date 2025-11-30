@@ -52,7 +52,7 @@ export function AiAssistant() {
         return (
             <Button 
                 onClick={() => setIsOpen(true)} 
-                className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg z-50 bg-[#0731c2] hover:bg-[#0525a0]"
+                className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg z-50 bg-[#0A33C6] hover:bg-[#0A33C6]/90"
             >
                 <Bot className="h-8 w-8" />
             </Button>
@@ -61,7 +61,7 @@ export function AiAssistant() {
 
     return (
         <Card className="fixed bottom-6 right-6 w-[350px] h-[500px] shadow-2xl z-50 flex flex-col animate-in slide-in-from-bottom-10 fade-in">
-            <CardHeader className="p-4 border-b bg-[#0731c2] text-white rounded-t-lg flex flex-row items-center justify-between">
+            <CardHeader className="p-4 border-b bg-[#0A33C6] text-white rounded-t-lg flex flex-row items-center justify-between">
                 <div className="flex items-center space-x-2">
                     <Sparkles className="h-5 w-5" />
                     <CardTitle className="text-base">AI Assistant</CardTitle>
@@ -70,20 +70,20 @@ export function AiAssistant() {
                     <Minimize2 className="h-4 w-4" />
                 </Button>
             </CardHeader>
-            <ScrollArea className="flex-1 p-4 bg-slate-50" ref={scrollRef}>
+            <ScrollArea className="flex-1 p-4 bg-[#EDEDED]" ref={scrollRef}>
                 <div className="space-y-4">
                     {messages.map((msg, i) => (
                         <div key={i} className={cn("flex gap-2", msg.role === 'user' ? "justify-end" : "justify-start")}>
                             {msg.role === 'assistant' && (
-                                <Avatar className="h-8 w-8 bg-blue-100 border border-blue-200">
-                                    <AvatarFallback className="text-[#0731c2]"><Bot className="h-4 w-4" /></AvatarFallback>
+                                <Avatar className="h-8 w-8 bg-[#EDEDED] border border-[#EDEDED]">
+                                    <AvatarFallback className="text-[#0A33C6]"><Bot className="h-4 w-4" /></AvatarFallback>
                                 </Avatar>
                             )}
                             <div className={cn(
                                 "p-3 rounded-lg text-sm max-w-[80%]",
                                 msg.role === 'user' 
-                                    ? "bg-[#0731c2] text-white rounded-tr-none" 
-                                    : "bg-white border text-gray-800 rounded-tl-none shadow-sm"
+                                    ? "bg-[#0A33C6] text-white rounded-tr-none" 
+                                    : "bg-white border font-primary text-[#02041D] rounded-tl-none shadow-sm"
                             )}>
                                 {msg.content}
                             </div>
@@ -91,10 +91,10 @@ export function AiAssistant() {
                     ))}
                     {loading && (
                         <div className="flex gap-2 justify-start">
-                             <Avatar className="h-8 w-8 bg-blue-100 border border-blue-200">
-                                <AvatarFallback className="text-[#0731c2]"><Bot className="h-4 w-4" /></AvatarFallback>
+                             <Avatar className="h-8 w-8 bg-[#EDEDED] border border-[#EDEDED]">
+                                <AvatarFallback className="text-[#0A33C6]"><Bot className="h-4 w-4" /></AvatarFallback>
                             </Avatar>
-                            <div className="p-3 rounded-lg bg-white border text-gray-500 text-xs rounded-tl-none shadow-sm flex items-center">
+                            <div className="p-3 rounded-lg bg-white border font-primary text-[#606170] text-xs rounded-tl-none shadow-sm flex items-center">
                                 Thinking...
                             </div>
                         </div>
@@ -110,7 +110,7 @@ export function AiAssistant() {
                         className="flex-1"
                         disabled={loading}
                     />
-                    <Button type="submit" size="icon" disabled={loading || !inputValue.trim()} className="bg-[#0731c2] hover:bg-[#0525a0]">
+                    <Button type="submit" size="icon" disabled={loading || !inputValue.trim()} className="bg-[#0A33C6] hover:bg-[#0A33C6]/90">
                         <Send className="h-4 w-4" />
                     </Button>
                 </form>

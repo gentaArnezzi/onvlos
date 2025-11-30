@@ -20,10 +20,10 @@ export default async function ChatPage() {
             <div className="flex flex-col h-full gap-6">
                 {/* Header */}
                 <div className="flex-shrink-0">
-                    <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+                    <h2 className="text-3xl font-bold tracking-tight font-primary text-[#0A33C6]">
                         {t("chat.title", language)}
                     </h2>
-                    <p className="text-slate-600 mt-1">
+                    <p className="font-primary text-[#606170] mt-1">
                         {t("chat.description", language)}
                     </p>
                 </div>

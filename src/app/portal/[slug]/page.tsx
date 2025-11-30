@@ -44,35 +44,35 @@ export default async function PortalPage({ params }: { params: Promise<{ slug: s
   return (
     <div className="space-y-8">
       {/* Welcome Header with Gradient */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-[#0731c2] via-[#0731c2] to-[#010119] p-8 rounded-xl shadow-lg">
+      <div className="relative overflow-hidden bg-[#0A33C6] p-8 rounded-xl shadow-lg">
         <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:20px_20px]" />
         <div className="relative z-10">
-          <h1 className="text-3xl font-bold text-white mb-2">Welcome, {client.company_name || client.name}</h1>
-          <p className="text-blue-100 text-lg">Here's the current status of your project.</p>
+          <h1 className="text-3xl font-bold font-primary text-[#EDEDED] mb-2">Welcome, {client.company_name || client.name}</h1>
+          <p className="font-primary text-[#EDEDED]/90 text-lg">Here's the current status of your project.</p>
         </div>
       </div>
 
       <Tabs defaultValue="summary" className="space-y-6">
-        <TabsList className="bg-white border border-slate-200 p-1 rounded-lg">
-            <TabsTrigger value="summary" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700">
+        <TabsList className="bg-white border border-[#EDEDED] p-1 rounded-lg">
+            <TabsTrigger value="summary" className="flex items-center gap-2 font-primary data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white text-[#606170]">
                 <TrendingUp className="h-4 w-4" /> Summary
             </TabsTrigger>
-            <TabsTrigger value="tasks" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700">
+            <TabsTrigger value="tasks" className="flex items-center gap-2 data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white font-primary text-[#606170]">
                 <CheckCircle2 className="h-4 w-4" /> Tasks
             </TabsTrigger>
-            <TabsTrigger value="chat" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700">
+            <TabsTrigger value="chat" className="flex items-center gap-2 data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white font-primary text-[#606170]">
                 <MessageSquare className="h-4 w-4" /> Chat
             </TabsTrigger>
-            <TabsTrigger value="invoices" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700">
+            <TabsTrigger value="invoices" className="flex items-center gap-2 data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white font-primary text-[#606170]">
                 <Receipt className="h-4 w-4" /> Invoices
             </TabsTrigger>
-            <TabsTrigger value="files" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700">
+            <TabsTrigger value="files" className="flex items-center gap-2 data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white font-primary text-[#606170]">
                 <FileText className="h-4 w-4" /> Files
             </TabsTrigger>
-            <TabsTrigger value="proposals" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700">
+            <TabsTrigger value="proposals" className="flex items-center gap-2 data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white font-primary text-[#606170]">
                 <FileCheck className="h-4 w-4" /> Proposals
             </TabsTrigger>
-            <TabsTrigger value="contracts" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700">
+            <TabsTrigger value="contracts" className="flex items-center gap-2 data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white font-primary text-[#606170]">
                 <FileSignature className="h-4 w-4" /> Contracts
             </TabsTrigger>
         </TabsList>
@@ -81,14 +81,14 @@ export default async function PortalPage({ params }: { params: Promise<{ slug: s
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
             <Card className="border-none shadow-lg bg-white">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-slate-700">Tasks Completed</CardTitle>
+                <CardTitle className="text-sm font-medium font-primary text-[#606170]">Tasks Completed</CardTitle>
                 <CheckCircle2 className="h-4 w-4 text-emerald-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-slate-900">
+                <div className="text-2xl font-bold font-primary text-[#02041D]">
                   {completedTasks} / {totalTasks}
                 </div>
-                <p className="text-xs text-slate-600 mt-1">
+                <p className="text-xs font-primary text-[#606170] mt-1">
                   {totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0}% complete
                 </p>
               </CardContent>
@@ -96,14 +96,14 @@ export default async function PortalPage({ params }: { params: Promise<{ slug: s
 
             <Card className="border-none shadow-lg bg-white">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-slate-700">Pending Invoices</CardTitle>
+                <CardTitle className="text-sm font-medium font-primary text-[#606170]">Pending Invoices</CardTitle>
                 <Clock className="h-4 w-4 text-amber-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-slate-900">
+                <div className="text-2xl font-bold font-primary text-[#02041D]">
                   {pendingInvoices}
                 </div>
-                <p className="text-xs text-slate-600 mt-1">
+                <p className="text-xs font-primary text-[#606170] mt-1">
                   Awaiting payment
                 </p>
               </CardContent>
@@ -111,14 +111,14 @@ export default async function PortalPage({ params }: { params: Promise<{ slug: s
 
             <Card className="border-none shadow-lg bg-white">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-slate-700">Overdue</CardTitle>
+                <CardTitle className="text-sm font-medium font-primary text-[#606170]">Overdue</CardTitle>
                 <AlertCircle className="h-4 w-4 text-red-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-slate-900">
+                <div className="text-2xl font-bold font-primary text-[#02041D]">
                   {overdueInvoices}
                 </div>
-                <p className="text-xs text-slate-600 mt-1">
+                <p className="text-xs font-primary text-[#606170] mt-1">
                   Requires attention
                 </p>
               </CardContent>
@@ -126,14 +126,14 @@ export default async function PortalPage({ params }: { params: Promise<{ slug: s
 
             <Card className="border-none shadow-lg bg-white">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-slate-700">Total Paid</CardTitle>
+                <CardTitle className="text-sm font-medium font-primary text-[#606170]">Total Paid</CardTitle>
                 <TrendingUp className="h-4 w-4 text-emerald-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-slate-900">
+                <div className="text-2xl font-bold font-primary text-[#02041D]">
                   ${invoices.filter(i => i.status === 'paid').reduce((sum, i) => sum + Number(i.total_amount), 0).toLocaleString()}
                 </div>
-                <p className="text-xs text-slate-600 mt-1">
+                <p className="text-xs font-primary text-[#606170] mt-1">
                   All time payments
                 </p>
               </CardContent>
@@ -141,14 +141,14 @@ export default async function PortalPage({ params }: { params: Promise<{ slug: s
 
             <Card className="border-none shadow-lg bg-white">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-slate-700">Active Contracts</CardTitle>
+                <CardTitle className="text-sm font-medium font-primary text-[#606170]">Active Contracts</CardTitle>
                 <FileSignature className="h-4 w-4 text-blue-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-slate-900">
+                <div className="text-2xl font-bold font-primary text-[#02041D]">
                   {activeContracts}
                 </div>
-                <p className="text-xs text-slate-600 mt-1">
+                <p className="text-xs font-primary text-[#606170] mt-1">
                   {fullySignedContracts} fully signed
                 </p>
               </CardContent>
@@ -159,34 +159,34 @@ export default async function PortalPage({ params }: { params: Promise<{ slug: s
         <TabsContent value="tasks" className="space-y-4">
             <Card className="border-none shadow-lg bg-white">
                 <CardHeader>
-                    <CardTitle className="text-slate-900">Project Tasks</CardTitle>
-                    <CardDescription className="text-slate-600">Action items and progress tracking.</CardDescription>
+                    <CardTitle className="font-primary text-[#02041D]">Project Tasks</CardTitle>
+                    <CardDescription className="font-primary text-[#606170]">Action items and progress tracking.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-3">
                         {tasks.length === 0 ? (
                             <div className="text-center py-12">
-                                <Circle className="h-12 w-12 text-slate-600 mx-auto mb-4" />
-                                <p className="text-slate-600 mt-2">No tasks assigned yet.</p>
+                                <Circle className="h-12 w-12 font-primary text-[#606170] mx-auto mb-4" />
+                                <p className="font-primary text-[#606170] mt-2">No tasks assigned yet.</p>
                             </div>
                         ) : (
                             tasks.map(task => (
-                                <div key={task.id} className="flex items-start justify-between p-4 border border-slate-200 rounded-lg bg-white hover:shadow-md transition-shadow">
+                                <div key={task.id} className="flex items-start justify-between p-4 border border-[#EDEDED] rounded-lg bg-white hover:shadow-md transition-shadow">
                                     <div className="flex items-start space-x-3 flex-1">
                                         <div className="mt-0.5">
                                             {task.status === 'done' ? (
                                                 <CheckCircle2 className="h-5 w-5 text-emerald-500" />
                                             ) : (
-                                                <Circle className="h-5 w-5 text-slate-600" />
+                                                <Circle className="h-5 w-5 font-primary text-[#606170]" />
                                             )}
                                         </div>
                                         <div className="flex-1">
-                                            <div className="font-medium text-slate-900">{task.title}</div>
+                                            <div className="font-medium font-primary text-[#02041D]">{task.title}</div>
                                             {task.description && (
-                                                <p className="text-sm text-slate-600 mt-1">{task.description}</p>
+                                                <p className="text-sm font-primary text-[#606170] mt-1">{task.description}</p>
                                             )}
                                             {task.due_date && (
-                                                <div className="flex items-center gap-1 mt-2 text-xs text-slate-600">
+                                                <div className="flex items-center gap-1 mt-2 text-xs font-primary text-[#606170]">
                                                     <Calendar className="h-3 w-3" />
                                                     Due: {format(new Date(task.due_date), "MMM d, yyyy")}
                                                 </div>
@@ -226,33 +226,33 @@ export default async function PortalPage({ params }: { params: Promise<{ slug: s
         <TabsContent value="invoices" className="space-y-4">
             <Card className="border-none shadow-lg bg-white">
                 <CardHeader>
-                    <CardTitle className="text-slate-900">Invoices</CardTitle>
-                    <CardDescription className="text-slate-600">Billing history and outstanding payments.</CardDescription>
+                    <CardTitle className="font-primary text-[#02041D]">Invoices</CardTitle>
+                    <CardDescription className="font-primary text-[#606170]">Billing history and outstanding payments.</CardDescription>
                 </CardHeader>
                 <CardContent>
                      <div className="space-y-3">
                         {invoices.length === 0 ? (
                             <div className="text-center py-12">
-                                <Receipt className="h-12 w-12 text-slate-600 mx-auto mb-4" />
-                                <p className="text-slate-600 mt-2">No invoices generated yet.</p>
+                                <Receipt className="h-12 w-12 font-primary text-[#606170] mx-auto mb-4" />
+                                <p className="font-primary text-[#606170] mt-2">No invoices generated yet.</p>
                             </div>
                         ) : (
                             invoices.map(invoice => (
-                                <div key={invoice.id} className="flex items-center justify-between p-4 border border-slate-200 rounded-lg bg-white hover:shadow-md transition-shadow">
+                                <div key={invoice.id} className="flex items-center justify-between p-4 border border-[#EDEDED] rounded-lg bg-white hover:shadow-md transition-shadow">
                                     <div className="flex items-center space-x-4 flex-1">
-                                        <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-[#0731c2] to-[#010119] flex items-center justify-center shadow-sm">
+                                        <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-[#0A33C6] to-[#0A33C6] flex items-center justify-center shadow-sm">
                                             <Receipt className="h-6 w-6 text-white" />
                                         </div>
                                         <div className="flex-1">
-                                            <div className="font-semibold text-slate-900">{invoice.invoice_number}</div>
-                                            <div className="text-sm text-slate-600 mt-1">
+                                            <div className="font-semibold font-primary text-[#02041D]">{invoice.invoice_number}</div>
+                                            <div className="text-sm font-primary text-[#606170] mt-1">
                                                 Due: {format(new Date(invoice.due_date), "MMM d, yyyy")}
                                             </div>
                                         </div>
                                     </div>
                                     <div className="flex items-center space-x-4">
                                         <div className="text-right">
-                                            <div className="font-bold text-lg text-slate-900">
+                                            <div className="font-bold text-lg font-primary text-[#02041D]">
                                                 ${Number(invoice.total_amount).toLocaleString()}
                                             </div>
                                         </div>
@@ -293,26 +293,26 @@ export default async function PortalPage({ params }: { params: Promise<{ slug: s
         <TabsContent value="proposals" className="space-y-4">
             <Card className="border-none shadow-lg bg-white">
                 <CardHeader>
-                    <CardTitle className="text-slate-900">Proposals</CardTitle>
-                    <CardDescription className="text-slate-600">View and manage your proposals.</CardDescription>
+                    <CardTitle className="font-primary text-[#02041D]">Proposals</CardTitle>
+                    <CardDescription className="font-primary text-[#606170]">View and manage your proposals.</CardDescription>
                 </CardHeader>
                 <CardContent>
                      <div className="space-y-3">
                         {proposals.length === 0 ? (
                             <div className="text-center py-12">
-                                <FileCheck className="h-12 w-12 text-slate-600 mx-auto mb-4" />
-                                <p className="text-slate-600 mt-2">No proposals available yet.</p>
+                                <FileCheck className="h-12 w-12 font-primary text-[#606170] mx-auto mb-4" />
+                                <p className="font-primary text-[#606170] mt-2">No proposals available yet.</p>
                             </div>
                         ) : (
                             proposals.map(proposal => (
-                                <div key={proposal.id} className="flex items-center justify-between p-4 border border-slate-200 rounded-lg bg-white hover:shadow-md transition-shadow">
+                                <div key={proposal.id} className="flex items-center justify-between p-4 border border-[#EDEDED] rounded-lg bg-white hover:shadow-md transition-shadow">
                                     <div className="flex items-center space-x-4 flex-1">
-                                        <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-[#0731c2] to-[#010119] flex items-center justify-center shadow-sm">
+                                        <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-[#0A33C6] to-[#0A33C6] flex items-center justify-center shadow-sm">
                                             <FileCheck className="h-6 w-6 text-white" />
                                         </div>
                                         <div className="flex-1">
-                                            <div className="font-semibold text-slate-900">{proposal.title}</div>
-                                            <div className="text-sm text-slate-600 mt-1">
+                                            <div className="font-semibold font-primary text-[#02041D]">{proposal.title}</div>
+                                            <div className="text-sm font-primary text-[#606170] mt-1">
                                                 {proposal.proposal_number}
                                             </div>
                                             {proposal.valid_until && (
@@ -321,7 +321,7 @@ export default async function PortalPage({ params }: { params: Promise<{ slug: s
                                                 </div>
                                             )}
                                             {proposal.total && (
-                                                <div className="text-sm font-medium text-slate-900 mt-1">
+                                                <div className="text-sm font-medium font-primary text-[#02041D] mt-1">
                                                     ${Number(proposal.total).toLocaleString()}
                                                 </div>
                                             )}
@@ -337,7 +337,7 @@ export default async function PortalPage({ params }: { params: Promise<{ slug: s
                                                     ? 'bg-red-100 text-red-700 border-red-200'
                                                     : proposal.status === 'sent' || proposal.status === 'viewed'
                                                     ? 'bg-blue-100 text-blue-700 border-blue-200'
-                                                    : 'bg-slate-100 text-slate-700 border-slate-200'
+                                                    : 'bg-[#EDEDED] font-primary text-[#606170] border-[#EDEDED]'
                                             }
                                         >
                                             {proposal.status}
@@ -361,26 +361,26 @@ export default async function PortalPage({ params }: { params: Promise<{ slug: s
         <TabsContent value="contracts" className="space-y-4">
             <Card className="border-none shadow-lg bg-white">
                 <CardHeader>
-                    <CardTitle className="text-slate-900">Contracts</CardTitle>
-                    <CardDescription className="text-slate-600">View and manage your contracts.</CardDescription>
+                    <CardTitle className="font-primary text-[#02041D]">Contracts</CardTitle>
+                    <CardDescription className="font-primary text-[#606170]">View and manage your contracts.</CardDescription>
                 </CardHeader>
                 <CardContent>
                      <div className="space-y-3">
                         {contracts.length === 0 ? (
                             <div className="text-center py-12">
-                                <FileSignature className="h-12 w-12 text-slate-600 mx-auto mb-4" />
-                                <p className="text-slate-600 mt-2">No contracts available yet.</p>
+                                <FileSignature className="h-12 w-12 font-primary text-[#606170] mx-auto mb-4" />
+                                <p className="font-primary text-[#606170] mt-2">No contracts available yet.</p>
                             </div>
                         ) : (
                             contracts.map(contract => (
-                                <div key={contract.id} className="flex items-center justify-between p-4 border border-slate-200 rounded-lg bg-white hover:shadow-md transition-shadow">
+                                <div key={contract.id} className="flex items-center justify-between p-4 border border-[#EDEDED] rounded-lg bg-white hover:shadow-md transition-shadow">
                                     <div className="flex items-center space-x-4 flex-1">
-                                        <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-[#0731c2] to-[#010119] flex items-center justify-center shadow-sm">
+                                        <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-[#0A33C6] to-[#0A33C6] flex items-center justify-center shadow-sm">
                                             <FileSignature className="h-6 w-6 text-white" />
                                         </div>
                                         <div className="flex-1">
-                                            <div className="font-semibold text-slate-900">{contract.title}</div>
-                                            <div className="text-sm text-slate-600 mt-1">
+                                            <div className="font-semibold font-primary text-[#02041D]">{contract.title}</div>
+                                            <div className="text-sm font-primary text-[#606170] mt-1">
                                                 {contract.contract_number}
                                             </div>
                                             {contract.effective_date && (

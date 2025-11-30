@@ -9,8 +9,8 @@ export default function PortalLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
-      <header className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+    <div className="min-h-screen bg-[#EDEDED]">
+      <header className="bg-white/80 backdrop-blur-md border-b border-[#EDEDED] sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center space-x-4">
              <img
@@ -18,16 +18,16 @@ export default function PortalLayout({
                alt="Onvlo"
                className="w-8 h-8 object-contain"
              />
-             <span className="font-semibold text-lg text-slate-900">Client Portal</span>
+             <span className="font-semibold font-primary text-lg text-[#02041D]">Client Portal</span>
           </div>
           <div className="flex items-center space-x-4">
-             <div className="flex items-center space-x-2 text-sm text-slate-600">
-                 <Avatar className="h-8 w-8 border-2 border-slate-200">
-                    <AvatarFallback className="bg-gradient-to-br from-[#0731c2] to-[#010119] text-white text-xs">CL</AvatarFallback>
+             <div className="flex items-center space-x-2 text-sm font-primary text-[#606170]">
+                 <Avatar className="h-8 w-8 border-2 border-[#EDEDED]">
+                    <AvatarFallback className="bg-[#0A33C6] text-white text-xs font-primary">CL</AvatarFallback>
                  </Avatar>
                  <span className="hidden sm:inline-block">Client User</span>
              </div>
-             <Button variant="ghost" size="icon" className="text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+             <Button variant="ghost" size="icon" className="font-primary text-[#606170] hover:text-[#02041D] hover:bg-[#EDEDED]">
                 <LogOut className="h-5 w-5" />
              </Button>
           </div>

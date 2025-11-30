@@ -38,32 +38,32 @@ export default async function BrainPage() {
       value: activeClients.toString(),
       description: t("brain.outOfTotalClients", language).replace("{total}", totalClients.toString()),
       icon: Users,
-      color: "text-blue-600",
-      bgColor: "bg-blue-100"
+      color: "text-[#0A33C6]",
+      bgColor: "bg-[#EDEDED]"
     },
     {
       title: t("brain.totalRevenue", language),
       value: `${getCurrencySymbol(workspace?.default_currency || "USD")}${totalRevenue.toLocaleString()}`,
       description: t("brain.fromPaidInvoices", language),
       icon: CreditCard,
-      color: "text-emerald-600",
-      bgColor: "bg-emerald-100"
+      color: "text-[#0A33C6]",
+      bgColor: "bg-[#EDEDED]"
     },
     {
       title: t("brain.pendingTasks", language),
       value: pendingTasks.toString(),
       description: t("brain.tasksToComplete", language),
       icon: CheckSquare,
-      color: "text-orange-600",
-      bgColor: "bg-orange-100"
+      color: "text-[#0A33C6]",
+      bgColor: "bg-[#EDEDED]"
     },
     {
       title: t("brain.overdueInvoices", language),
       value: overdueInvoices.toString(),
       description: t("brain.invoicesPastDue", language),
       icon: TrendingUp,
-      color: "text-red-600",
-      bgColor: "bg-red-100"
+      color: "text-[#0A33C6]",
+      bgColor: "bg-[#EDEDED]"
     }
   ];
 
@@ -99,10 +99,10 @@ export default async function BrainPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-[#0731c2] via-[#0731c2] to-[#010119] bg-clip-text text-transparent">
+          <h2 className="text-3xl font-bold font-primary tracking-tight text-[#0A33C6]">
             {t("brain.title", language)}
           </h2>
-          <p className="text-slate-600 mt-1.5 text-sm">
+          <p className="font-primary text-[#606170] mt-1.5 text-sm">
             {t("brain.description", language)}
           </p>
         </div>
@@ -111,12 +111,12 @@ export default async function BrainPage() {
       {/* Quick Insights */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {quickInsights.map((insight, index) => (
-          <Card key={index} className="border border-slate-200 shadow-sm hover:shadow-md transition-shadow duration-200 bg-white relative overflow-hidden group">
+          <Card key={index} className="border border-[#EDEDED] shadow-sm hover:shadow-md transition-shadow duration-200 bg-white relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-              <insight.icon className="h-16 w-16 text-slate-600" />
+              <insight.icon className="h-16 w-16 font-primary text-[#606170]" />
             </div>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-slate-700">
+              <CardTitle className="text-sm font-medium font-primary text-[#606170]">
                 {insight.title}
               </CardTitle>
               <div className={`p-2 rounded-lg ${insight.bgColor} ${insight.color} transition-transform group-hover:scale-110`}>
@@ -124,8 +124,8 @@ export default async function BrainPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-slate-900">{insight.value}</div>
-              <p className="text-xs text-slate-600 mt-1.5">
+              <div className="text-2xl font-bold font-primary text-[#02041D]">{insight.value}</div>
+              <p className="text-xs font-primary text-[#606170] mt-1.5">
                 {insight.description}
               </p>
             </CardContent>
@@ -146,42 +146,42 @@ export default async function BrainPage() {
           <SuggestedQueries queries={suggestedQueries} language={language} />
 
           {/* Coming Soon Features */}
-          <Card className="border border-slate-200 shadow-sm bg-white">
+          <Card className="border border-[#EDEDED] shadow-sm bg-white">
             <CardHeader>
-              <CardTitle className="text-slate-900 flex items-center gap-2 text-base">
-                <FileText className="h-5 w-5 text-[#0731c2]" />
+              <CardTitle className="font-primary text-[#02041D] flex items-center gap-2 text-base">
+                <FileText className="h-5 w-5 text-[#0A33C6]" />
                 {t("brain.comingSoon", language)}
               </CardTitle>
-              <CardDescription className="text-slate-600 text-sm">
+              <CardDescription className="font-primary text-[#606170] text-sm">
                 {t("brain.advancedFeaturesInDevelopment", language)}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="flex items-start gap-3 p-3 rounded-lg bg-gradient-to-r from-slate-50 to-slate-100/50 border border-slate-200 hover:border-[#0731c2] transition-colors group">
-                <div className="p-2 rounded-lg bg-blue-100 text-[#0731c2] group-hover:bg-blue-200 transition-colors">
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-[#EDEDED] border border-[#EDEDED] hover:border-[#0A33C6] transition-colors group">
+                <div className="p-2 rounded-lg bg-[#EDEDED] text-[#0A33C6] group-hover:bg-[#0A33C6]/10 transition-colors">
                   <Upload className="h-4 w-4" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-slate-700">{t("brain.documentUpload", language)}</p>
-                  <p className="text-xs text-slate-600 mt-0.5">{t("brain.documentUploadDesc", language)}</p>
+                  <p className="text-sm font-medium font-primary text-[#606170]">{t("brain.documentUpload", language)}</p>
+                  <p className="text-xs font-primary text-[#606170] mt-0.5">{t("brain.documentUploadDesc", language)}</p>
                 </div>
               </div>
-              <div className="flex items-start gap-3 p-3 rounded-lg bg-gradient-to-r from-slate-50 to-slate-100/50 border border-slate-200 hover:border-[#0731c2] transition-colors group">
-                <div className="p-2 rounded-lg bg-blue-100 text-[#0731c2] group-hover:bg-blue-200 transition-colors">
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-[#EDEDED] border border-[#EDEDED] hover:border-[#0A33C6] transition-colors group">
+                <div className="p-2 rounded-lg bg-[#EDEDED] text-[#0A33C6] group-hover:bg-[#0A33C6]/10 transition-colors">
                   <Brain className="h-4 w-4" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-slate-700">{t("brain.knowledgeBase", language)}</p>
-                  <p className="text-xs text-slate-600 mt-0.5">{t("brain.knowledgeBaseDesc", language)}</p>
+                  <p className="text-sm font-medium font-primary text-[#606170]">{t("brain.knowledgeBase", language)}</p>
+                  <p className="text-xs font-primary text-[#606170] mt-0.5">{t("brain.knowledgeBaseDesc", language)}</p>
                 </div>
               </div>
-              <div className="flex items-start gap-3 p-3 rounded-lg bg-gradient-to-r from-slate-50 to-slate-100/50 border border-slate-200 hover:border-[#0731c2] transition-colors group">
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-gradient-to-r from-slate-50 to-slate-100/50 border border-[#EDEDED] hover:border-[#0731c2] transition-colors group">
                 <div className="p-2 rounded-lg bg-pink-100 text-pink-600 group-hover:bg-pink-200 transition-colors">
                   <Sparkles className="h-4 w-4" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-slate-700">{t("brain.contentGeneration", language)}</p>
-                  <p className="text-xs text-slate-600 mt-0.5">{t("brain.contentGenerationDesc", language)}</p>
+                  <p className="text-sm font-medium font-primary text-[#606170]">{t("brain.contentGeneration", language)}</p>
+                  <p className="text-xs font-primary text-[#606170] mt-0.5">{t("brain.contentGenerationDesc", language)}</p>
                 </div>
               </div>
             </CardContent>

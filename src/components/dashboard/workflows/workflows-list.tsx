@@ -124,10 +124,10 @@ export function WorkflowsList({ workflows, language: propLanguage }: WorkflowsLi
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">
+          <h2 className="text-3xl font-bold font-primary tracking-tight text-[#0A33C6]">
             {t("workflows.title")}
           </h2>
-          <p className="text-slate-600 mt-1">
+          <p className="font-primary text-[#606170] mt-1">
             {t("workflows.description")}
           </p>
         </div>
@@ -136,61 +136,61 @@ export function WorkflowsList({ workflows, language: propLanguage }: WorkflowsLi
 
       {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-3">
-        <Card className="border border-slate-200 shadow-lg bg-white relative overflow-hidden">
+        <Card className="border border-[#EDEDED] shadow-lg bg-white relative overflow-hidden">
           <div className="absolute top-0 right-0 p-4 opacity-5">
-            <Zap className="h-16 w-16 text-amber-500" />
+            <Zap className="h-16 w-16 text-[#0A33C6]" />
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-600">
+            <CardTitle className="text-sm font-medium font-primary text-[#606170]">
               {t("workflows.totalWorkflows")}
             </CardTitle>
-            <div className="p-2 rounded-lg bg-amber-100 text-amber-600">
+            <div className="p-2 rounded-lg bg-[#EDEDED] text-[#0A33C6]">
               <Zap className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900">{totalWorkflows}</div>
-            <p className="text-xs text-slate-600 mt-1">
+            <div className="text-2xl font-bold font-primary text-[#02041D]">{totalWorkflows}</div>
+            <p className="text-xs font-primary text-[#606170] mt-1">
               {t("workflows.automationRules")}
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border border-slate-200 shadow-lg bg-white relative overflow-hidden">
+        <Card className="border border-[#EDEDED] shadow-lg bg-white relative overflow-hidden">
           <div className="absolute top-0 right-0 p-4 opacity-5">
-            <Play className="h-16 w-16 text-emerald-500" />
+            <Play className="h-16 w-16 text-[#0A33C6]" />
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-600">
+            <CardTitle className="text-sm font-medium font-primary text-[#606170]">
               {t("workflows.active")}
             </CardTitle>
-            <div className="p-2 rounded-lg bg-emerald-100 text-emerald-600">
+            <div className="p-2 rounded-lg bg-[#EDEDED] text-[#0A33C6]">
               <Play className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900">{activeWorkflows}</div>
-            <p className="text-xs text-slate-600 mt-1">
+            <div className="text-2xl font-bold font-primary text-[#02041D]">{activeWorkflows}</div>
+            <p className="text-xs font-primary text-[#606170] mt-1">
               {t("workflows.runningAutomatically")}
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border border-slate-200 shadow-lg bg-white relative overflow-hidden">
+        <Card className="border border-[#EDEDED] shadow-lg bg-white relative overflow-hidden">
           <div className="absolute top-0 right-0 p-4 opacity-5">
-            <Pause className="h-16 w-16 text-slate-600" />
+            <Pause className="h-16 w-16 font-primary text-[#606170]" />
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-600">
+            <CardTitle className="text-sm font-medium font-primary text-[#606170]">
               {t("workflows.paused")}
             </CardTitle>
-            <div className="p-2 rounded-lg bg-slate-100 text-slate-500">
+            <div className="p-2 rounded-lg bg-[#EDEDED] font-primary text-[#606170]">
               <Pause className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900">{pausedWorkflows}</div>
-            <p className="text-xs text-slate-600 mt-1">
+            <div className="text-2xl font-bold font-primary text-[#02041D]">{pausedWorkflows}</div>
+            <p className="text-xs font-primary text-[#606170] mt-1">
               {t("workflows.inactiveRules")}
             </p>
           </CardContent>
@@ -200,20 +200,20 @@ export function WorkflowsList({ workflows, language: propLanguage }: WorkflowsLi
       {/* Search and Filter */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-600" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 font-primary text-[#606170]" />
           <Input
             placeholder={t("workflows.searchPlaceholder")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
+            className="pl-10 bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]"
           />
         </div>
         <div className="relative">
-          <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-600" />
+          <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 font-primary text-[#606170]" />
           <select
             value={filterTrigger}
             onChange={(e) => setFilterTrigger(e.target.value)}
-            className="pl-10 pr-8 py-2 rounded-md border border-slate-200 bg-white text-slate-900 text-sm"
+            className="pl-10 pr-8 py-2 rounded-md border border-[#EDEDED] bg-white font-primary text-[#02041D] text-sm"
           >
             <option value="all">{t("workflows.allTriggers")}</option>
             {Object.entries(triggerLabels).map(([value, label]) => (
@@ -225,54 +225,54 @@ export function WorkflowsList({ workflows, language: propLanguage }: WorkflowsLi
 
       {/* Workflows Table */}
       {filteredWorkflows.length > 0 ? (
-        <Card className="border border-slate-200 bg-white">
+        <Card className="border border-[#EDEDED] bg-white">
           <Table>
             <TableHeader>
-              <TableRow className="border-slate-200">
-                <TableHead className="text-slate-600">{t("workflows.name")}</TableHead>
-                <TableHead className="text-slate-600">{t("workflows.trigger")}</TableHead>
-                <TableHead className="text-slate-600">{t("workflows.actions")}</TableHead>
-                <TableHead className="text-slate-600">{t("workflows.status")}</TableHead>
-                <TableHead className="text-slate-600">{t("workflows.lastRun")}</TableHead>
-                <TableHead className="text-right text-slate-600">{t("common.actions")}</TableHead>
+              <TableRow className="border-[#EDEDED]">
+                <TableHead className="font-primary text-[#606170]">{t("workflows.name")}</TableHead>
+                <TableHead className="font-primary text-[#606170]">{t("workflows.trigger")}</TableHead>
+                <TableHead className="font-primary text-[#606170]">{t("workflows.actions")}</TableHead>
+                <TableHead className="font-primary text-[#606170]">{t("workflows.status")}</TableHead>
+                <TableHead className="font-primary text-[#606170]">{t("workflows.lastRun")}</TableHead>
+                <TableHead className="text-right font-primary text-[#606170]">{t("common.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredWorkflows.map((workflow) => (
                 <TableRow 
                   key={workflow.id}
-                  className="border-slate-200 hover:bg-slate-50"
+                  className="border-[#EDEDED] hover:bg-[#EDEDED]"
                 >
-                  <TableCell className="font-medium text-slate-900">
+                  <TableCell className="font-medium font-primary text-[#02041D]">
                     <div>
                       <div>{workflow.name}</div>
                       {workflow.description && (
-                        <div className="text-xs text-slate-600 mt-1">
+                        <div className="text-xs font-primary text-[#606170] mt-1">
                           {workflow.description}
                         </div>
                       )}
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge variant="outline" className="text-xs bg-slate-100 text-slate-700 border-slate-200">
+                    <Badge variant="outline" className="text-xs bg-[#EDEDED] font-primary text-[#606170] border-[#EDEDED]">
                       {getTriggerLabel(workflow.trigger)}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-sm text-slate-700">
+                  <TableCell className="text-sm font-primary text-[#606170]">
                     {getActionsSummary(workflow.actions)}
                   </TableCell>
                   <TableCell>
                     <Badge 
                       variant={workflow.enabled ? "default" : "secondary"}
                       className={workflow.enabled 
-                        ? "bg-emerald-100 text-emerald-700 border-0" 
-                        : "bg-slate-100 text-slate-700 border-slate-200"
+                        ? "bg-[#EDEDED] text-[#0A33C6] border-0" 
+                        : "bg-[#EDEDED] font-primary text-[#606170] border-[#EDEDED]"
                       }
                     >
                       {workflow.enabled ? t("workflows.active") : t("workflows.paused")}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-sm text-slate-600">
+                  <TableCell className="text-sm font-primary text-[#606170]">
                     <div className="flex items-center gap-1">
                       <Clock className="h-3 w-3" />
                       {workflow.updated_at 
@@ -284,20 +284,20 @@ export function WorkflowsList({ workflows, language: propLanguage }: WorkflowsLi
                   <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 hover:text-slate-900">
+                        <Button variant="ghost" size="icon" className="h-8 w-8 font-primary text-[#606170] hover:font-primary text-[#02041D]">
                           <MoreVertical className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="bg-white border-slate-200">
+                      <DropdownMenuContent align="end" className="bg-white border-[#EDEDED]">
                         <DropdownMenuItem asChild>
-                          <Link href={`/dashboard/workflows/${workflow.id}`} className="flex items-center text-slate-900">
+                          <Link href={`/dashboard/workflows/${workflow.id}`} className="flex items-center font-primary text-[#02041D]">
                             <Edit className="mr-2 h-4 w-4" />
                             {t("workflows.edit")}
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem 
                           onClick={() => handleToggle(workflow.id, workflow.enabled)}
-                          className="text-slate-900"
+                          className="font-primary text-[#02041D]"
                         >
                           {workflow.enabled ? (
                             <>
@@ -327,15 +327,15 @@ export function WorkflowsList({ workflows, language: propLanguage }: WorkflowsLi
           </Table>
         </Card>
       ) : (
-        <Card className="border border-dashed border-slate-200 bg-slate-50">
+        <Card className="border border-dashed border-[#EDEDED] bg-[#EDEDED]">
           <CardContent className="flex flex-col items-center justify-center py-16">
-            <div className="h-16 w-16 rounded-full bg-amber-100 flex items-center justify-center mb-4">
-              <Zap className="h-8 w-8 text-amber-600" />
+            <div className="h-16 w-16 rounded-full bg-[#EDEDED] flex items-center justify-center mb-4">
+              <Zap className="h-8 w-8 text-[#0A33C6]" />
             </div>
-            <h3 className="text-xl font-semibold text-slate-900 mb-2">
+            <h3 className="text-xl font-semibold font-primary text-[#02041D] mb-2">
               {searchQuery || filterTrigger !== "all" ? t("workflows.noWorkflowsFound") : t("workflows.noAutomationsYet")}
             </h3>
-            <p className="text-slate-600 mb-6 max-w-md text-center">
+            <p className="font-primary text-[#606170] mb-6 max-w-md text-center">
               {searchQuery || filterTrigger !== "all"
                 ? t("workflows.tryAdjustingSearch")
                 : t("workflows.createFirstWorkflow")}

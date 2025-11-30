@@ -229,14 +229,14 @@ export function ChatInterface({ conversationId, initialMessages, currentUserId, 
     };
 
     return (
-        <div className={cn("flex flex-col h-[600px] border border-slate-200 rounded-lg bg-white shadow-sm", className)}>
-            <div className="p-4 border-b border-slate-200 bg-white flex items-center justify-between">
-                <h3 className="font-semibold text-slate-900">Chat</h3>
+        <div className={cn("flex flex-col h-[600px] border border-[#EDEDED] rounded-lg bg-white shadow-sm", className)}>
+            <div className="p-4 border-b border-[#EDEDED] bg-white flex items-center justify-between">
+                <h3 className="font-semibold font-primary text-[#02041D]">Chat</h3>
                 <div className="flex items-center gap-1">
                     {isConnected ? (
-                        <><Wifi className="h-4 w-4 text-green-500" /><span className="text-xs text-slate-600">Live</span></>
+                        <><Wifi className="h-4 w-4 text-green-500" /><span className="text-xs font-primary text-[#606170]">Live</span></>
                     ) : (
-                        <><WifiOff className="h-4 w-4 text-red-500" /><span className="text-xs text-slate-600">Offline</span></>
+                        <><WifiOff className="h-4 w-4 text-red-500" /><span className="text-xs font-primary text-[#606170]">Offline</span></>
                     )}
                 </div>
             </div>
@@ -257,7 +257,7 @@ export function ChatInterface({ conversationId, initialMessages, currentUserId, 
                             <div key={uniqueKey} className={cn("flex w-full", isMe ? "justify-end" : "justify-start")}>
                                 <div className={cn("flex max-w-[80%] gap-2", isMe ? "flex-row-reverse" : "flex-row")}>
                                     <Avatar className="h-8 w-8 mt-0.5 border-2 border-white">
-                                        <AvatarFallback className="bg-gradient-to-br from-[#0731c2] to-[#010119] text-white text-xs">
+                                        <AvatarFallback className="bg-gradient-to-br from-[#0A33C6] to-[#0A33C6] text-white text-xs">
                                             {isMe ? "ME" : (msg.user_name?.[0] || "U")}
                                         </AvatarFallback>
                                     </Avatar>
@@ -265,10 +265,10 @@ export function ChatInterface({ conversationId, initialMessages, currentUserId, 
                                         "p-3 rounded-lg text-sm",
                                         isMe 
                                             ? "bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-tr-none" 
-                                            : "bg-slate-100 text-slate-900 rounded-tl-none"
+                                            : "bg-[#EDEDED] font-primary text-[#02041D] rounded-tl-none"
                                     )}>
-                                        <p className={isMe ? "text-white" : "text-slate-900"}>{msg.content}</p>
-                                        <span className={cn("text-[10px] block mt-1 opacity-70", isMe ? "text-white/80" : "text-slate-600")}>
+                                        <p className={isMe ? "text-white" : "font-primary text-[#02041D]"}>{msg.content}</p>
+                                        <span className={cn("text-[10px] block mt-1 opacity-70", isMe ? "text-white/80" : "font-primary text-[#606170]")}>
                                             {msg.created_at ? format(new Date(msg.created_at), "h:mm a") : "Sending..."}
                                         </span>
                                     </div>
@@ -277,14 +277,14 @@ export function ChatInterface({ conversationId, initialMessages, currentUserId, 
                         );
                     })}
                     {messages.length === 0 && (
-                         <div className="text-center text-slate-600 py-10">
+                         <div className="text-center font-primary text-[#606170] py-10">
                              No messages yet. Start the conversation!
                          </div>
                     )}
                     
                     {/* Typing indicators */}
                     {typingUsers.size > 0 && (
-                        <div key="typing-indicator" className="flex items-center gap-2 text-sm text-slate-600 italic mt-2">
+                        <div key="typing-indicator" className="flex items-center gap-2 text-sm font-primary text-[#606170] italic mt-2">
                             <div className="flex gap-1">
                                 <div key="dot-1" className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
                                 <div key="dot-2" className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
@@ -298,7 +298,7 @@ export function ChatInterface({ conversationId, initialMessages, currentUserId, 
                 </div>
             </ScrollArea>
 
-            <form onSubmit={handleSend} className="p-4 border-t border-slate-200 bg-white flex gap-2">
+            <form onSubmit={handleSend} className="p-4 border-t border-[#EDEDED] bg-white flex gap-2">
                 <Input 
                     value={inputValue} 
                     onChange={e => {
@@ -307,7 +307,7 @@ export function ChatInterface({ conversationId, initialMessages, currentUserId, 
                     }} 
                     placeholder="Type a message..." 
                     disabled={sending}
-                    className="flex-1 bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
+                    className="flex-1 bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]"
                 />
                 <Button 
                     type="submit" 

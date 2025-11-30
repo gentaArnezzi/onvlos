@@ -77,10 +77,10 @@ export function DashboardContent({
     <div className="flex-1 space-y-8 p-8 max-w-screen-2xl mx-auto">
       {/* Header */}
       <div>
-        <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-[#0731c2] via-[#0731c2] to-[#010119] bg-clip-text text-transparent">
+        <h2 className="text-3xl font-bold font-primary tracking-tight text-[#0A33C6]">
           {t("dashboard.title")}
         </h2>
-        <p className="text-slate-600 mt-1">
+        <p className="font-primary text-[#606170] mt-1">
           {t("dashboard.description")}
         </p>
       </div>
@@ -90,24 +90,23 @@ export function DashboardContent({
         {translatedStats.map((stat, index) => {
           const Icon = stat.icon;
           return (
-            <Card key={index} className="relative overflow-hidden border-slate-200 bg-white">
-              <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-5`} />
+            <Card key={index} className="relative overflow-hidden border-[#EDEDED] bg-white">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-slate-600">
+                <CardTitle className="text-sm font-medium font-primary text-[#606170]">
                   {stat.title}
                 </CardTitle>
-                <div className={`p-2 rounded-lg bg-gradient-to-br ${stat.gradient} ${stat.shadow}`}>
+                <div className="p-2 rounded-lg bg-[#0A33C6] shadow-lg">
                   <Icon className="h-4 w-4 text-white" />
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-slate-900">{stat.value}</div>
+                <div className="text-2xl font-bold font-primary text-[#02041D]">{stat.value}</div>
                 <div className="flex items-center gap-2 mt-1">
-                  <p className="text-xs text-slate-600">
+                  <p className="text-xs font-primary text-[#606170]">
                     {stat.description}
                   </p>
                   {stat.trend && (
-                    <div className={`flex items-center gap-1 text-xs font-medium ${stat.trendUp ? 'text-emerald-600' : 'text-red-600'}`}>
+                    <div className={`flex items-center gap-1 text-xs font-medium ${stat.trendUp ? 'text-[#0A33C6]' : 'text-red-600'}`}>
                       {stat.trendUp ? (
                         <ArrowUpRight className="h-3 w-3" />
                       ) : (
@@ -131,7 +130,7 @@ export function DashboardContent({
         </TabsList>
         <TabsContent value="overview" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <Card className="col-span-4 border-slate-200 bg-white">
+            <Card className="col-span-4 border-[#EDEDED] bg-white">
               <CardHeader>
                 <CardTitle>{t("dashboard.recentTransactions")}</CardTitle>
               </CardHeader>
@@ -162,11 +161,11 @@ export function DashboardContent({
                     </TableBody>
                   </Table>
                 ) : (
-                  <p className="text-sm text-slate-600">{t("dashboard.noTransactions")}</p>
+                  <p className="text-sm font-primary text-[#606170]">{t("dashboard.noTransactions")}</p>
                 )}
               </CardContent>
             </Card>
-            <Card className="col-span-3 border-slate-200 bg-white">
+            <Card className="col-span-3 border-[#EDEDED] bg-white">
               <CardHeader>
                 <CardTitle>{t("dashboard.recentActivity")}</CardTitle>
               </CardHeader>
@@ -175,14 +174,14 @@ export function DashboardContent({
                   <div className="space-y-4">
                     {recentActivity.map((activity) => (
                       <div key={activity.id} className="flex items-start gap-3">
-                        <div className="p-2 rounded-full bg-blue-100">
-                          <Activity className="h-4 w-4 text-blue-600" />
+                        <div className="p-2 rounded-full bg-[#EDEDED]">
+                          <Activity className="h-4 w-4 text-[#0A33C6]" />
                         </div>
                         <div className="flex-1">
-                          <p className="text-sm font-medium text-slate-900">
+                          <p className="text-sm font-medium font-primary text-[#02041D]">
                             {activity.description}
                           </p>
-                          <p className="text-xs text-slate-600 mt-1">
+                          <p className="text-xs font-primary text-[#606170] mt-1">
                             {format(activity.timestamp, "MMM dd, yyyy 'at' HH:mm")}
                           </p>
                         </div>
@@ -190,7 +189,7 @@ export function DashboardContent({
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-slate-600">{t("dashboard.noActivity")}</p>
+                  <p className="text-sm font-primary text-[#606170]">{t("dashboard.noActivity")}</p>
                 )}
               </CardContent>
             </Card>

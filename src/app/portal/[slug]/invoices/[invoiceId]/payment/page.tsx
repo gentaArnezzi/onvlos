@@ -24,9 +24,9 @@ export default async function PaymentPage({ params }: { params: Promise<{ slug: 
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6 p-6 bg-white">
-                <div className="flex justify-between items-center pb-4 border-b border-slate-200">
-                    <span className="text-slate-600 font-medium">Total Amount</span>
-                    <span className="text-3xl font-bold text-slate-900">
+                <div className="flex justify-between items-center pb-4 border-b border-[#EDEDED]">
+                    <span className="font-primary text-[#606170] font-medium">Total Amount</span>
+                    <span className="text-3xl font-bold font-primary text-[#02041D]">
                         {currencySymbol}{Number(invoice.total_amount).toLocaleString()}
                     </span>
                 </div>
@@ -44,13 +44,13 @@ export default async function PaymentPage({ params }: { params: Promise<{ slug: 
         <div className="mt-8 flex items-center justify-center space-x-4 opacity-60">
              {/* Payment Gateway Logos */}
              <div className="h-8 w-12 bg-slate-200 rounded flex items-center justify-center">
-                <span className="text-xs text-slate-600">SSL</span>
+                <span className="text-xs font-primary text-[#606170]">SSL</span>
              </div>
              <div className="h-8 w-12 bg-slate-200 rounded flex items-center justify-center">
-                <span className="text-xs text-slate-600">PCI</span>
+                <span className="text-xs font-primary text-[#606170]">PCI</span>
              </div>
              <div className="h-8 w-12 bg-slate-200 rounded flex items-center justify-center">
-                <span className="text-xs text-slate-600">256</span>
+                <span className="text-xs font-primary text-[#606170]">256</span>
              </div>
         </div>
     </div>

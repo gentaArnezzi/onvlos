@@ -67,13 +67,13 @@ export function FunnelsList({ funnels, language: propLanguage }: FunnelsListProp
     <div className="space-y-4">
       {/* Search Bar */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-500" />
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 font-primary text-[#606170]" />
         <Input
           type="text"
           placeholder={t("funnels.searchPlaceholder")}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10 bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
+          className="pl-10 bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]"
         />
       </div>
 
@@ -83,20 +83,20 @@ export function FunnelsList({ funnels, language: propLanguage }: FunnelsListProp
           {filteredFunnels.map((funnel) => (
             <Card
               key={funnel.id}
-              className="group hover:shadow-xl transition-all duration-300 border-slate-200 bg-white overflow-hidden"
+              className="group hover:shadow-xl transition-all duration-300 border-[#EDEDED] bg-white overflow-hidden"
             >
-              <div className="h-2 w-full bg-gradient-to-r from-pink-500 to-rose-500" />
+              <div className="h-2 w-full bg-[#0A33C6]" />
               <CardHeader>
                 <div className="flex justify-between items-start mb-2">
-                  <div className="p-2 rounded-lg bg-slate-100 text-slate-600 group-hover:bg-pink-100 group-hover:text-pink-600 transition-colors">
+                  <div className="p-2 rounded-lg bg-[#EDEDED] font-primary text-[#606170] group-hover:bg-[#0A33C6]/10 group-hover:text-[#0A33C6] transition-colors">
                     <Layout className="h-5 w-5" />
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge
                       variant={funnel.published ? "default" : "secondary"}
                       className={funnel.published
-                        ? "bg-emerald-600 hover:bg-emerald-700 text-white"
-                        : "bg-slate-100 text-slate-600 hover:bg-slate-200"}
+                        ? "bg-[#0A33C6] hover:bg-[#0A33C6]/90 text-white"
+                        : "bg-[#EDEDED] font-primary text-[#606170] hover:bg-[#EDEDED]"}
                     >
                       {funnel.published ? t("funnels.live") : t("funnels.draft")}
                     </Badge>
@@ -105,13 +105,13 @@ export function FunnelsList({ funnels, language: propLanguage }: FunnelsListProp
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8 text-slate-500 hover:text-slate-700"
+                          className="h-8 w-8 font-primary text-[#606170] hover:font-primary text-[#606170]"
                         >
                           <MoreVertical className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="bg-white border-slate-200">
-                        <DropdownMenuItem asChild className="text-slate-900 hover:bg-slate-100">
+                      <DropdownMenuContent align="end" className="bg-white border-[#EDEDED]">
+                        <DropdownMenuItem asChild className="font-primary text-[#02041D] hover:bg-[#EDEDED]">
                           <Link href={`/dashboard/funnels/${funnel.id}`}>
                             <ArrowRight className="mr-2 h-4 w-4" />
                             {t("funnels.edit")}
@@ -119,7 +119,7 @@ export function FunnelsList({ funnels, language: propLanguage }: FunnelsListProp
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => handleDuplicate(funnel.id)}
-                          className="text-slate-900 hover:bg-slate-100"
+                          className="font-primary text-[#02041D] hover:bg-[#EDEDED]"
                         >
                           <Copy className="mr-2 h-4 w-4" />
                           {t("funnels.duplicate")}
@@ -135,18 +135,18 @@ export function FunnelsList({ funnels, language: propLanguage }: FunnelsListProp
                     </DropdownMenu>
                   </div>
                 </div>
-                <CardTitle className="text-xl text-slate-900 group-hover:text-pink-600 transition-colors">
+                <CardTitle className="text-xl font-primary text-[#02041D] group-hover:text-[#0A33C6] transition-colors">
                   {funnel.name}
                 </CardTitle>
-                <CardDescription className="line-clamp-2 text-slate-600">
+                <CardDescription className="line-clamp-2 font-primary text-[#606170]">
                   {funnel.description || t("funnels.noDescription")}
                 </CardDescription>
-                <div className="text-xs text-slate-600 mt-2">
+                <div className="text-xs font-primary text-[#606170] mt-2">
                   {t("funnels.created")} {funnel.created_at ? format(new Date(funnel.created_at), "MMM d, yyyy") : t("funnels.unknownDate")}
                 </div>
               </CardHeader>
-              <CardFooter className="flex justify-between items-center border-t border-slate-100 pt-4 mt-2">
-                <div className="text-sm text-slate-600 flex items-center gap-1">
+              <CardFooter className="flex justify-between items-center border-t border-[#EDEDED] pt-4 mt-2">
+                <div className="text-sm font-primary text-[#606170] flex items-center gap-1">
                   <Users className="h-3 w-3" />
                   <span>{funnel.onboarded_count || 0} {t("funnels.clients")}</span>
                 </div>
@@ -154,7 +154,7 @@ export function FunnelsList({ funnels, language: propLanguage }: FunnelsListProp
                   asChild
                   variant="ghost"
                   size="sm"
-                  className="text-slate-600 hover:text-pink-600 hover:bg-pink-50"
+                  className="font-primary text-[#606170] hover:text-[#0A33C6] hover:bg-[#0A33C6]/10"
                 >
                   <Link href={`/dashboard/funnels/${funnel.id}`}>
                     {t("funnels.editFunnel")} <ArrowRight className="ml-2 h-4 w-4" />
@@ -165,14 +165,14 @@ export function FunnelsList({ funnels, language: propLanguage }: FunnelsListProp
           ))}
         </div>
       ) : (
-        <div className="col-span-full flex flex-col items-center justify-center py-16 bg-slate-50 rounded-xl border border-dashed border-slate-200">
-          <div className="h-16 w-16 rounded-full bg-pink-100 flex items-center justify-center mb-4">
-            <Filter className="h-8 w-8 text-pink-600" />
+        <div className="col-span-full flex flex-col items-center justify-center py-16 bg-[#EDEDED] rounded-xl border border-dashed border-[#EDEDED]">
+          <div className="h-16 w-16 rounded-full bg-[#EDEDED] flex items-center justify-center mb-4">
+            <Filter className="h-8 w-8 text-[#0A33C6]" />
           </div>
-          <h3 className="text-xl font-semibold text-slate-900 mb-2">
+          <h3 className="text-xl font-semibold font-primary text-[#02041D] mb-2">
             {searchQuery ? t("funnels.noFunnelsFound") : t("funnels.noFunnelsYet")}
           </h3>
-          <p className="text-slate-600 mb-6 max-w-md text-center">
+          <p className="font-primary text-[#606170] mb-6 max-w-md text-center">
             {searchQuery
               ? t("funnels.tryAdjustingSearch")
               : t("funnels.createFirstFunnel")}

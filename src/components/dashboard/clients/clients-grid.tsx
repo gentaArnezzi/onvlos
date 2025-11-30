@@ -76,11 +76,11 @@ interface ClientsGridProps {
 }
 
 const statusColors: Record<string, string> = {
-  active: "bg-emerald-100 text-emerald-700",
-  lead: "bg-orange-100 text-orange-700",
-  onboarding: "bg-blue-100 text-blue-700",
-  completed: "bg-slate-100 text-slate-700",
-  archived: "bg-slate-100 text-slate-700",
+  active: "bg-[#EDEDED] text-emerald-700",
+  lead: "bg-[#EDEDED] text-orange-700",
+  onboarding: "bg-[#EDEDED] text-[#0A33C6]",
+  completed: "bg-[#EDEDED] font-primary text-[#606170]",
+  archived: "bg-[#EDEDED] font-primary text-[#606170]",
 };
 
 export function ClientsGrid({ clients: initialClients, totalPages = 1, currentPage = 1 }: ClientsGridProps) {
@@ -174,46 +174,46 @@ export function ClientsGrid({ clients: initialClients, totalPages = 1, currentPa
             placeholder={t("clients.searchPlaceholder")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
+            className="pl-10 bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]"
           />
-          <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-600" />
+          <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 font-primary text-[#606170]" />
         </div>
         <div className="flex gap-2">
           <Select value={filterStatus} onValueChange={setFilterStatus}>
-            <SelectTrigger className="w-[140px] bg-white border-slate-200 text-slate-900">
+            <SelectTrigger className="w-[140px] bg-white border-[#EDEDED] font-primary text-[#02041D]">
               <SelectValue placeholder={t("clients.status")} />
             </SelectTrigger>
-            <SelectContent className="bg-white border-slate-200">
-              <SelectItem value="all" className="text-slate-900">{t("clients.allStatus")}</SelectItem>
-              <SelectItem value="active" className="text-slate-900">{t("clients.active")}</SelectItem>
-              <SelectItem value="lead" className="text-slate-900">{t("clients.lead")}</SelectItem>
-              <SelectItem value="onboarding" className="text-slate-900">{t("clients.onboarding")}</SelectItem>
-              <SelectItem value="completed" className="text-slate-900">{t("clients.completed")}</SelectItem>
-              <SelectItem value="archived" className="text-slate-900">{t("clients.archived")}</SelectItem>
+            <SelectContent className="bg-white border-[#EDEDED]">
+              <SelectItem value="all" className="font-primary text-[#02041D]">{t("clients.allStatus")}</SelectItem>
+              <SelectItem value="active" className="font-primary text-[#02041D]">{t("clients.active")}</SelectItem>
+              <SelectItem value="lead" className="font-primary text-[#02041D]">{t("clients.lead")}</SelectItem>
+              <SelectItem value="onboarding" className="font-primary text-[#02041D]">{t("clients.onboarding")}</SelectItem>
+              <SelectItem value="completed" className="font-primary text-[#02041D]">{t("clients.completed")}</SelectItem>
+              <SelectItem value="archived" className="font-primary text-[#02041D]">{t("clients.archived")}</SelectItem>
             </SelectContent>
           </Select>
           <Select value={filterCategory} onValueChange={setFilterCategory}>
-            <SelectTrigger className="w-[140px] bg-white border-slate-200 text-slate-900">
+            <SelectTrigger className="w-[140px] bg-white border-[#EDEDED] font-primary text-[#02041D]">
               <SelectValue placeholder={t("clients.category")} />
             </SelectTrigger>
-            <SelectContent className="bg-white border-slate-200">
-              <SelectItem value="all" className="text-slate-900">{t("clients.allCategories")}</SelectItem>
+            <SelectContent className="bg-white border-[#EDEDED]">
+              <SelectItem value="all" className="font-primary text-[#02041D]">{t("clients.allCategories")}</SelectItem>
               {categories.map((cat) => (
-                <SelectItem key={cat} value={cat || ""} className="text-slate-900">
+                <SelectItem key={cat} value={cat || ""} className="font-primary text-[#02041D]">
                   {cat}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
           <Select value={sortBy} onValueChange={setSortBy}>
-            <SelectTrigger className="w-[140px] bg-white border-slate-200 text-slate-900">
+            <SelectTrigger className="w-[140px] bg-white border-[#EDEDED] font-primary text-[#02041D]">
               <SelectValue placeholder={t("clients.sortBy")} />
             </SelectTrigger>
-            <SelectContent className="bg-white border-slate-200">
-              <SelectItem value="created" className="text-slate-900">{t("clients.newest")}</SelectItem>
-              <SelectItem value="updated" className="text-slate-900">{t("clients.recentlyUpdated")}</SelectItem>
-              <SelectItem value="name" className="text-slate-900">{t("clients.name")}</SelectItem>
-              <SelectItem value="value" className="text-slate-900">{t("clients.contractValue")}</SelectItem>
+            <SelectContent className="bg-white border-[#EDEDED]">
+              <SelectItem value="created" className="font-primary text-[#02041D]">{t("clients.newest")}</SelectItem>
+              <SelectItem value="updated" className="font-primary text-[#02041D]">{t("clients.recentlyUpdated")}</SelectItem>
+              <SelectItem value="name" className="font-primary text-[#02041D]">{t("clients.name")}</SelectItem>
+              <SelectItem value="value" className="font-primary text-[#02041D]">{t("clients.contractValue")}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -234,25 +234,25 @@ export function ClientsGrid({ clients: initialClients, totalPages = 1, currentPa
             return (
               <Card
                 key={client.id}
-                className="group relative overflow-hidden border-slate-200 bg-white hover:shadow-lg transition-all duration-200"
+                className="group relative overflow-hidden border-[#EDEDED] bg-white hover:shadow-lg transition-all duration-200"
               >
                 <CardContent className="p-6">
                   {/* Header */}
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center space-x-3 flex-1 min-w-0">
-                      <Avatar className="h-12 w-12 border-2 border-slate-200 flex-shrink-0">
+                      <Avatar className="h-12 w-12 border-2 border-[#EDEDED] flex-shrink-0">
                         <AvatarImage src={client.logo_url || ""} />
-                        <AvatarFallback className="bg-gradient-to-br from-[#0731c2] to-[#010119] text-white font-semibold text-sm">
+                        <AvatarFallback className="bg-gradient-to-br from-[#0A33C6] to-[#0A33C6] text-white font-semibold text-sm">
                           {initials}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1 min-w-0">
                         <Link href={`/dashboard/clients/${client.id}`}>
-                          <h3 className="font-semibold text-slate-900 truncate hover:text-blue-600 transition-colors">
+                          <h3 className="font-semibold font-primary text-[#02041D] truncate hover:text-[#0A33C6] transition-colors">
                             {client.company_name || t("clients.noCompany")}
                           </h3>
                         </Link>
-                        <p className="text-sm text-slate-600 truncate">
+                        <p className="text-sm font-primary text-[#606170] truncate">
                           {client.name}
                         </p>
                       </div>
@@ -262,16 +262,16 @@ export function ClientsGrid({ clients: initialClients, totalPages = 1, currentPa
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity text-slate-500 hover:text-slate-900"
+                          className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity font-primary text-[#606170] hover:font-primary text-[#02041D]"
                         >
                           <MoreVertical className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-48 bg-white border-slate-200 shadow-lg">
+                      <DropdownMenuContent align="end" className="w-48 bg-white border-[#EDEDED] shadow-lg">
                         {client.space_public_url && (
-                          <DropdownMenuItem asChild className="text-slate-900 hover:bg-slate-100 focus:bg-slate-100">
+                          <DropdownMenuItem asChild className="font-primary text-[#02041D] hover:bg-[#EDEDED] focus:bg-[#EDEDED]">
                             <Link href={`/portal/${client.space_public_url}`} target="_blank" className="cursor-pointer flex items-center">
-                              <ExternalLink className="mr-2 h-4 w-4 text-slate-600" />
+                              <ExternalLink className="mr-2 h-4 w-4 font-primary text-[#606170]" />
                               {t("clients.openSpace")}
                             </Link>
                           </DropdownMenuItem>
@@ -281,9 +281,9 @@ export function ClientsGrid({ clients: initialClients, totalPages = 1, currentPa
                             setSelectedClientForAction(client.id);
                             setInvoiceDialogOpen(true);
                           }}
-                          className="cursor-pointer text-slate-900 hover:bg-slate-100 focus:bg-slate-100"
+                          className="cursor-pointer font-primary text-[#02041D] hover:bg-[#EDEDED] focus:bg-[#EDEDED]"
                         >
-                          <FileText className="mr-2 h-4 w-4 text-slate-600" />
+                          <FileText className="mr-2 h-4 w-4 font-primary text-[#606170]" />
                           {t("clients.newInvoice")}
                         </DropdownMenuItem>
                         <DropdownMenuItem
@@ -291,21 +291,21 @@ export function ClientsGrid({ clients: initialClients, totalPages = 1, currentPa
                             setSelectedClientForAction(client.id);
                             setTaskDialogOpen(true);
                           }}
-                          className="cursor-pointer text-slate-900 hover:bg-slate-100 focus:bg-slate-100"
+                          className="cursor-pointer font-primary text-[#02041D] hover:bg-[#EDEDED] focus:bg-[#EDEDED]"
                         >
-                          <CheckSquare className="mr-2 h-4 w-4 text-slate-600" />
+                          <CheckSquare className="mr-2 h-4 w-4 font-primary text-[#606170]" />
                           {t("clients.newTask")}
                         </DropdownMenuItem>
-                        <DropdownMenuItem asChild className="text-slate-900 hover:bg-slate-100 focus:bg-slate-100">
+                        <DropdownMenuItem asChild className="font-primary text-[#02041D] hover:bg-[#EDEDED] focus:bg-[#EDEDED]">
                           <Link href={`/dashboard/funnels`} className="cursor-pointer flex items-center">
-                            <Zap className="mr-2 h-4 w-4 text-slate-600" />
+                            <Zap className="mr-2 h-4 w-4 font-primary text-[#606170]" />
                             {t("clients.startFunnel")}
                           </Link>
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator className="bg-slate-200" />
+                        <DropdownMenuSeparator className="bg-[#EDEDED]" />
                         <DropdownMenuItem
                           onClick={() => handleArchive(client.id)}
-                          className="cursor-pointer text-slate-600 hover:bg-slate-100 focus:bg-slate-100"
+                          className="cursor-pointer font-primary text-[#606170] hover:bg-[#EDEDED] focus:bg-[#EDEDED]"
                         >
                           <Archive className="mr-2 h-4 w-4" />
                           {t("clients.archive")}
@@ -326,7 +326,7 @@ export function ClientsGrid({ clients: initialClients, totalPages = 1, currentPa
                     <div className="mb-3">
                       <Badge
                         variant="outline"
-                        className="text-xs bg-slate-100 text-slate-700 border-slate-200"
+                        className="text-xs bg-[#EDEDED] font-primary text-[#606170] border-[#EDEDED]"
                       >
                         {client.category}
                       </Badge>
@@ -335,7 +335,7 @@ export function ClientsGrid({ clients: initialClients, totalPages = 1, currentPa
 
                   {/* Description */}
                   {client.description && (
-                    <p className="text-sm text-slate-600 mb-4 line-clamp-2">
+                    <p className="text-sm font-primary text-[#606170] mb-4 line-clamp-2">
                       {client.description}
                     </p>
                   )}
@@ -343,14 +343,14 @@ export function ClientsGrid({ clients: initialClients, totalPages = 1, currentPa
                   {/* Engagement Bar */}
                   <div className="mb-4">
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-medium text-slate-600">{t("clients.engagement")}</span>
-                      <span className="text-xs text-slate-600">{engagement}%</span>
+                      <span className="text-xs font-medium font-primary text-[#606170]">{t("clients.engagement")}</span>
+                      <span className="text-xs font-primary text-[#606170]">{engagement}%</span>
                     </div>
                     <Progress value={engagement} className="h-2" />
                   </div>
 
                   {/* Stats */}
-                  <div className="flex items-center justify-between text-xs text-slate-600 mb-4">
+                  <div className="flex items-center justify-between text-xs font-primary text-[#606170] mb-4">
                     <div className="flex items-center gap-1">
                       <CheckSquare className="h-3 w-3" />
                       <span>{client.task_count || 0} {t("clients.tasks")}</span>
@@ -362,7 +362,7 @@ export function ClientsGrid({ clients: initialClients, totalPages = 1, currentPa
                   </div>
 
                   {/* Footer */}
-                  <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+                  <div className="flex items-center justify-between pt-4 border-t border-[#EDEDED]">
                     <Badge
                       variant="outline"
                       className={cn(
@@ -373,7 +373,7 @@ export function ClientsGrid({ clients: initialClients, totalPages = 1, currentPa
                       {client.status || "lead"}
                     </Badge>
                     {client.created_at && (
-                      <span className="text-xs text-slate-600">
+                      <span className="text-xs font-primary text-[#606170]">
                         {format(new Date(client.created_at), "MMM d, yyyy")}
                       </span>
                     )}
@@ -384,17 +384,17 @@ export function ClientsGrid({ clients: initialClients, totalPages = 1, currentPa
           })}
         </div>
       ) : (
-        <Card className="border-dashed border-slate-200 bg-slate-50">
+        <Card className="border-dashed border-[#EDEDED] bg-[#EDEDED]">
           <CardContent className="flex flex-col items-center justify-center py-16">
-            <div className="h-16 w-16 rounded-full bg-blue-100 flex items-center justify-center mb-4">
-              <Users className="h-8 w-8 text-blue-600" />
+            <div className="h-16 w-16 rounded-full bg-[#EDEDED] flex items-center justify-center mb-4">
+              <Users className="h-8 w-8 text-[#0A33C6]" />
             </div>
-            <h3 className="text-xl font-semibold text-slate-900 mb-2">
+            <h3 className="text-xl font-semibold font-primary text-[#02041D] mb-2">
               {searchQuery || filterStatus !== "all" || filterCategory !== "all" 
                 ? t("clients.noClients") 
                 : t("clients.noClientsYet")}
             </h3>
-            <p className="text-slate-600 mb-6 max-w-md text-center">
+            <p className="font-primary text-[#606170] mb-6 max-w-md text-center">
               {searchQuery || filterStatus !== "all" || filterCategory !== "all"
                 ? t("clients.tryAdjustingSearch")
                 : t("clients.getStartedByAdding")}
@@ -433,10 +433,10 @@ export function ClientsGrid({ clients: initialClients, totalPages = 1, currentPa
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={!!deletingClientId} onOpenChange={(open) => !open && setDeletingClientId(null)}>
-        <DialogContent className="bg-white border-slate-200">
+        <DialogContent className="bg-white border-[#EDEDED]">
           <DialogHeader>
-            <DialogTitle className="text-slate-900">{t("clients.deleteClient")}</DialogTitle>
-            <DialogDescription className="text-slate-600">
+            <DialogTitle className="font-primary text-[#02041D]">{t("clients.deleteClient")}</DialogTitle>
+            <DialogDescription className="font-primary text-[#606170]">
               {t("clients.deleteConfirm")}
             </DialogDescription>
           </DialogHeader>
@@ -444,7 +444,7 @@ export function ClientsGrid({ clients: initialClients, totalPages = 1, currentPa
             <Button
               variant="outline"
               onClick={() => setDeletingClientId(null)}
-              className="border-slate-200 text-slate-900 hover:bg-slate-50"
+              className="border-[#EDEDED] font-primary text-[#02041D] hover:bg-[#EDEDED]"
             >
               {t("common.cancel")}
             </Button>

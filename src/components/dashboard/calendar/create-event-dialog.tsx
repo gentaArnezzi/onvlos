@@ -53,64 +53,64 @@ export function CreateEventDialog() {
           <Plus className="mr-2 h-4 w-4" /> New Event
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-white border-slate-200">
+      <DialogContent className="sm:max-w-[425px] bg-white border-[#EDEDED]">
         <DialogHeader>
-          <DialogTitle className="text-slate-900">Schedule Event</DialogTitle>
+          <DialogTitle className="font-primary text-[#02041D]">Schedule Event</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="space-y-2">
-              <Label className="text-slate-900">Event Title</Label>
+              <Label className="font-primary text-[#02041D]">Event Title</Label>
               <Input 
                 value={title} 
                 onChange={e => setTitle(e.target.value)} 
                 required 
                 placeholder="Weekly Sync"
-                className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
+                className="bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]"
               />
             </div>
             
             <div className="space-y-2">
-               <Label className="text-slate-900">Date</Label>
+               <Label className="font-primary text-[#02041D]">Date</Label>
                <Input 
                  type="date" 
                  value={startDate} 
                  onChange={e => setStartDate(e.target.value)} 
                  required
-                 className="bg-white border-slate-200 text-slate-900"
+                 className="bg-white border-[#EDEDED] font-primary text-[#02041D]"
                />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                   <Label className="text-slate-900">Start Time</Label>
+                   <Label className="font-primary text-[#02041D]">Start Time</Label>
                    <Input 
                      type="time" 
                      value={startTime} 
                      onChange={e => setStartTime(e.target.value)} 
                      required
-                     className="bg-white border-slate-200 text-slate-900"
+                     className="bg-white border-[#EDEDED] font-primary text-[#02041D]"
                    />
                 </div>
                 <div className="space-y-2">
-                   <Label className="text-slate-900">End Time</Label>
+                   <Label className="font-primary text-[#02041D]">End Time</Label>
                    <Input 
                      type="time" 
                      value={endTime} 
                      onChange={e => setEndTime(e.target.value)} 
                      required
-                     className="bg-white border-slate-200 text-slate-900"
+                     className="bg-white border-[#EDEDED] font-primary text-[#02041D]"
                    />
                 </div>
             </div>
 
              <div className="space-y-2">
-              <Label className="text-slate-900">Description</Label>
+              <Label className="font-primary text-[#02041D]">Description</Label>
               <Textarea 
                 value={description} 
                 onChange={e => setDescription(e.target.value)} 
                 placeholder="Meeting agenda..."
-                className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
+                className="bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]"
               />
             </div>
           </div>

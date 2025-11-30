@@ -110,8 +110,8 @@ export default async function DashboardPage() {
       icon: DollarSign,
       trend: `${revenueTrendUp ? '+' : ''}${revenueTrend}%`,
       trendUp: revenueTrendUp,
-      gradient: "from-[#0731c2] to-[#010119]",
-      shadow: "shadow-[#0731c2]/20"
+      gradient: "from-[#0A33C6] to-[#0A33C6]",
+      shadow: "shadow-[#0A33C6]/20"
     },
     {
       title: t("dashboard.activeClients", language),
@@ -122,8 +122,8 @@ export default async function DashboardPage() {
         ? `${((activeClientsCount / analyticsData.stats.totalClients) * 100).toFixed(0)}% active`
         : `${activeClientsCount} total`,
       trendUp: true,
-      gradient: "from-blue-500 to-cyan-600",
-      shadow: "shadow-blue-500/20"
+      gradient: "from-[#0A33C6] to-[#0A33C6]",
+      shadow: "shadow-[#0A33C6]/20"
     },
     {
       title: t("dashboard.sentInvoices", language),
@@ -132,8 +132,8 @@ export default async function DashboardPage() {
       icon: CreditCard,
       trend: "0",
       trendUp: false,
-      gradient: "from-orange-500 to-red-600",
-      shadow: "shadow-orange-500/20"
+      gradient: "from-[#0A33C6] to-[#0A33C6]",
+      shadow: "shadow-[#0A33C6]/20"
     },
     {
       title: t("dashboard.completionRate", language),
@@ -142,8 +142,8 @@ export default async function DashboardPage() {
       icon: CheckCircle2,
       trend: "+0%",
       trendUp: true,
-      gradient: "from-emerald-500 to-teal-600",
-      shadow: "shadow-emerald-500/20"
+      gradient: "from-[#0A33C6] to-[#0A33C6]",
+      shadow: "shadow-[#0A33C6]/20"
     }
   ];
 
@@ -152,19 +152,19 @@ export default async function DashboardPage() {
       {/* Hero Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+          <h1 className="text-3xl font-bold font-primary tracking-tight text-[#02041D]">
             {language === "id" ? "Selamat pagi" : "Good morning"}, {user?.name?.split(' ')[0] || 'User'} 👋
           </h1>
-          <p className="text-slate-600 mt-1">
+          <p className="font-primary text-[#606170] mt-1">
             {t("dashboard.description", language)}
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" className="hidden sm:flex border-slate-300 text-slate-700 hover:bg-slate-100 hover:text-slate-900">
+          <Button variant="outline" className="hidden sm:flex border-[#EDEDED] font-primary text-[#02041D] hover:bg-[#EDEDED] hover:text-[#02041D]">
             <Calendar className="mr-2 h-4 w-4" />
             {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
           </Button>
-          <Button className="bg-[#0731c2] hover:bg-[#0525a0] text-white shadow-lg shadow-[#0731c2]/20">
+          <Button className="bg-[#0A33C6] hover:bg-[#0A33C6]/90 text-white shadow-lg shadow-[#0A33C6]/20 font-primary font-bold">
             <Plus className="mr-2 h-4 w-4" /> {t("tasks.newProject", language)}
           </Button>
         </div>
@@ -173,26 +173,26 @@ export default async function DashboardPage() {
       {/* Stats Grid */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
-          <Card key={stat.title} className="relative overflow-hidden border border-slate-200 shadow-lg bg-white backdrop-blur-sm hover:scale-[1.02] hover:border-slate-300 transition-all duration-300">
+          <Card key={stat.title} className="relative overflow-hidden border border-[#EDEDED] shadow-lg bg-white backdrop-blur-sm hover:scale-[1.02] hover:border-[#0A33C6]/50 transition-all duration-300">
             <div className={`absolute top-0 right-0 p-4 opacity-5`}>
               <stat.icon className="h-24 w-24" />
             </div>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-slate-700">
+              <CardTitle className="text-sm font-medium font-primary text-[#606170]">
                 {stat.title}
               </CardTitle>
-              <div className={`p-2 rounded-lg bg-gradient-to-br ${stat.gradient} ${stat.shadow}`}>
+              <div className="p-2 rounded-lg bg-[#0A33C6] shadow-lg">
                 <stat.icon className="h-4 w-4 text-white" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-slate-900">{stat.value}</div>
+              <div className="text-2xl font-bold font-primary text-[#02041D]">{stat.value}</div>
               <div className="flex items-center mt-1">
-                <span className={`text-xs font-medium ${stat.trendUp ? 'text-emerald-600' : 'text-red-600'} flex items-center`}>
+                <span className={`text-xs font-medium font-primary ${stat.trendUp ? 'text-emerald-600' : 'text-red-600'} flex items-center`}>
                   {stat.trendUp ? <ArrowUpRight className="h-3 w-3 mr-1" /> : <ArrowDownRight className="h-3 w-3 mr-1" />}
                   {stat.trend}
                 </span>
-                <span className="text-xs text-slate-600 ml-2">{t("tasks.vsLastMonth", language)}</span>
+                <span className="text-xs font-primary text-[#606170] ml-2">{t("tasks.vsLastMonth", language)}</span>
               </div>
             </CardContent>
           </Card>
@@ -203,30 +203,30 @@ export default async function DashboardPage() {
         {/* Main Content - Left Column */}
         <div className="lg:col-span-8 xl:col-span-9 space-y-8">
           {/* Revenue Chart */}
-          <Card className="border border-slate-200 shadow-lg bg-white backdrop-blur-sm">
+          <Card className="border border-[#EDEDED] shadow-lg bg-white backdrop-blur-sm">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-lg font-semibold text-slate-900">{t("dashboard.revenueOverview", language)}</CardTitle>
-                  <CardDescription className="text-slate-600">{t("dashboard.monthlyRevenue", language)}</CardDescription>
+                  <CardTitle className="text-lg font-semibold font-primary text-[#02041D]">{t("dashboard.revenueOverview", language)}</CardTitle>
+                  <CardDescription className="font-primary text-[#606170]">{t("dashboard.monthlyRevenue", language)}</CardDescription>
                 </div>
                 <Tabs defaultValue="6m" className="w-[200px]">
-                  <TabsList className="grid w-full grid-cols-3 bg-slate-100 border border-slate-200">
+                  <TabsList className="grid w-full grid-cols-3 bg-[#EDEDED] border border-[#EDEDED]">
                     <TabsTrigger
                       value="1m"
-                      className="text-slate-700 data-[state=active]:bg-[#0731c2] data-[state=active]:text-white"
+                      className="font-primary text-[#606170] data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white"
                     >
                       1M
                     </TabsTrigger>
                     <TabsTrigger
                       value="6m"
-                      className="text-slate-700 data-[state=active]:bg-[#0731c2] data-[state=active]:text-white"
+                      className="font-primary text-[#606170] data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white"
                     >
                       6M
                     </TabsTrigger>
                     <TabsTrigger
                       value="1y"
-                      className="text-slate-700 data-[state=active]:bg-[#0731c2] data-[state=active]:text-white"
+                      className="font-primary text-[#606170] data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white"
                     >
                       1Y
                     </TabsTrigger>
@@ -240,44 +240,44 @@ export default async function DashboardPage() {
           </Card>
 
           {/* Recent Transactions */}
-          <Card className="border border-slate-200 shadow-lg bg-white backdrop-blur-sm">
+          <Card className="border border-[#EDEDED] shadow-lg bg-white backdrop-blur-sm">
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                  <CardTitle className="text-lg font-semibold text-slate-900">{t("dashboard.recentTransactions", language)}</CardTitle>
-                  <CardDescription className="text-slate-600">{t("dashboard.recentActivity", language)}</CardDescription>
+                  <CardTitle className="text-lg font-semibold font-primary text-[#02041D]">{t("dashboard.recentTransactions", language)}</CardTitle>
+                  <CardDescription className="font-primary text-[#606170]">{t("dashboard.recentActivity", language)}</CardDescription>
               </div>
-              <Button variant="ghost" size="sm" className="text-[#0731c2] hover:text-[#0525a0]" asChild>
+              <Button variant="ghost" size="sm" className="font-primary text-[#0A33C6] hover:text-[#0A33C6]/80" asChild>
                 <Link href="/dashboard/invoices">{t("dashboard.viewAll", language)}</Link>
               </Button>
             </CardHeader>
             <CardContent>
-              <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
+              <div className="rounded-xl border border-[#EDEDED] bg-white overflow-hidden">
                   <Table>
-                  <TableHeader className="bg-slate-50">
-                    <TableRow className="hover:bg-transparent border-slate-200">
-                      <TableHead className="pl-6 h-12 text-xs font-medium text-slate-600 uppercase tracking-wider">{t("table.invoice", language)}</TableHead>
-                      <TableHead className="h-12 text-xs font-medium text-slate-600 uppercase tracking-wider">{t("table.date", language)}</TableHead>
-                      <TableHead className="text-right pr-6 h-12 text-xs font-medium text-slate-600 uppercase tracking-wider">{t("table.amount", language)}</TableHead>
+                  <TableHeader className="bg-[#EDEDED]">
+                    <TableRow className="hover:bg-transparent border-[#EDEDED]">
+                      <TableHead className="pl-6 h-12 text-xs font-medium font-primary text-[#606170] uppercase tracking-wider">{t("table.invoice", language)}</TableHead>
+                      <TableHead className="h-12 text-xs font-medium font-primary text-[#606170] uppercase tracking-wider">{t("table.date", language)}</TableHead>
+                      <TableHead className="text-right pr-6 h-12 text-xs font-medium font-primary text-[#606170] uppercase tracking-wider">{t("table.amount", language)}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {paidInvoices.length > 0 ? (
                       paidInvoices.map((inv) => (
-                        <TableRow key={inv.id} className="hover:bg-slate-50 transition-colors border-slate-200 group">
+                        <TableRow key={inv.id} className="hover:bg-[#EDEDED] transition-colors border-[#EDEDED] group">
                           <TableCell className="pl-6 py-4">
                             <div className="flex items-center gap-3">
-                              <div className="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 group-hover:scale-110 transition-transform">
+                              <div className="h-8 w-8 rounded-full bg-[#EDEDED] flex items-center justify-center text-[#0A33C6] group-hover:scale-110 transition-transform">
                                 <DollarSign className="h-4 w-4" />
                               </div>
-                              <span className="font-medium text-slate-900">#{inv.invoice_number}</span>
+                              <span className="font-medium font-primary text-[#02041D]">#{inv.invoice_number}</span>
                             </div>
                           </TableCell>
-                          <TableCell className="text-slate-600 text-sm">
+                          <TableCell className="font-primary text-[#606170] text-sm">
                             {inv.paid_date ? new Date(inv.paid_date).toLocaleDateString() : t("tasks.paidRecently", language)}
                           </TableCell>
                           <TableCell className="text-right pr-6">
                             <div className="flex flex-col items-end">
-                              <span className="font-bold text-slate-900">+{defaultCurrencySymbol}{Number(inv.total_amount).toLocaleString()}</span>
+                              <span className="font-bold font-primary text-[#02041D]">+{defaultCurrencySymbol}{Number(inv.total_amount).toLocaleString()}</span>
                               <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 border-none text-[10px] px-1.5 py-0 h-5">
                                 {t("invoices.paid", language)}
                               </Badge>
@@ -287,7 +287,7 @@ export default async function DashboardPage() {
                       ))
                     ) : (
                       <TableRow>
-                        <TableCell colSpan={3} className="h-24 text-center text-slate-600">
+                        <TableCell colSpan={3} className="h-24 text-center font-primary text-[#606170]">
                           {t("dashboard.noTransactions", language)}
                         </TableCell>
                       </TableRow>
@@ -302,10 +302,10 @@ export default async function DashboardPage() {
         {/* Sidebar Content - Right Column */}
         <div className="lg:col-span-4 xl:col-span-3 space-y-8">
           {/* Quick Actions */}
-          <Card className="border-none shadow-lg bg-gradient-to-br from-[#0731c2] to-[#010119] text-white">
+          <Card className="border-none shadow-lg bg-[#0A33C6] text-white">
             <CardHeader>
               <CardTitle className="text-lg font-semibold">{t("dashboard.quickActions", language)}</CardTitle>
-              <p className="text-blue-100 text-sm">{t("dashboard.quickActionsDesc", language)}</p>
+              <p className="font-primary text-[#EDEDED]/90 text-sm">{t("dashboard.quickActionsDesc", language)}</p>
             </CardHeader>
             <CardContent className="grid grid-cols-2 gap-4">
               <Button variant="secondary" className="h-auto py-4 flex flex-col gap-2 bg-white/10 hover:bg-white/20 border-none text-white" asChild>
@@ -336,9 +336,9 @@ export default async function DashboardPage() {
           </Card>
 
           {/* Upcoming Tasks */}
-          <Card className="border border-slate-200 shadow-lg bg-white backdrop-blur-sm">
+          <Card className="border border-[#EDEDED] shadow-lg bg-white backdrop-blur-sm">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-lg font-semibold text-slate-900">{t("dashboard.upcomingTasks", language)}</CardTitle>
+              <CardTitle className="text-lg font-semibold font-primary text-[#02041D]">{t("dashboard.upcomingTasks", language)}</CardTitle>
               <Button variant="ghost" size="icon" className="h-8 w-8">
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
@@ -347,11 +347,11 @@ export default async function DashboardPage() {
               <div className="space-y-4">
                 {recentTasks.length > 0 ? (
                   recentTasks.map((task) => (
-                    <div key={task.id} className="flex items-start gap-3 p-3 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer">
-                      <div className={`mt-1 h-2 w-2 rounded-full ${task.priority === 'high' ? 'bg-red-500' : task.priority === 'medium' ? 'bg-orange-500' : 'bg-blue-500'}`} />
+                    <div key={task.id} className="flex items-start gap-3 p-3 rounded-lg hover:bg-[#EDEDED] transition-colors cursor-pointer">
+                      <div className={`mt-1 h-2 w-2 rounded-full ${task.priority === 'high' ? 'bg-red-500' : task.priority === 'medium' ? 'bg-[#0A33C6]' : 'bg-[#0A33C6]'}`} />
                       <div className="flex-1 space-y-1">
-                        <p className="text-sm font-medium text-slate-900 leading-none">{task.title}</p>
-                        <div className="flex items-center gap-2 text-xs text-slate-600">
+                        <p className="text-sm font-medium font-primary text-[#02041D] leading-none">{task.title}</p>
+                        <div className="flex items-center gap-2 text-xs font-primary text-[#606170]">
                           <Clock className="h-3 w-3" />
                           {task.due_date ? new Date(task.due_date).toLocaleDateString() : 'No due date'}
                         </div>
@@ -362,9 +362,9 @@ export default async function DashboardPage() {
                     </div>
                   ))
                 ) : (
-                  <div className="text-center py-8 text-slate-600">{t("dashboard.noPendingTasks", language)}</div>
+                  <div className="text-center py-8 font-primary text-[#606170]">{t("dashboard.noPendingTasks", language)}</div>
                 )}
-                <Button variant="outline" className="w-full text-xs border-slate-300 text-slate-700 hover:bg-slate-100 hover:text-slate-900" asChild>
+                <Button variant="outline" className="w-full text-xs border-[#EDEDED] font-primary text-[#606170] hover:bg-[#EDEDED] hover:font-primary text-[#02041D]" asChild>
                   <Link href="/dashboard/tasks">{t("dashboard.viewAllTasks", language)}</Link>
                 </Button>
               </div>
@@ -372,7 +372,7 @@ export default async function DashboardPage() {
           </Card>
 
           {/* Pro Plan Promo */}
-          <Card className="border-none shadow-lg bg-gradient-to-br from-[#0731c2] to-[#010119] text-white overflow-hidden relative">
+          <Card className="border-none shadow-lg bg-gradient-to-br from-[#0A33C6] to-[#0A33C6] text-white overflow-hidden relative">
             <div className="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 bg-gradient-to-br from-white/20 to-white/10 blur-2xl opacity-50 rounded-full" />
             <CardHeader>
               <div className="flex items-center gap-2 mb-2">
@@ -380,12 +380,12 @@ export default async function DashboardPage() {
                 <span className="font-semibold text-sm text-yellow-300">Pro Plan</span>
               </div>
               <CardTitle className="text-lg text-white">{t("dashboard.upgradeToPro", language)}</CardTitle>
-              <CardDescription className="text-blue-100">
+              <CardDescription className="font-primary text-[#EDEDED]/90">
                 {t("dashboard.upgradeDesc", language)}
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button className="w-full bg-white text-[#0731c2] hover:bg-slate-100 font-semibold">
+              <Button className="w-full bg-white text-[#0A33C6] hover:bg-[#EDEDED] font-semibold">
                 {t("dashboard.upgradeNow", language)}
               </Button>
             </CardContent>

@@ -41,33 +41,33 @@ export function ClientDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white shadow-lg shadow-blue-500/20 border-0">
+        <Button className="bg-[#0A33C6] hover:bg-[#0A33C6]/90 text-white shadow-lg shadow-[#0A33C6]/20 border-0 font-primary font-bold">
           <Plus className="mr-2 h-4 w-4" /> {t("clients.addClient")}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-white border-slate-200">
+      <DialogContent className="sm:max-w-[425px] bg-white border-[#EDEDED]">
         <DialogHeader>
-          <DialogTitle className="text-slate-900">{t("clients.addClient")}</DialogTitle>
-          <DialogDescription className="text-slate-600">
+          <DialogTitle className="font-primary text-[#02041D]">{t("clients.addClient")}</DialogTitle>
+          <DialogDescription className="font-primary text-[#606170]">
             {t("clients.addNewClient")}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-right text-slate-900">
+              <Label htmlFor="name" className="text-right font-primary text-[#02041D]">
                 {t("clients.name")}
               </Label>
               <Input 
                 id="name" 
                 name="name" 
                 placeholder={t("clients.name")} 
-                className="col-span-3 bg-white border-slate-200 text-slate-900 placeholder:text-slate-500" 
+                className="col-span-3 bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]" 
                 required 
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="email" className="text-right text-slate-900">
+              <Label htmlFor="email" className="text-right font-primary text-[#02041D]">
                 {t("clients.email")}
               </Label>
               <Input 
@@ -75,19 +75,19 @@ export function ClientDialog() {
                 name="email" 
                 type="email" 
                 placeholder={t("clients.email")} 
-                className="col-span-3 bg-white border-slate-200 text-slate-900 placeholder:text-slate-500" 
+                className="col-span-3 bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]" 
                 required 
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="company_name" className="text-right text-slate-900">
+              <Label htmlFor="company_name" className="text-right font-primary text-[#02041D]">
                 {t("clients.company")}
               </Label>
               <Input 
                 id="company_name" 
                 name="company_name" 
                 placeholder={t("clients.company")} 
-                className="col-span-3 bg-white border-slate-200 text-slate-900 placeholder:text-slate-500" 
+                className="col-span-3 bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]" 
                 required 
               />
             </div>
@@ -96,7 +96,7 @@ export function ClientDialog() {
             <Button 
               type="submit" 
               disabled={loading}
-              className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white"
+              className="bg-[#0A33C6] hover:bg-[#0A33C6]/90 text-white"
             >
                 {loading ? t("clients.saving") : t("clients.saveChanges")}
             </Button>

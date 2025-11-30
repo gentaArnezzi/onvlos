@@ -53,14 +53,14 @@ export default async function ProposalsPage() {
 
   const getStatusBadgeClass = (status: string) => {
     switch (status) {
-      case 'draft': return 'bg-slate-100 text-slate-700';
-      case 'sent': return 'bg-blue-100 text-blue-700';
-      case 'viewed': return 'bg-blue-100 text-blue-700';
+      case 'draft': return 'bg-[#EDEDED] font-primary text-[#606170]';
+      case 'sent': return 'bg-[#EDEDED] text-[#0A33C6]';
+      case 'viewed': return 'bg-[#EDEDED] text-[#0A33C6]';
       case 'accepted': return 'bg-emerald-100 text-emerald-700';
       case 'signed': return 'bg-emerald-100 text-emerald-700';
       case 'declined': return 'bg-red-100 text-red-700';
       case 'expired': return 'bg-orange-100 text-orange-700';
-      default: return 'bg-slate-100 text-slate-700';
+      default: return 'bg-[#EDEDED] font-primary text-[#606170]';
     }
   };
 
@@ -75,23 +75,23 @@ export default async function ProposalsPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-fuchsia-600 to-pink-600 bg-clip-text text-transparent">
+          <h2 className="text-3xl font-bold font-primary tracking-tight text-[#0A33C6]">
             {t("proposals.proposalsAndContracts", language)}
           </h2>
-          <p className="text-slate-600 mt-1">
+          <p className="font-primary text-[#606170] mt-1">
             {t("proposals.description", language)}
           </p>
         </div>
         <Dialog>
           <DialogTrigger asChild>
-            <Button className="bg-gradient-to-r from-fuchsia-600 to-pink-600 hover:from-fuchsia-700 hover:to-pink-700 text-white shadow-lg shadow-fuchsia-500/20 border-0">
+            <Button className="bg-[#0A33C6] hover:bg-[#0A33C6]/90 text-white shadow-lg shadow-[#0A33C6]/20 border-0 font-primary font-bold">
               <Plus className="h-4 w-4 mr-2" />
               {t("proposals.newProposal", language)}
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white border-slate-200">
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white border-[#EDEDED]">
             <DialogHeader>
-              <DialogTitle className="text-slate-900">{t("proposals.createNewProposal", language)}</DialogTitle>
+              <DialogTitle className="font-primary text-[#02041D]">{t("proposals.createNewProposal", language)}</DialogTitle>
             </DialogHeader>
             <ProposalEditor clients={clients} currencySymbol={defaultCurrencySymbol} />
           </DialogContent>
@@ -105,14 +105,14 @@ export default async function ProposalsPage() {
             <FileText className="h-16 w-16" />
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-700">{t("proposals.totalProposals", language)}</CardTitle>
-            <div className="p-2 rounded-lg bg-slate-100 text-slate-600">
+            <CardTitle className="text-sm font-medium font-primary text-[#606170]">{t("proposals.totalProposals", language)}</CardTitle>
+            <div className="p-2 rounded-lg bg-[#EDEDED] font-primary text-[#606170]">
               <FileText className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900">{totalProposals}</div>
-            <p className="text-xs text-slate-600 mt-1">{t("proposals.allTimeCreated", language)}</p>
+            <div className="text-2xl font-bold font-primary text-[#02041D]">{totalProposals}</div>
+            <p className="text-xs font-primary text-[#606170] mt-1">{t("proposals.allTimeCreated", language)}</p>
           </CardContent>
         </Card>
 
@@ -121,14 +121,14 @@ export default async function ProposalsPage() {
             <Send className="h-16 w-16" />
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-700">{t("proposals.sentProposals", language)}</CardTitle>
-            <div className="p-2 rounded-lg bg-blue-100 text-blue-600">
+            <CardTitle className="text-sm font-medium font-primary text-[#606170]">{t("proposals.sentProposals", language)}</CardTitle>
+            <div className="p-2 rounded-lg bg-[#EDEDED] text-[#0A33C6]">
               <Send className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900">{sentProposals}</div>
-            <p className="text-xs text-slate-600 mt-1">{t("proposals.awaitingResponse", language)}</p>
+            <div className="text-2xl font-bold font-primary text-[#02041D]">{sentProposals}</div>
+            <p className="text-xs font-primary text-[#606170] mt-1">{t("proposals.awaitingResponse", language)}</p>
           </CardContent>
         </Card>
 
@@ -137,14 +137,14 @@ export default async function ProposalsPage() {
             <FileSignature className="h-16 w-16" />
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-700">{t("proposals.acceptedProposals", language)}</CardTitle>
-            <div className="p-2 rounded-lg bg-emerald-100 text-emerald-600">
+            <CardTitle className="text-sm font-medium font-primary text-[#606170]">{t("proposals.acceptedProposals", language)}</CardTitle>
+            <div className="p-2 rounded-lg bg-[#EDEDED] text-[#0A33C6]">
               <FileSignature className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900">{acceptedProposals}</div>
-            <p className="text-xs text-slate-600 mt-1">{t("proposals.successfullyClosed", language)}</p>
+            <div className="text-2xl font-bold font-primary text-[#02041D]">{acceptedProposals}</div>
+            <p className="text-xs font-primary text-[#606170] mt-1">{t("proposals.successfullyClosed", language)}</p>
           </CardContent>
         </Card>
 
@@ -153,25 +153,25 @@ export default async function ProposalsPage() {
             <CheckCircle2 className="h-16 w-16" />
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-700">{t("proposals.totalValue", language)}</CardTitle>
-            <div className="p-2 rounded-lg bg-fuchsia-100 text-fuchsia-600">
+            <CardTitle className="text-sm font-medium font-primary text-[#606170]">{t("proposals.totalValue", language)}</CardTitle>
+            <div className="p-2 rounded-lg bg-[#EDEDED] text-[#0A33C6]">
               <CheckCircle2 className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900">{defaultCurrencySymbol}{totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-            <p className="text-xs text-slate-600 mt-1">{t("proposals.potentialRevenue", language)}</p>
+            <div className="text-2xl font-bold font-primary text-[#02041D]">{defaultCurrencySymbol}{totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+            <p className="text-xs font-primary text-[#606170] mt-1">{t("proposals.potentialRevenue", language)}</p>
           </CardContent>
         </Card>
       </div>
 
       <Tabs defaultValue="proposals" className="space-y-6">
-        <TabsList className="glass-card border-0 w-fit bg-slate-100">
-          <TabsTrigger value="proposals" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-fuchsia-600 data-[state=active]:to-pink-600 data-[state=active]:text-white text-slate-700">
+        <TabsList className="border border-[#EDEDED] w-fit bg-white">
+          <TabsTrigger value="proposals" className="data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white font-primary text-[#606170]">
             <FileText className="h-4 w-4 mr-2" />
             {t("proposals.title", language)}
           </TabsTrigger>
-          <TabsTrigger value="contracts" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-fuchsia-600 data-[state=active]:to-pink-600 data-[state=active]:text-white text-slate-700">
+          <TabsTrigger value="contracts" className="data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white font-primary text-[#606170]">
             <FileSignature className="h-4 w-4 mr-2" />
             {t("proposals.contracts", language)}
           </TabsTrigger>
@@ -181,70 +181,70 @@ export default async function ProposalsPage() {
           <Card className="border-none shadow-lg bg-white">
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle className="text-slate-900">{t("proposals.allProposals", language)}</CardTitle>
+                <CardTitle className="font-primary text-[#02041D]">{t("proposals.allProposals", language)}</CardTitle>
                 <div className="relative w-64 hidden md:block">
-                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-slate-500" />
-                  <Input placeholder="Search proposals..." className="pl-8 bg-slate-50 border-none text-slate-900 placeholder:text-slate-500" />
+                  <Search className="absolute left-2 top-2.5 h-4 w-4 font-primary text-[#606170]" />
+                  <Input placeholder="Search proposals..." className="pl-8 bg-[#EDEDED] border-none font-primary text-[#02041D] placeholder:font-primary text-[#606170]" />
                 </div>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
+              <div className="rounded-xl border border-[#EDEDED] bg-white overflow-hidden">
                 <Table>
-                  <TableHeader className="bg-slate-50">
-                    <TableRow className="hover:bg-transparent border-slate-200">
-                      <TableHead className="h-12 text-xs font-medium text-slate-600 uppercase tracking-wider">{t("proposals.proposalNumber", language)}</TableHead>
-                      <TableHead className="h-12 text-xs font-medium text-slate-600 uppercase tracking-wider">{t("proposals.proposalTitle", language)}</TableHead>
-                      <TableHead className="h-12 text-xs font-medium text-slate-600 uppercase tracking-wider">{t("table.client", language)}</TableHead>
-                      <TableHead className="h-12 text-xs font-medium text-slate-600 uppercase tracking-wider">{t("table.amount", language)}</TableHead>
-                      <TableHead className="h-12 text-xs font-medium text-slate-600 uppercase tracking-wider">{t("table.status", language)}</TableHead>
-                      <TableHead className="h-12 text-xs font-medium text-slate-600 uppercase tracking-wider">{t("proposals.created", language)}</TableHead>
-                      <TableHead className="h-12 text-xs font-medium text-slate-600 uppercase tracking-wider">{t("proposals.validUntil", language)}</TableHead>
-                      <TableHead className="h-12 text-xs font-medium text-slate-600 uppercase tracking-wider">{t("table.actions", language)}</TableHead>
+                  <TableHeader className="bg-[#EDEDED]">
+                    <TableRow className="hover:bg-transparent border-[#EDEDED]">
+                      <TableHead className="h-12 text-xs font-medium font-primary text-[#606170] uppercase tracking-wider">{t("proposals.proposalNumber", language)}</TableHead>
+                      <TableHead className="h-12 text-xs font-medium font-primary text-[#606170] uppercase tracking-wider">{t("proposals.proposalTitle", language)}</TableHead>
+                      <TableHead className="h-12 text-xs font-medium font-primary text-[#606170] uppercase tracking-wider">{t("table.client", language)}</TableHead>
+                      <TableHead className="h-12 text-xs font-medium font-primary text-[#606170] uppercase tracking-wider">{t("table.amount", language)}</TableHead>
+                      <TableHead className="h-12 text-xs font-medium font-primary text-[#606170] uppercase tracking-wider">{t("table.status", language)}</TableHead>
+                      <TableHead className="h-12 text-xs font-medium font-primary text-[#606170] uppercase tracking-wider">{t("proposals.created", language)}</TableHead>
+                      <TableHead className="h-12 text-xs font-medium font-primary text-[#606170] uppercase tracking-wider">{t("proposals.validUntil", language)}</TableHead>
+                      <TableHead className="h-12 text-xs font-medium font-primary text-[#606170] uppercase tracking-wider">{t("table.actions", language)}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {proposals.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={8} className="h-32 text-center text-slate-500">
+                        <TableCell colSpan={8} className="h-32 text-center font-primary text-[#606170]">
                           {t("proposals.noProposals", language)}
                         </TableCell>
                       </TableRow>
                     ) : (
                       proposals.map((proposal) => (
-                        <TableRow key={proposal.id} className="hover:bg-slate-50 transition-colors border-slate-100 group">
-                          <TableCell className="pl-6 py-4 font-medium text-slate-900">
+                        <TableRow key={proposal.id} className="hover:bg-[#EDEDED] transition-colors border-[#EDEDED] group">
+                          <TableCell className="pl-6 py-4 font-medium font-primary text-[#02041D]">
                             <div className="flex items-center gap-2">
-                              <div className="p-2 rounded-lg bg-slate-100 text-slate-500">
+                              <div className="p-2 rounded-lg bg-[#EDEDED] font-primary text-[#606170]">
                                 <FileText className="h-4 w-4" />
                               </div>
                               {proposal.proposal_number}
                             </div>
                           </TableCell>
-                          <TableCell className="font-medium text-slate-900">{proposal.title}</TableCell>
-                          <TableCell className="text-slate-600">{proposal.client_name || '-'}</TableCell>
-                          <TableCell className="font-bold text-slate-900">{defaultCurrencySymbol}{proposal.total || '0'}</TableCell>
+                          <TableCell className="font-medium font-primary text-[#02041D]">{proposal.title}</TableCell>
+                          <TableCell className="font-primary text-[#606170]">{proposal.client_name || '-'}</TableCell>
+                          <TableCell className="font-bold font-primary text-[#02041D]">{defaultCurrencySymbol}{proposal.total || '0'}</TableCell>
                           <TableCell>
                             <Badge variant="outline" className={`capitalize font-medium border-0 px-2.5 py-0.5 ${getStatusBadgeClass(proposal.status)}`}>
                               {proposal.status}
                             </Badge>
                           </TableCell>
-                          <TableCell className="text-slate-600">
+                          <TableCell className="font-primary text-[#606170]">
                             {proposal.created_at && format(new Date(proposal.created_at), "MMM d, yyyy")}
                           </TableCell>
-                          <TableCell className="text-slate-600">
+                          <TableCell className="font-primary text-[#606170]">
                             {proposal.valid_until && format(new Date(proposal.valid_until), "MMM d, yyyy")}
                           </TableCell>
                           <TableCell className="text-right pr-6">
                             <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                               <Button size="sm" variant="ghost" className="h-8 w-8 p-0" asChild>
                                 <Link href={`/proposal/${proposal.id}`} target="_blank">
-                                  <Eye className="h-4 w-4 text-blue-500" />
+                                  <Eye className="h-4 w-4 text-[#0A33C6]" />
                                 </Link>
                               </Button>
                               {proposal.status === 'draft' && (
                                 <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
-                                  <Send className="h-4 w-4 text-fuchsia-500" />
+                                  <Send className="h-4 w-4 text-[#0A33C6]" />
                                 </Button>
                               )}
                             </div>
@@ -263,64 +263,64 @@ export default async function ProposalsPage() {
           <Card className="border-none shadow-lg bg-white">
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle className="text-slate-900">{t("proposals.allContracts", language)}</CardTitle>
+                <CardTitle className="font-primary text-[#02041D]">{t("proposals.allContracts", language)}</CardTitle>
                 <div className="relative w-64 hidden md:block">
-                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-slate-500" />
-                  <Input placeholder="Search contracts..." className="pl-8 bg-slate-50 border-none text-slate-900 placeholder:text-slate-500" />
+                  <Search className="absolute left-2 top-2.5 h-4 w-4 font-primary text-[#606170]" />
+                  <Input placeholder="Search contracts..." className="pl-8 bg-[#EDEDED] border-none font-primary text-[#02041D] placeholder:font-primary text-[#606170]" />
                 </div>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
+              <div className="rounded-xl border border-[#EDEDED] bg-white overflow-hidden">
                 <Table>
-                  <TableHeader className="bg-slate-50">
-                    <TableRow className="hover:bg-transparent border-slate-200">
-                      <TableHead className="h-12 text-xs font-medium text-slate-600 uppercase tracking-wider">{t("proposals.contractNumber", language)}</TableHead>
-                      <TableHead className="h-12 text-xs font-medium text-slate-600 uppercase tracking-wider">{t("proposals.proposalTitle", language)}</TableHead>
-                      <TableHead className="h-12 text-xs font-medium text-slate-600 uppercase tracking-wider">{t("table.client", language)}</TableHead>
-                      <TableHead className="h-12 text-xs font-medium text-slate-600 uppercase tracking-wider">{t("table.status", language)}</TableHead>
-                      <TableHead className="h-12 text-xs font-medium text-slate-600 uppercase tracking-wider">{t("proposals.effectiveDate", language)}</TableHead>
-                      <TableHead className="h-12 text-xs font-medium text-slate-600 uppercase tracking-wider">{t("proposals.fullySigned", language)}</TableHead>
-                      <TableHead className="h-12 text-xs font-medium text-slate-600 uppercase tracking-wider">{t("table.actions", language)}</TableHead>
+                  <TableHeader className="bg-[#EDEDED]">
+                    <TableRow className="hover:bg-transparent border-[#EDEDED]">
+                      <TableHead className="h-12 text-xs font-medium font-primary text-[#606170] uppercase tracking-wider">{t("proposals.contractNumber", language)}</TableHead>
+                      <TableHead className="h-12 text-xs font-medium font-primary text-[#606170] uppercase tracking-wider">{t("proposals.proposalTitle", language)}</TableHead>
+                      <TableHead className="h-12 text-xs font-medium font-primary text-[#606170] uppercase tracking-wider">{t("table.client", language)}</TableHead>
+                      <TableHead className="h-12 text-xs font-medium font-primary text-[#606170] uppercase tracking-wider">{t("table.status", language)}</TableHead>
+                      <TableHead className="h-12 text-xs font-medium font-primary text-[#606170] uppercase tracking-wider">{t("proposals.effectiveDate", language)}</TableHead>
+                      <TableHead className="h-12 text-xs font-medium font-primary text-[#606170] uppercase tracking-wider">{t("proposals.fullySigned", language)}</TableHead>
+                      <TableHead className="h-12 text-xs font-medium font-primary text-[#606170] uppercase tracking-wider">{t("table.actions", language)}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {contracts.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={7} className="h-32 text-center text-slate-500">
+                        <TableCell colSpan={7} className="h-32 text-center font-primary text-[#606170]">
                           {t("proposals.noContracts", language)}
                         </TableCell>
                       </TableRow>
                     ) : (
                       contracts.map((contract) => (
-                        <TableRow key={contract.id} className="hover:bg-slate-50 transition-colors border-slate-100 group">
-                          <TableCell className="pl-6 py-4 font-medium text-slate-900">
+                        <TableRow key={contract.id} className="hover:bg-[#EDEDED] transition-colors border-[#EDEDED] group">
+                          <TableCell className="pl-6 py-4 font-medium font-primary text-[#02041D]">
                             <div className="flex items-center gap-2">
-                              <div className="p-2 rounded-lg bg-slate-100 text-slate-500">
+                              <div className="p-2 rounded-lg bg-[#EDEDED] font-primary text-[#606170]">
                                 <FileSignature className="h-4 w-4" />
                               </div>
                               {contract.contract_number}
                             </div>
                           </TableCell>
-                          <TableCell className="font-medium text-slate-900">{contract.title}</TableCell>
-                          <TableCell className="text-slate-600">{contract.client_name || '-'}</TableCell>
+                          <TableCell className="font-medium font-primary text-[#02041D]">{contract.title}</TableCell>
+                          <TableCell className="font-primary text-[#606170]">{contract.client_name || '-'}</TableCell>
                           <TableCell>
                             <Badge variant="outline" className={`capitalize font-medium border-0 px-2.5 py-0.5 ${getStatusBadgeClass(contract.status)}`}>
                               {contract.status}
                             </Badge>
                           </TableCell>
-                          <TableCell className="text-slate-600">
+                          <TableCell className="font-primary text-[#606170]">
                             {contract.effective_date && format(new Date(contract.effective_date), "MMM d, yyyy")}
                           </TableCell>
                           <TableCell>
-                            <Badge variant={contract.fully_signed ? "default" : "secondary"} className={contract.fully_signed ? "bg-emerald-100 text-emerald-700 border-0" : "bg-slate-100 text-slate-700 border-0"}>
+                            <Badge variant={contract.fully_signed ? "default" : "secondary"} className={contract.fully_signed ? "bg-emerald-100 text-emerald-700 border-0" : "bg-[#EDEDED] font-primary text-[#606170] border-0"}>
                               {contract.fully_signed ? "Yes" : "No"}
                             </Badge>
                           </TableCell>
                           <TableCell className="text-right pr-6">
                             <Button size="sm" variant="ghost" className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity" asChild>
                               <Link href={`/contract/${contract.id}`} target="_blank">
-                                <Eye className="h-4 w-4 text-blue-500" />
+                                <Eye className="h-4 w-4 text-[#0A33C6]" />
                               </Link>
                             </Button>
                           </TableCell>

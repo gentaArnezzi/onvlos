@@ -151,36 +151,36 @@ export function SettingsTabs({ user, workspace, billing, language: propLanguage 
   const getTierBadgeColor = (tier: string) => {
     switch (tier) {
       case "starter":
-        return "bg-blue-100 text-blue-700";
+        return "bg-[#EDEDED] text-[#0A33C6]";
       case "professional":
-        return "bg-blue-100 text-blue-700";
+        return "bg-[#EDEDED] text-[#0A33C6]";
       case "enterprise":
-        return "bg-emerald-100 text-emerald-700";
+        return "bg-[#EDEDED] text-emerald-700";
       default:
-        return "bg-slate-100 text-slate-700";
+        return "bg-[#EDEDED] font-primary text-[#606170]";
     }
   };
 
   return (
     <Tabs defaultValue="profile" className="space-y-6">
-      <TabsList className="bg-slate-100 border border-slate-200 w-fit">
+      <TabsList className="bg-[#EDEDED] border border-[#EDEDED] w-fit">
         <TabsTrigger 
           value="profile" 
-          className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700"
+          className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0A33C6] data-[state=active]:to-[#0A33C6] data-[state=active]:text-white font-primary text-[#606170]"
         >
           <User className="h-4 w-4 mr-2" />
           {t("settings.profile")}
         </TabsTrigger>
         <TabsTrigger 
           value="workspace" 
-          className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700"
+          className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0A33C6] data-[state=active]:to-[#0A33C6] data-[state=active]:text-white font-primary text-[#606170]"
         >
           <Building className="h-4 w-4 mr-2" />
           {t("settings.workspace")}
         </TabsTrigger>
         <TabsTrigger 
           value="billing" 
-          className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700"
+          className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0A33C6] data-[state=active]:to-[#0A33C6] data-[state=active]:text-white font-primary text-[#606170]"
         >
           <CreditCard className="h-4 w-4 mr-2" />
           {t("settings.billing")}
@@ -188,25 +188,25 @@ export function SettingsTabs({ user, workspace, billing, language: propLanguage 
       </TabsList>
 
       <TabsContent value="profile" className="mt-0">
-        <Card className="border border-slate-200 shadow-lg bg-white">
+        <Card className="border border-[#EDEDED] shadow-lg bg-white">
           <CardHeader>
-            <CardTitle className="text-slate-900">{t("settings.profileInformation")}</CardTitle>
-            <CardDescription className="text-slate-600">
+            <CardTitle className="font-primary text-[#02041D]">{t("settings.profileInformation")}</CardTitle>
+            <CardDescription className="font-primary text-[#606170]">
               {t("settings.profileDescription")}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="flex items-center space-x-4">
-              <Avatar className="h-20 w-20 border-2 border-slate-200">
+              <Avatar className="h-20 w-20 border-2 border-[#EDEDED]">
                 <AvatarImage src={profileAvatar || undefined} />
-                <AvatarFallback className="bg-gradient-to-br from-[#0731c2] to-[#010119] text-white text-xl">
+                <AvatarFallback className="bg-gradient-to-br from-[#0A33C6] to-[#0A33C6] text-white text-xl">
                   {getInitials(profileName)}
                 </AvatarFallback>
               </Avatar>
               <Button 
                 variant="outline" 
                 onClick={handleChangeAvatar}
-                className="border-slate-200 text-slate-900 hover:bg-slate-50"
+                className="border-[#EDEDED] font-primary text-[#02041D] hover:bg-[#EDEDED]"
               >
                 {t("settings.changeAvatar")}
               </Button>
@@ -214,28 +214,28 @@ export function SettingsTabs({ user, workspace, billing, language: propLanguage 
 
             <div className="grid gap-6 md:grid-cols-2">
               <div className="space-y-2">
-                <Label className="text-slate-900">{t("settings.fullName")}</Label>
+                <Label className="font-primary text-[#02041D]">{t("settings.fullName")}</Label>
                 <Input 
                   value={profileName}
                   onChange={(e) => setProfileName(e.target.value)}
-                  className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500" 
+                  className="bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]" 
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-slate-900">{t("settings.profile.email")}</Label>
+                <Label className="font-primary text-[#02041D]">{t("settings.profile.email")}</Label>
                 <Input 
                   value={user?.email || ""} 
                   disabled 
-                  className="bg-slate-100 border-slate-200 text-slate-500" 
+                  className="bg-[#EDEDED] border-[#EDEDED] font-primary text-[#606170]" 
                 />
               </div>
             </div>
           </CardContent>
-          <CardFooter className="bg-slate-50/50 border-t border-slate-100 p-6">
+          <CardFooter className="bg-[#EDEDED]/50 border-t border-[#EDEDED] p-6">
             <Button 
               onClick={handleSaveProfile} 
               disabled={loading} 
-              className="ml-auto bg-gradient-to-r from-[#0731c2] to-[#010119] hover:from-[#0525a0] hover:to-[#00000f] text-white border-0"
+              className="ml-auto bg-gradient-to-r from-[#0A33C6] to-[#0A33C6] hover:from-[#0A33C6]/90 hover:to-[#0A33C6]/90 text-white border-0"
             >
               {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
               {t("settings.saveChanges")}
@@ -245,26 +245,26 @@ export function SettingsTabs({ user, workspace, billing, language: propLanguage 
       </TabsContent>
 
       <TabsContent value="workspace" className="mt-0">
-        <Card className="border border-slate-200 shadow-lg bg-white">
+        <Card className="border border-[#EDEDED] shadow-lg bg-white">
           <CardHeader>
-            <CardTitle className="text-slate-900">{t("settings.workspaceSettings")}</CardTitle>
-            <CardDescription className="text-slate-600">
+            <CardTitle className="font-primary text-[#02041D]">{t("settings.workspaceSettings")}</CardTitle>
+            <CardDescription className="font-primary text-[#606170]">
               {t("settings.workspaceDescription")}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="space-y-2">
-              <Label className="text-slate-900">{t("settings.workspace.name")}</Label>
+              <Label className="font-primary text-[#02041D]">{t("settings.workspace.name")}</Label>
               <Input 
                 value={workspaceName}
                 onChange={(e) => setWorkspaceName(e.target.value)}
-                className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500" 
+                className="bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]" 
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-slate-900">{t("settings.workspace.timezone")}</Label>
+              <Label className="font-primary text-[#02041D]">{t("settings.workspace.timezone")}</Label>
               <Select value={workspaceTimezone} onValueChange={setWorkspaceTimezone}>
-                <SelectTrigger className="bg-white border-slate-200 text-slate-900">
+                <SelectTrigger className="bg-white border-[#EDEDED] font-primary text-[#02041D]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -281,28 +281,28 @@ export function SettingsTabs({ user, workspace, billing, language: propLanguage 
               </Select>
             </div>
             <div className="space-y-2">
-              <Label className="text-slate-900">{t("settings.logoUrlOptional")}</Label>
+              <Label className="font-primary text-[#02041D]">{t("settings.logoUrlOptional")}</Label>
               <Input 
                 value={workspaceLogo}
                 onChange={(e) => setWorkspaceLogo(e.target.value)}
                 placeholder="https://example.com/logo.png"
-                className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500" 
+                className="bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]" 
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-slate-900">{t("settings.workspace.billingEmail")}</Label>
+              <Label className="font-primary text-[#02041D]">{t("settings.workspace.billingEmail")}</Label>
               <Input 
                 type="email"
                 value={billingEmail}
                 onChange={(e) => setBillingEmail(e.target.value)}
                 placeholder="billing@example.com"
-                className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500" 
+                className="bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]" 
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-slate-900">{t("settings.workspace.defaultCurrency")}</Label>
+              <Label className="font-primary text-[#02041D]">{t("settings.workspace.defaultCurrency")}</Label>
               <Select value={defaultCurrency} onValueChange={setDefaultCurrency}>
-                <SelectTrigger className="bg-white border-slate-200 text-slate-900">
+                <SelectTrigger className="bg-white border-[#EDEDED] font-primary text-[#02041D]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -310,14 +310,14 @@ export function SettingsTabs({ user, workspace, billing, language: propLanguage 
                   <SelectItem value="IDR">IDR - Indonesian Rupiah (Rp)</SelectItem>
                 </SelectContent>
               </Select>
-              <p className="text-xs text-slate-600">
+              <p className="text-xs font-primary text-[#606170]">
                 {t("settings.workspace.currencyDescription")}
               </p>
             </div>
             <div className="space-y-2">
-              <Label className="text-slate-900">{t("settings.workspace.defaultLanguage")}</Label>
+              <Label className="font-primary text-[#02041D]">{t("settings.workspace.defaultLanguage")}</Label>
               <Select value={defaultLanguage} onValueChange={setDefaultLanguage}>
-                <SelectTrigger className="bg-white border-slate-200 text-slate-900">
+                <SelectTrigger className="bg-white border-[#EDEDED] font-primary text-[#02041D]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -325,16 +325,16 @@ export function SettingsTabs({ user, workspace, billing, language: propLanguage 
                   <SelectItem value="id">Bahasa Indonesia</SelectItem>
                 </SelectContent>
               </Select>
-              <p className="text-xs text-slate-600">
+              <p className="text-xs font-primary text-[#606170]">
                 {t("settings.workspace.languageDescription")}
               </p>
             </div>
           </CardContent>
-          <CardFooter className="bg-slate-50/50 border-t border-slate-100 p-6">
+          <CardFooter className="bg-[#EDEDED]/50 border-t border-[#EDEDED] p-6">
             <Button 
               onClick={handleSaveWorkspace} 
               disabled={loading} 
-              className="ml-auto bg-gradient-to-r from-[#0731c2] to-[#010119] hover:from-[#0525a0] hover:to-[#00000f] text-white border-0"
+              className="ml-auto bg-gradient-to-r from-[#0A33C6] to-[#0A33C6] hover:from-[#0A33C6]/90 hover:to-[#0A33C6]/90 text-white border-0"
             >
               {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
               {t("settings.saveChanges")}
@@ -344,21 +344,21 @@ export function SettingsTabs({ user, workspace, billing, language: propLanguage 
       </TabsContent>
 
       <TabsContent value="billing" className="mt-0">
-        <Card className="border border-slate-200 shadow-lg bg-white">
+        <Card className="border border-[#EDEDED] shadow-lg bg-white">
           <CardHeader>
-            <CardTitle className="text-slate-900">{t("settings.billingSubscription")}</CardTitle>
-            <CardDescription className="text-slate-600">
+            <CardTitle className="font-primary text-[#02041D]">{t("settings.billingSubscription")}</CardTitle>
+            <CardDescription className="font-primary text-[#606170]">
               {t("settings.billingDescription")}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {billing && (
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-lg border border-slate-200">
+                <div className="flex items-center justify-between p-4 bg-[#EDEDED] rounded-lg border border-[#EDEDED]">
                   <div>
-                    <p className="text-sm text-slate-600 mb-1">{t("settings.currentPlan")}</p>
+                    <p className="text-sm font-primary text-[#606170] mb-1">{t("settings.currentPlan")}</p>
                     <div className="flex items-center gap-2">
-                      <p className="text-lg font-semibold text-slate-900 capitalize">
+                      <p className="text-lg font-semibold font-primary text-[#02041D] capitalize">
                         {billing.subscription_tier}
                       </p>
                       <Badge className={`${getTierBadgeColor(billing.subscription_tier)} capitalize`}>
@@ -369,24 +369,24 @@ export function SettingsTabs({ user, workspace, billing, language: propLanguage 
                 </div>
                 
                 {billing.billing_email && (
-                  <div className="p-4 bg-slate-50 rounded-lg border border-slate-200">
-                    <p className="text-sm text-slate-600 mb-1">{t("settings.billingEmail")}</p>
-                    <p className="text-slate-900">{billing.billing_email}</p>
+                  <div className="p-4 bg-[#EDEDED] rounded-lg border border-[#EDEDED]">
+                    <p className="text-sm font-primary text-[#606170] mb-1">{t("settings.billingEmail")}</p>
+                    <p className="font-primary text-[#02041D]">{billing.billing_email}</p>
                   </div>
                 )}
               </div>
             )}
             
-            <div className="text-center py-12 text-slate-600 bg-slate-50 rounded-lg border border-dashed border-slate-200">
-              <CreditCard className="h-12 w-12 mx-auto mb-4 text-slate-600" />
-              <p className="mb-2 font-medium text-slate-900">{t("settings.billingHandledViaStripe")}</p>
-              <p className="text-sm text-slate-600">{t("settings.redirectedToCustomerPortal")}</p>
+            <div className="text-center py-12 font-primary text-[#606170] bg-[#EDEDED] rounded-lg border border-dashed border-[#EDEDED]">
+              <CreditCard className="h-12 w-12 mx-auto mb-4 font-primary text-[#606170]" />
+              <p className="mb-2 font-medium font-primary text-[#02041D]">{t("settings.billingHandledViaStripe")}</p>
+              <p className="text-sm font-primary text-[#606170]">{t("settings.redirectedToCustomerPortal")}</p>
             </div>
           </CardContent>
           <CardFooter className="justify-center p-6">
             <Button 
               variant="outline" 
-              className="w-full sm:w-auto border-slate-200 text-slate-900 hover:bg-slate-50"
+              className="w-full sm:w-auto border-[#EDEDED] font-primary text-[#02041D] hover:bg-[#EDEDED]"
               onClick={() => {
                 // TODO: Implement Stripe customer portal redirect
                 alert(t("settings.stripePortalComingSoon"));

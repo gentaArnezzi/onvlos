@@ -135,24 +135,24 @@ export default function HelpPage() {
     <div className="flex-1 space-y-8 p-8 max-w-7xl mx-auto">
       {/* Header */}
       <div>
-        <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-[#0731c2] via-[#0731c2] to-[#010119] bg-clip-text text-transparent">
+        <h2 className="text-3xl font-bold font-primary tracking-tight text-[#0A33C6]">
           Help & Support
         </h2>
-        <p className="text-slate-600 mt-1">
+        <p className="font-primary text-[#606170] mt-1">
           Get help, find answers, and learn how to make the most of Onvlo.
         </p>
       </div>
 
       {/* Search Bar */}
-      <Card className="border border-slate-200 shadow-sm bg-white">
+      <Card className="border border-[#EDEDED] shadow-sm bg-white">
         <CardContent className="p-6">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-600" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 font-primary text-[#606170]" />
             <Input
               placeholder="Search for help articles, FAQs, or guides..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
+              className="pl-10 bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:text-slate-500"
             />
           </div>
         </CardContent>
@@ -160,21 +160,21 @@ export default function HelpPage() {
 
       {/* Support Options */}
       <div>
-        <h3 className="text-xl font-semibold text-slate-900 mb-4 flex items-center gap-2">
-          <LifeBuoy className="h-5 w-5 text-[#0731c2]" />
+        <h3 className="text-xl font-semibold font-primary text-[#02041D] mb-4 flex items-center gap-2">
+          <LifeBuoy className="h-5 w-5 text-[#0A33C6]" />
           Get Support
         </h3>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {supportOptions.map((option, index) => (
-            <Card key={index} className="border border-slate-200 shadow-sm bg-white hover:shadow-md transition-shadow">
+            <Card key={index} className="border border-[#EDEDED] shadow-sm bg-white hover:shadow-md transition-shadow">
               <CardHeader className="pb-3">
-                <div className="p-2 rounded-lg bg-blue-100 text-[#0731c2] w-fit mb-2">
+                <div className="p-2 rounded-lg bg-[#EDEDED] text-[#0A33C6] w-fit mb-2">
                   <option.icon className="h-5 w-5" />
                 </div>
-                <CardTitle className="text-base font-semibold text-slate-900">
+                <CardTitle className="text-base font-semibold font-primary text-[#02041D]">
                   {option.title}
                 </CardTitle>
-                <CardDescription className="text-sm text-slate-600">
+                <CardDescription className="text-sm font-primary text-[#606170]">
                   {option.description}
                 </CardDescription>
               </CardHeader>
@@ -182,7 +182,7 @@ export default function HelpPage() {
                 <Button 
                   variant="outline" 
                   size="sm" 
-                  className="w-full border-slate-200 text-slate-900 hover:bg-slate-50"
+                  className="w-full border-[#EDEDED] font-primary text-[#02041D] hover:bg-[#EDEDED]"
                   asChild
                 >
                   <a href={option.href}>
@@ -198,27 +198,27 @@ export default function HelpPage() {
 
       {/* Quick Start Guides */}
       <div>
-        <h3 className="text-xl font-semibold text-slate-900 mb-4 flex items-center gap-2">
-          <BookOpen className="h-5 w-5 text-[#0731c2]" />
+        <h3 className="text-xl font-semibold font-primary text-[#02041D] mb-4 flex items-center gap-2">
+          <BookOpen className="h-5 w-5 text-[#0A33C6]" />
           Quick Start Guides
         </h3>
         <div className="grid gap-4 md:grid-cols-2">
           {quickStartGuides.map((guide, index) => (
-            <Card key={index} className="border border-slate-200 shadow-sm bg-white hover:shadow-md transition-shadow cursor-pointer group">
+            <Card key={index} className="border border-[#EDEDED] shadow-sm bg-white hover:shadow-md transition-shadow cursor-pointer group">
               <CardContent className="p-6">
                 <div className="flex items-start gap-4">
-                  <div className="p-2 rounded-lg bg-blue-100 text-[#0731c2] group-hover:bg-blue-200 transition-colors">
+                  <div className="p-2 rounded-lg bg-[#EDEDED] text-[#0A33C6] group-hover:bg-[#0A33C6]/10 transition-colors">
                     <guide.icon className="h-5 w-5" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-semibold text-slate-900 mb-1 group-hover:text-[#0731c2] transition-colors">
+                    <h4 className="font-semibold font-primary text-[#02041D] mb-1 group-hover:text-[#0A33C6] transition-colors">
                       {guide.title}
                     </h4>
-                    <p className="text-sm text-slate-600">
+                    <p className="text-sm font-primary text-[#606170]">
                       {guide.description}
                     </p>
                   </div>
-                  <ChevronRight className="h-5 w-5 text-slate-600 group-hover:text-[#0731c2] transition-colors" />
+                  <ChevronRight className="h-5 w-5 font-primary text-[#606170] group-hover:text-[#0A33C6] transition-colors" />
                 </div>
               </CardContent>
             </Card>
@@ -228,25 +228,25 @@ export default function HelpPage() {
 
       {/* FAQ Section */}
       <div>
-        <h3 className="text-xl font-semibold text-slate-900 mb-4 flex items-center gap-2">
-          <HelpCircle className="h-5 w-5 text-[#0731c2]" />
+        <h3 className="text-xl font-semibold font-primary text-[#02041D] mb-4 flex items-center gap-2">
+          <HelpCircle className="h-5 w-5 text-[#0A33C6]" />
           Frequently Asked Questions
         </h3>
         <div className="space-y-6">
           {faqCategories.map((category, catIndex) => (
-            <Card key={catIndex} className="border border-slate-200 shadow-sm bg-white">
+            <Card key={catIndex} className="border border-[#EDEDED] shadow-sm bg-white">
               <CardHeader>
-                <CardTitle className="text-lg font-semibold text-slate-900">
+                <CardTitle className="text-lg font-semibold font-primary text-[#02041D]">
                   {category.title}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {category.questions.map((faq, faqIndex) => (
-                  <div key={faqIndex} className="border-b border-slate-200 last:border-0 pb-4 last:pb-0">
-                    <h4 className="font-medium text-slate-900 mb-2">
+                  <div key={faqIndex} className="border-b border-[#EDEDED] last:border-0 pb-4 last:pb-0">
+                    <h4 className="font-medium font-primary text-[#02041D] mb-2">
                       {faq.q}
                     </h4>
-                    <p className="text-sm text-slate-600">
+                    <p className="text-sm font-primary text-[#606170]">
                       {faq.a}
                     </p>
                   </div>
@@ -258,19 +258,19 @@ export default function HelpPage() {
       </div>
 
       {/* Still Need Help */}
-      <Card className="border border-blue-200 bg-gradient-to-r from-blue-50 to-blue-50">
+      <Card className="border border-[#EDEDED] bg-gradient-to-r bg-[#EDEDED] ">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold text-slate-900 mb-1">
+              <h3 className="text-lg font-semibold font-primary text-[#02041D] mb-1">
                 Still need help?
               </h3>
-              <p className="text-sm text-slate-600">
+              <p className="text-sm font-primary text-[#606170]">
                 Our support team is here to assist you 24/7.
               </p>
             </div>
             <Button 
-              className="bg-gradient-to-r from-[#0731c2] to-[#010119] hover:from-[#0525a0] hover:to-[#00000f] text-white"
+              className="bg-[#0A33C6] hover:bg-[#0A33C6]/90 text-white font-primary font-bold"
               asChild
             >
               <a href="mailto:support@onvlo.com">

@@ -55,10 +55,10 @@ export function StepConfigAutomation({ config, onUpdate }: StepConfigAutomationP
     return (
         <div className="space-y-6">
             <div>
-                <Label className="text-slate-900 mb-2 block">
+                <Label className="font-primary text-[#02041D] mb-2 block">
                     {t('funnels.editor.automation.actions')}
                 </Label>
-                <p className="text-sm text-slate-600 mb-4">
+                <p className="text-sm font-primary text-[#606170] mb-4">
                     {t('funnels.editor.automation.configureActions')}
                 </p>
             </div>
@@ -67,10 +67,10 @@ export function StepConfigAutomation({ config, onUpdate }: StepConfigAutomationP
                 {actions.map((action, index) => (
                     <div
                         key={action.id}
-                        className="p-4 border rounded-md space-y-3 bg-slate-50 border-slate-200"
+                        className="p-4 border rounded-md space-y-3 bg-[#EDEDED] border-[#EDEDED]"
                     >
                         <div className="flex items-center justify-between">
-                            <span className="text-sm font-medium text-slate-900">
+                            <span className="text-sm font-medium font-primary text-[#02041D]">
                                 {t('funnels.editor.automation.action')} {index + 1}
                             </span>
                             <Button
@@ -83,20 +83,20 @@ export function StepConfigAutomation({ config, onUpdate }: StepConfigAutomationP
                             </Button>
                         </div>
                         <div className="space-y-2">
-                            <Label className="text-slate-900">{t('funnels.editor.automation.actionType')}</Label>
+                            <Label className="font-primary text-[#02041D]">{t('funnels.editor.automation.actionType')}</Label>
                             <Select
                                 value={action.type}
                                 onValueChange={(value) => updateAction(action.id, { type: value })}
                             >
-                                <SelectTrigger className="bg-white border-slate-200 text-slate-900">
+                                <SelectTrigger className="bg-white border-[#EDEDED] font-primary text-[#02041D]">
                                     <SelectValue />
                                 </SelectTrigger>
-                                <SelectContent className="bg-white border-slate-200">
+                                <SelectContent className="bg-white border-[#EDEDED]">
                                     {actionTypes.map((type) => (
                                         <SelectItem
                                             key={type.value}
                                             value={type.value}
-                                            className="text-slate-900 focus:bg-slate-100"
+                                            className="font-primary text-[#02041D] focus:bg-[#EDEDED]"
                                         >
                                             {type.label}
                                         </SelectItem>
@@ -112,7 +112,7 @@ export function StepConfigAutomation({ config, onUpdate }: StepConfigAutomationP
             <Button
                 variant="outline"
                 onClick={addAction}
-                className="w-full bg-white border-slate-200 text-slate-900 hover:bg-slate-50"
+                className="w-full bg-white border-[#EDEDED] font-primary text-[#02041D] hover:bg-[#EDEDED]"
             >
                 <Plus className="mr-2 h-4 w-4" />
                 {t('funnels.editor.automation.addAction')}

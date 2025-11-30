@@ -16,10 +16,10 @@ export default async function BoardsPage() {
       {/* Header */}
       <div className="flex items-center justify-between shrink-0">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-orange-500 to-amber-500 bg-clip-text text-transparent">
+          <h2 className="text-3xl font-bold font-primary tracking-tight text-[#0A33C6]">
             {board.columns.length > 0 ? t("boards.clientPipeline", language) : t("boards.title", language)}
           </h2>
-          <p className="text-slate-600 mt-1">
+          <p className="font-primary text-[#606170] mt-1">
             {t("boards.description", language)}
           </p>
         </div>
@@ -29,7 +29,7 @@ export default async function BoardsPage() {
       </div>
 
       {/* Board Area */}
-      <div className="flex-1 overflow-hidden rounded-xl border border-slate-200 bg-slate-50 backdrop-blur-sm shadow-lg">
+      <div className="flex-1 overflow-hidden rounded-xl border border-[#EDEDED] bg-[#EDEDED] backdrop-blur-sm shadow-lg">
         <div className="h-full p-4">
           <KanbanBoard boardId={board.id} initialColumns={board.columns} language={language} />
         </div>

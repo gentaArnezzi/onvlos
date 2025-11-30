@@ -78,9 +78,9 @@ export function ChatMessages({ clientId, clientName, clientLogo, currentUserId, 
     });
 
     return (
-        <div className="h-full flex flex-col border border-slate-200 bg-white rounded-lg">
+        <div className="h-full flex flex-col border border-[#EDEDED] bg-white rounded-lg">
             {/* Header */}
-            <div className="border-b border-slate-200 py-4 px-6 flex-shrink-0 bg-white">
+            <div className="border-b border-[#EDEDED] py-4 px-6 flex-shrink-0 bg-white">
                 <div className="flex items-center gap-3">
                     {clientLogo ? (
                         <img
@@ -89,37 +89,37 @@ export function ChatMessages({ clientId, clientName, clientLogo, currentUserId, 
                             className="w-10 h-10 rounded-full object-cover"
                         />
                     ) : (
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center">
+                        <div className="w-10 h-10 rounded-full bg-[#EDEDED]0 to-cyan-600 flex items-center justify-center">
                             <span className="text-white font-semibold">
                                 {clientName.substring(0, 2).toUpperCase()}
                             </span>
                         </div>
                     )}
                     <div>
-                        <h3 className="font-semibold text-slate-900">{clientName}</h3>
-                        <p className="text-xs text-slate-600">{t("chat.client")}</p>
+                        <h3 className="font-semibold font-primary text-[#02041D]">{clientName}</h3>
+                        <p className="text-xs font-primary text-[#606170]">{t("chat.client")}</p>
                     </div>
                 </div>
             </div>
 
             {/* Messages - Scrollable Area */}
             <div 
-                className="flex-1 overflow-y-auto bg-slate-50 scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent"
+                className="flex-1 overflow-y-auto bg-[#EDEDED] scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent"
                 ref={scrollAreaRef}
                 style={{ minHeight: 0, maxHeight: '100%' }}
             >
                 <div className="p-6 space-y-4">
                     {loading ? (
                         <div className="flex items-center justify-center min-h-[400px]">
-                            <Loader2 className="w-6 h-6 text-slate-600 animate-spin" />
+                            <Loader2 className="w-6 h-6 font-primary text-[#606170] animate-spin" />
                         </div>
                     ) : messages.length === 0 ? (
                         <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
-                            <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
-                                <Calendar className="w-8 h-8 text-slate-600" />
+                            <div className="w-16 h-16 rounded-full bg-[#EDEDED] flex items-center justify-center mb-4">
+                                <Calendar className="w-8 h-8 font-primary text-[#606170]" />
                             </div>
-                            <h4 className="text-lg font-semibold text-slate-900 mb-2">{t("chat.noMessagesYet")}</h4>
-                            <p className="text-sm text-slate-600 max-w-sm">
+                            <h4 className="text-lg font-semibold font-primary text-[#02041D] mb-2">{t("chat.noMessagesYet")}</h4>
+                            <p className="text-sm font-primary text-[#606170] max-w-sm">
                                 {t("chat.startConversation")}
                             </p>
                         </div>
@@ -129,7 +129,7 @@ export function ChatMessages({ clientId, clientName, clientLogo, currentUserId, 
                                 <div key={groupIdx}>
                                     {/* Date separator */}
                                     <div className="flex items-center justify-center my-6">
-                                        <div className="px-3 py-1 rounded-full bg-slate-200 text-xs text-slate-600">
+                                        <div className="px-3 py-1 rounded-full bg-slate-200 text-xs font-primary text-[#606170]">
                                             {format(group.date, "MMMM d, yyyy")}
                                         </div>
                                     </div>
@@ -147,14 +147,14 @@ export function ChatMessages({ clientId, clientName, clientLogo, currentUserId, 
                                                     <div
                                                         className={`max-w-[70%] rounded-2xl px-4 py-2 ${isOwnMessage
                                                             ? "bg-blue-600 text-white"
-                                                            : "bg-white text-slate-900 border border-slate-200"
+                                                            : "bg-white font-primary text-[#02041D] border border-[#EDEDED]"
                                                             }`}
                                                     >
                                                         <p className="text-sm whitespace-pre-wrap break-words">
                                                             {message.content}
                                                         </p>
                                                         <p
-                                                            className={`text-xs mt-1 ${isOwnMessage ? "text-blue-100" : "text-slate-500"
+                                                            className={`text-xs mt-1 ${isOwnMessage ? "font-primary text-[#EDEDED]/90" : "font-primary text-[#606170]"
                                                                 }`}
                                                         >
                                                             {format(new Date(message.created_at), "HH:mm")}
@@ -173,7 +173,7 @@ export function ChatMessages({ clientId, clientName, clientLogo, currentUserId, 
             </div>
 
             {/* Input - Fixed at bottom */}
-            <div className="border-t border-slate-200 p-4 bg-white flex-shrink-0 relative z-10">
+            <div className="border-t border-[#EDEDED] p-4 bg-white flex-shrink-0 relative z-10">
                 <ChatInput
                     key={`input-${clientId}`}
                     clientId={clientId}

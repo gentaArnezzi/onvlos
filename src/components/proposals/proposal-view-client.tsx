@@ -86,18 +86,18 @@ export function ProposalViewClient({ proposal, currencySymbol, isWorkspaceOwner 
     <div className="space-y-6">
       {/* Client Info */}
       {proposal.client && (
-        <Card className="border-slate-200 bg-white">
+        <Card className="border-[#EDEDED] bg-white">
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-blue-100 text-blue-600">
+              <div className="p-2 rounded-lg bg-[#EDEDED] text-[#0A33C6]">
                 <User className="h-5 w-5" />
               </div>
               <div>
-                <p className="font-medium text-slate-900">
+                <p className="font-medium font-primary text-[#02041D]">
                   {proposal.client.name || proposal.client.company_name || "Client"}
                 </p>
                 {proposal.client.email && (
-                  <p className="text-sm text-slate-600">
+                  <p className="text-sm font-primary text-[#606170]">
                     {proposal.client.email}
                   </p>
                 )}
@@ -108,9 +108,9 @@ export function ProposalViewClient({ proposal, currencySymbol, isWorkspaceOwner 
       )}
 
       {/* Proposal Details */}
-      <Card className="border-slate-200 bg-white">
+      <Card className="border-[#EDEDED] bg-white">
         <CardHeader>
-          <CardTitle className="text-slate-900">{t("proposals.details")}</CardTitle>
+          <CardTitle className="font-primary text-[#02041D]">{t("proposals.details")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Content Sections */}
@@ -121,38 +121,38 @@ export function ProposalViewClient({ proposal, currencySymbol, isWorkspaceOwner 
                 .map((section: any, index: number) => (
                   <div key={section.id || index} className="prose max-w-none">
                     {section.type === "header" && (
-                      <h2 className="text-2xl font-bold text-slate-900 mb-4">
+                      <h2 className="text-2xl font-bold font-primary text-[#02041D] mb-4">
                         {typeof section.content === 'string' ? section.content : JSON.stringify(section.content)}
                       </h2>
                     )}
                     {section.type === "text" && (
-                      <p className="text-slate-700 leading-relaxed">
+                      <p className="font-primary text-[#606170] leading-relaxed">
                         {typeof section.content === 'string' ? section.content : JSON.stringify(section.content)}
                       </p>
                     )}
                     {section.type === "pricing" && (
-                      <div className="bg-slate-50 p-4 rounded-lg">
-                        <h3 className="font-semibold text-slate-900 mb-2">
+                      <div className="bg-[#EDEDED] p-4 rounded-lg">
+                        <h3 className="font-semibold font-primary text-[#02041D] mb-2">
                           {section.title || t("proposals.pricing")}
                         </h3>
                         {typeof section.content === 'string' ? (
-                          <p className="text-slate-700">
+                          <p className="font-primary text-[#606170]">
                             {section.content}
                           </p>
                         ) : Array.isArray(section.content) ? (
                           <div className="space-y-2">
                             {section.content.map((item: any, idx: number) => {
                               if (typeof item === 'string') {
-                                return <div key={idx} className="text-slate-700">{item}</div>;
+                                return <div key={idx} className="font-primary text-[#606170]">{item}</div>;
                               }
                               if (item && typeof item === 'object') {
                                 return (
-                                  <div key={idx} className="text-slate-700">
+                                  <div key={idx} className="font-primary text-[#606170]">
                                     {item.name && (
                                       <div className="font-medium">{item.name}</div>
                                     )}
                                     {item.description && (
-                                      <div className="text-sm text-slate-600">{item.description}</div>
+                                      <div className="text-sm font-primary text-[#606170]">{item.description}</div>
                                     )}
                                     {item.quantity && item.unit_price && (
                                       <div className="text-sm">
@@ -167,11 +167,11 @@ export function ProposalViewClient({ proposal, currencySymbol, isWorkspaceOwner 
                             })}
                           </div>
                         ) : section.content && typeof section.content === 'object' ? (
-                          <p className="text-slate-700">
+                          <p className="font-primary text-[#606170]">
                             {section.content.name || section.content.title || section.content.description || ''}
                           </p>
                         ) : (
-                          <p className="text-slate-700">
+                          <p className="font-primary text-[#606170]">
                             {String(section.content || '')}
                           </p>
                         )}
@@ -185,29 +185,29 @@ export function ProposalViewClient({ proposal, currencySymbol, isWorkspaceOwner 
           {/* Items */}
           {proposal.items && Array.isArray(proposal.items) && proposal.items.length > 0 && (
             <div className="mt-6">
-              <h3 className="font-semibold text-slate-900 mb-4">{t("proposals.items")}</h3>
+              <h3 className="font-semibold font-primary text-[#02041D] mb-4">{t("proposals.items")}</h3>
               <div className="space-y-3">
                 {proposal.items.map((item: any, index: number) => {
                   // Ensure item is an object and has required fields
                   if (!item || typeof item !== 'object') return null;
                   
                   return (
-                    <div key={item.id || index} className="flex justify-between items-start p-4 bg-slate-50 rounded-lg">
+                    <div key={item.id || index} className="flex justify-between items-start p-4 bg-[#EDEDED] rounded-lg">
                       <div className="flex-1">
-                        <p className="font-medium text-slate-900">
+                        <p className="font-medium font-primary text-[#02041D]">
                           {item.name || t("proposals.unnamedItem")}
                         </p>
                         {item.description && (
-                          <p className="text-sm text-slate-600 mt-1">
+                          <p className="text-sm font-primary text-[#606170] mt-1">
                             {typeof item.description === 'string' ? item.description : String(item.description)}
                           </p>
                         )}
-                        <p className="text-sm text-slate-600 mt-1">
+                        <p className="text-sm font-primary text-[#606170] mt-1">
                           {t("proposals.quantity")}: {item.quantity || 0} × {currencySymbol}{Number(item.unit_price || 0).toLocaleString()}
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="font-semibold text-slate-900">
+                        <p className="font-semibold font-primary text-[#02041D]">
                           {currencySymbol}{Number(item.total || 0).toLocaleString()}
                         </p>
                       </div>
@@ -219,16 +219,16 @@ export function ProposalViewClient({ proposal, currencySymbol, isWorkspaceOwner 
           )}
 
           {/* Totals */}
-          <div className="mt-6 pt-6 border-t border-slate-200">
+          <div className="mt-6 pt-6 border-t border-[#EDEDED]">
             <div className="space-y-2">
               {proposal.subtotal && (
-                <div className="flex justify-between text-slate-700">
+                <div className="flex justify-between font-primary text-[#606170]">
                   <span>{t("proposals.subtotal")}</span>
                   <span>{currencySymbol}{Number(proposal.subtotal).toLocaleString()}</span>
                 </div>
               )}
               {proposal.discount_amount && Number(proposal.discount_amount) > 0 && (
-                <div className="flex justify-between text-slate-700">
+                <div className="flex justify-between font-primary text-[#606170]">
                   <span>{t("invoices.discount")}</span>
                   <span className="text-emerald-600">
                     -{currencySymbol}{Number(proposal.discount_amount).toLocaleString()}
@@ -236,12 +236,12 @@ export function ProposalViewClient({ proposal, currencySymbol, isWorkspaceOwner 
                 </div>
               )}
               {proposal.tax_amount && Number(proposal.tax_amount) > 0 && (
-                <div className="flex justify-between text-slate-700">
+                <div className="flex justify-between font-primary text-[#606170]">
                   <span>{t("invoices.tax")}</span>
                   <span>{currencySymbol}{Number(proposal.tax_amount).toLocaleString()}</span>
                 </div>
               )}
-              <div className="flex justify-between text-lg font-bold text-slate-900 pt-2 border-t border-slate-200">
+              <div className="flex justify-between text-lg font-bold font-primary text-[#02041D] pt-2 border-t border-[#EDEDED]">
                 <span>{t("proposals.total")}</span>
                 <span>{currencySymbol}{Number(proposal.total || proposal.subtotal || 0).toLocaleString()}</span>
               </div>
@@ -251,7 +251,7 @@ export function ProposalViewClient({ proposal, currencySymbol, isWorkspaceOwner 
       </Card>
 
       {/* Validity & Dates */}
-      <Card className="border-slate-200 bg-white">
+      <Card className="border-[#EDEDED] bg-white">
         <CardContent className="pt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {proposal.valid_until && (
@@ -260,8 +260,8 @@ export function ProposalViewClient({ proposal, currencySymbol, isWorkspaceOwner 
                   <Calendar className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-sm text-slate-600">{t("proposals.validUntil")}</p>
-                  <p className="font-medium text-slate-900">
+                  <p className="text-sm font-primary text-[#606170]">{t("proposals.validUntil")}</p>
+                  <p className="font-medium font-primary text-[#02041D]">
                     {format(new Date(proposal.valid_until), "MMM d, yyyy")}
                   </p>
                 </div>
@@ -273,8 +273,8 @@ export function ProposalViewClient({ proposal, currencySymbol, isWorkspaceOwner 
                   <DollarSign className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-sm text-slate-600">{t("proposals.totalAmount")}</p>
-                  <p className="font-medium text-slate-900">
+                  <p className="text-sm font-primary text-[#606170]">{t("proposals.totalAmount")}</p>
+                  <p className="font-medium font-primary text-[#02041D]">
                     {currencySymbol}{Number(proposal.total).toLocaleString()}
                   </p>
                 </div>
@@ -286,10 +286,10 @@ export function ProposalViewClient({ proposal, currencySymbol, isWorkspaceOwner 
 
       {/* Info Message for Draft Proposals */}
       {proposal.status === "draft" && (
-        <Card className="border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20">
+        <Card className="border-[#EDEDED] dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20">
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <FileText className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+              <FileText className="h-5 w-5 text-[#0A33C6] dark:text-blue-400" />
               <div>
                 <p className="font-medium text-blue-900 dark:text-blue-300">
                   {t("proposals.draftNotice")}
@@ -305,7 +305,7 @@ export function ProposalViewClient({ proposal, currencySymbol, isWorkspaceOwner 
 
       {/* Actions - Show if proposal can be accepted/rejected */}
       {canAccept && (
-        <Card className="border-slate-200 bg-white">
+        <Card className="border-[#EDEDED] bg-white">
           <CardContent className="pt-6">
             {isDraft && (
               <div className="mb-4 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-700">
@@ -314,8 +314,8 @@ export function ProposalViewClient({ proposal, currencySymbol, isWorkspaceOwner 
                 </p>
               </div>
             )}
-            <div className="mb-4 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
-              <p className="text-sm text-slate-700 dark:text-slate-300">
+            <div className="mb-4 p-4 bg-[#EDEDED] dark:bg-slate-800/50 rounded-lg border border-[#EDEDED] dark:border-slate-700">
+              <p className="text-sm font-primary text-[#606170] dark:text-slate-300">
                 {t("proposals.acceptanceNotice")}
               </p>
             </div>
@@ -345,7 +345,7 @@ export function ProposalViewClient({ proposal, currencySymbol, isWorkspaceOwner 
                   value={declineReason}
                   onChange={(e) => setDeclineReason(e.target.value)}
                   placeholder={t("proposals.declineReason")}
-                  className="w-full min-h-[100px] p-3 rounded-md border border-slate-200 bg-white text-slate-900 placeholder:text-slate-500"
+                  className="w-full min-h-[100px] p-3 rounded-md border border-[#EDEDED] bg-white font-primary text-[#02041D] placeholder:font-primary text-[#606170]"
                 />
                 <div className="flex gap-3">
                   <Button

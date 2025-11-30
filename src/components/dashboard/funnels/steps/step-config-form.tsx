@@ -52,46 +52,46 @@ export function StepConfigForm({ config, onUpdate }: StepConfigFormProps) {
     return (
         <div className="space-y-6">
             <div className="space-y-2">
-                <Label className="text-slate-900">{t('funnels.editor.form.title')}</Label>
+                <Label className="font-primary text-[#02041D]">{t('funnels.editor.form.title')}</Label>
                 <Input
                     value={title}
                     onChange={e => setTitle(e.target.value)}
-                    className="bg-white text-slate-900 border-slate-200"
+                    className="bg-white font-primary text-[#02041D] border-[#EDEDED]"
                 />
             </div>
             <div className="space-y-2">
-                <Label className="text-slate-900">{t('funnels.editor.form.description')}</Label>
+                <Label className="font-primary text-[#02041D]">{t('funnels.editor.form.description')}</Label>
                 <Textarea
                     value={description}
                     onChange={e => setDescription(e.target.value)}
-                    className="bg-white text-slate-900 border-slate-200"
+                    className="bg-white font-primary text-[#02041D] border-[#EDEDED]"
                 />
             </div>
 
             <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                    <Label className="text-slate-900">{t('funnels.editor.form.fields')}</Label>
-                    <Button size="sm" variant="outline" onClick={addField} className="text-slate-900 border-slate-200 hover:bg-slate-100">
+                    <Label className="font-primary text-[#02041D]">{t('funnels.editor.form.fields')}</Label>
+                    <Button size="sm" variant="outline" onClick={addField} className="font-primary text-[#02041D] border-[#EDEDED] hover:bg-[#EDEDED]">
                         <Plus className="h-3 w-3 mr-1" /> {t('funnels.editor.form.addField')}
                     </Button>
                 </div>
 
                 {fields.map((field, index) => (
-                    <div key={field.id} className="p-4 border rounded-md space-y-3 bg-slate-50 border-slate-200">
+                    <div key={field.id} className="p-4 border rounded-md space-y-3 bg-[#EDEDED] border-[#EDEDED]">
                         <div className="flex items-center gap-2">
                             <Input
                                 value={field.label}
                                 onChange={e => updateField(field.id, { label: e.target.value })}
-                                className="flex-1 font-medium bg-white text-slate-900 border-slate-200"
+                                className="flex-1 font-medium bg-white font-primary text-[#02041D] border-[#EDEDED]"
                             />
-                            <Button size="icon" variant="ghost" className="h-8 w-8 text-slate-600 hover:text-red-500 hover:bg-red-50" onClick={() => removeField(field.id)}>
+                            <Button size="icon" variant="ghost" className="h-8 w-8 font-primary text-[#606170] hover:text-red-500 hover:bg-red-50" onClick={() => removeField(field.id)}>
                                 <Trash2 className="h-4 w-4" />
                             </Button>
                         </div>
                         <div className="flex items-center gap-4">
                             <div className="w-1/2">
                                 <select
-                                    className="w-full h-9 rounded-md border border-slate-200 bg-white px-3 py-1 text-sm shadow-sm transition-colors text-slate-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                                    className="w-full h-9 rounded-md border border-[#EDEDED] bg-white px-3 py-1 text-sm shadow-sm transition-colors font-primary text-[#02041D] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                                     value={field.type}
                                     onChange={e => updateField(field.id, { type: e.target.value })}
                                 >
@@ -106,9 +106,9 @@ export function StepConfigForm({ config, onUpdate }: StepConfigFormProps) {
                                     id={`req-${field.id}`}
                                     checked={field.required}
                                     onCheckedChange={(c) => updateField(field.id, { required: c as boolean })}
-                                    className="border-slate-300 data-[state=checked]:bg-[#0731c2] data-[state=checked]:border-[#0731c2]"
+                                    className="border-[#EDEDED] data-[state=checked]:bg-[#0A33C6] data-[state=checked]:border-[#0731c2]"
                                 />
-                                <Label htmlFor={`req-${field.id}`} className="text-sm font-normal text-slate-700">{t('funnels.editor.form.required')}</Label>
+                                <Label htmlFor={`req-${field.id}`} className="text-sm font-normal font-primary text-[#606170]">{t('funnels.editor.form.required')}</Label>
                             </div>
                         </div>
                     </div>

@@ -27,11 +27,11 @@ export function BookingLinkCard({ link, baseUrl }: BookingLinkCardProps) {
     };
 
     return (
-        <Card className="group hover:shadow-xl transition-all duration-300 border-slate-200 bg-white overflow-hidden">
-            <div className="h-1 w-full bg-gradient-to-r from-[#0731c2] to-[#010119]" />
+        <Card className="group hover:shadow-xl transition-all duration-300 border-[#EDEDED] bg-white overflow-hidden">
+            <div className="h-1 w-full bg-gradient-to-r from-[#0A33C6] to-[#0A33C6]" />
             <CardHeader className="pb-3">
                 <div className="flex justify-between items-start">
-                    <CardTitle className="text-lg font-semibold text-slate-900">
+                    <CardTitle className="text-lg font-semibold font-primary text-[#02041D]">
                         {link.title}
                     </CardTitle>
                     <DropdownMenu>
@@ -55,7 +55,7 @@ export function BookingLinkCard({ link, baseUrl }: BookingLinkCardProps) {
                 )}
             </CardHeader>
             <CardContent className="space-y-4">
-                <div className="flex items-center gap-4 text-sm text-slate-600">
+                <div className="flex items-center gap-4 text-sm font-primary text-[#606170]">
                     <div className="flex items-center gap-1">
                         <Clock className="h-4 w-4 text-blue-500" />
                         {link.duration_minutes}m
@@ -64,12 +64,12 @@ export function BookingLinkCard({ link, baseUrl }: BookingLinkCardProps) {
                         <MapPin className="h-4 w-4 text-red-500" />
                         <span className="capitalize">{link.location_type.replace('_', ' ')}</span>
                     </div>
-                    <Badge variant={link.is_active ? "default" : "secondary"} className={link.is_active ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-200" : ""}>
+                    <Badge variant={link.is_active ? "default" : "secondary"} className={link.is_active ? "bg-[#EDEDED] text-emerald-700 hover:bg-emerald-200" : ""}>
                         {link.is_active ? "Active" : "Inactive"}
                     </Badge>
                 </div>
 
-                <div className="flex items-center gap-2 p-2 rounded-lg bg-slate-50 border border-slate-100">
+                <div className="flex items-center gap-2 p-2 rounded-lg bg-[#EDEDED] border border-[#EDEDED]">
                     <Input
                         value={bookingUrl}
                         readOnly
@@ -85,7 +85,7 @@ export function BookingLinkCard({ link, baseUrl }: BookingLinkCardProps) {
                     </Button>
                 </div>
 
-                <Button variant="outline" className="w-full group-hover:border-blue-500 group-hover:text-blue-600 transition-colors" asChild>
+                <Button variant="outline" className="w-full group-hover:border-blue-500 group-hover:text-[#0A33C6] transition-colors" asChild>
                     <Link href={`/book/${link.slug}`} target="_blank">
                         <ExternalLink className="h-4 w-4 mr-2" />
                         Preview Booking Page

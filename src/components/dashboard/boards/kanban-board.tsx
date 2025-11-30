@@ -145,7 +145,7 @@ function SortableCard({ card, onCardUpdated, onCardDeleted }: {
                 {...attributes} 
                 className={cn(
                     "hover:shadow-lg transition-all duration-200",
-                    "bg-white border-slate-200",
+                    "bg-white border-[#EDEDED]",
                     "hover:border-orange-300",
                     isDragging && "opacity-50"
                 )}
@@ -159,11 +159,11 @@ function SortableCard({ card, onCardUpdated, onCardDeleted }: {
                                 "touch-none"
                             )}
                         >
-                            <div className="font-semibold text-slate-900 text-sm leading-tight">
+                            <div className="font-semibold font-primary text-[#02041D] text-sm leading-tight">
                                 {card.title}
                             </div>
                             {card.description && (
-                                <div className="text-xs text-slate-600 mt-2 line-clamp-2">
+                                <div className="text-xs font-primary text-[#606170] mt-2 line-clamp-2">
                                     {card.description}
                                 </div>
                             )}
@@ -173,19 +173,19 @@ function SortableCard({ card, onCardUpdated, onCardDeleted }: {
                                 <Button 
                                     variant="ghost" 
                                     size="icon" 
-                                    className="h-6 w-6 text-slate-500 hover:text-slate-900"
+                                    className="h-6 w-6 font-primary text-[#606170] hover:font-primary text-[#02041D]"
                                     onClick={(e) => e.stopPropagation()}
                                 >
                                     <MoreVertical className="h-4 w-4" />
                                 </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="bg-white border-slate-200">
+                            <DropdownMenuContent align="end" className="bg-white border-[#EDEDED]">
                                 <DropdownMenuItem 
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         setIsEditOpen(true);
                                     }}
-                                    className="text-slate-900 hover:bg-slate-100 cursor-pointer"
+                                    className="font-primary text-[#02041D] hover:bg-[#EDEDED] cursor-pointer"
                                 >
                                     <Pencil className="mr-2 h-4 w-4" />
                                     {t("common.edit") || "Edit"}
@@ -209,25 +209,25 @@ function SortableCard({ card, onCardUpdated, onCardDeleted }: {
 
             {/* Edit Dialog */}
             <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-                <DialogContent className="sm:max-w-[425px] bg-white border-slate-200">
+                <DialogContent className="sm:max-w-[425px] bg-white border-[#EDEDED]">
                     <DialogHeader>
-                        <DialogTitle className="text-slate-900">{t("boards.editCard") || "Edit Card"}</DialogTitle>
+                        <DialogTitle className="font-primary text-[#02041D]">{t("boards.editCard") || "Edit Card"}</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4 py-4">
                         <div className="space-y-2">
-                            <Label className="text-slate-900">{t("boards.cardTitle") || "Title"}</Label>
+                            <Label className="font-primary text-[#02041D]">{t("boards.cardTitle") || "Title"}</Label>
                             <Input
                                 value={editTitle}
                                 onChange={(e) => setEditTitle(e.target.value)}
-                                className="bg-white border-slate-200 text-slate-900"
+                                className="bg-white border-[#EDEDED] font-primary text-[#02041D]"
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label className="text-slate-900">{t("common.description") || "Description"}</Label>
+                            <Label className="font-primary text-[#02041D]">{t("common.description") || "Description"}</Label>
                             <Textarea
                                 value={editDescription}
                                 onChange={(e) => setEditDescription(e.target.value)}
-                                className="bg-white border-slate-200 text-slate-900"
+                                className="bg-white border-[#EDEDED] font-primary text-[#02041D]"
                                 rows={3}
                             />
                         </div>
@@ -236,13 +236,13 @@ function SortableCard({ card, onCardUpdated, onCardDeleted }: {
                         <Button
                             variant="outline"
                             onClick={() => setIsEditOpen(false)}
-                            className="border-slate-200 text-slate-900 bg-white hover:bg-slate-50"
+                            className="border-[#EDEDED] font-primary text-[#02041D] bg-white hover:bg-[#EDEDED]"
                         >
                             {t("common.cancel") || "Cancel"}
                         </Button>
                         <Button
                             onClick={handleEdit}
-                            className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white"
+                            className="bg-gradient-to-r from-[#0A33C6] to-[#0A33C6] hover:from-[#0A33C6]/90 hover:to-[#0A33C6]/90 text-white"
                         >
                             {t("common.save") || "Save"}
                         </Button>
@@ -284,10 +284,10 @@ const Column = memo(function Column({ column, onCardAdded }: { column: BoardColu
     const translatedColumnName = translateColumnName(column.name, t);
 
     return (
-        <div className="w-80 flex flex-col bg-white rounded-xl border border-slate-200 h-full max-h-full shadow-sm">
-            <div className="p-4 font-semibold text-sm flex items-center justify-between border-b border-slate-200 bg-slate-50/50 rounded-t-xl">
-                <span className="text-slate-900">{translatedColumnName}</span>
-                <span className="text-xs font-medium text-slate-600 bg-slate-200 px-2.5 py-1 rounded-full min-w-[24px] text-center">
+        <div className="w-80 flex flex-col bg-white rounded-xl border border-[#EDEDED] h-full max-h-full shadow-sm">
+            <div className="p-4 font-semibold text-sm flex items-center justify-between border-b border-[#EDEDED] bg-[#EDEDED]/50 rounded-t-xl">
+                <span className="font-primary text-[#02041D]">{translatedColumnName}</span>
+                <span className="text-xs font-medium font-primary text-[#606170] bg-slate-200 px-2.5 py-1 rounded-full min-w-[24px] text-center">
                     {column.cards.length}
                 </span>
             </div>
@@ -301,10 +301,10 @@ const Column = memo(function Column({ column, onCardAdded }: { column: BoardColu
             >
                 {column.cards.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-8 text-center">
-                        <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mb-3">
-                            <Plus className="w-5 h-5 text-slate-600" />
+                        <div className="w-12 h-12 rounded-full bg-[#EDEDED] flex items-center justify-center mb-3">
+                            <Plus className="w-5 h-5 font-primary text-[#606170]" />
                         </div>
-                        <p className="text-xs text-slate-600">{t("boards.noCardsYet")}</p>
+                        <p className="text-xs font-primary text-[#606170]">{t("boards.noCardsYet")}</p>
                     </div>
                 ) : (
                     <SortableContext items={column.cards.map(c => c.id)} strategy={verticalListSortingStrategy}>
@@ -328,7 +328,7 @@ const Column = memo(function Column({ column, onCardAdded }: { column: BoardColu
                 )}
             </div>
             
-            <div className="p-3 border-t border-slate-200 rounded-b-xl">
+            <div className="p-3 border-t border-[#EDEDED] rounded-b-xl">
                 <AddCardButton columnId={column.id} onCardAdded={onCardAdded} />
             </div>
         </div>
@@ -372,22 +372,22 @@ function AddCardButton({ columnId, onCardAdded }: { columnId: string; onCardAdde
             <DialogTrigger asChild>
                 <Button 
                     variant="ghost" 
-                    className="w-full justify-start text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+                    className="w-full justify-start font-primary text-[#606170] hover:font-primary text-[#02041D] hover:bg-[#EDEDED] transition-colors"
                 >
                     <Plus className="mr-2 h-4 w-4" /> {t("boards.addCard")}
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px] bg-white border-slate-200">
+            <DialogContent className="sm:max-w-[425px] bg-white border-[#EDEDED]">
                 <DialogHeader>
-                    <DialogTitle className="text-slate-900">{t("boards.addNewCard")}</DialogTitle>
-                    <DialogDescription className="text-slate-600">
+                    <DialogTitle className="font-primary text-[#02041D]">{t("boards.addNewCard")}</DialogTitle>
+                    <DialogDescription className="font-primary text-[#606170]">
                         {t("boards.createNewCard")}
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit}>
                     <div className="grid gap-4 py-4">
                         <div className="space-y-2">
-                            <Label htmlFor="title" className="text-slate-900">
+                            <Label htmlFor="title" className="font-primary text-[#02041D]">
                                 {t("common.title")}
                             </Label>
                             <Input
@@ -395,13 +395,13 @@ function AddCardButton({ columnId, onCardAdded }: { columnId: string; onCardAdde
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
                                 placeholder={t("boards.enterCardTitle")}
-                                className="bg-white border-slate-200 text-slate-900"
+                                className="bg-white border-[#EDEDED] font-primary text-[#02041D]"
                                 required
                                 autoFocus
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="description" className="text-slate-900">
+                            <Label htmlFor="description" className="font-primary text-[#02041D]">
                                 {t("common.description")} ({t("common.optional")})
                             </Label>
                             <Textarea
@@ -409,7 +409,7 @@ function AddCardButton({ columnId, onCardAdded }: { columnId: string; onCardAdde
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
                                 placeholder={t("boards.enterCardDescription")}
-                                className="bg-white border-slate-200 text-slate-900 resize-none"
+                                className="bg-white border-[#EDEDED] font-primary text-[#02041D] resize-none"
                                 rows={3}
                             />
                         </div>
@@ -419,14 +419,14 @@ function AddCardButton({ columnId, onCardAdded }: { columnId: string; onCardAdde
                             type="button"
                             variant="outline"
                             onClick={() => setOpen(false)}
-                            className="border-slate-200 text-slate-900 bg-white hover:bg-slate-50"
+                            className="border-[#EDEDED] font-primary text-[#02041D] bg-white hover:bg-[#EDEDED]"
                         >
                             {t("common.cancel")}
                         </Button>
                         <Button
                             type="submit"
                             disabled={loading || !title.trim()}
-                            className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white"
+                            className="bg-gradient-to-r from-[#0A33C6] to-[#0A33C6] hover:from-[#0A33C6]/90 hover:to-[#0A33C6]/90 text-white"
                         >
                             {loading ? (
                                 <>

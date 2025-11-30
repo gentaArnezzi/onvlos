@@ -71,13 +71,13 @@ export function ChatInterface({ conversations, currentUserId, language: propLang
                         language={language}
                     />
                 ) : (
-                    <Card className="h-full border border-slate-200 bg-white backdrop-blur-sm flex items-center justify-center">
+                    <Card className="h-full border border-[#EDEDED] bg-white backdrop-blur-sm flex items-center justify-center">
                         <div className="text-center">
-                            <div className="mx-auto w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center mb-4">
-                                <MessageSquare className="w-8 h-8 text-blue-600" />
+                            <div className="mx-auto w-16 h-16 rounded-full bg-[#EDEDED] flex items-center justify-center mb-4">
+                                <MessageSquare className="w-8 h-8 text-[#0A33C6]" />
                             </div>
-                            <h3 className="text-lg font-semibold text-slate-900 mb-2">{t("chat.noConversationSelected")}</h3>
-                            <p className="text-slate-600 text-sm">
+                            <h3 className="text-lg font-semibold font-primary text-[#02041D] mb-2">{t("chat.noConversationSelected")}</h3>
+                            <p className="font-primary text-[#606170] text-sm">
                                 {t("chat.selectClientToStart")}
                             </p>
                         </div>

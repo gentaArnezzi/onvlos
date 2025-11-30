@@ -153,23 +153,23 @@ export function ProposalEditor({ clients, currencySymbol = "$" }: ProposalEditor
   return (
     <div className="space-y-6 bg-transparent">
       {/* Client Selection */}
-      <Card className="bg-white border-slate-200 shadow-sm">
+      <Card className="bg-white border-[#EDEDED] shadow-sm">
         <CardHeader>
-          <CardTitle className="text-slate-900">{t("proposals.clientInformation")}</CardTitle>
+          <CardTitle className="font-primary text-[#02041D]">{t("proposals.clientInformation")}</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-4">
           <div className="grid gap-2">
-            <Label htmlFor="client" className="text-slate-900">{t("proposals.selectClientRequired")}</Label>
+            <Label htmlFor="client" className="font-primary text-[#02041D]">{t("proposals.selectClientRequired")}</Label>
             <Select
               value={formData.client_id}
               onValueChange={(value) => setFormData({ ...formData, client_id: value })}
             >
-              <SelectTrigger className="bg-white border-slate-200 text-slate-900">
+              <SelectTrigger className="bg-white border-[#EDEDED] font-primary text-[#02041D]">
                 <SelectValue placeholder={t("proposals.chooseClient")} />
               </SelectTrigger>
-              <SelectContent className="bg-white border-slate-200">
+              <SelectContent className="bg-white border-[#EDEDED]">
                 {clients.map((client) => (
-                  <SelectItem key={client.id} value={client.id} className="text-slate-900 focus:bg-slate-100">
+                  <SelectItem key={client.id} value={client.id} className="font-primary text-[#02041D] focus:bg-[#EDEDED]">
                     {client.company_name || client.name}
                   </SelectItem>
                 ))}
@@ -178,119 +178,119 @@ export function ProposalEditor({ clients, currencySymbol = "$" }: ProposalEditor
           </div>
           
           <div className="grid gap-2">
-            <Label htmlFor="title" className="text-slate-900">{t("proposals.proposalTitleRequired")}</Label>
+            <Label htmlFor="title" className="font-primary text-[#02041D]">{t("proposals.proposalTitleRequired")}</Label>
             <Input
               id="title"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               placeholder={t("proposals.proposalTitlePlaceholder")}
-              className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
+              className="bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]"
             />
           </div>
           
           <div className="grid gap-2">
-            <Label htmlFor="valid_days" className="text-slate-900">{t("proposals.validFor")}</Label>
+            <Label htmlFor="valid_days" className="font-primary text-[#02041D]">{t("proposals.validFor")}</Label>
             <Input
               id="valid_days"
               type="number"
               value={formData.valid_days}
               onChange={(e) => setFormData({ ...formData, valid_days: parseInt(e.target.value) || 30 })}
-              className="bg-white border-slate-200 text-slate-900"
+              className="bg-white border-[#EDEDED] font-primary text-[#02041D]"
             />
           </div>
         </CardContent>
       </Card>
 
       {/* Proposal Content */}
-      <Card className="bg-white border-slate-200 shadow-sm">
+      <Card className="bg-white border-[#EDEDED] shadow-sm">
         <CardHeader>
-          <CardTitle className="text-slate-900">{t("proposals.proposalContent")}</CardTitle>
+          <CardTitle className="font-primary text-[#02041D]">{t("proposals.proposalContent")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-2">
-            <Label htmlFor="introduction" className="text-slate-900">{t("proposals.introduction")}</Label>
+            <Label htmlFor="introduction" className="font-primary text-[#02041D]">{t("proposals.introduction")}</Label>
             <Textarea
               id="introduction"
               value={formData.introduction}
               onChange={(e) => setFormData({ ...formData, introduction: e.target.value })}
               placeholder={t("proposals.introductionPlaceholder")}
               rows={4}
-              className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
+              className="bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]"
             />
           </div>
           
           <div className="grid gap-2">
-            <Label htmlFor="scope" className="text-slate-900">{t("proposals.scopeOfWork")}</Label>
+            <Label htmlFor="scope" className="font-primary text-[#02041D]">{t("proposals.scopeOfWork")}</Label>
             <Textarea
               id="scope"
               value={formData.scope}
               onChange={(e) => setFormData({ ...formData, scope: e.target.value })}
               placeholder={t("proposals.scopeOfWorkPlaceholder")}
               rows={6}
-              className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
+              className="bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]"
             />
           </div>
           
           <div className="grid gap-2">
-            <Label htmlFor="timeline" className="text-slate-900">{t("proposals.timeline")}</Label>
+            <Label htmlFor="timeline" className="font-primary text-[#02041D]">{t("proposals.timeline")}</Label>
             <Textarea
               id="timeline"
               value={formData.timeline}
               onChange={(e) => setFormData({ ...formData, timeline: e.target.value })}
               placeholder={t("proposals.timelinePlaceholder")}
               rows={4}
-              className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
+              className="bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]"
             />
           </div>
         </CardContent>
       </Card>
 
       {/* Pricing */}
-      <Card className="bg-white border-slate-200 shadow-sm">
+      <Card className="bg-white border-[#EDEDED] shadow-sm">
         <CardHeader>
-          <CardTitle className="text-slate-900">{t("proposals.pricing")}</CardTitle>
+          <CardTitle className="font-primary text-[#02041D]">{t("proposals.pricing")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {items.map((item, index) => (
               <div key={index} className="grid grid-cols-12 gap-2 items-end">
                 <div className="col-span-4">
-                  <Label className="text-slate-900">{t("proposals.itemName")}</Label>
+                  <Label className="font-primary text-[#02041D]">{t("proposals.itemName")}</Label>
                   <Input
                     value={item.name}
                     onChange={(e) => updateItem(index, 'name', e.target.value)}
                     placeholder={t("proposals.serviceProduct")}
-                    className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
+                    className="bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]"
                   />
                 </div>
                 <div className="col-span-3">
-                  <Label className="text-slate-900">{t("proposals.description")}</Label>
+                  <Label className="font-primary text-[#02041D]">{t("proposals.description")}</Label>
                   <Input
                     value={item.description}
                     onChange={(e) => updateItem(index, 'description', e.target.value)}
                     placeholder={t("proposals.descriptionPlaceholder")}
-                    className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
+                    className="bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]"
                   />
                 </div>
                 <div className="col-span-2">
-                  <Label className="text-slate-900">{t("proposals.quantity")}</Label>
+                  <Label className="font-primary text-[#02041D]">{t("proposals.quantity")}</Label>
                   <Input
                     type="number"
                     value={item.quantity}
                     onChange={(e) => updateItem(index, 'quantity', e.target.value)}
                     min="1"
-                    className="bg-white border-slate-200 text-slate-900"
+                    className="bg-white border-[#EDEDED] font-primary text-[#02041D]"
                   />
                 </div>
                 <div className="col-span-2">
-                  <Label className="text-slate-900">{t("proposals.unitPrice")}</Label>
+                  <Label className="font-primary text-[#02041D]">{t("proposals.unitPrice")}</Label>
                   <Input
                     type="number"
                     value={item.unit_price}
                     onChange={(e) => updateItem(index, 'unit_price', e.target.value)}
                     min="0"
                     step="0.01"
-                    className="bg-white border-slate-200 text-slate-900"
+                    className="bg-white border-[#EDEDED] font-primary text-[#02041D]"
                   />
                 </div>
                 <div className="col-span-1">
@@ -300,7 +300,7 @@ export function ProposalEditor({ clients, currencySymbol = "$" }: ProposalEditor
                     size="icon"
                     onClick={() => removeItem(index)}
                     disabled={items.length === 1}
-                    className="text-slate-600 hover:text-red-600"
+                    className="font-primary text-[#606170] hover:text-red-600"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -312,14 +312,14 @@ export function ProposalEditor({ clients, currencySymbol = "$" }: ProposalEditor
               type="button"
               variant="outline"
               onClick={addItem}
-              className="w-full border-slate-200 text-slate-900 hover:bg-slate-100"
+              className="w-full border-[#EDEDED] font-primary text-[#02041D] hover:bg-[#EDEDED]"
             >
               <Plus className="h-4 w-4 mr-2" />
               {t("proposals.addItem")}
             </Button>
             
-            <div className="text-right pt-4 border-t border-slate-200">
-              <div className="text-2xl font-bold text-slate-900">
+            <div className="text-right pt-4 border-t border-[#EDEDED]">
+              <div className="text-2xl font-bold font-primary text-[#02041D]">
                 {t("proposals.total")}: {currencySymbol}{calculateTotal().toFixed(2)}
               </div>
             </div>
@@ -328,9 +328,9 @@ export function ProposalEditor({ clients, currencySymbol = "$" }: ProposalEditor
       </Card>
 
       {/* Terms & Conditions */}
-      <Card className="bg-white border-slate-200 shadow-sm">
+      <Card className="bg-white border-[#EDEDED] shadow-sm">
         <CardHeader>
-          <CardTitle className="text-slate-900">{t("proposals.termsConditions")}</CardTitle>
+          <CardTitle className="font-primary text-[#02041D]">{t("proposals.termsConditions")}</CardTitle>
         </CardHeader>
         <CardContent>
           <Textarea
@@ -338,7 +338,7 @@ export function ProposalEditor({ clients, currencySymbol = "$" }: ProposalEditor
             onChange={(e) => setFormData({ ...formData, terms: e.target.value })}
             placeholder={t("proposals.termsPlaceholder")}
             rows={6}
-            className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
+            className="bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]"
           />
         </CardContent>
       </Card>
@@ -348,7 +348,7 @@ export function ProposalEditor({ clients, currencySymbol = "$" }: ProposalEditor
         <Button
           variant="outline"
           onClick={() => router.push("/dashboard/proposals")}
-          className="border-slate-200 text-slate-900 hover:bg-slate-100"
+          className="border-[#EDEDED] font-primary text-[#02041D] hover:bg-[#EDEDED]"
         >
           {t("proposals.cancel")}
         </Button>

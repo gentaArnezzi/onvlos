@@ -31,10 +31,10 @@ export function SearchInput() {
 
     return (
         <div className="relative w-64 hidden md:block">
-            <Search className="absolute left-2 top-2.5 h-4 w-4 text-slate-500" />
+            <Search className="absolute left-2 top-2.5 h-4 w-4 font-primary text-[#606170]" />
             <Input
                 placeholder={t("tasks.searchPlaceholder")}
-                className="pl-8 bg-white border-slate-300 text-slate-900 placeholder:text-slate-500"
+                className="pl-8 bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]"
                 onChange={(e) => setSearchTerm(e.target.value)}
                 value={searchTerm}
             />

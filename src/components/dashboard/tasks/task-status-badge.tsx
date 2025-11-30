@@ -22,10 +22,10 @@ export function TaskStatusBadge({ taskId, status }: TaskStatusBadgeProps) {
     const router = useRouter();
     
     const statusConfig: Record<string, { label: string; className: string }> = {
-        todo: { label: t("tasks.toDo"), className: "bg-slate-100 text-slate-600" },
-        in_progress: { label: t("tasks.inProgress"), className: "bg-blue-100 text-blue-700" },
-        in_review: { label: t("tasks.inReview"), className: "bg-blue-100 text-blue-700" },
-        done: { label: t("tasks.done"), className: "bg-emerald-100 text-emerald-700" },
+        todo: { label: t("tasks.toDo"), className: "bg-[#EDEDED] font-primary text-[#606170]" },
+        in_progress: { label: t("tasks.inProgress"), className: "bg-[#EDEDED] text-[#0A33C6]" },
+        in_review: { label: t("tasks.inReview"), className: "bg-[#EDEDED] text-[#0A33C6]" },
+        done: { label: t("tasks.done"), className: "bg-[#EDEDED] text-emerald-700" },
     };
     
     const currentConfig = statusConfig[status] || statusConfig.todo;
@@ -42,12 +42,12 @@ export function TaskStatusBadge({ taskId, status }: TaskStatusBadgeProps) {
                     {currentConfig.label}
                 </Badge>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-white border-slate-200">
+            <DropdownMenuContent align="end" className="bg-white border-[#EDEDED]">
                 {Object.entries(statusConfig).map(([key, config]) => (
                     <DropdownMenuItem
                         key={key}
                         onClick={() => handleStatusChange(key)}
-                        className="text-slate-900 hover:bg-slate-100 cursor-pointer"
+                        className="font-primary text-[#02041D] hover:bg-[#EDEDED] cursor-pointer"
                     >
                         <Badge variant="secondary" className={cn("mr-2", config.className)}>
                             {config.label}

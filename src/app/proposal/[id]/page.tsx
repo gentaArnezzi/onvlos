@@ -55,18 +55,18 @@ export default async function ProposalPage({
           <div className="mb-8">
             {/* Client Info Banner */}
             {client && (
-              <div className="mb-4 p-4 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+              <div className="mb-4 p-4 bg-[#EDEDED] dark:bg-slate-800 rounded-lg border border-[#EDEDED] dark:border-slate-700">
                 <div className="flex items-center gap-3">
-                  <Building2 className="h-5 w-5 text-slate-600 dark:text-slate-400" />
+                  <Building2 className="h-5 w-5 font-primary text-[#606170] dark:text-slate-400" />
                   <div>
                     <p className="text-sm text-slate-500 dark:text-slate-400">
                       {t("proposals.client", language)}
                     </p>
-                    <p className="font-semibold text-slate-900 dark:text-white">
+                    <p className="font-semibold font-primary text-[#02041D] dark:text-white">
                       {client.company_name || client.name}
                     </p>
                     {client.email && (
-                      <p className="text-sm text-slate-600 dark:text-slate-400">
+                      <p className="text-sm font-primary text-[#606170] dark:text-slate-400">
                         {client.email}
                       </p>
                     )}
@@ -77,10 +77,10 @@ export default async function ProposalPage({
             
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h1 className="text-3xl font-bold text-slate-900 mb-2">
+                <h1 className="text-3xl font-bold font-primary text-[#02041D] mb-2">
                   {proposal.title}
                 </h1>
-                <p className="text-slate-600">
+                <p className="font-primary text-[#606170]">
                   {proposal.proposal_number}
                 </p>
               </div>

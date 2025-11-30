@@ -40,13 +40,13 @@ export default function ForgotPasswordPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-[#ededed] to-blue-50 relative overflow-hidden">
-            <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
+        <div className="min-h-screen flex items-center justify-center bg-[#EDEDED] relative overflow-hidden">
+            <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-10 -z-10" />
             
-            <Card className="w-full max-w-md border-none shadow-2xl bg-white/95 backdrop-blur-sm">
+            <Card className="w-full max-w-md border-[#EDEDED] shadow-2xl bg-white/80 backdrop-blur-sm">
                 <CardHeader className="space-y-1 text-center">
-                    <CardTitle className="text-2xl font-bold text-slate-900">Forgot Password</CardTitle>
-                    <CardDescription className="text-slate-600">
+                    <CardTitle className="text-2xl font-bold font-primary text-[#02041D]">Forgot Password</CardTitle>
+                    <CardDescription className="font-primary text-[#606170]">
                         Enter your email address and we'll send you a link to reset your password.
                     </CardDescription>
                 </CardHeader>
@@ -58,12 +58,12 @@ export default function ForgotPasswordPage() {
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                 </svg>
                             </div>
-                            <h3 className="text-lg font-semibold text-slate-900">Email Sent!</h3>
-                            <p className="text-sm text-slate-600">
+                            <h3 className="text-lg font-semibold font-primary text-[#02041D]">Email Sent!</h3>
+                            <p className="text-sm font-primary text-[#606170]">
                                 We've sent a password reset link to <strong>{email}</strong>. 
                                 Please check your inbox and click the link to reset your password.
                             </p>
-                            <p className="text-xs text-slate-500 mt-4">
+                            <p className="text-xs font-primary text-[#A2A2AA] mt-4">
                                 Didn't receive the email? Check your spam folder or try again.
                             </p>
                             <Button
@@ -80,7 +80,7 @@ export default function ForgotPasswordPage() {
                     ) : (
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="email" className="text-slate-900">Email Address</Label>
+                                <Label htmlFor="email" className="font-primary text-[#02041D]">Email Address</Label>
                                 <Input
                                     id="email"
                                     type="email"
@@ -88,13 +88,13 @@ export default function ForgotPasswordPage() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
-                                    className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
+                                    className="bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:text-[#606170] focus:border-[#0A33C6] focus:ring-[#0A33C6]/20"
                                     disabled={loading}
                                 />
                             </div>
                             <Button
                                 type="submit"
-                                className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white"
+                                className="w-full bg-[#0A33C6] hover:bg-[#0A33C6]/90 text-white font-primary font-bold"
                                 disabled={loading}
                             >
                                 {loading ? (
@@ -110,13 +110,13 @@ export default function ForgotPasswordPage() {
                     )}
                 </CardContent>
                 <CardFooter className="flex flex-col space-y-4">
-                    <div className="text-sm text-center text-slate-600">
+                    <div className="text-sm text-center font-primary text-[#606170]">
                         Remember your password?{" "}
-                        <Link href="/login" className="text-blue-600 hover:text-blue-700 font-medium">
+                        <Link href="/login" className="text-[#0A33C6] hover:text-[#0A33C6]/80 font-medium">
                             Back to Login
                         </Link>
                     </div>
-                    <Link href="/login" className="flex items-center justify-center text-sm text-slate-600 hover:text-slate-900">
+                    <Link href="/login" className="flex items-center justify-center text-sm font-primary text-[#606170] hover:text-[#02041D]">
                         <ArrowLeft className="mr-2 h-4 w-4" />
                         Return to login
                     </Link>

@@ -50,7 +50,7 @@ export function Pagination({ currentPage, totalPages, onPageChange, className }:
           >
             1
           </Button>
-          {startPage > 2 && <span className="px-2 text-slate-500">...</span>}
+          {startPage > 2 && <span className="px-2 font-primary text-[#606170]">...</span>}
         </>
       )}
 
@@ -71,7 +71,7 @@ export function Pagination({ currentPage, totalPages, onPageChange, className }:
 
       {endPage < totalPages && (
         <>
-          {endPage < totalPages - 1 && <span className="px-2 text-slate-500">...</span>}
+          {endPage < totalPages - 1 && <span className="px-2 font-primary text-[#606170]">...</span>}
           <Button
             variant="outline"
             size="sm"
