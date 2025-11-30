@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/db";
 import { client_spaces, client_companies, tasks, invoices, client_onboarding_sessions, funnels } from "@/lib/db/schema";
+import { contracts } from "@/lib/db/schema-proposals";
 import { eq, desc, and } from "drizzle-orm";
 
 export async function getClientSpace(slug: string) {
@@ -38,10 +39,20 @@ export async function getClientSpace(slug: string) {
         ))
         .orderBy(desc(invoices.created_at));
 
+    // Fetch Contracts - verify they belong to the workspace
+    const clientContracts = await db.select()
+        .from(contracts)
+        .where(and(
+            eq(contracts.client_id, space.client_id),
+            eq(contracts.workspace_id, space.workspace_id)
+        ))
+        .orderBy(desc(contracts.created_at));
+
     return {
         space,
         client: client[0],
         tasks: clientTasks,
-        invoices: clientInvoices
+        invoices: clientInvoices,
+        contracts: clientContracts
     };
 }

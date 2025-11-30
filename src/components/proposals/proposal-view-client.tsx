@@ -26,22 +26,32 @@ export function ProposalViewClient({ proposal, currencySymbol }: ProposalViewCli
   const isExpired = proposal.valid_until && new Date(proposal.valid_until) < new Date();
   const isAccepted = proposal.status === "accepted";
   const isDeclined = proposal.status === "declined";
-  const canAccept = !isAccepted && !isDeclined && !isExpired;
+  // Only allow accept/decline if proposal is sent (not draft) and not already accepted/declined/expired
+  const canAccept = proposal.status === "sent" && !isAccepted && !isDeclined && !isExpired;
 
   const handleAccept = async () => {
     if (!canAccept) return;
     
+    // Confirm acceptance
+    if (!confirm(t("proposals.acceptConfirm"))) {
+      return;
+    }
+    
     setLoading(true);
     try {
-      const result = await acceptProposal(proposal.id, "", proposal.client?.name || "Client", proposal.client?.email || "");
+      // Use client info from proposal
+      const signerName = proposal.client?.name || proposal.client?.company_name || "Client";
+      const signerEmail = proposal.client?.email || "";
+      
+      const result = await acceptProposal(proposal.id, "", signerName, signerEmail);
       if (result.success) {
-        toast.success("Proposal accepted successfully!");
+        toast.success(t("proposals.acceptedSuccess"));
         router.refresh();
       } else {
-        toast.error(result.error || "Failed to accept proposal");
+        toast.error(result.error || t("proposals.acceptFailed"));
       }
     } catch (error) {
-      toast.error("An error occurred");
+      toast.error(t("proposals.acceptFailed"));
     } finally {
       setLoading(false);
     }
@@ -271,10 +281,34 @@ export function ProposalViewClient({ proposal, currencySymbol }: ProposalViewCli
         </CardContent>
       </Card>
 
-      {/* Actions */}
+      {/* Info Message for Draft Proposals */}
+      {proposal.status === "draft" && (
+        <Card className="border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3">
+              <FileText className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+              <div>
+                <p className="font-medium text-blue-900 dark:text-blue-300">
+                  {t("proposals.draftNotice")}
+                </p>
+                <p className="text-sm text-blue-700 dark:text-blue-400 mt-1">
+                  {t("proposals.draftNoticeDesc")}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Actions - Only show if proposal is sent */}
       {canAccept && (
         <Card className="border-slate-200 bg-white">
           <CardContent className="pt-6">
+            <div className="mb-4 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
+              <p className="text-sm text-slate-700 dark:text-slate-300">
+                {t("proposals.acceptanceNotice")}
+              </p>
+            </div>
             {!showDeclineReason ? (
               <div className="flex flex-col sm:flex-row gap-3">
                 <Button

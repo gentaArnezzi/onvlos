@@ -5,13 +5,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getCurrencySymbol } from "@/lib/currency";
 import { format } from "date-fns";
-import { CheckCircle2, XCircle, Clock, FileText } from "lucide-react";
+import { CheckCircle2, XCircle, Clock, FileText, Building2 } from "lucide-react";
 import { ProposalViewClient } from "@/components/proposals/proposal-view-client";
 import { t } from "@/lib/i18n/server";
 import { Language } from "@/lib/i18n/translations";
 import { LanguageProviderWrapper } from "@/components/language-provider-wrapper";
 import { db } from "@/lib/db";
-import { workspaces } from "@/lib/db/schema";
+import { workspaces, client_companies } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
 export default async function ProposalPage({ 
@@ -31,6 +31,11 @@ export default async function ProposalPage({
     where: eq(workspaces.id, proposal.workspace_id)
   });
   
+  // Get client information
+  const client = await db.query.client_companies.findFirst({
+    where: eq(client_companies.id, proposal.client_id)
+  });
+  
   const language = (workspace?.default_language as Language) || "en";
   // Always use workspace default currency, fallback to USD
   const currency = workspace?.default_currency || 'USD';
@@ -45,6 +50,28 @@ export default async function ProposalPage({
         <div className="container max-w-4xl mx-auto py-8 px-4">
           {/* Header */}
           <div className="mb-8">
+            {/* Client Info Banner */}
+            {client && (
+              <div className="mb-4 p-4 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+                <div className="flex items-center gap-3">
+                  <Building2 className="h-5 w-5 text-slate-600 dark:text-slate-400" />
+                  <div>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                      {t("proposals.client", language)}
+                    </p>
+                    <p className="font-semibold text-slate-900 dark:text-white">
+                      {client.company_name || client.name}
+                    </p>
+                    {client.email && (
+                      <p className="text-sm text-slate-600 dark:text-slate-400">
+                        {client.email}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+            
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h1 className="text-3xl font-bold text-slate-900 mb-2">
