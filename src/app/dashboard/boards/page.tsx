@@ -16,7 +16,7 @@ export default async function BoardsPage() {
       {/* Header */}
       <div className="flex items-center justify-between shrink-0">
         <div>
-          <h2 className="text-3xl font-bold font-primary tracking-tight text-[#0A33C6]">
+          <h2 className="text-2xl sm:text-3xl font-bold font-primary tracking-tight text-[#0A33C6]">
             {board.columns.length > 0 ? t("boards.clientPipeline", language) : t("boards.title", language)}
           </h2>
           <p className="font-primary text-[#606170] mt-1">

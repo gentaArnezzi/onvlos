@@ -21,7 +21,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
   const currencySymbol = getCurrencySymbol(invoice.currency || 'USD');
 
   return (
-    <div className="flex-1 space-y-6 p-8 max-w-7xl mx-auto">
+    <div className="flex-1 space-y-6 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -31,7 +31,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
             </Button>
           </Link>
           <div>
-            <h2 className="text-3xl font-bold tracking-tight font-primary text-[#0A33C6]">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight font-primary text-[#0A33C6]">
               {invoice.invoice_number}
             </h2>
             <p className="font-primary text-[#606170] mt-1">

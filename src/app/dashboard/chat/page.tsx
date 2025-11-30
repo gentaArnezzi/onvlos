@@ -16,14 +16,14 @@ export default async function ChatPage() {
     }
 
     return (
-        <div className="flex-1 p-6 md:p-8 pt-6 max-w-screen-2xl mx-auto w-full flex flex-col" style={{ height: 'calc(100vh - 4rem)' }}>
-            <div className="flex flex-col h-full gap-6">
+        <div className="flex-1 p-4 sm:p-6 lg:p-8 pt-4 sm:pt-6 max-w-screen-2xl mx-auto w-full flex flex-col min-w-0" style={{ height: 'calc(100vh - 4rem)' }}>
+            <div className="flex flex-col h-full gap-4 sm:gap-6 min-w-0">
                 {/* Header */}
                 <div className="flex-shrink-0">
-                    <h2 className="text-3xl font-bold tracking-tight font-primary text-[#0A33C6]">
+                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight font-primary text-[#0A33C6]">
                         {t("chat.title", language)}
                     </h2>
-                    <p className="font-primary text-[#606170] mt-1">
+                    <p className="font-primary text-[#606170] mt-1 text-sm sm:text-base">
                         {t("chat.description", language)}
                     </p>
                 </div>

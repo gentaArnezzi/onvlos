@@ -80,24 +80,24 @@ export function ChatMessages({ clientId, clientName, clientLogo, currentUserId, 
     return (
         <div className="h-full flex flex-col border border-[#EDEDED] bg-white rounded-lg">
             {/* Header */}
-            <div className="border-b border-[#EDEDED] py-4 px-6 flex-shrink-0 bg-white">
-                <div className="flex items-center gap-3">
+            <div className="border-b border-[#EDEDED] py-3 sm:py-4 px-4 sm:px-6 flex-shrink-0 bg-white">
+                <div className="flex items-center gap-2 sm:gap-3">
                     {clientLogo ? (
                         <img
                             src={clientLogo}
                             alt={clientName}
-                            className="w-10 h-10 rounded-full object-cover"
+                            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover"
                         />
                     ) : (
-                        <div className="w-10 h-10 rounded-full bg-[#EDEDED]0 to-cyan-600 flex items-center justify-center">
-                            <span className="text-white font-semibold">
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-[#0A33C6] to-[#0A33C6] flex items-center justify-center">
+                            <span className="text-white font-semibold text-xs sm:text-sm">
                                 {clientName.substring(0, 2).toUpperCase()}
                             </span>
                         </div>
                     )}
-                    <div>
-                        <h3 className="font-semibold font-primary text-[#02041D]">{clientName}</h3>
-                        <p className="text-xs font-primary text-[#606170]">{t("chat.client")}</p>
+                    <div className="min-w-0 flex-1">
+                        <h3 className="font-semibold font-primary text-[#02041D] text-sm sm:text-base truncate">{clientName}</h3>
+                        <p className="text-[10px] sm:text-xs font-primary text-[#606170]">{t("chat.client")}</p>
                     </div>
                 </div>
             </div>
@@ -108,18 +108,18 @@ export function ChatMessages({ clientId, clientName, clientLogo, currentUserId, 
                 ref={scrollAreaRef}
                 style={{ minHeight: 0, maxHeight: '100%' }}
             >
-                <div className="p-6 space-y-4">
+                <div className="p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4">
                     {loading ? (
                         <div className="flex items-center justify-center min-h-[400px]">
                             <Loader2 className="w-6 h-6 font-primary text-[#606170] animate-spin" />
                         </div>
                     ) : messages.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
-                            <div className="w-16 h-16 rounded-full bg-[#EDEDED] flex items-center justify-center mb-4">
-                                <Calendar className="w-8 h-8 font-primary text-[#606170]" />
+                        <div className="flex flex-col items-center justify-center min-h-[300px] sm:min-h-[400px] text-center p-4">
+                            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-[#EDEDED] flex items-center justify-center mb-4">
+                                <Calendar className="w-6 h-6 sm:w-8 sm:h-8 font-primary text-[#606170]" />
                             </div>
-                            <h4 className="text-lg font-semibold font-primary text-[#02041D] mb-2">{t("chat.noMessagesYet")}</h4>
-                            <p className="text-sm font-primary text-[#606170] max-w-sm">
+                            <h4 className="text-base sm:text-lg font-semibold font-primary text-[#02041D] mb-2">{t("chat.noMessagesYet")}</h4>
+                            <p className="text-xs sm:text-sm font-primary text-[#606170] max-w-sm">
                                 {t("chat.startConversation")}
                             </p>
                         </div>
@@ -128,14 +128,14 @@ export function ChatMessages({ clientId, clientName, clientLogo, currentUserId, 
                             {groupedMessages.map((group, groupIdx) => (
                                 <div key={groupIdx}>
                                     {/* Date separator */}
-                                    <div className="flex items-center justify-center my-6">
-                                        <div className="px-3 py-1 rounded-full bg-slate-200 text-xs font-primary text-[#606170]">
+                                    <div className="flex items-center justify-center my-4 sm:my-6">
+                                        <div className="px-2 sm:px-3 py-1 rounded-full bg-slate-200 text-[10px] sm:text-xs font-primary text-[#606170]">
                                             {format(group.date, "MMMM d, yyyy")}
                                         </div>
                                     </div>
 
                                     {/* Messages for this date */}
-                                    <div className="space-y-4">
+                                    <div className="space-y-3 sm:space-y-4">
                                         {group.messages.map((message) => {
                                             const isOwnMessage = message.user_id === currentUserId;
 
@@ -145,16 +145,16 @@ export function ChatMessages({ clientId, clientName, clientLogo, currentUserId, 
                                                     className={`flex ${isOwnMessage ? "justify-end" : "justify-start"}`}
                                                 >
                                                     <div
-                                                        className={`max-w-[70%] rounded-2xl px-4 py-2 ${isOwnMessage
-                                                            ? "bg-blue-600 text-white"
+                                                        className={`max-w-[85%] sm:max-w-[70%] rounded-2xl px-3 sm:px-4 py-2 ${isOwnMessage
+                                                            ? "bg-[#0A33C6] text-white"
                                                             : "bg-white font-primary text-[#02041D] border border-[#EDEDED]"
                                                             }`}
                                                     >
-                                                        <p className="text-sm whitespace-pre-wrap break-words">
+                                                        <p className="text-xs sm:text-sm whitespace-pre-wrap break-words">
                                                             {message.content}
                                                         </p>
                                                         <p
-                                                            className={`text-xs mt-1 ${isOwnMessage ? "font-primary text-[#EDEDED]/90" : "font-primary text-[#606170]"
+                                                            className={`text-[10px] sm:text-xs mt-1 ${isOwnMessage ? "font-primary text-white/90" : "font-primary text-[#606170]"
                                                                 }`}
                                                         >
                                                             {format(new Date(message.created_at), "HH:mm")}
@@ -173,7 +173,7 @@ export function ChatMessages({ clientId, clientName, clientLogo, currentUserId, 
             </div>
 
             {/* Input - Fixed at bottom */}
-            <div className="border-t border-[#EDEDED] p-4 bg-white flex-shrink-0 relative z-10">
+            <div className="border-t border-[#EDEDED] p-3 sm:p-4 bg-white flex-shrink-0 relative z-10">
                 <ChatInput
                     key={`input-${clientId}`}
                     clientId={clientId}

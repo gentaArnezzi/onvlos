@@ -73,11 +73,11 @@ export default function TasksPage() {
   };
 
   return (
-    <div className="flex-1 space-y-8 p-8 max-w-7xl mx-auto">
+    <div className="flex-1 space-y-6 sm:space-y-8 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full min-w-0">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold font-primary tracking-tight text-[#0A33C6]">
+          <h2 className="text-2xl sm:text-3xl font-bold font-primary tracking-tight text-[#0A33C6]">
             {t("tasks.title")}
           </h2>
           <p className="font-primary text-[#606170] mt-1">
@@ -88,11 +88,8 @@ export default function TasksPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3">
         <Card className="border border-[#EDEDED] shadow-lg bg-white backdrop-blur-sm relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4 opacity-5">
-            <CheckSquare className="h-16 w-16" />
-          </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium font-primary text-[#606170]">
               {t("tasks.totalTasks")}
@@ -102,7 +99,7 @@ export default function TasksPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold font-primary text-[#02041D]">{totalTasks}</div>
+            <div className="text-xl sm:text-2xl font-bold font-primary text-[#02041D]">{totalTasks}</div>
             <p className="text-xs font-primary text-[#606170] mt-1">
               {t("tasks.allAssignments")}
             </p>
@@ -110,9 +107,6 @@ export default function TasksPage() {
         </Card>
 
         <Card className="border border-[#EDEDED] shadow-lg bg-white backdrop-blur-sm relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4 opacity-5">
-            <Clock className="h-16 w-16" />
-          </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium font-primary text-[#606170]">
               {t("tasks.pending")}
@@ -122,7 +116,7 @@ export default function TasksPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold font-primary text-[#02041D]">{pendingTasks}</div>
+            <div className="text-xl sm:text-2xl font-bold font-primary text-[#02041D]">{pendingTasks}</div>
             <p className="text-xs font-primary text-[#606170] mt-1">
               {t("tasks.toDoInProgress")}
             </p>
@@ -130,9 +124,6 @@ export default function TasksPage() {
         </Card>
 
         <Card className="border border-[#EDEDED] shadow-lg bg-white backdrop-blur-sm relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4 opacity-5">
-            <AlertTriangle className="h-16 w-16" />
-          </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium font-primary text-[#606170]">
               {t("tasks.highPriority")}
@@ -142,7 +133,7 @@ export default function TasksPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold font-primary text-[#02041D]">{highPriorityTasks}</div>
+            <div className="text-xl sm:text-2xl font-bold font-primary text-[#02041D]">{highPriorityTasks}</div>
             <p className="text-xs font-primary text-[#606170] mt-1">
               {t("tasks.needsAttention")}
             </p>
@@ -152,12 +143,16 @@ export default function TasksPage() {
 
       {/* Main Content */}
       <Card className="border border-[#EDEDED] shadow-lg bg-white backdrop-blur-sm">
-        <CardHeader>
+        <CardHeader className="p-4 sm:p-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <CardTitle className="font-primary text-[#02041D]">{t("tasks.taskList")}</CardTitle>
-            <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
-              <StatusFilter />
-              <SearchInput />
+            <CardTitle className="font-primary text-[#02041D] text-base sm:text-lg">{t("tasks.taskList")}</CardTitle>
+            <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto min-w-0">
+              <div className="w-full md:w-auto min-w-0 overflow-hidden">
+                <StatusFilter />
+              </div>
+              <div className="w-full md:w-auto min-w-0">
+                <SearchInput />
+              </div>
             </div>
           </div>
         </CardHeader>

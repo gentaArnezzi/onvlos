@@ -81,18 +81,18 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-[#EDEDED]">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 px-6 lg:px-12 h-20 flex items-center border-b border-[#EDEDED]/50 bg-[#EDEDED]/80 backdrop-blur-xl z-50">
-        <Link className="flex items-center gap-3 group" href="/">
+      <header className="fixed top-0 left-0 right-0 px-4 sm:px-6 lg:px-12 h-16 sm:h-20 flex items-center border-b border-[#EDEDED]/50 bg-[#EDEDED]/80 backdrop-blur-xl z-50">
+        <Link className="flex items-center gap-2 sm:gap-3 group" href="/">
           <img
             src="/logo-onvlo.png"
             alt="Onvlo"
-            className="w-10 h-10 object-contain transition-all duration-300 group-hover:scale-105"
+            className="w-8 h-8 sm:w-10 sm:h-10 object-contain transition-all duration-300 group-hover:scale-105"
           />
-          <span className="text-xl font-bold font-primary text-[#0A33C6]">
+          <span className="text-lg sm:text-xl font-bold font-primary text-[#0A33C6]">
             Onvlo
           </span>
         </Link>
-        <nav className="ml-auto flex items-center gap-8">
+        <nav className="ml-auto hidden md:flex items-center gap-6 lg:gap-8">
           <Link className="text-sm font-medium font-primary text-[#606170] hover:text-[#0A33C6] transition-colors" href="#features">
             Features
           </Link>
@@ -100,39 +100,46 @@ export default function Home() {
             Solutions
           </Link>
           <Link href="/login">
-            <Button variant="ghost" className="font-primary text-[#02041D] hover:text-[#0A33C6]">
+            <Button variant="ghost" size="sm" className="font-primary text-[#02041D] hover:text-[#0A33C6]">
               Login
             </Button>
           </Link>
           <Link href="/signup">
-            <Button className="bg-[#0A33C6] hover:bg-[#0A33C6]/90 text-white shadow-lg shadow-[#0A33C6]/30 hover:shadow-xl hover:shadow-[#0A33C6]/40 transition-all font-primary">
+            <Button size="sm" className="bg-[#0A33C6] hover:bg-[#0A33C6]/90 text-white shadow-lg shadow-[#0A33C6]/30 hover:shadow-xl hover:shadow-[#0A33C6]/40 transition-all font-primary">
               Get Started
             </Button>
           </Link>
         </nav>
+        <div className="ml-auto md:hidden">
+          <Link href="/signup">
+            <Button size="sm" className="bg-[#0A33C6] hover:bg-[#0A33C6]/90 text-white font-primary">
+              Get Started
+            </Button>
+          </Link>
+        </div>
       </header>
 
-      <main className="flex-1 pt-20">
+      <main className="flex-1 pt-16 sm:pt-20">
         {/* Hero Section */}
-        <section className="relative py-24 lg:py-32 overflow-hidden bg-[#EDEDED]">
+        <section className="relative py-12 sm:py-16 lg:py-24 xl:py-32 overflow-hidden bg-[#EDEDED]">
           {/* Animated Background */}
           <div className="absolute inset-0 bg-[#EDEDED]" />
           <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-10" />
           <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#0A33C6]/10 rounded-full blur-3xl animate-float" />
           <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#0A33C6]/10 rounded-full blur-3xl animate-float delay-300" />
 
-          <div className="container px-6 mx-auto relative z-10">
+          <div className="container px-4 sm:px-6 mx-auto relative z-10">
             <div className="flex flex-col items-center text-center max-w-5xl mx-auto">
               {/* Badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-[#EDEDED] mb-8 animate-fade-in-down">
-                <Sparkles className="h-4 w-4 text-[#0A33C6]" />
-                <span className="text-sm font-medium font-primary text-[#0A33C6]">
+              <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/80 backdrop-blur-sm border border-[#EDEDED] mb-6 sm:mb-8 animate-fade-in-down">
+                <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 text-[#0A33C6]" />
+                <span className="text-xs sm:text-sm font-medium font-primary text-[#0A33C6]">
                   The all-in-one platform for modern agencies
                 </span>
               </div>
 
               {/* Headline */}
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold font-primary tracking-tight mb-6 animate-fade-in-up">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold font-primary tracking-tight mb-4 sm:mb-6 animate-fade-in-up px-4">
                 <span className="text-[#02041D]">
                   Streamline Client
                 </span>
@@ -143,7 +150,7 @@ export default function Home() {
               </h1>
 
               {/* Subtitle */}
-              <p className="text-lg md:text-xl font-primary text-[#606170] mb-10 max-w-3xl animate-fade-in-up delay-100">
+              <p className="text-base sm:text-lg md:text-xl font-primary text-[#606170] mb-8 sm:mb-10 max-w-3xl animate-fade-in-up delay-100 px-4">
                 Replace Notion, Trello, Slack, and invoicing tools with one integrated workspace.
                 From first contact to final payment — all in one beautiful platform.
               </p>
@@ -165,14 +172,14 @@ export default function Home() {
               </div>
 
               {/* Stats */}
-              <div className="grid grid-cols-3 gap-8 w-full max-w-3xl animate-fade-in-up delay-300">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 w-full max-w-3xl animate-fade-in-up delay-300 px-4">
                 {stats.map((stat) => (
-                  <div key={stat.label} className="bg-white rounded-2xl p-6 hover:shadow-xl transition-all duration-300 group cursor-pointer border border-[#EDEDED]">
-                    <stat.icon className="h-8 w-8 mx-auto mb-3 text-[#0A33C6] group-hover:scale-110 transition-transform" />
-                    <div className="text-4xl md:text-5xl font-bold font-primary text-[#02041D] mb-2">
+                  <div key={stat.label} className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 hover:shadow-xl transition-all duration-300 group cursor-pointer border border-[#EDEDED]">
+                    <stat.icon className="h-6 w-6 sm:h-8 sm:w-8 mx-auto mb-2 sm:mb-3 text-[#0A33C6] group-hover:scale-110 transition-transform" />
+                    <div className="text-3xl sm:text-4xl md:text-5xl font-bold font-primary text-[#02041D] mb-1 sm:mb-2">
                       {stat.value}
                     </div>
-                    <div className="text-sm font-primary text-[#606170] font-medium">
+                    <div className="text-xs sm:text-sm font-primary text-[#606170] font-medium">
                       {stat.label}
                     </div>
                   </div>
@@ -183,28 +190,28 @@ export default function Home() {
         </section>
 
         {/* Features Section */}
-        <section id="features" className="py-24 lg:py-32 bg-[#EDEDED] relative overflow-hidden">
+        <section id="features" className="py-12 sm:py-16 lg:py-24 xl:py-32 bg-[#EDEDED] relative overflow-hidden">
 
-          <div className="container px-6 mx-auto relative z-10">
-            <div className="text-center mb-20">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-[#EDEDED] mb-6">
-                <Zap className="h-4 w-4 text-[#0A33C6]" />
-                <span className="text-sm font-medium font-primary text-[#0A33C6]">
+          <div className="container px-4 sm:px-6 mx-auto relative z-10">
+            <div className="text-center mb-12 sm:mb-16 lg:mb-20">
+              <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/80 backdrop-blur-sm border border-[#EDEDED] mb-4 sm:mb-6">
+                <Zap className="h-3 w-3 sm:h-4 sm:w-4 text-[#0A33C6]" />
+                <span className="text-xs sm:text-sm font-medium font-primary text-[#0A33C6]">
                   Powerful Features
                 </span>
               </div>
-              <h2 className="text-4xl md:text-5xl font-bold font-primary text-[#02041D] mb-6">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold font-primary text-[#02041D] mb-4 sm:mb-6 px-4">
                 Everything You Need,{" "}
                 <span className="text-[#0A33C6]">
                   Nothing You Don't
                 </span>
               </h2>
-              <p className="text-lg font-primary text-[#606170] max-w-3xl mx-auto">
+              <p className="text-sm sm:text-base lg:text-lg font-primary text-[#606170] max-w-3xl mx-auto px-4">
                 Built specifically for agencies and service businesses. Every feature designed to save you time and impress your clients.
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               {features.map((feature, index) => (
                 <Card
                   key={feature.title}
@@ -229,23 +236,23 @@ export default function Home() {
         </section>
 
         {/* How It Works */}
-        <section id="solutions" className="py-24 lg:py-32 relative overflow-hidden bg-[#EDEDED]">
+        <section id="solutions" className="py-12 sm:py-16 lg:py-24 xl:py-32 relative overflow-hidden bg-[#EDEDED]">
 
-          <div className="container px-6 mx-auto relative z-10">
-            <div className="text-center mb-20">
-              <h2 className="text-4xl md:text-5xl font-bold font-primary text-[#02041D] mb-6">
+          <div className="container px-4 sm:px-6 mx-auto relative z-10">
+            <div className="text-center mb-12 sm:mb-16 lg:mb-20">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold font-primary text-[#02041D] mb-4 sm:mb-6 px-4">
                 How{" "}
                 <span className="text-[#0A33C6]">
                   Onvlo
                 </span>
                 {" "}Works
               </h2>
-              <p className="text-lg font-primary text-[#606170] max-w-2xl mx-auto">
+              <p className="text-sm sm:text-base lg:text-lg font-primary text-[#606170] max-w-2xl mx-auto px-4">
                 From lead to long-term client in three simple steps
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto px-4">
               {[
                 {
                   step: 1,
@@ -290,28 +297,28 @@ export default function Home() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-24 lg:py-32 relative overflow-hidden bg-[#0A33C6]">
+        <section className="py-12 sm:py-16 lg:py-24 xl:py-32 relative overflow-hidden bg-[#0A33C6]">
           <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-10" />
 
-          <div className="container px-6 mx-auto relative z-10">
+          <div className="container px-4 sm:px-6 mx-auto relative z-10">
             <div className="max-w-4xl mx-auto text-center">
-              <Sparkles className="h-16 w-16 text-white/80 mx-auto mb-6 animate-float" />
-              <h2 className="text-4xl md:text-5xl font-bold font-primary text-[#EDEDED] mb-6">
+              <Sparkles className="h-12 w-12 sm:h-16 sm:w-16 text-white/80 mx-auto mb-4 sm:mb-6 animate-float" />
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold font-primary text-[#EDEDED] mb-4 sm:mb-6 px-4">
                 Ready to Transform Your Client Experience?
               </h2>
-              <p className="text-xl font-primary text-[#EDEDED]/90 mb-12 leading-relaxed">
+              <p className="text-base sm:text-lg lg:text-xl font-primary text-[#EDEDED]/90 mb-8 sm:mb-12 leading-relaxed px-4">
                 Join agencies that have cut onboarding time by 10x and replaced 5+ tools with Onvlo.
                 Start your journey to better client relationships today.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/signup">
-                  <Button size="lg" className="bg-[#0A33C6] hover:bg-[#0A33C6]/90 text-white px-10 h-16 text-lg shadow-2xl hover:shadow-3xl transition-all hover:scale-105 group font-primary font-bold">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center w-full sm:w-auto px-4">
+                <Link href="/signup" className="w-full sm:w-auto">
+                  <Button size="lg" className="w-full sm:w-auto bg-[#0A33C6] hover:bg-[#0A33C6]/90 text-white px-6 sm:px-10 h-12 sm:h-16 text-base sm:text-lg shadow-2xl hover:shadow-3xl transition-all hover:scale-105 group font-primary font-bold">
                     Get Started Free
-                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
-                <Link href="/dashboard">
-                  <Button variant="outline" size="lg" className="border-2 border-[#EDEDED] text-[#EDEDED] hover:bg-[#EDEDED]/10 px-10 h-16 text-lg backdrop-blur-xl transition-all hover:scale-105 font-primary">
+                <Link href="/dashboard" className="w-full sm:w-auto">
+                  <Button variant="outline" size="lg" className="w-full sm:w-auto border-2 border-[#EDEDED] text-[#EDEDED] hover:bg-[#EDEDED]/10 px-6 sm:px-10 h-12 sm:h-16 text-base sm:text-lg backdrop-blur-xl transition-all hover:scale-105 font-primary">
                     Explore Dashboard
                   </Button>
                 </Link>
@@ -322,9 +329,9 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-[#EDEDED] py-12 px-6 bg-[#EDEDED]">
+      <footer className="border-t border-[#EDEDED] py-8 sm:py-12 px-4 sm:px-6 bg-[#EDEDED]">
         <div className="container mx-auto">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4 sm:gap-6">
             <div className="flex items-center gap-3">
               <img
                 src="/logo-onvlo.png"

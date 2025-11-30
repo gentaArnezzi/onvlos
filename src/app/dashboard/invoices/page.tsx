@@ -34,11 +34,11 @@ export default async function InvoicesPage({
   const overdueInvoices = activeInvoices.filter(inv => inv.status === 'overdue');
 
   return (
-    <div className="flex-1 space-y-8 p-8 max-w-7xl mx-auto">
+    <div className="flex-1 space-y-6 sm:space-y-8 p-4 sm:p-6 lg:p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold font-primary tracking-tight text-[#0A33C6]">
+          <h2 className="text-2xl sm:text-3xl font-bold font-primary tracking-tight text-[#0A33C6]">
             {t("invoices.title", language)}
           </h2>
           <p className="font-primary text-[#606170] mt-1">
@@ -49,11 +49,8 @@ export default async function InvoicesPage({
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3">
         <Card className="border-none shadow-lg bg-white relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4 opacity-10">
-            <CreditCard className="h-16 w-16" />
-          </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium font-primary text-[#606170]">
               {t("stats.totalRevenue", language)}
@@ -63,7 +60,7 @@ export default async function InvoicesPage({
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold font-primary text-[#02041D]">
+            <div className="text-xl sm:text-2xl font-bold font-primary text-[#02041D]">
               {defaultCurrencySymbol}{totalRevenue.toLocaleString()}
             </div>
             <p className="text-xs font-primary text-[#606170] mt-1">
@@ -73,9 +70,6 @@ export default async function InvoicesPage({
         </Card>
 
         <Card className="border-none shadow-lg bg-white relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4 opacity-10">
-            <CheckCircle className="h-16 w-16" />
-          </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium font-primary text-[#606170]">
               {t("stats.paid", language)}
@@ -85,7 +79,7 @@ export default async function InvoicesPage({
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold font-primary text-[#02041D]">
+            <div className="text-xl sm:text-2xl font-bold font-primary text-[#02041D]">
               {defaultCurrencySymbol}{paidAmount.toLocaleString()}
             </div>
             <p className="text-xs font-primary text-[#606170] mt-1">
@@ -95,9 +89,6 @@ export default async function InvoicesPage({
         </Card>
 
         <Card className="border-none shadow-lg bg-white relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4 opacity-10">
-            <Clock className="h-16 w-16" />
-          </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium font-primary text-[#606170]">
               {t("stats.pending", language)}
@@ -107,7 +98,7 @@ export default async function InvoicesPage({
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold font-primary text-[#02041D]">
+            <div className="text-xl sm:text-2xl font-bold font-primary text-[#02041D]">
               {defaultCurrencySymbol}{pendingAmount.toLocaleString()}
             </div>
             <p className="text-xs font-primary text-[#606170] mt-1">

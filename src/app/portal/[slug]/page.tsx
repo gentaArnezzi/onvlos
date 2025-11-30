@@ -53,26 +53,26 @@ export default async function PortalPage({ params }: { params: Promise<{ slug: s
       </div>
 
       <Tabs defaultValue="summary" className="space-y-6">
-        <TabsList className="bg-white border border-[#EDEDED] p-1 rounded-lg">
-            <TabsTrigger value="summary" className="flex items-center gap-2 font-primary data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white text-[#606170]">
+        <TabsList className="bg-white border border-[#EDEDED] p-1 rounded-lg w-full sm:w-auto overflow-x-auto scrollbar-hide">
+            <TabsTrigger value="summary" className="flex items-center gap-2 font-primary data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white text-[#606170] whitespace-nowrap flex-shrink-0">
                 <TrendingUp className="h-4 w-4" /> Summary
             </TabsTrigger>
-            <TabsTrigger value="tasks" className="flex items-center gap-2 data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white font-primary text-[#606170]">
+            <TabsTrigger value="tasks" className="flex items-center gap-2 data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white font-primary text-[#606170] whitespace-nowrap flex-shrink-0">
                 <CheckCircle2 className="h-4 w-4" /> Tasks
             </TabsTrigger>
-            <TabsTrigger value="chat" className="flex items-center gap-2 data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white font-primary text-[#606170]">
+            <TabsTrigger value="chat" className="flex items-center gap-2 data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white font-primary text-[#606170] whitespace-nowrap flex-shrink-0">
                 <MessageSquare className="h-4 w-4" /> Chat
             </TabsTrigger>
-            <TabsTrigger value="invoices" className="flex items-center gap-2 data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white font-primary text-[#606170]">
+            <TabsTrigger value="invoices" className="flex items-center gap-2 data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white font-primary text-[#606170] whitespace-nowrap flex-shrink-0">
                 <Receipt className="h-4 w-4" /> Invoices
             </TabsTrigger>
-            <TabsTrigger value="files" className="flex items-center gap-2 data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white font-primary text-[#606170]">
+            <TabsTrigger value="files" className="flex items-center gap-2 data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white font-primary text-[#606170] whitespace-nowrap flex-shrink-0">
                 <FileText className="h-4 w-4" /> Files
             </TabsTrigger>
-            <TabsTrigger value="proposals" className="flex items-center gap-2 data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white font-primary text-[#606170]">
+            <TabsTrigger value="proposals" className="flex items-center gap-2 data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white font-primary text-[#606170] whitespace-nowrap flex-shrink-0">
                 <FileCheck className="h-4 w-4" /> Proposals
             </TabsTrigger>
-            <TabsTrigger value="contracts" className="flex items-center gap-2 data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white font-primary text-[#606170]">
+            <TabsTrigger value="contracts" className="flex items-center gap-2 data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white font-primary text-[#606170] whitespace-nowrap flex-shrink-0">
                 <FileSignature className="h-4 w-4" /> Contracts
             </TabsTrigger>
         </TabsList>

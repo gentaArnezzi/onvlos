@@ -21,13 +21,15 @@ export function StatusFilter() {
     };
 
     return (
-        <Tabs value={currentStatus} onValueChange={handleStatusChange} className="w-full md:w-auto">
-            <TabsList className="bg-[#EDEDED] border border-[#EDEDED]">
-                <TabsTrigger value="all" className="data-[state=active]:bg-[#0A33C6] font-primary text-[#606170] data-[state=active]:text-white hover:font-primary text-[#02041D]">{t("tasks.all")}</TabsTrigger>
-                <TabsTrigger value="todo" className="data-[state=active]:bg-[#0A33C6] font-primary text-[#606170] data-[state=active]:text-white hover:font-primary text-[#02041D]">{t("tasks.toDo")}</TabsTrigger>
-                <TabsTrigger value="in_progress" className="data-[state=active]:bg-[#0A33C6] font-primary text-[#606170] data-[state=active]:text-white hover:font-primary text-[#02041D]">{t("tasks.inProgress")}</TabsTrigger>
-                <TabsTrigger value="done" className="data-[state=active]:bg-[#0A33C6] font-primary text-[#606170] data-[state=active]:text-white hover:font-primary text-[#02041D]">{t("tasks.done")}</TabsTrigger>
-            </TabsList>
+        <Tabs value={currentStatus} onValueChange={handleStatusChange} className="w-full max-w-full min-w-0">
+            <div className="w-full overflow-x-auto scrollbar-hide">
+                <TabsList className="bg-[#EDEDED] border border-[#EDEDED] w-max sm:w-auto overflow-x-auto scrollbar-hide min-w-0 p-[2px] sm:p-[3px]">
+                    <TabsTrigger value="all" className="data-[state=active]:bg-[#0A33C6] font-primary text-[#606170] data-[state=active]:text-white hover:font-primary text-[#02041D] whitespace-nowrap flex-shrink-0 px-1.5 sm:px-3 text-xs sm:text-sm">{t("tasks.all")}</TabsTrigger>
+                    <TabsTrigger value="todo" className="data-[state=active]:bg-[#0A33C6] font-primary text-[#606170] data-[state=active]:text-white hover:font-primary text-[#02041D] whitespace-nowrap flex-shrink-0 px-1.5 sm:px-3 text-xs sm:text-sm">{t("tasks.toDo")}</TabsTrigger>
+                    <TabsTrigger value="in_progress" className="data-[state=active]:bg-[#0A33C6] font-primary text-[#606170] data-[state=active]:text-white hover:font-primary text-[#02041D] whitespace-nowrap flex-shrink-0 px-1.5 sm:px-3 text-xs sm:text-sm">{t("tasks.inProgress")}</TabsTrigger>
+                    <TabsTrigger value="done" className="data-[state=active]:bg-[#0A33C6] font-primary text-[#606170] data-[state=active]:text-white hover:font-primary text-[#02041D] whitespace-nowrap flex-shrink-0 px-1.5 sm:px-3 text-xs sm:text-sm">{t("tasks.done")}</TabsTrigger>
+                </TabsList>
+            </div>
         </Tabs>
     );
 }

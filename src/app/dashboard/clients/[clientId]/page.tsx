@@ -53,7 +53,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ c
     }
 
     return (
-        <div className="flex-1 space-y-6 p-8 max-w-7xl mx-auto">
+        <div className="flex-1 space-y-6 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
             <div className="flex items-center space-x-4 mb-6">
                 <Button variant="ghost" size="icon" asChild className="font-primary text-[#606170] hover:font-primary text-[#02041D]">
                     <Link href="/dashboard/clients">
@@ -61,7 +61,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ c
                     </Link>
                 </Button>
                 <div>
-                    <h2 className="text-2xl font-bold tracking-tight font-primary text-[#02041D]">
+                    <h2 className="text-xl sm:text-2xl font-bold tracking-tight font-primary text-[#02041D]">
                         {client.company_name || "No Company Name"}
                     </h2>
                     <p className="font-primary text-[#606170] mt-1">
@@ -71,30 +71,30 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ c
             </div>
 
             <Tabs defaultValue="overview" className="space-y-4">
-                <TabsList className="bg-white border-[#EDEDED]">
-                    <TabsTrigger value="overview" className="font-primary text-[#606170] data-[state=active]:font-primary text-[#02041D]">
+                <TabsList className="bg-white border-[#EDEDED] w-full sm:w-auto overflow-x-auto scrollbar-hide">
+                    <TabsTrigger value="overview" className="font-primary text-[#606170] data-[state=active]:font-primary text-[#02041D] whitespace-nowrap flex-shrink-0">
                         Overview
                     </TabsTrigger>
-                    <TabsTrigger value="chat" className="font-primary text-[#606170] data-[state=active]:font-primary text-[#02041D]">
+                    <TabsTrigger value="chat" className="font-primary text-[#606170] data-[state=active]:font-primary text-[#02041D] whitespace-nowrap flex-shrink-0">
                         Chat
                     </TabsTrigger>
-                    <TabsTrigger value="tasks" className="font-primary text-[#606170] data-[state=active]:font-primary text-[#02041D]">
+                    <TabsTrigger value="tasks" className="font-primary text-[#606170] data-[state=active]:font-primary text-[#02041D] whitespace-nowrap flex-shrink-0">
                         Tasks
                     </TabsTrigger>
-                    <TabsTrigger value="files" className="font-primary text-[#606170] data-[state=active]:font-primary text-[#02041D]">
+                    <TabsTrigger value="files" className="font-primary text-[#606170] data-[state=active]:font-primary text-[#02041D] whitespace-nowrap flex-shrink-0">
                         Files
                     </TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="overview" className="space-y-4">
-                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
                         <Card className="border-none shadow-lg bg-white">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium font-primary text-[#606170]">Status</CardTitle>
                                 <CheckSquare className="h-4 w-4 text-slate-500" />
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold font-primary text-[#02041D] capitalize">
+                                <div className="text-xl sm:text-2xl font-bold font-primary text-[#02041D] capitalize">
                                     {client.status || "lead"}
                                 </div>
                             </CardContent>
@@ -105,7 +105,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ c
                                 <FileText className="h-4 w-4 text-slate-500" />
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold font-primary text-[#02041D]">
+                                <div className="text-xl sm:text-2xl font-bold font-primary text-[#02041D]">
                                     {defaultCurrencySymbol}{client.contract_value ? Number(client.contract_value).toLocaleString() : "0"}
                                 </div>
                             </CardContent>
@@ -117,7 +117,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ c
                                     <FileText className="h-4 w-4 text-slate-500" />
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="text-2xl font-bold font-primary text-[#02041D]">
+                                    <div className="text-xl sm:text-2xl font-bold font-primary text-[#02041D]">
                                         {client.category}
                                     </div>
                                 </CardContent>

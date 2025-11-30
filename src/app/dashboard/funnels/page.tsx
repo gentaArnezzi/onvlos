@@ -35,11 +35,11 @@ export default async function FunnelsPage() {
   const draftFunnels = totalFunnels - publishedFunnels;
 
   return (
-    <div className="flex-1 space-y-8 p-8 max-w-7xl mx-auto">
+    <div className="flex-1 space-y-6 sm:space-y-8 p-4 sm:p-6 lg:p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold font-primary tracking-tight text-[#0A33C6]">
+          <h2 className="text-2xl sm:text-3xl font-bold font-primary tracking-tight text-[#0A33C6]">
             {t("funnels.title", language)}
           </h2>
           <p className="font-primary text-[#606170] mt-1">
@@ -50,11 +50,8 @@ export default async function FunnelsPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3">
         <Card className="border border-[#EDEDED] shadow-lg bg-white backdrop-blur-sm relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4 opacity-5">
-            <Filter className="h-16 w-16" />
-          </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium font-primary text-[#606170]">
               {t("funnels.totalFunnels", language)}
@@ -64,7 +61,7 @@ export default async function FunnelsPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold font-primary text-[#02041D]">{totalFunnels}</div>
+            <div className="text-xl sm:text-2xl font-bold font-primary text-[#02041D]">{totalFunnels}</div>
             <p className="text-xs font-primary text-[#606170] mt-1">
               {t("funnels.activeWorkflows", language)}
             </p>
@@ -72,9 +69,6 @@ export default async function FunnelsPage() {
         </Card>
 
         <Card className="border border-[#EDEDED] shadow-lg bg-white backdrop-blur-sm relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4 opacity-5">
-            <Globe className="h-16 w-16" />
-          </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium font-primary text-[#606170]">
               {t("funnels.published", language)}
@@ -84,7 +78,7 @@ export default async function FunnelsPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold font-primary text-[#02041D]">{publishedFunnels}</div>
+            <div className="text-xl sm:text-2xl font-bold font-primary text-[#02041D]">{publishedFunnels}</div>
             <p className="text-xs font-primary text-[#606170] mt-1">
               {t("funnels.liveAndAccessible", language)}
             </p>
@@ -92,9 +86,6 @@ export default async function FunnelsPage() {
         </Card>
 
         <Card className="border border-[#EDEDED] shadow-lg bg-white backdrop-blur-sm relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4 opacity-5">
-            <Lock className="h-16 w-16" />
-          </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium font-primary text-[#606170]">
               {t("funnels.drafts", language)}
@@ -104,7 +95,7 @@ export default async function FunnelsPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold font-primary text-[#02041D]">{draftFunnels}</div>
+            <div className="text-xl sm:text-2xl font-bold font-primary text-[#02041D]">{draftFunnels}</div>
             <p className="text-xs font-primary text-[#606170] mt-1">
               {t("funnels.workInProgress", language)}
             </p>

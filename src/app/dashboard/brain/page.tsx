@@ -95,11 +95,11 @@ export default async function BrainPage() {
   ];
 
   return (
-    <div className="flex-1 space-y-6 p-6 md:p-8 max-w-[1600px] mx-auto">
+    <div className="flex-1 space-y-6 p-6 md:p-4 sm:p-6 lg:p-8 max-w-[1600px] mx-auto">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold font-primary tracking-tight text-[#0A33C6]">
+          <h2 className="text-2xl sm:text-3xl font-bold font-primary tracking-tight text-[#0A33C6]">
             {t("brain.title", language)}
           </h2>
           <p className="font-primary text-[#606170] mt-1.5 text-sm">
@@ -109,12 +109,9 @@ export default async function BrainPage() {
       </div>
 
       {/* Quick Insights */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-4">
         {quickInsights.map((insight, index) => (
           <Card key={index} className="border border-[#EDEDED] shadow-sm hover:shadow-md transition-shadow duration-200 bg-white relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-              <insight.icon className="h-16 w-16 font-primary text-[#606170]" />
-            </div>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium font-primary text-[#606170]">
                 {insight.title}
@@ -124,7 +121,7 @@ export default async function BrainPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold font-primary text-[#02041D]">{insight.value}</div>
+              <div className="text-xl sm:text-2xl font-bold font-primary text-[#02041D]">{insight.value}</div>
               <p className="text-xs font-primary text-[#606170] mt-1.5">
                 {insight.description}
               </p>

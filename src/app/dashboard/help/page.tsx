@@ -132,10 +132,10 @@ export default function HelpPage() {
   ];
 
   return (
-    <div className="flex-1 space-y-8 p-8 max-w-7xl mx-auto">
+    <div className="flex-1 space-y-6 sm:space-y-8 p-4 sm:p-6 lg:p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
       {/* Header */}
       <div>
-        <h2 className="text-3xl font-bold font-primary tracking-tight text-[#0A33C6]">
+        <h2 className="text-2xl sm:text-3xl font-bold font-primary tracking-tight text-[#0A33C6]">
           Help & Support
         </h2>
         <p className="font-primary text-[#606170] mt-1">
@@ -164,7 +164,7 @@ export default function HelpPage() {
           <LifeBuoy className="h-5 w-5 text-[#0A33C6]" />
           Get Support
         </h3>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-4">
           {supportOptions.map((option, index) => (
             <Card key={index} className="border border-[#EDEDED] shadow-sm bg-white hover:shadow-md transition-shadow">
               <CardHeader className="pb-3">
@@ -202,7 +202,7 @@ export default function HelpPage() {
           <BookOpen className="h-5 w-5 text-[#0A33C6]" />
           Quick Start Guides
         </h3>
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:grid-cols-2">
           {quickStartGuides.map((guide, index) => (
             <Card key={index} className="border border-[#EDEDED] shadow-sm bg-white hover:shadow-md transition-shadow cursor-pointer group">
               <CardContent className="p-6">

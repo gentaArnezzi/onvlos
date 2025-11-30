@@ -33,7 +33,9 @@ import {
   FileText,
   LogOut,
   ChevronDown,
-  FileSignature
+  FileSignature,
+  Menu,
+  X
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Input } from "@/components/ui/input";
@@ -107,6 +109,7 @@ export function Navbar({ user }: NavbarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [searchOpen, setSearchOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { t } = useTranslation();
 
   const handleLogout = async () => {
@@ -122,10 +125,18 @@ export function Navbar({ user }: NavbarProps) {
   const userInitials = userName.split(" ").map((n) => n[0]).join("").substring(0, 2).toUpperCase();
 
   return (
-    <div className="sticky top-0 z-50 px-6 py-3 bg-white border-b border-[#EDEDED] font-primary text-[#02041D]">
+    <div className="sticky top-0 z-50 px-4 sm:px-6 py-3 bg-white border-b border-[#EDEDED] font-primary text-[#02041D]">
       <div className="relative mx-auto w-full max-w-screen-2xl flex items-center justify-between">
-        {/* Left Section: Logo */}
-        <div className="flex items-center gap-8">
+        {/* Left Section: Logo & Mobile Menu Button */}
+        <div className="flex items-center gap-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden font-primary text-[#606170] hover:text-[#02041D] hover:bg-[#EDEDED]"
+          >
+            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
           <Link href="/dashboard" className="flex items-center gap-2 group">
             <img
               src="/logo-onvlo.png"
@@ -207,8 +218,10 @@ export function Navbar({ user }: NavbarProps) {
             <Search className="h-5 w-5" />
           </Button>
 
-          {/* Notifications */}
+          {/* Notifications - Hidden on mobile */}
+          <div className="hidden sm:block">
           <NotificationsDropdown />
+          </div>
 
           {/* User Menu */}
           <DropdownMenu>
@@ -257,6 +270,53 @@ export function Navbar({ user }: NavbarProps) {
           </DropdownMenu>
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden fixed inset-0 top-[57px] bg-white border-t border-[#EDEDED] z-40 overflow-y-auto">
+          <nav className="flex flex-col p-4 space-y-2">
+            {navItems.map((item) => {
+              const isActive = item.href === "/dashboard"
+                ? pathname === "/dashboard"
+                : (pathname === item.href || pathname?.startsWith(item.href + "/"));
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={cn(
+                    "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200",
+                    isActive
+                      ? "bg-[#0A33C6] text-white shadow-sm font-primary"
+                      : "font-primary text-[#606170] hover:text-[#02041D] hover:bg-[#EDEDED]"
+                  )}
+                >
+                  <item.icon className={cn("w-5 h-5", isActive ? "text-white" : "text-[#606170]")} />
+                  <span>{t(item.key)}</span>
+                </Link>
+              );
+            })}
+            <div className="pt-4 border-t border-[#EDEDED] mt-4">
+              <Link
+                href="/dashboard/settings"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium font-primary text-[#606170] hover:text-[#02041D] hover:bg-[#EDEDED]"
+              >
+                <Settings className="w-5 h-5" />
+                <span>{t("nav.settings")}</span>
+              </Link>
+              <Link
+                href="/dashboard/help"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium font-primary text-[#606170] hover:text-[#02041D] hover:bg-[#EDEDED]"
+              >
+                <HelpCircle className="w-5 h-5" />
+                <span>Help & Support</span>
+              </Link>
+            </div>
+          </nav>
+        </div>
+      )}
 
       {/* Search Dialog */}
       <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} />

@@ -148,35 +148,32 @@ export default async function DashboardPage() {
   ];
 
   return (
-    <div className="flex-1 space-y-8 p-8 pt-6 max-w-screen-2xl mx-auto w-full">
+    <div className="flex-1 space-y-6 sm:space-y-8 p-4 sm:p-6 lg:p-8 pt-4 sm:pt-6 max-w-screen-2xl mx-auto w-full">
       {/* Hero Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold font-primary tracking-tight text-[#02041D]">
+          <h1 className="text-2xl sm:text-2xl sm:text-3xl font-bold font-primary tracking-tight text-[#02041D]">
             {language === "id" ? "Selamat pagi" : "Good morning"}, {user?.name?.split(' ')[0] || 'User'} 👋
           </h1>
-          <p className="font-primary text-[#606170] mt-1">
+          <p className="text-sm sm:text-base font-primary text-[#606170] mt-1">
             {t("dashboard.description", language)}
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" className="hidden sm:flex border-[#EDEDED] font-primary text-[#02041D] hover:bg-[#EDEDED] hover:text-[#02041D]">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+          <Button variant="outline" size="sm" className="hidden sm:flex border-[#EDEDED] font-primary text-[#02041D] hover:bg-[#EDEDED] hover:text-[#02041D]">
             <Calendar className="mr-2 h-4 w-4" />
             {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
           </Button>
-          <Button className="bg-[#0A33C6] hover:bg-[#0A33C6]/90 text-white shadow-lg shadow-[#0A33C6]/20 font-primary font-bold">
+          <Button size="sm" className="bg-[#0A33C6] hover:bg-[#0A33C6]/90 text-white shadow-lg shadow-[#0A33C6]/20 font-primary font-bold">
             <Plus className="mr-2 h-4 w-4" /> {t("tasks.newProject", language)}
           </Button>
         </div>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {stats.map((stat) => (
           <Card key={stat.title} className="relative overflow-hidden border border-[#EDEDED] shadow-lg bg-white backdrop-blur-sm hover:scale-[1.02] hover:border-[#0A33C6]/50 transition-all duration-300">
-            <div className={`absolute top-0 right-0 p-4 opacity-5`}>
-              <stat.icon className="h-24 w-24" />
-            </div>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium font-primary text-[#606170]">
                 {stat.title}
@@ -186,7 +183,7 @@ export default async function DashboardPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold font-primary text-[#02041D]">{stat.value}</div>
+              <div className="text-xl sm:text-2xl font-bold font-primary text-[#02041D]">{stat.value}</div>
               <div className="flex items-center mt-1">
                 <span className={`text-xs font-medium font-primary ${stat.trendUp ? 'text-emerald-600' : 'text-red-600'} flex items-center`}>
                   {stat.trendUp ? <ArrowUpRight className="h-3 w-3 mr-1" /> : <ArrowDownRight className="h-3 w-3 mr-1" />}
@@ -199,9 +196,9 @@ export default async function DashboardPage() {
         ))}
       </div>
 
-      <div className="grid gap-8 grid-cols-1 lg:grid-cols-12">
+      <div className="grid gap-6 sm:gap-8 grid-cols-1 lg:grid-cols-12">
         {/* Main Content - Left Column */}
-        <div className="lg:col-span-8 xl:col-span-9 space-y-8">
+        <div className="lg:col-span-8 xl:col-span-9 space-y-6 sm:space-y-8">
           {/* Revenue Chart */}
           <Card className="border border-[#EDEDED] shadow-lg bg-white backdrop-blur-sm">
             <CardHeader>
@@ -210,7 +207,7 @@ export default async function DashboardPage() {
                   <CardTitle className="text-lg font-semibold font-primary text-[#02041D]">{t("dashboard.revenueOverview", language)}</CardTitle>
                   <CardDescription className="font-primary text-[#606170]">{t("dashboard.monthlyRevenue", language)}</CardDescription>
                 </div>
-                <Tabs defaultValue="6m" className="w-[200px]">
+                <Tabs defaultValue="6m" className="w-full sm:w-[200px]">
                   <TabsList className="grid w-full grid-cols-3 bg-[#EDEDED] border border-[#EDEDED]">
                     <TabsTrigger
                       value="1m"
@@ -300,7 +297,7 @@ export default async function DashboardPage() {
         </div>
 
         {/* Sidebar Content - Right Column */}
-        <div className="lg:col-span-4 xl:col-span-3 space-y-8">
+        <div className="lg:col-span-4 xl:col-span-3 space-y-6 sm:space-y-8">
           {/* Quick Actions */}
           <Card className="border-none shadow-lg bg-[#0A33C6] text-white">
             <CardHeader>
@@ -373,7 +370,6 @@ export default async function DashboardPage() {
 
           {/* Pro Plan Promo */}
           <Card className="border-none shadow-lg bg-gradient-to-br from-[#0A33C6] to-[#0A33C6] text-white overflow-hidden relative">
-            <div className="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 bg-gradient-to-br from-white/20 to-white/10 blur-2xl opacity-50 rounded-full" />
             <CardHeader>
               <div className="flex items-center gap-2 mb-2">
                 <Zap className="h-5 w-5 text-yellow-300 fill-yellow-300" />

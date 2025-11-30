@@ -82,7 +82,7 @@ export function ChatInput({ clientId, onMessageSent, language: propLanguage }: C
                         onChange={(e) => setMessage(e.target.value)}
                         onKeyDown={handleKeyDown}
                         placeholder={t("chat.placeholderWithHint")}
-                        className="min-h-[60px] max-h-[120px] bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170] resize-none focus:ring-2 focus:ring-blue-500"
+                        className="min-h-[50px] sm:min-h-[60px] max-h-[120px] bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170] resize-none focus:ring-2 focus:ring-[#0A33C6] text-sm"
                         disabled={sending}
                     />
                 </div>
@@ -102,7 +102,7 @@ export function ChatInput({ clientId, onMessageSent, language: propLanguage }: C
                     type="submit"
                     size="icon"
                     disabled={!message.trim() || sending}
-                    className="bg-blue-600 hover:bg-blue-700 text-white flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed h-[60px]"
+                    className="bg-[#0A33C6] hover:bg-[#0A33C6]/90 text-white flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed h-[50px] sm:h-[60px] w-[50px] sm:w-[60px]"
                 >
                     {sending ? (
                         <Loader2 className="w-4 h-4 animate-spin" />

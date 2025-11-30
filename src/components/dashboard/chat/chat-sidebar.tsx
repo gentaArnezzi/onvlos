@@ -42,14 +42,14 @@ export function ChatSidebar({
     return (
         <Card className="h-full border border-[#EDEDED] bg-white backdrop-blur-sm flex flex-col overflow-hidden">
             {/* Search */}
-            <div className="p-4 border-b border-[#EDEDED] flex-shrink-0">
+            <div className="p-3 sm:p-4 border-b border-[#EDEDED] flex-shrink-0">
                 <div className="relative">
-                    <Search className="absolute left-3 top-2.5 h-4 w-4 font-primary text-[#606170]" />
+                    <Search className="absolute left-2 sm:left-3 top-2.5 h-4 w-4 font-primary text-[#606170]" />
                     <Input
                         placeholder={t("chat.searchClients")}
                         value={searchQuery}
                         onChange={(e) => onSearchChange(e.target.value)}
-                        className="pl-9 bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]"
+                        className="pl-8 sm:pl-9 bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170] text-sm"
                     />
                 </div>
             </div>
@@ -70,22 +70,22 @@ export function ChatSidebar({
                                 key={conversation.clientId}
                                 onClick={() => onSelectClient(conversation.clientId)}
                                 className={cn(
-                                    "w-full p-4 text-left hover:bg-[#EDEDED] transition-colors",
+                                    "w-full p-3 sm:p-4 text-left hover:bg-[#EDEDED] transition-colors",
                                     selectedClientId === conversation.clientId && "bg-[#EDEDED]"
                                 )}
                             >
-                                <div className="flex items-start gap-3">
+                                <div className="flex items-start gap-2 sm:gap-3">
                                     {/* Avatar */}
                                     <div className="flex-shrink-0">
                                         {conversation.clientLogo ? (
                                             <img
                                                 src={conversation.clientLogo}
                                                 alt={conversation.clientName}
-                                                className="w-10 h-10 rounded-full object-cover"
+                                                className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover"
                                             />
                                         ) : (
-                                            <div className="w-10 h-10 rounded-full bg-[#EDEDED]0 to-cyan-600 flex items-center justify-center">
-                                                <span className="text-white font-semibold text-sm">
+                                            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-[#0A33C6] to-[#0A33C6] flex items-center justify-center">
+                                                <span className="text-white font-semibold text-xs sm:text-sm">
                                                     {conversation.clientName.substring(0, 2).toUpperCase()}
                                                 </span>
                                             </div>
@@ -95,21 +95,21 @@ export function ChatSidebar({
                                     {/* Content */}
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-baseline justify-between gap-2 mb-1">
-                                            <h4 className="font-semibold font-primary text-[#02041D] text-sm truncate">
+                                            <h4 className="font-semibold font-primary text-[#02041D] text-xs sm:text-sm truncate">
                                                 {conversation.clientName}
                                             </h4>
                                             {conversation.lastMessageTime && (
-                                                <span className="text-xs font-primary text-[#606170] flex-shrink-0">
+                                                <span className="text-[10px] sm:text-xs font-primary text-[#606170] flex-shrink-0">
                                                     {formatDistanceToNow(new Date(conversation.lastMessageTime), { addSuffix: true })}
                                                 </span>
                                             )}
                                         </div>
                                         {conversation.lastMessage ? (
-                                            <p className="text-xs font-primary text-[#606170] truncate">
+                                            <p className="text-[10px] sm:text-xs font-primary text-[#606170] truncate">
                                                 {conversation.lastMessage}
                                             </p>
                                         ) : (
-                                            <p className="text-xs font-primary text-[#606170] italic">
+                                            <p className="text-[10px] sm:text-xs font-primary text-[#606170] italic">
                                                 {t("chat.noMessagesYet")}
                                             </p>
                                         )}
@@ -117,8 +117,8 @@ export function ChatSidebar({
 
                                     {/* Unread Badge */}
                                     {conversation.unreadCount > 0 && (
-                                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-blue-600 flex items-center justify-center">
-                                            <span className="text-xs font-bold text-white">
+                                        <div className="flex-shrink-0 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#0A33C6] flex items-center justify-center">
+                                            <span className="text-[10px] sm:text-xs font-bold text-white">
                                                 {conversation.unreadCount}
                                             </span>
                                         </div>
