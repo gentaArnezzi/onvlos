@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CheckCircle2, FileText, FileSignature, Receipt, Zap, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import SignatureCanvas from 'react-signature-canvas';
 
 interface FormField {
   id: string;
@@ -40,8 +41,11 @@ export function OnboardingWizard({ steps }: OnboardingWizardProps) {
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [agreed, setAgreed] = useState(false);
   const [signature, setSignature] = useState("");
+  const [signerName, setSignerName] = useState("");
+  const [signerEmail, setSignerEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
+  const sigCanvas = useRef<SignatureCanvas>(null);
 
   const currentStep = steps[currentStepIndex];
   const isLastStep = currentStepIndex === steps.length - 1;
@@ -62,8 +66,24 @@ export function OnboardingWizard({ steps }: OnboardingWizardProps) {
       return;
     }
     
-    if (currentStep.step_type === 'contract' && !agreed) {
-      return;
+    if (currentStep.step_type === 'contract') {
+      if (!agreed) {
+        alert("Please agree to the terms and conditions");
+        return;
+      }
+      if (config.requireSignature) {
+        if (!sigCanvas.current || sigCanvas.current.isEmpty()) {
+          alert("Please sign the contract");
+          return;
+        }
+        if (!signerName || !signerEmail) {
+          alert("Please provide your name and email");
+          return;
+        }
+        // Get signature data
+        const signatureData = sigCanvas.current.toDataURL();
+        setSignature(signatureData);
+      }
     }
 
     if (isLastStep) {
@@ -73,7 +93,9 @@ export function OnboardingWizard({ steps }: OnboardingWizardProps) {
         const onboardingData = {
           formData,
           contractAgreed: agreed,
-          signature,
+          signature: config.requireSignature ? (sigCanvas.current?.toDataURL() || signature) : signature,
+          signerName,
+          signerEmail,
           steps: completedSteps
         };
         
@@ -89,10 +111,49 @@ export function OnboardingWizard({ steps }: OnboardingWizardProps) {
         setIsSubmitting(false);
       }
     } else {
+      // Save step data before moving to next
+      if (currentStep.step_type === 'contract') {
+        const contractData = {
+          agreed,
+          signature_data: config.requireSignature ? (sigCanvas.current?.toDataURL() || "") : "",
+          signer_name: signerName,
+          signer_email: signerEmail,
+          contract_signed: true,
+          signed_at: new Date().toISOString()
+        };
+        // Store in formData for later use
+        setFormData({ ...formData, [`contract_${currentStepIndex}`]: JSON.stringify(contractData) });
+      }
+
       setCompletedSteps([...completedSteps, currentStepIndex]);
       setCurrentStepIndex(currentStepIndex + 1);
+
+      // Reset contract-specific state when moving away from contract step
+      if (currentStep.step_type === 'contract') {
+        // Don't reset - keep for when user goes back
+      }
     }
   };
+
+  const clearSignature = () => {
+    sigCanvas.current?.clear();
+    setSignature("");
+  };
+
+  // Restore contract data when returning to contract step
+  useEffect(() => {
+    if (currentStep?.step_type === 'contract') {
+      const contractDataKey = `contract_${currentStepIndex}`;
+      const savedContractData = formData[contractDataKey] ? JSON.parse(formData[contractDataKey]) : null;
+
+      if (savedContractData) {
+        setAgreed(savedContractData.agreed || false);
+        setSignerName(savedContractData.signer_name || "");
+        setSignerEmail(savedContractData.signer_email || "");
+        setSignature(savedContractData.signature_data || "");
+      }
+    }
+  }, [currentStepIndex, currentStep?.step_type]);
   
   const validateFormStep = () => {
     const stepConfig = currentStep.config;
@@ -264,14 +325,49 @@ export function OnboardingWizard({ steps }: OnboardingWizardProps) {
                   </Label>
                 </div>
                 {config.requireSignature && (
-                  <div className="space-y-2">
-                    <Label htmlFor="signature">Type your full name to sign</Label>
-                    <Input 
-                      id="signature" 
-                      placeholder="Your full name"
-                      value={signature}
-                      onChange={(e) => setSignature(e.target.value)}
-                    />
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="signerName">Your Name *</Label>
+                        <Input
+                          id="signerName"
+                          placeholder="Your full name"
+                          value={signerName}
+                          onChange={(e) => setSignerName(e.target.value)}
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="signerEmail">Your Email *</Label>
+                        <Input
+                          id="signerEmail"
+                          type="email"
+                          placeholder="your@email.com"
+                          value={signerEmail}
+                          onChange={(e) => setSignerEmail(e.target.value)}
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="signature">Sign Here *</Label>
+                      <div className="border border-slate-300 dark:border-slate-700 rounded-md">
+                        <SignatureCanvas
+                          ref={sigCanvas}
+                          penColor='black'
+                          canvasProps={{ width: 500, height: 150, className: 'sigCanvas bg-white dark:bg-slate-800 rounded-md' }}
+                        />
+                      </div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={clearSignature}
+                        className="mt-2"
+                      >
+                        Clear Signature
+                      </Button>
+                    </div>
                   </div>
                 )}
               </div>
@@ -332,7 +428,7 @@ export function OnboardingWizard({ steps }: OnboardingWizardProps) {
             onClick={handleNext}
             disabled={
               isSubmitting || 
-              (currentStep.step_type === 'contract' && !agreed)
+              (currentStep.step_type === 'contract' && (!agreed || (config.requireSignature && (sigCanvas.current?.isEmpty() || !signerName || !signerEmail))))
             }
           >
             {isSubmitting ? (

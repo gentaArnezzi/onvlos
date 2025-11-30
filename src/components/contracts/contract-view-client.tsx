@@ -5,12 +5,24 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { CheckCircle2, XCircle, Clock, FileText, FileSignature, Send, Eye, Building2, User } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { sendContract, signContract } from "@/actions/proposals";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/lib/i18n/context";
 import Link from "next/link";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import SignatureCanvas from 'react-signature-canvas';
 
 interface ContractViewClientProps {
   contract: any;
@@ -20,6 +32,11 @@ export function ContractViewClient({ contract }: ContractViewClientProps) {
   const router = useRouter();
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
+  const [showSignatureDialog, setShowSignatureDialog] = useState(false);
+  const [selectedPartyId, setSelectedPartyId] = useState<string | null>(null);
+  const [signerName, setSignerName] = useState("");
+  const [signerEmail, setSignerEmail] = useState("");
+  const sigCanvas = useRef<SignatureCanvas>(null);
 
   const isFullySigned = contract.fully_signed;
   const isSigned = contract.status === "signed";
@@ -47,20 +64,43 @@ export function ContractViewClient({ contract }: ContractViewClientProps) {
     }
   };
 
-  const handleSign = async (partyId: string) => {
-    if (!canSign) return;
+  const openSignatureDialog = (partyId: string) => {
+    const party = contract.parties.find((p: any) => p.id === partyId);
+    if (party) {
+      setSelectedPartyId(partyId);
+      setSignerName(party.name || "");
+      setSignerEmail(party.email || "");
+      setShowSignatureDialog(true);
+    }
+  };
+
+  const clearSignature = () => {
+    sigCanvas.current?.clear();
+  };
+
+  const handleSign = async () => {
+    if (!selectedPartyId || !canSign) return;
+
+    if (!signerName || !signerEmail) {
+      toast.error(t("contracts.nameEmailRequired"));
+      return;
+    }
+
+    if (sigCanvas.current?.isEmpty()) {
+      toast.error(t("contracts.pleaseSignToSign"));
+      return;
+    }
+
+    const signatureData = sigCanvas.current?.toDataURL() || "";
     
     setLoading(true);
     try {
-      const party = contract.parties.find((p: any) => p.id === partyId);
-      if (!party) {
-        toast.error(t("contracts.partyNotFound"));
-        return;
-      }
-      
-      const result = await signContract(contract.id, partyId, "", party.name, party.email);
+      const result = await signContract(contract.id, selectedPartyId, signatureData, signerName, signerEmail);
       if (result.success) {
         toast.success(result.fullySigned ? t("contracts.fullySignedSuccess") : t("contracts.signSuccess"));
+        setShowSignatureDialog(false);
+        setSelectedPartyId(null);
+        sigCanvas.current?.clear();
         router.refresh();
       } else {
         toast.error(result.error || t("contracts.signFailed"));
@@ -168,10 +208,30 @@ export function ContractViewClient({ contract }: ContractViewClientProps) {
                 </div>
                 <div className="flex items-center gap-3">
                   {party.signed ? (
-                    <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border-0">
-                      <CheckCircle2 className="h-3 w-3 mr-1" />
-                      {t("contracts.signed")}
-                    </Badge>
+                    <div className="flex flex-col items-end gap-2">
+                      <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border-0">
+                        <CheckCircle2 className="h-3 w-3 mr-1" />
+                        {t("contracts.signed")}
+                      </Badge>
+                      {party.signature_data && (
+                        <div className="mt-2">
+                          <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">
+                            {t("contracts.signature")}:
+                          </p>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={party.signature_data}
+                            alt="Signature"
+                            className="border border-slate-200 dark:border-slate-700 rounded-md max-w-[150px] h-auto"
+                          />
+                          {party.signed_at && (
+                            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                              {format(new Date(party.signed_at), "MMM d, yyyy HH:mm")}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   ) : (
                     <Badge className="bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400 border-0">
                       <Clock className="h-3 w-3 mr-1" />
@@ -179,15 +239,91 @@ export function ContractViewClient({ contract }: ContractViewClientProps) {
                     </Badge>
                   )}
                   {canSign && !party.signed && (
-                    <Button
-                      size="sm"
-                      onClick={() => handleSign(party.id)}
-                      disabled={loading}
-                      className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white"
-                    >
-                      <FileSignature className="h-4 w-4 mr-2" />
-                      {t("contracts.sign")}
-                    </Button>
+                    <>
+                      <Button
+                        size="sm"
+                        onClick={() => openSignatureDialog(party.id)}
+                        disabled={loading}
+                        className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white"
+                      >
+                        <FileSignature className="h-4 w-4 mr-2" />
+                        {t("contracts.sign")}
+                      </Button>
+                      {showSignatureDialog && selectedPartyId === party.id && (
+                        <Dialog open={true} onOpenChange={(open) => {
+                          if (!open) {
+                            setShowSignatureDialog(false);
+                            setSelectedPartyId(null);
+                            sigCanvas.current?.clear();
+                          }
+                        }}>
+                          <DialogContent className="sm:max-w-[500px] bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
+                            <DialogHeader>
+                              <DialogTitle>{t("contracts.signContract")}</DialogTitle>
+                              <DialogDescription>
+                                {t("contracts.signContractDescription")}
+                              </DialogDescription>
+                            </DialogHeader>
+                            <div className="grid gap-4 py-4">
+                              <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="signerName" className="text-right">
+                                  {t("contracts.enterYourName")}
+                                </Label>
+                                <Input
+                                  id="signerName"
+                                  value={signerName}
+                                  onChange={(e) => setSignerName(e.target.value)}
+                                  className="col-span-3 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
+                                  required
+                                />
+                              </div>
+                              <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="signerEmail" className="text-right">
+                                  {t("contracts.enterYourEmail")}
+                                </Label>
+                                <Input
+                                  id="signerEmail"
+                                  type="email"
+                                  value={signerEmail}
+                                  onChange={(e) => setSignerEmail(e.target.value)}
+                                  className="col-span-3 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
+                                  required
+                                />
+                              </div>
+                              <div className="grid grid-cols-4 items-center gap-4">
+                                <Label className="text-right">
+                                  {t("contracts.signHere")}
+                                </Label>
+                                <div className="col-span-3 border border-slate-300 dark:border-slate-700 rounded-md">
+                                  <SignatureCanvas
+                                    ref={sigCanvas}
+                                    penColor='black'
+                                    canvasProps={{ width: 400, height: 150, className: 'sigCanvas bg-white dark:bg-slate-800 rounded-md' }}
+                                  />
+                                </div>
+                              </div>
+                              <div className="flex justify-end col-span-4">
+                                <Button variant="outline" onClick={clearSignature} className="text-slate-900 dark:text-white border-slate-200 dark:border-slate-700">
+                                  {t("contracts.clearSignature")}
+                                </Button>
+                              </div>
+                            </div>
+                            <DialogFooter>
+                              <Button variant="outline" onClick={() => {
+                                setShowSignatureDialog(false);
+                                setSelectedPartyId(null);
+                                sigCanvas.current?.clear();
+                              }} className="text-slate-900 dark:text-white border-slate-200 dark:border-slate-700">
+                                {t("contracts.cancel")}
+                              </Button>
+                              <Button onClick={handleSign} disabled={loading || !signerName || !signerEmail || sigCanvas.current?.isEmpty()}>
+                                {t("contracts.confirmSignature")}
+                              </Button>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
+                      )}
+                    </>
                   )}
                 </div>
               </div>

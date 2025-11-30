@@ -57,7 +57,15 @@ export async function completeOnboardingStep(
   const progressData = (session.progress_data || {}) as any;
   progressData[`step_${stepIndex}`] = {
     completed: true,
-    data,
+    data: {
+      ...data,
+      // Store signature data if contract step
+      signature_data: stepType === 'contract' && data.signature_data ? data.signature_data : undefined,
+      signer_name: stepType === 'contract' && data.signer_name ? data.signer_name : undefined,
+      signer_email: stepType === 'contract' && data.signer_email ? data.signer_email : undefined,
+      contract_signed: stepType === 'contract' ? true : undefined,
+      signed_at: stepType === 'contract' ? new Date().toISOString() : undefined
+    },
     completedAt: new Date().toISOString()
   };
 
