@@ -1,12 +1,11 @@
-import { getProposalByIdOrSlug } from "@/actions/proposals";
+import { getContractByIdOrSlug } from "@/actions/proposals";
 import { notFound } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { getCurrencySymbol } from "@/lib/currency";
 import { format } from "date-fns";
-import { CheckCircle2, XCircle, Clock, FileText, Building2 } from "lucide-react";
-import { ProposalViewClient } from "@/components/proposals/proposal-view-client";
+import { CheckCircle2, XCircle, Clock, FileText, Building2, FileSignature } from "lucide-react";
+import { ContractViewClient } from "@/components/contracts/contract-view-client";
 import { t } from "@/lib/i18n/server";
 import { Language } from "@/lib/i18n/translations";
 import { LanguageProviderWrapper } from "@/components/language-provider-wrapper";
@@ -14,35 +13,36 @@ import { db } from "@/lib/db";
 import { workspaces, client_companies } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
-export default async function ProposalPage({ 
+export default async function ContractPage({ 
   params 
 }: { 
   params: Promise<{ id: string }> 
 }) {
   const { id } = await params;
-  const proposal = await getProposalByIdOrSlug(id);
+  const contract = await getContractByIdOrSlug(id);
 
-  if (!proposal) {
+  if (!contract) {
     notFound();
   }
 
-  // Get workspace from proposal to get correct language and currency settings
+  // Get workspace from contract to get correct language and currency settings
   const workspace = await db.query.workspaces.findFirst({
-    where: eq(workspaces.id, proposal.workspace_id)
+    where: eq(workspaces.id, contract.workspace_id)
   });
   
-  // Get client information
-  const client = await db.query.client_companies.findFirst({
-    where: eq(client_companies.id, proposal.client_id)
+  // Get client information (already included in contract, but ensure it exists)
+  const client = contract.client || await db.query.client_companies.findFirst({
+    where: eq(client_companies.id, contract.client_id)
   });
   
   const language = (workspace?.default_language as Language) || "en";
   // Always use workspace default currency, fallback to USD
   const currency = workspace?.default_currency || 'USD';
   const currencySymbol = getCurrencySymbol(currency);
-  const isExpired = proposal.valid_until && new Date(proposal.valid_until) < new Date();
-  const isAccepted = proposal.status === "accepted";
-  const isDeclined = proposal.status === "declined";
+  const isFullySigned = contract.fully_signed;
+  const isSigned = contract.status === "signed";
+  const isCancelled = contract.status === "cancelled";
+  const isCompleted = contract.status === "completed";
 
   return (
     <LanguageProviderWrapper defaultLanguage={language}>
@@ -57,7 +57,7 @@ export default async function ProposalPage({
                   <Building2 className="h-5 w-5 text-slate-600 dark:text-slate-400" />
                   <div>
                     <p className="text-sm text-slate-500 dark:text-slate-400">
-                      {t("proposals.client", language)}
+                      {t("contracts.client", language)}
                     </p>
                     <p className="font-semibold text-slate-900 dark:text-white">
                       {client.company_name || client.name}
@@ -75,49 +75,60 @@ export default async function ProposalPage({
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
-                  {proposal.title}
+                  {contract.title}
                 </h1>
                 <p className="text-slate-600 dark:text-slate-400">
-                  {proposal.proposal_number}
+                  {contract.contract_number}
                 </p>
               </div>
               <div className="flex items-center gap-2">
-                {isAccepted && (
+                {isFullySigned && (
                   <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border-0">
                     <CheckCircle2 className="h-3 w-3 mr-1" />
-                    {t("proposals.status.accepted", language)}
+                    {t("contracts.status.signed", language)}
                   </Badge>
                 )}
-                {isDeclined && (
+                {isSigned && !isFullySigned && (
+                  <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border-0">
+                    <FileSignature className="h-3 w-3 mr-1" />
+                    {t("contracts.status.signed", language)}
+                  </Badge>
+                )}
+                {isCancelled && (
                   <Badge className="bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border-0">
                     <XCircle className="h-3 w-3 mr-1" />
-                    {t("proposals.status.declined", language)}
+                    {t("contracts.status.cancelled", language)}
                   </Badge>
                 )}
-                {isExpired && !isAccepted && !isDeclined && (
-                  <Badge className="bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 border-0">
-                    <Clock className="h-3 w-3 mr-1" />
-                    {t("proposals.status.expired", language)}
+                {isCompleted && (
+                  <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border-0">
+                    <CheckCircle2 className="h-3 w-3 mr-1" />
+                    {t("contracts.status.completed", language)}
                   </Badge>
                 )}
-                {!isAccepted && !isDeclined && !isExpired && (
-                  <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border-0">
+                {contract.status === "draft" && (
+                  <Badge className="bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400 border-0">
                     <FileText className="h-3 w-3 mr-1" />
-                    {proposal.status === "draft" ? t("proposals.status.draft", language) : t("proposals.status.active", language)}
+                    {t("contracts.status.draft", language)}
+                  </Badge>
+                )}
+                {(contract.status === "sent" || contract.status === "viewed") && !isSigned && !isFullySigned && (
+                  <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border-0">
+                    <Clock className="h-3 w-3 mr-1" />
+                    {contract.status === "sent" ? t("contracts.status.sent", language) : t("contracts.status.viewed", language)}
                   </Badge>
                 )}
               </div>
             </div>
           </div>
 
-          {/* Proposal Content */}
-          <ProposalViewClient 
-            proposal={{
-              ...proposal,
-              items: Array.isArray(proposal.items) ? proposal.items : [],
-              content: proposal.content || { sections: [] }
+          {/* Contract Content */}
+          <ContractViewClient 
+            contract={{
+              ...contract,
+              content: contract.content || { sections: [] },
+              parties: Array.isArray(contract.parties) ? contract.parties : []
             }}
-            currencySymbol={currencySymbol}
           />
         </div>
       </div>
