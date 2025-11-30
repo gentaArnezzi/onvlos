@@ -16,6 +16,7 @@ import {
 import { Plus, Trash2, Save, Send, Loader2 } from "lucide-react";
 import { createProposal, sendProposal } from "@/actions/proposals";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "@/lib/i18n/context";
 
 interface ProposalItem {
   name: string;
@@ -35,6 +36,7 @@ interface ProposalEditorProps {
 
 export function ProposalEditor({ clients, currencySymbol = "$" }: ProposalEditorProps) {
   const router = useRouter();
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [sendingProposal, setSendingProposal] = useState(false);
   const [proposalId, setProposalId] = useState<string | null>(null);
@@ -153,17 +155,17 @@ export function ProposalEditor({ clients, currencySymbol = "$" }: ProposalEditor
       {/* Client Selection */}
       <Card className="bg-white border-slate-200 shadow-sm">
         <CardHeader>
-          <CardTitle className="text-slate-900">Client Information</CardTitle>
+          <CardTitle className="text-slate-900">{t("proposals.clientInformation")}</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-4">
           <div className="grid gap-2">
-            <Label htmlFor="client" className="text-slate-900">Select Client *</Label>
+            <Label htmlFor="client" className="text-slate-900">{t("proposals.selectClientRequired")}</Label>
             <Select
               value={formData.client_id}
               onValueChange={(value) => setFormData({ ...formData, client_id: value })}
             >
               <SelectTrigger className="bg-white border-slate-200 text-slate-900">
-                <SelectValue placeholder="Choose a client" />
+                <SelectValue placeholder={t("proposals.chooseClient")} />
               </SelectTrigger>
               <SelectContent className="bg-white border-slate-200">
                 {clients.map((client) => (
@@ -176,18 +178,18 @@ export function ProposalEditor({ clients, currencySymbol = "$" }: ProposalEditor
           </div>
           
           <div className="grid gap-2">
-            <Label htmlFor="title" className="text-slate-900">Proposal Title *</Label>
+            <Label htmlFor="title" className="text-slate-900">{t("proposals.proposalTitleRequired")}</Label>
             <Input
               id="title"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              placeholder="e.g., Website Development Proposal"
+              placeholder={t("proposals.proposalTitlePlaceholder")}
               className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
             />
           </div>
           
           <div className="grid gap-2">
-            <Label htmlFor="valid_days" className="text-slate-900">Valid For (days)</Label>
+            <Label htmlFor="valid_days" className="text-slate-900">{t("proposals.validFor")}</Label>
             <Input
               id="valid_days"
               type="number"
@@ -202,40 +204,40 @@ export function ProposalEditor({ clients, currencySymbol = "$" }: ProposalEditor
       {/* Proposal Content */}
       <Card className="bg-white border-slate-200 shadow-sm">
         <CardHeader>
-          <CardTitle className="text-slate-900">Proposal Content</CardTitle>
+          <CardTitle className="text-slate-900">{t("proposals.proposalContent")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-2">
-            <Label htmlFor="introduction" className="text-slate-900">Introduction</Label>
+            <Label htmlFor="introduction" className="text-slate-900">{t("proposals.introduction")}</Label>
             <Textarea
               id="introduction"
               value={formData.introduction}
               onChange={(e) => setFormData({ ...formData, introduction: e.target.value })}
-              placeholder="Brief introduction about the proposal..."
+              placeholder={t("proposals.introductionPlaceholder")}
               rows={4}
               className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
             />
           </div>
           
           <div className="grid gap-2">
-            <Label htmlFor="scope" className="text-slate-900">Scope of Work</Label>
+            <Label htmlFor="scope" className="text-slate-900">{t("proposals.scopeOfWork")}</Label>
             <Textarea
               id="scope"
               value={formData.scope}
               onChange={(e) => setFormData({ ...formData, scope: e.target.value })}
-              placeholder="Detailed scope of work..."
+              placeholder={t("proposals.scopeOfWorkPlaceholder")}
               rows={6}
               className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
             />
           </div>
           
           <div className="grid gap-2">
-            <Label htmlFor="timeline" className="text-slate-900">Timeline</Label>
+            <Label htmlFor="timeline" className="text-slate-900">{t("proposals.timeline")}</Label>
             <Textarea
               id="timeline"
               value={formData.timeline}
               onChange={(e) => setFormData({ ...formData, timeline: e.target.value })}
-              placeholder="Project timeline and milestones..."
+              placeholder={t("proposals.timelinePlaceholder")}
               rows={4}
               className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
             />
@@ -246,32 +248,32 @@ export function ProposalEditor({ clients, currencySymbol = "$" }: ProposalEditor
       {/* Pricing */}
       <Card className="bg-white border-slate-200 shadow-sm">
         <CardHeader>
-          <CardTitle className="text-slate-900">Pricing</CardTitle>
+          <CardTitle className="text-slate-900">{t("proposals.pricing")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {items.map((item, index) => (
               <div key={index} className="grid grid-cols-12 gap-2 items-end">
                 <div className="col-span-4">
-                  <Label className="text-slate-900">Item Name</Label>
+                  <Label className="text-slate-900">{t("proposals.itemName")}</Label>
                   <Input
                     value={item.name}
                     onChange={(e) => updateItem(index, 'name', e.target.value)}
-                    placeholder="Service/Product"
+                    placeholder={t("proposals.serviceProduct")}
                     className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
                   />
                 </div>
                 <div className="col-span-3">
-                  <Label className="text-slate-900">Description</Label>
+                  <Label className="text-slate-900">{t("proposals.description")}</Label>
                   <Input
                     value={item.description}
                     onChange={(e) => updateItem(index, 'description', e.target.value)}
-                    placeholder="Brief description"
+                    placeholder={t("proposals.descriptionPlaceholder")}
                     className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
                   />
                 </div>
                 <div className="col-span-2">
-                  <Label className="text-slate-900">Quantity</Label>
+                  <Label className="text-slate-900">{t("proposals.quantity")}</Label>
                   <Input
                     type="number"
                     value={item.quantity}
@@ -281,7 +283,7 @@ export function ProposalEditor({ clients, currencySymbol = "$" }: ProposalEditor
                   />
                 </div>
                 <div className="col-span-2">
-                  <Label className="text-slate-900">Unit Price</Label>
+                  <Label className="text-slate-900">{t("proposals.unitPrice")}</Label>
                   <Input
                     type="number"
                     value={item.unit_price}
@@ -313,12 +315,12 @@ export function ProposalEditor({ clients, currencySymbol = "$" }: ProposalEditor
               className="w-full border-slate-200 text-slate-900 hover:bg-slate-100"
             >
               <Plus className="h-4 w-4 mr-2" />
-              Add Item
+              {t("proposals.addItem")}
             </Button>
             
             <div className="text-right pt-4 border-t border-slate-200">
               <div className="text-2xl font-bold text-slate-900">
-                Total: {currencySymbol}{calculateTotal().toFixed(2)}
+                {t("proposals.total")}: {currencySymbol}{calculateTotal().toFixed(2)}
               </div>
             </div>
           </div>
@@ -328,13 +330,13 @@ export function ProposalEditor({ clients, currencySymbol = "$" }: ProposalEditor
       {/* Terms & Conditions */}
       <Card className="bg-white border-slate-200 shadow-sm">
         <CardHeader>
-          <CardTitle className="text-slate-900">Terms & Conditions</CardTitle>
+          <CardTitle className="text-slate-900">{t("proposals.termsConditions")}</CardTitle>
         </CardHeader>
         <CardContent>
           <Textarea
             value={formData.terms}
             onChange={(e) => setFormData({ ...formData, terms: e.target.value })}
-            placeholder="Terms and conditions..."
+            placeholder={t("proposals.termsPlaceholder")}
             rows={6}
             className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-500"
           />
@@ -348,7 +350,7 @@ export function ProposalEditor({ clients, currencySymbol = "$" }: ProposalEditor
           onClick={() => router.push("/dashboard/proposals")}
           className="border-slate-200 text-slate-900 hover:bg-slate-100"
         >
-          Cancel
+          {t("proposals.cancel")}
         </Button>
         <Button
           onClick={() => handleSave(false)}
@@ -358,12 +360,12 @@ export function ProposalEditor({ clients, currencySymbol = "$" }: ProposalEditor
           {loading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Saving...
+              {t("proposals.saving")}
             </>
           ) : (
             <>
               <Save className="mr-2 h-4 w-4" />
-              Save Draft
+              {t("proposals.saveDraft")}
             </>
           )}
         </Button>
@@ -375,12 +377,12 @@ export function ProposalEditor({ clients, currencySymbol = "$" }: ProposalEditor
           {sendingProposal ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Sending...
+              {t("proposals.sending")}
             </>
           ) : (
             <>
               <Send className="mr-2 h-4 w-4" />
-              Save & Send
+              {t("proposals.saveSend")}
             </>
           )}
         </Button>
