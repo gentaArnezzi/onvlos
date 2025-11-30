@@ -15,6 +15,7 @@ import {
   Zap,
   CheckSquare,
   Sparkles,
+  Workflow,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -33,6 +34,13 @@ const routes = [
     href: "/dashboard/clients",
     color: "text-[#0A33C6]",
     gradient: "from-[#0A33C6] to-[#0A33C6]",
+  },
+  {
+    label: "Flows",
+    icon: Workflow,
+    href: "/dashboard/flows",
+    color: "text-purple-500",
+    gradient: "from-purple-500 to-purple-600",
   },
   {
     label: "Funnels",

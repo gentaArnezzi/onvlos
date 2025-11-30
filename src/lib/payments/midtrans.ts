@@ -81,6 +81,8 @@ export async function createPaymentLink(params: CreatePaymentLinkParams) {
         error: params.cancelUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/portal/payment/error`,
       },
       custom_field1: params.invoiceId, // Store invoice ID for webhook
+      // Enable QRIS payment method
+      enabled_payments: ['qris'],
     };
 
     const transaction = await snap.createTransaction(parameter);
@@ -95,6 +97,66 @@ export async function createPaymentLink(params: CreatePaymentLinkParams) {
     return {
       success: false,
       error: error instanceof Error ? error.message : "Failed to create payment link",
+    };
+  }
+}
+
+// Create QRIS payment specifically for Funnels
+export async function createQRISPayment(params: {
+  orderId: string;
+  amount: number;
+  customerDetails: {
+    first_name: string;
+    last_name?: string;
+    email: string;
+    phone?: string;
+  };
+  itemDetails: Array<{
+    id: string;
+    price: number;
+    quantity: number;
+    name: string;
+  }>;
+  metadata?: any;
+}) {
+  try {
+    const core = getMidtransCore();
+
+    const parameter = {
+      payment_type: "qris",
+      transaction_details: {
+        order_id: params.orderId,
+        gross_amount: params.amount,
+      },
+      item_details: params.itemDetails,
+      customer_details: {
+        first_name: params.customerDetails.first_name,
+        last_name: params.customerDetails.last_name || "",
+        email: params.customerDetails.email,
+        phone: params.customerDetails.phone || "",
+      },
+      qris: {
+        acquirer: "gopay", // or "shopeepay", "dana", etc.
+      },
+      custom_field1: JSON.stringify(params.metadata || {}),
+    };
+
+    const chargeResponse = await core.transaction.charge(parameter);
+    
+    return {
+      success: true,
+      transaction_id: chargeResponse.transaction_id,
+      order_id: chargeResponse.order_id,
+      qr_code: chargeResponse.qr_code, // QRIS QR code string
+      qr_code_url: chargeResponse.qr_code_url, // QRIS QR code image URL
+      status_code: chargeResponse.status_code,
+      status_message: chargeResponse.status_message,
+    };
+  } catch (error) {
+    console.error("Midtrans QRIS payment creation error:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to create QRIS payment",
     };
   }
 }

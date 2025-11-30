@@ -67,7 +67,7 @@ export async function getInvoices(search?: string, status?: string, page: number
 }
 
 export async function createInvoice(data: {
-    client_id: string;
+    client_id?: string;
     due_date: Date;
     items: { name: string; quantity: number; unit_price: number }[];
     currency?: string;
@@ -76,6 +76,11 @@ export async function createInvoice(data: {
     tax_rate?: number;
     notes?: string;
     status?: 'draft' | 'sent';
+    invoice_type?: 'single' | 'retainer';
+    retainer_schedule?: { frequency: 'weekly' | 'monthly' | 'yearly'; interval: number };
+    autopay_enabled?: boolean;
+    is_public?: boolean;
+    redirect_url?: string;
 }) {
     try {
         const session = await getSession();
@@ -118,12 +123,16 @@ export async function createInvoice(data: {
         const count = existingInvoices.length;
         const invoiceNumber = `INV-${String(count + 1).padStart(3, '0')}`;
         
+        // Generate public URL if is_public
+        const publicUrl = data.is_public ? `invoice-${crypto.randomUUID()}` : null;
+        
         // Transaction
         await db.transaction(async (tx) => {
             const [newInvoice] = await tx.insert(invoices).values({
                 workspace_id: workspace.id,
-                client_id: data.client_id,
+                client_id: data.client_id || null,
                 invoice_number: invoiceNumber,
+                invoice_type: data.invoice_type || 'single',
                 currency: currency,
                 due_date: data.due_date instanceof Date 
                     ? data.due_date.toISOString().split('T')[0] 
@@ -137,6 +146,11 @@ export async function createInvoice(data: {
                 total_amount: totalAmount.toString(),
                 notes: data.notes || null,
                 status: data.status || 'draft',
+                is_public: data.is_public || false,
+                public_url: publicUrl,
+                retainer_schedule: data.retainer_schedule ? JSON.stringify(data.retainer_schedule) : null,
+                autopay_enabled: data.autopay_enabled || false,
+                redirect_url: data.redirect_url || null,
                 created_by_user_id: session.user.id,
             }).returning();
             
@@ -332,5 +346,146 @@ export async function duplicateInvoice(invoiceId: string) {
     } catch (error) {
         console.error("Failed to duplicate invoice:", error);
         return { success: false, error: "Failed to duplicate invoice" };
+    }
+}
+
+export async function getPublicInvoice(publicUrl: string) {
+    try {
+        const invoice = await db.query.invoices.findFirst({
+            where: and(
+                eq(invoices.public_url, publicUrl),
+                eq(invoices.is_public, true)
+            )
+        });
+
+        if (!invoice) return null;
+
+        const items = await db.query.invoice_items.findMany({
+            where: eq(invoice_items.invoice_id, invoice.id)
+        });
+
+        const client = invoice.client_id ? await db.query.client_companies.findFirst({
+            where: eq(client_companies.id, invoice.client_id)
+        }) : null;
+
+        return {
+            ...invoice,
+            items,
+            client
+        };
+    } catch (error) {
+        console.error("Failed to get public invoice:", error);
+        return null;
+    }
+}
+
+export async function generateInvoicePDF(invoiceId: string) {
+    try {
+        const session = await getSession();
+        if (!session) {
+            return { success: false, pdf: null, error: "Not authenticated" };
+        }
+
+        const invoice = await getInvoiceById(invoiceId);
+        if (!invoice) {
+            return { success: false, pdf: null, error: "Invoice not found" };
+        }
+
+        // TODO: Implement actual PDF generation using a library like pdfkit, jsPDF, or puppeteer
+        // For now, return a placeholder
+        const pdfData = `PDF for invoice ${invoice.invoice_number}`;
+        
+        return { success: true, pdf: pdfData };
+    } catch (error) {
+        console.error("Failed to generate PDF:", error);
+        return { success: false, pdf: null, error: "Failed to generate PDF" };
+    }
+}
+
+export async function sendInvoiceEmail(invoiceId: string, recipientEmail: string) {
+    try {
+        const session = await getSession();
+        if (!session) {
+            return { success: false, error: "Not authenticated" };
+        }
+
+        const invoice = await getInvoiceById(invoiceId);
+        if (!invoice) {
+            return { success: false, error: "Invoice not found" };
+        }
+
+        // Generate public URL if not exists and make it public
+        let publicUrl = invoice.public_url;
+        if (!publicUrl) {
+            publicUrl = `invoice-${crypto.randomUUID()}`;
+            await db.update(invoices)
+                .set({ 
+                    public_url: publicUrl,
+                    is_public: true
+                })
+                .where(eq(invoices.id, invoiceId));
+        }
+
+        const invoiceLink = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/invoice/${publicUrl}`;
+
+        // Send email
+        await sendEmail({
+            to: recipientEmail,
+            subject: `Invoice ${invoice.invoice_number}`,
+            html: `
+                <h2>Invoice ${invoice.invoice_number}</h2>
+                <p>Dear ${invoice.client?.name || 'Client'},</p>
+                <p>Please find your invoice attached.</p>
+                <p><a href="${invoiceLink}">View Invoice Online</a></p>
+                <p>Amount: ${invoice.currency} ${invoice.total_amount}</p>
+                <p>Due Date: ${invoice.due_date}</p>
+            `,
+        });
+
+        // Update status to 'sent' if it's draft
+        if (invoice.status === 'draft') {
+            await db.update(invoices)
+                .set({ status: 'sent' })
+                .where(eq(invoices.id, invoiceId));
+        }
+
+        revalidatePath("/dashboard/invoices");
+        return { success: true };
+    } catch (error) {
+        console.error("Failed to send invoice email:", error);
+        return { success: false, error: "Failed to send invoice email" };
+    }
+}
+
+export async function createStripePaymentIntent(invoiceId: string) {
+    try {
+        const session = await getSession();
+        if (!session) {
+            return { success: false, clientSecret: null, error: "Not authenticated" };
+        }
+
+        const invoice = await getInvoiceById(invoiceId);
+        if (!invoice) {
+            return { success: false, clientSecret: null, error: "Invoice not found" };
+        }
+
+        // TODO: Implement actual Stripe Payment Intent creation
+        // This requires Stripe API key configuration
+        // const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+        // const paymentIntent = await stripe.paymentIntents.create({
+        //     amount: Math.round(parseFloat(invoice.total_amount) * 100), // Convert to cents
+        //     currency: invoice.currency?.toLowerCase() || 'usd',
+        //     metadata: { invoice_id: invoiceId },
+        // });
+
+        // For now, return a placeholder
+        return { 
+            success: true, 
+            clientSecret: `pi_mock_${invoiceId}`,
+            error: null 
+        };
+    } catch (error) {
+        console.error("Failed to create payment intent:", error);
+        return { success: false, clientSecret: null, error: "Failed to create payment intent" };
     }
 }

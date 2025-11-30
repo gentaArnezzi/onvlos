@@ -2,7 +2,7 @@
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, User, FileText } from "lucide-react";
+import { Calendar, Clock, User, FileText, Repeat, Workflow } from "lucide-react";
 import { format } from "date-fns";
 import { useTranslation } from "@/lib/i18n/context";
 
@@ -94,6 +94,32 @@ export function TaskDetailDialog({ task, open, onOpenChange }: TaskDetailDialogP
                                 </div>
                                 <span className="font-primary text-[#02041D]">{task.client_name}</span>
                             </div>
+                        </div>
+                    )}
+
+                    {/* Flow */}
+                    {task.flow_id && (
+                        <div>
+                            <div className="flex items-center gap-2 mb-2">
+                                <Workflow className="h-4 w-4 font-primary text-[#606170]" />
+                                <p className="text-sm font-medium font-primary text-[#606170]">{t('flows.title', 'Flow')}</p>
+                            </div>
+                            <p className="font-primary text-[#02041D] text-sm pl-6">
+                                {task.flow_name || 'Flow'}
+                            </p>
+                        </div>
+                    )}
+
+                    {/* Recurring */}
+                    {task.is_recurring && (
+                        <div>
+                            <div className="flex items-center gap-2 mb-2">
+                                <Repeat className="h-4 w-4 font-primary text-[#606170]" />
+                                <p className="text-sm font-medium font-primary text-[#606170]">{t('tasks.recurringTask', 'Recurring Task')}</p>
+                            </div>
+                            <p className="font-primary text-[#02041D] text-sm pl-6">
+                                {task.recurring_pattern ? JSON.parse(task.recurring_pattern).type : 'Weekly'}
+                            </p>
                         </div>
                     )}
 

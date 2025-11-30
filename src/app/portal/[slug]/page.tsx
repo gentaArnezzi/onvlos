@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, Circle, FileText, Receipt, MessageSquare, Calendar, TrendingUp, Clock, AlertCircle, FileSignature, FileCheck } from "lucide-react";
+import { CheckCircle2, Circle, FileText, Receipt, MessageSquare, Calendar, TrendingUp, Clock, AlertCircle, FileSignature, FileCheck, Brain, Image } from "lucide-react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { getConversationForPortal } from "@/actions/chat";
@@ -74,6 +74,12 @@ export default async function PortalPage({ params }: { params: Promise<{ slug: s
             </TabsTrigger>
             <TabsTrigger value="contracts" className="flex items-center gap-2 data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white font-primary text-[#606170] whitespace-nowrap flex-shrink-0">
                 <FileSignature className="h-4 w-4" /> Contracts
+            </TabsTrigger>
+            <TabsTrigger value="brain" className="flex items-center gap-2 data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white font-primary text-[#606170] whitespace-nowrap flex-shrink-0">
+                <Brain className="h-4 w-4" /> Brain
+            </TabsTrigger>
+            <TabsTrigger value="media" className="flex items-center gap-2 data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white font-primary text-[#606170] whitespace-nowrap flex-shrink-0">
+                <Image className="h-4 w-4" /> Media
             </TabsTrigger>
         </TabsList>
 

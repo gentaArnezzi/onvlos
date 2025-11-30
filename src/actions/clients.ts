@@ -233,6 +233,7 @@ export async function createClient(data: {
     await db.insert(conversations).values({
         workspace_id: workspace.id,
         client_space_id: newSpace.id,
+        chat_type: "client_external",
         title: "General Chat"
     });
 

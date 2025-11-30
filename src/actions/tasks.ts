@@ -2,12 +2,12 @@
 
 import { db } from "@/lib/db";
 import { tasks, client_companies, workspaces } from "@/lib/db/schema";
-import { desc, eq, and, sql } from "drizzle-orm";
+import { desc, eq, and, sql, or, isNull } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { getSession } from "@/lib/get-session";
 import { sendEmail } from "@/lib/email";
 
-export async function getTasks(search?: string, status?: string, page: number = 1, limit: number = 20) {
+export async function getTasks(search?: string, status?: string, flowId?: string, clientId?: string, assigneeId?: string, page: number = 1, limit: number = 20) {
     try {
         const session = await getSession();
         if (!session) return { tasks: [], total: 0, totalPages: 0 };
@@ -22,6 +22,19 @@ export async function getTasks(search?: string, status?: string, page: number = 
 
         if (status && status !== 'all') {
             conditions.push(eq(tasks.status, status));
+        }
+
+        if (flowId) {
+            conditions.push(eq(tasks.flow_id, flowId));
+        }
+
+        if (clientId) {
+            conditions.push(eq(tasks.client_id, clientId));
+        }
+
+        if (assigneeId) {
+            // Filter by assignee (assignee_ids is JSON array)
+            conditions.push(sql`${tasks.assignee_ids}::text LIKE ${`%"${assigneeId}"%`}`);
         }
 
         if (search) {
@@ -44,13 +57,21 @@ export async function getTasks(search?: string, status?: string, page: number = 
             description: tasks.description,
             status: tasks.status,
             priority: tasks.priority,
+            start_date: tasks.start_date,
             due_date: tasks.due_date,
             client_id: tasks.client_id,
+            flow_id: tasks.flow_id,
+            parent_task_id: tasks.parent_task_id,
+            is_recurring: tasks.is_recurring,
+            recurring_pattern: tasks.recurring_pattern,
+            assignee_ids: tasks.assignee_ids,
             client_name: client_companies.name,
+            flow_name: flows.name,
             created_at: tasks.created_at
         })
             .from(tasks)
             .leftJoin(client_companies, eq(tasks.client_id, client_companies.id))
+            .leftJoin(flows, eq(tasks.flow_id, flows.id))
             .where(and(...conditions))
             .orderBy(desc(tasks.created_at))
             .limit(limit)
@@ -65,10 +86,16 @@ export async function getTasks(search?: string, status?: string, page: number = 
 
 export async function createTask(data: {
     title: string;
-    client_id: string;
+    client_id?: string;
+    flow_id?: string;
     priority: string;
+    start_date?: Date;
     due_date?: Date;
     description?: string;
+    assignee_ids?: string[];
+    tags?: string[];
+    is_recurring?: boolean;
+    recurring_pattern?: any;
 }) {
     try {
         const session = await getSession();
@@ -83,10 +110,16 @@ export async function createTask(data: {
         const [newTask] = await db.insert(tasks).values({
             workspace_id: workspace.id,
             title: data.title,
+            flow_id: data.flow_id || null,
             client_id: data.client_id || null,
             priority: data.priority,
+            start_date: data.start_date ? data.start_date.toISOString().split('T')[0] : null,
             due_date: data.due_date ? data.due_date.toISOString().split('T')[0] : null,
             description: data.description,
+            assignee_ids: data.assignee_ids ? JSON.stringify(data.assignee_ids) : null,
+            tags: data.tags ? JSON.stringify(data.tags) : null,
+            is_recurring: data.is_recurring || false,
+            recurring_pattern: data.recurring_pattern ? JSON.stringify(data.recurring_pattern) : null,
             status: "todo"
         }).returning();
 

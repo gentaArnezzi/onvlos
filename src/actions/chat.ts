@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { conversations, messages, client_spaces, client_companies, users } from "@/lib/db/schema";
+import { conversations, messages, client_spaces, client_companies, users, flows, message_reads } from "@/lib/db/schema";
 import { eq, asc, desc, and } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { getOrCreateWorkspace } from "@/actions/workspace";
@@ -36,6 +36,7 @@ export async function getConversation(clientSpaceId: string) {
              const [newConv] = await db.insert(conversations).values({
                  workspace_id: workspace.id,
                  client_space_id: clientSpaceId,
+                 chat_type: "client_external",
                  title: "General Chat"
              }).returning();
              conversation = newConv;
@@ -158,6 +159,7 @@ export async function getConversationForPortal(clientSpaceId: string) {
             const [newConv] = await db.insert(conversations).values({
                 workspace_id: clientSpace.workspace_id,
                 client_space_id: clientSpaceId,
+                chat_type: "client_external",
                 title: "General Chat"
             }).returning();
             conversation = newConv;
@@ -286,11 +288,18 @@ export async function sendMessageFromPortal(conversationId: string, content: str
         }
 
         try {
-            const [newMessage] = await db.insert(messages).values({
+            const insertResult = await db.insert(messages).values({
                 conversation_id: conversationId,
                 user_id: portalUser.id,
                 content: content.trim()
             }).returning();
+            
+            const newMessage = (Array.isArray(insertResult) ? insertResult[0] : insertResult) as typeof messages.$inferSelect | undefined;
+            
+            if (!newMessage) {
+                console.error("sendMessageFromPortal: Failed to insert message - no message returned");
+                return { success: false, error: "Failed to save message" };
+            }
             
             // Broadcast to socket if available (for real-time updates)
             try {
@@ -321,5 +330,368 @@ export async function sendMessageFromPortal(conversationId: string, content: str
     } catch (error) {
         console.error("Error sending message from portal:", error);
         return { success: false, error: "Failed to send message" };
+    }
+}
+
+export async function getConversationForFlow(flowId: string) {
+    try {
+        const session = await getSession();
+        if (!session) return null;
+
+        const workspace = await getOrCreateWorkspace();
+        if (!workspace) return null;
+
+        // Verify flow belongs to workspace
+        const flow = await db.query.flows.findFirst({
+            where: and(
+                eq(flows.id, flowId),
+                eq(flows.workspace_id, workspace.id)
+            )
+        });
+
+        if (!flow) return null;
+
+        // Find or create conversation for flow
+        let conversation = await db.query.conversations.findFirst({
+            where: and(
+                eq(conversations.flow_id, flowId),
+                eq(conversations.chat_type, "flow"),
+                eq(conversations.workspace_id, workspace.id)
+            )
+        });
+
+        if (!conversation) {
+            // Auto-create conversation if it doesn't exist
+            const [newConv] = await db.insert(conversations).values({
+                workspace_id: workspace.id,
+                flow_id: flowId,
+                chat_type: "flow",
+                title: `${flow.name} Chat`
+            }).returning();
+            conversation = newConv;
+        }
+
+        const msgs = await db.select({
+            id: messages.id,
+            content: messages.content,
+            created_at: messages.created_at,
+            user_id: messages.user_id,
+            user_name: users.name,
+            user_image: users.image
+        })
+        .from(messages)
+        .leftJoin(users, eq(messages.user_id, users.id))
+        .where(eq(messages.conversation_id, conversation.id))
+        .orderBy(asc(messages.created_at));
+
+        return { conversation, messages: msgs };
+    } catch (error) {
+        console.error("Error fetching flow conversation:", error);
+        return null;
+    }
+}
+
+// Star a message
+export async function starMessage(messageId: string) {
+    try {
+        const session = await getSession();
+        if (!session) {
+            return { success: false, error: "Not authenticated" };
+        }
+
+        const workspace = await getOrCreateWorkspace();
+        if (!workspace) {
+            return { success: false, error: "Workspace not found" };
+        }
+
+        // Verify message exists and belongs to workspace
+        const message = await db.select({
+            id: messages.id,
+            conversation_id: messages.conversation_id,
+        })
+        .from(messages)
+        .where(eq(messages.id, messageId))
+        .limit(1);
+
+        if (!message[0]) {
+            return { success: false, error: "Message not found" };
+        }
+
+        // Verify conversation belongs to workspace
+        const conversation = await db.query.conversations.findFirst({
+            where: and(
+                eq(conversations.id, message[0].conversation_id),
+                eq(conversations.workspace_id, workspace.id)
+            ),
+        });
+
+        if (!conversation) {
+            return { success: false, error: "Message not found" };
+        }
+
+        await db.update(messages)
+            .set({ is_starred: true })
+            .where(eq(messages.id, messageId));
+
+        revalidatePath("/dashboard/chat");
+        return { success: true };
+    } catch (error) {
+        console.error("Error starring message:", error);
+        return { success: false, error: "Failed to star message" };
+    }
+}
+
+// Unstar a message
+export async function unstarMessage(messageId: string) {
+    try {
+        const session = await getSession();
+        if (!session) {
+            return { success: false, error: "Not authenticated" };
+        }
+
+        const workspace = await getOrCreateWorkspace();
+        if (!workspace) {
+            return { success: false, error: "Workspace not found" };
+        }
+
+        await db.update(messages)
+            .set({ is_starred: false })
+            .where(eq(messages.id, messageId));
+
+        revalidatePath("/dashboard/chat");
+        return { success: true };
+    } catch (error) {
+        console.error("Error unstarring message:", error);
+        return { success: false, error: "Failed to unstar message" };
+    }
+}
+
+// Pin a message
+export async function pinMessage(messageId: string) {
+    try {
+        const session = await getSession();
+        if (!session) {
+            return { success: false, error: "Not authenticated" };
+        }
+
+        const workspace = await getOrCreateWorkspace();
+        if (!workspace) {
+            return { success: false, error: "Workspace not found" };
+        }
+
+        // Verify message exists and belongs to workspace
+        const message = await db.select({
+            id: messages.id,
+            conversation_id: messages.conversation_id,
+        })
+        .from(messages)
+        .where(eq(messages.id, messageId))
+        .limit(1);
+
+        if (!message[0]) {
+            return { success: false, error: "Message not found" };
+        }
+
+        // Verify conversation belongs to workspace
+        const conversation = await db.query.conversations.findFirst({
+            where: and(
+                eq(conversations.id, message[0].conversation_id),
+                eq(conversations.workspace_id, workspace.id)
+            ),
+        });
+
+        if (!conversation) {
+            return { success: false, error: "Message not found" };
+        }
+
+        await db.update(messages)
+            .set({ is_pinned: true })
+            .where(eq(messages.id, messageId));
+
+        revalidatePath("/dashboard/chat");
+        return { success: true };
+    } catch (error) {
+        console.error("Error pinning message:", error);
+        return { success: false, error: "Failed to pin message" };
+    }
+}
+
+// Unpin a message
+export async function unpinMessage(messageId: string) {
+    try {
+        const session = await getSession();
+        if (!session) {
+            return { success: false, error: "Not authenticated" };
+        }
+
+        const workspace = await getOrCreateWorkspace();
+        if (!workspace) {
+            return { success: false, error: "Workspace not found" };
+        }
+
+        await db.update(messages)
+            .set({ is_pinned: false })
+            .where(eq(messages.id, messageId));
+
+        revalidatePath("/dashboard/chat");
+        return { success: true };
+    } catch (error) {
+        console.error("Error unpinning message:", error);
+        return { success: false, error: "Failed to unpin message" };
+    }
+}
+
+// Forward a message to another conversation
+export async function forwardMessage(messageId: string, targetConversationId: string) {
+    try {
+        const session = await getSession();
+        if (!session) {
+            return { success: false, error: "Not authenticated" };
+        }
+
+        const workspace = await getOrCreateWorkspace();
+        if (!workspace) {
+            return { success: false, error: "Workspace not found" };
+        }
+
+        // Get original message with user info
+        const originalMessageResult = await db.select({
+            id: messages.id,
+            content: messages.content,
+            conversation_id: messages.conversation_id,
+            user_id: messages.user_id,
+            user_name: users.name,
+        })
+        .from(messages)
+        .leftJoin(users, eq(messages.user_id, users.id))
+        .where(eq(messages.id, messageId))
+        .limit(1);
+
+        if (!originalMessageResult[0]) {
+            return { success: false, error: "Message not found" };
+        }
+
+        const originalMessage = originalMessageResult[0];
+
+        // Verify original message's conversation belongs to workspace
+        const originalConversation = await db.query.conversations.findFirst({
+            where: and(
+                eq(conversations.id, originalMessage.conversation_id),
+                eq(conversations.workspace_id, workspace.id)
+            ),
+        });
+
+        if (!originalConversation) {
+            return { success: false, error: "Message not found" };
+        }
+
+        // Verify target conversation exists and belongs to workspace
+        const targetConversation = await db.query.conversations.findFirst({
+            where: and(
+                eq(conversations.id, targetConversationId),
+                eq(conversations.workspace_id, workspace.id)
+            ),
+        });
+
+        if (!targetConversation) {
+            return { success: false, error: "Target conversation not found" };
+        }
+
+        // Create forwarded message with prefix
+        const forwardedContent = `Forwarded from ${originalMessage.user_name || "User"}: ${originalMessage.content}`;
+
+        await db.insert(messages).values({
+            conversation_id: targetConversationId,
+            user_id: session.user.id,
+            content: forwardedContent,
+            reply_to_message_id: null,
+        });
+
+        // Update target conversation updated_at
+        await db.update(conversations)
+            .set({ updated_at: new Date() })
+            .where(eq(conversations.id, targetConversationId));
+
+        revalidatePath("/dashboard/chat");
+        return { success: true };
+    } catch (error) {
+        console.error("Error forwarding message:", error);
+        return { success: false, error: "Failed to forward message" };
+    }
+}
+
+// Mark message as read
+export async function markMessageAsRead(messageId: string) {
+    try {
+        const session = await getSession();
+        if (!session) {
+            return { success: false, error: "Not authenticated" };
+        }
+
+        const workspace = await getOrCreateWorkspace();
+        if (!workspace) {
+            return { success: false, error: "Workspace not found" };
+        }
+
+        // Check if already read
+        const existingRead = await db.query.message_reads.findFirst({
+            where: and(
+                eq(message_reads.message_id, messageId),
+                eq(message_reads.user_id, session.user.id)
+            ),
+        });
+
+        if (!existingRead) {
+            await db.insert(message_reads).values({
+                message_id: messageId,
+                user_id: session.user.id,
+            });
+        }
+
+        return { success: true };
+    } catch (error) {
+        console.error("Error marking message as read:", error);
+        return { success: false, error: "Failed to mark message as read" };
+    }
+}
+
+// Schedule a message
+export async function scheduleMessage(conversationId: string, content: string, scheduledFor: Date) {
+    try {
+        const session = await getSession();
+        if (!session) {
+            return { success: false, error: "Not authenticated" };
+        }
+
+        const workspace = await getOrCreateWorkspace();
+        if (!workspace) {
+            return { success: false, error: "Workspace not found" };
+        }
+
+        // Verify conversation exists and belongs to workspace
+        const conversation = await db.query.conversations.findFirst({
+            where: and(
+                eq(conversations.id, conversationId),
+                eq(conversations.workspace_id, workspace.id)
+            ),
+        });
+
+        if (!conversation) {
+            return { success: false, error: "Conversation not found" };
+        }
+
+        // Create scheduled message
+        await db.insert(messages).values({
+            conversation_id: conversationId,
+            user_id: session.user.id,
+            content: content,
+            scheduled_for: scheduledFor,
+        });
+
+        revalidatePath("/dashboard/chat");
+        return { success: true };
+    } catch (error) {
+        console.error("Error scheduling message:", error);
+        return { success: false, error: "Failed to schedule message" };
     }
 }

@@ -4,18 +4,20 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Send, Loader2, Paperclip } from "lucide-react";
-import { sendMessage } from "@/actions/messages";
+import { sendMessage, sendMessageToConversation } from "@/actions/messages";
 import { toast } from "sonner";
 import { useTranslation } from "@/lib/i18n/context";
 import { Language } from "@/lib/i18n/translations";
 
 interface ChatInputProps {
-    clientId: string;
+    conversationId?: string;
+    clientId?: string;
+    replyToMessageId?: string | null;
     onMessageSent: (message: any) => void;
     language?: Language;
 }
 
-export function ChatInput({ clientId, onMessageSent, language: propLanguage }: ChatInputProps) {
+export function ChatInput({ conversationId, clientId, replyToMessageId, onMessageSent, language: propLanguage }: ChatInputProps) {
     const { t, language: contextLanguage } = useTranslation();
     const language = propLanguage || contextLanguage;
     const [message, setMessage] = useState("");
@@ -40,7 +42,9 @@ export function ChatInput({ clientId, onMessageSent, language: propLanguage }: C
         setMessage(""); // Clear input immediately for better UX
         
         try {
-            const result = await sendMessage(clientId, messageText);
+            const result = conversationId 
+                ? await sendMessageToConversation(conversationId, messageText, replyToMessageId || undefined)
+                : await sendMessage(clientId!, messageText);
 
             if (result.success && result.message) {
                 onMessageSent(result.message);

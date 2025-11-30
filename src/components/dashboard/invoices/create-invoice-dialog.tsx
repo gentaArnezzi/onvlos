@@ -17,7 +17,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { useState, useEffect } from "react";
 import * as React from "react";
 import { createInvoice } from "@/actions/invoices";
-import { Plus, Trash2, Loader2 } from "lucide-react";
+import { Plus, Trash2, Loader2, Repeat } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useRouter } from "next/navigation";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -52,6 +53,12 @@ export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency 
   const [notes, setNotes] = useState("");
   const [status, setStatus] = useState<"draft" | "sent">("draft");
   const [items, setItems] = useState([{ name: "", quantity: 1, unit_price: 0 }]);
+  const [invoiceType, setInvoiceType] = useState<"single" | "retainer">("single");
+  const [isRetainer, setIsRetainer] = useState(false);
+  const [retainerFrequency, setRetainerFrequency] = useState<"weekly" | "monthly" | "yearly">("monthly");
+  const [retainerInterval, setRetainerInterval] = useState(1);
+  const [autopayEnabled, setAutopayEnabled] = useState(false);
+  const [isPublic, setIsPublic] = useState(false);
   const router = useRouter();
 
   // Update selectedClient when initialClientId changes
@@ -111,7 +118,7 @@ export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency 
     const totals = calculateTotals();
     
     const result = await createInvoice({
-      client_id: selectedClient,
+      client_id: selectedClient || undefined,
       due_date: date,
       currency,
       items: items.map(i => ({ ...i, unit_price: Number(i.unit_price), quantity: Number(i.quantity) })),
@@ -120,6 +127,13 @@ export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency 
       tax_rate: parseFloat(taxRate || "0"),
       notes: notes || undefined,
       status,
+      invoice_type: isRetainer ? "retainer" : "single",
+      retainer_schedule: isRetainer ? {
+        frequency: retainerFrequency,
+        interval: retainerInterval,
+      } : undefined,
+      autopay_enabled: isRetainer ? autopayEnabled : false,
+      is_public: isPublic,
     });
 
     setLoading(false);
@@ -356,17 +370,87 @@ export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency 
                 </div>
             </div>
             
-            <div className="space-y-2 pt-4 border-t border-[#EDEDED]">
-                <Label className="font-primary text-[#02041D]">{t("invoices.status")}</Label>
-                <Select value={status} onValueChange={(v: "draft" | "sent") => setStatus(v)}>
-                    <SelectTrigger className="bg-white border-[#EDEDED] font-primary text-[#02041D]">
-                        <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="draft">{t("invoices.saveAsDraft")}</SelectItem>
-                        <SelectItem value="sent">{t("invoices.sendToClient")}</SelectItem>
-                    </SelectContent>
-                </Select>
+            <div className="space-y-4 pt-4 border-t border-[#EDEDED]">
+                <div className="flex items-center space-x-2">
+                    <Checkbox
+                        id="retainer"
+                        checked={isRetainer}
+                        onCheckedChange={(checked) => {
+                            setIsRetainer(checked as boolean);
+                            if (!checked) {
+                                setAutopayEnabled(false);
+                            }
+                        }}
+                    />
+                    <Label htmlFor="retainer" className="font-primary text-[#02041D] cursor-pointer flex items-center gap-2">
+                        <Repeat className="h-4 w-4" />
+                        {t("invoices.retainerInvoice", "Retainer Invoice")}
+                    </Label>
+                </div>
+                
+                {isRetainer && (
+                    <div className="pl-6 space-y-3 border-l-2 border-[#EDEDED]">
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <Label className="font-primary text-[#02041D]">{t("invoices.frequency", "Frequency")}</Label>
+                                <Select value={retainerFrequency} onValueChange={(v: "weekly" | "monthly" | "yearly") => setRetainerFrequency(v)}>
+                                    <SelectTrigger className="bg-white border-[#EDEDED] font-primary text-[#02041D]">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="weekly">{t("invoices.weekly", "Weekly")}</SelectItem>
+                                        <SelectItem value="monthly">{t("invoices.monthly", "Monthly")}</SelectItem>
+                                        <SelectItem value="yearly">{t("invoices.yearly", "Yearly")}</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="space-y-2">
+                                <Label className="font-primary text-[#02041D]">{t("invoices.interval", "Every")}</Label>
+                                <Input
+                                    type="number"
+                                    min="1"
+                                    value={retainerInterval}
+                                    onChange={(e) => setRetainerInterval(parseInt(e.target.value) || 1)}
+                                    className="bg-white border-[#EDEDED] font-primary text-[#02041D]"
+                                />
+                            </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <Checkbox
+                                id="autopay"
+                                checked={autopayEnabled}
+                                onCheckedChange={(checked) => setAutopayEnabled(checked as boolean)}
+                            />
+                            <Label htmlFor="autopay" className="font-primary text-[#02041D] cursor-pointer">
+                                {t("invoices.enableAutopay", "Enable Autopay")}
+                            </Label>
+                        </div>
+                    </div>
+                )}
+
+                <div className="flex items-center space-x-2">
+                    <Checkbox
+                        id="public"
+                        checked={isPublic}
+                        onCheckedChange={(checked) => setIsPublic(checked as boolean)}
+                    />
+                    <Label htmlFor="public" className="font-primary text-[#02041D] cursor-pointer">
+                        {t("invoices.publicInvoice", "Public Invoice (Shareable Link)")}
+                    </Label>
+                </div>
+
+                <div className="space-y-2">
+                    <Label className="font-primary text-[#02041D]">{t("invoices.status")}</Label>
+                    <Select value={status} onValueChange={(v: "draft" | "sent") => setStatus(v)}>
+                        <SelectTrigger className="bg-white border-[#EDEDED] font-primary text-[#02041D]">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="draft">{t("invoices.saveAsDraft")}</SelectItem>
+                            <SelectItem value="sent">{t("invoices.sendToClient")}</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
             </div>
           </div>
           <DialogFooter>

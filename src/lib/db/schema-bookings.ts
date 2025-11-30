@@ -10,6 +10,8 @@ export const booking_links = pgTable("booking_links", {
   description: text("description"),
   duration_minutes: integer("duration_minutes").notNull().default(30),
   buffer_minutes: integer("buffer_minutes").default(0), // buffer between meetings
+  minimum_notice_hours: integer("minimum_notice_hours").default(2), // minimum hours notice required
+  daily_limit: integer("daily_limit"), // maximum bookings per day (null = unlimited)
   is_active: boolean("is_active").default(true),
   
   // Availability settings
@@ -131,6 +133,8 @@ export const booking_notifications = pgTable("booking_notifications", {
   // Calendar sync
   google_calendar_sync: boolean("google_calendar_sync").default(false),
   google_calendar_id: text("google_calendar_id"),
+  google_calendar_access_token: text("google_calendar_access_token"), // OAuth token
+  google_calendar_refresh_token: text("google_calendar_refresh_token"), // OAuth refresh token
   outlook_calendar_sync: boolean("outlook_calendar_sync").default(false),
   outlook_calendar_id: text("outlook_calendar_id"),
   

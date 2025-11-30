@@ -6,6 +6,7 @@ import { desc, eq, sql, count, and, asc, ilike } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { getOrCreateWorkspace } from "@/actions/workspace";
 import { getSession } from "@/lib/get-session";
+import { createQRISPayment as createMidtransQRIS } from "@/lib/payments/midtrans";
 
 export async function getFunnels() {
     try {
@@ -316,4 +317,34 @@ export async function deleteFunnel(funnelId: string) {
         console.error("Failed to delete funnel:", error);
         return { success: false, error: "Failed to delete funnel" };
     }
+}
+
+// Create QRIS payment for funnel
+export async function createQRISPayment(params: {
+  orderId: string;
+  amount: number;
+  customerDetails: {
+    first_name: string;
+    last_name?: string;
+    email: string;
+    phone?: string;
+  };
+  itemDetails: Array<{
+    id: string;
+    price: number;
+    quantity: number;
+    name: string;
+  }>;
+  metadata?: any;
+}) {
+  try {
+    const result = await createMidtransQRIS(params);
+    return result;
+  } catch (error) {
+    console.error("Failed to create QRIS payment:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to create QRIS payment",
+    };
+  }
 }

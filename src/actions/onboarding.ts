@@ -11,7 +11,11 @@ import {
   boards,
   invoices,
   invoice_items,
-  funnels
+  funnels,
+  payments,
+  tasks,
+  documents,
+  document_folders
 } from "@/lib/db/schema";
 import { eq, and, isNull } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -155,6 +159,7 @@ export async function completeOnboarding(sessionId: string) {
   await db.insert(conversations).values({
     workspace_id: funnel.workspace_id,
     client_space_id: newSpace.id,
+    chat_type: "client_external",
     title: "General Chat"
   });
 
@@ -183,10 +188,17 @@ export async function completeOnboarding(sessionId: string) {
     }
   }
 
-  // 5. Create Invoice if invoice step exists
-  const invoiceStep = progressData.step_2;
+  // 5. Check payment status and create invoice if invoice step exists
+  const invoiceStep = Object.values(progressData).find((step: any) => step?.data?.amount) as any;
+  let paymentCompleted = false;
+  
   if (invoiceStep?.data?.amount) {
     const invoiceNumber = `INV-${Date.now().toString(36).toUpperCase()}`;
+    
+    // Check if payment was completed
+    if (invoiceStep.data.paid && invoiceStep.data.transaction_id) {
+      paymentCompleted = true;
+    }
     
     const [newInvoice] = await db.insert(invoices).values({
       workspace_id: funnel.workspace_id,
@@ -196,9 +208,10 @@ export async function completeOnboarding(sessionId: string) {
       total_amount: invoiceStep.data.amount.toString(),
       tax_rate: "0",
       tax_amount: "0",
-      status: "sent",
+      status: paymentCompleted ? "paid" : "sent",
       due_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days from now
-      issued_date: new Date().toISOString()
+      issued_date: new Date().toISOString(),
+      paid_date: paymentCompleted ? new Date().toISOString() : null,
     }).returning();
 
     await db.insert(invoice_items).values({
@@ -207,6 +220,105 @@ export async function completeOnboarding(sessionId: string) {
       quantity: 1,
       unit_price: invoiceStep.data.amount.toString()
     });
+
+    // If payment completed, record payment
+    if (paymentCompleted && invoiceStep.data.transaction_id) {
+      await db.insert(payments).values({
+        invoice_id: newInvoice.id,
+        gateway: "midtrans",
+        gateway_payment_id: invoiceStep.data.transaction_id,
+        amount: invoiceStep.data.amount.toString(),
+        currency: invoiceStep.data.currency || "IDR",
+        status: "completed",
+        paid_at: new Date(),
+        metadata: {
+          payment_method: "qris",
+          source: "funnel",
+        },
+      });
+    }
+  }
+
+  // 6. Auto-duplicate client space template if payment completed or no payment required
+  if (paymentCompleted || !invoiceStep) {
+    // Check if funnel has a template client space to duplicate
+    const templateSpaceId = funnel.client_space_template_id;
+    if (templateSpaceId) {
+      const templateSpace = await db.query.client_spaces.findFirst({
+        where: eq(client_spaces.id, templateSpaceId)
+      });
+
+      if (templateSpace) {
+        // Duplicate template space content
+        // Update the new space with template branding and settings
+        await db.update(client_spaces)
+          .set({
+            branding: templateSpace.branding,
+            banner_url: templateSpace.banner_url,
+            welcome_video_url: templateSpace.welcome_video_url,
+            logo_url: templateSpace.logo_url,
+          })
+          .where(eq(client_spaces.id, newSpace.id));
+
+        // Duplicate template tasks
+        const templateTasks = await db.query.tasks.findMany({
+          where: eq(tasks.client_id, templateSpace.client_id)
+        });
+
+        for (const templateTask of templateTasks) {
+          await db.insert(tasks).values({
+            workspace_id: funnel.workspace_id,
+            client_id: newClient.id,
+            title: templateTask.title,
+            description: templateTask.description,
+            priority: templateTask.priority,
+            status: "todo",
+            due_date: templateTask.due_date,
+          });
+        }
+
+        // Duplicate template documents (Brain)
+        const templateFoldersList = await db.query.document_folders.findMany({
+          where: and(
+            eq(document_folders.workspace_id, funnel.workspace_id),
+            eq(document_folders.folder_type, "client_external"),
+            eq(document_folders.client_id, templateSpace.client_id)
+          )
+        });
+
+        for (const templateFolder of templateFoldersList) {
+          const newFolderResult = await db.insert(document_folders).values({
+            workspace_id: funnel.workspace_id,
+            name: templateFolder.name,
+            parent_folder_id: null, // Simplified - can be enhanced
+            folder_type: "client_external",
+            client_id: newClient.id,
+            created_by_user_id: null,
+          }).returning();
+          
+          const newFolder = Array.isArray(newFolderResult) ? newFolderResult[0] : newFolderResult;
+
+          // Duplicate documents in this folder
+          const templateDocsList = await db.query.documents.findMany({
+            where: eq(documents.folder_id, templateFolder.id)
+          });
+
+          for (const templateDoc of templateDocsList) {
+            await db.insert(documents).values({
+              workspace_id: funnel.workspace_id,
+              folder_id: newFolder?.id || null,
+              title: templateDoc.title,
+              content: templateDoc.content,
+              file_type: templateDoc.file_type,
+              file_url: templateDoc.file_url,
+              file_size: templateDoc.file_size,
+              mime_type: templateDoc.mime_type,
+              created_by_user_id: null,
+            });
+          }
+        }
+      }
+    }
   }
 
   // Mark session as completed
@@ -229,6 +341,21 @@ export async function completeOnboarding(sessionId: string) {
   } catch (emailError) {
     console.error("Failed to send funnel completion email:", emailError);
     // Don't fail the whole operation if email fails
+  }
+
+  // Send payment confirmation email if payment was completed
+  if (paymentCompleted && invoiceStep?.data) {
+    try {
+      if (newClient.email) {
+        await sendEmail(newClient.email, 'paymentReceived', {
+          clientName: newClient.name || newClient.company_name || 'Client',
+          invoiceNumber: `FUNNEL-${funnel.id.substring(0, 8)}`,
+          amount: `${invoiceStep.data.currency || 'IDR'} ${invoiceStep.data.amount.toLocaleString('id-ID')}`,
+        });
+      }
+    } catch (emailError) {
+      console.error("Failed to send payment confirmation email:", emailError);
+    }
   }
 
   revalidatePath("/dashboard/clients");

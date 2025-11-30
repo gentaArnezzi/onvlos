@@ -10,6 +10,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { CheckCircle2, FileText, FileSignature, Receipt, Zap, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import dynamic from 'next/dynamic';
+import { QRISPayment } from "./qris-payment";
+import { completeOnboardingStep } from "@/actions/onboarding";
 
 const SignatureCanvas = dynamic(
   () => import('react-signature-canvas').then((mod) => mod.default),
@@ -39,9 +41,11 @@ interface OnboardingWizardProps {
     step_type: string;
     config: StepConfig;
   }[];
+  sessionId?: string;
+  funnelId?: string;
 }
 
-export function OnboardingWizard({ steps }: OnboardingWizardProps) {
+export function OnboardingWizard({ steps, sessionId, funnelId }: OnboardingWizardProps) {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [formData, setFormData] = useState<Record<string, string>>({});
@@ -51,6 +55,8 @@ export function OnboardingWizard({ steps }: OnboardingWizardProps) {
   const [signerEmail, setSignerEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
+  const [paymentInitiated, setPaymentInitiated] = useState(false);
+  const [paymentTransactionId, setPaymentTransactionId] = useState<string | null>(null);
   const sigCanvas = useRef<any>(null);
 
   const currentStep = steps[currentStepIndex];
@@ -92,6 +98,42 @@ export function OnboardingWizard({ steps }: OnboardingWizardProps) {
       }
     }
 
+    // Handle invoice step payment initiation
+    if (currentStep.step_type === 'invoice' && !paymentInitiated) {
+      setPaymentInitiated(true);
+      return;
+    }
+
+    // Complete step if not invoice or payment already done
+    if (currentStep.step_type !== 'invoice' || paymentTransactionId) {
+      if (sessionId) {
+        try {
+          let stepData: any = {};
+          
+          if (currentStep.step_type === 'form') {
+            stepData = formData;
+          } else if (currentStep.step_type === 'contract') {
+            stepData = {
+              agreed,
+              signature_data: config.requireSignature ? (sigCanvas.current?.toDataURL() || signature) : undefined,
+              signer_name: signerName,
+              signer_email: signerEmail,
+            };
+          }
+
+          await completeOnboardingStep(
+            sessionId,
+            currentStepIndex,
+            currentStep.step_type,
+            stepData
+          );
+        } catch (error) {
+          toast.error("Failed to save step");
+          return;
+        }
+      }
+    }
+
     if (isLastStep) {
       setIsSubmitting(true);
       try {
@@ -102,7 +144,8 @@ export function OnboardingWizard({ steps }: OnboardingWizardProps) {
           signature: config.requireSignature ? (sigCanvas.current?.toDataURL() || signature) : signature,
           signerName,
           signerEmail,
-          steps: completedSteps
+          steps: completedSteps,
+          paymentTransactionId,
         };
         
         // In real app, this would call the server action
@@ -383,29 +426,79 @@ export function OnboardingWizard({ steps }: OnboardingWizardProps) {
           {/* Invoice Step */}
           {currentStep.step_type === 'invoice' && (
             <div className="space-y-6">
-              <div className="bg-[#EDEDED] rounded-lg p-6 text-center">
-                <p className="text-sm font-primary text-[#606170] mb-2">Amount Due</p>
-                <p className="text-4xl font-bold font-primary text-[#02041D]">
-                  {config.currency || '$'}{(config.amount || 5000).toLocaleString()}
-                </p>
-              </div>
-              <div className="border border-[#EDEDED] rounded-lg divide-y divide-slate-200">
-                <div className="p-4 flex justify-between">
-                  <span className="font-primary text-[#606170]">Service Package</span>
-                  <span className="font-medium font-primary text-[#02041D]">{config.currency || '$'}{(config.amount || 5000).toLocaleString()}</span>
-                </div>
-                <div className="p-4 flex justify-between">
-                  <span className="font-primary text-[#606170]">Tax</span>
-                  <span className="font-medium font-primary text-[#02041D]">$0</span>
-                </div>
-                <div className="p-4 flex justify-between bg-[#EDEDED]">
-                  <span className="font-semibold font-primary text-[#02041D]">Total</span>
-                  <span className="font-bold font-primary text-[#02041D]">{config.currency || '$'}{(config.amount || 5000).toLocaleString()}</span>
-                </div>
-              </div>
-              <p className="text-sm font-primary text-[#606170] text-center">
-                Click "Pay Now" to proceed to secure payment
-              </p>
+              {!paymentInitiated ? (
+                <>
+                  <div className="bg-[#EDEDED] rounded-lg p-6 text-center">
+                    <p className="text-sm font-primary text-[#606170] mb-2">Amount Due</p>
+                    <p className="text-4xl font-bold font-primary text-[#02041D]">
+                      {config.currency || 'Rp'}{(config.amount || 5000).toLocaleString('id-ID')}
+                    </p>
+                  </div>
+                  <div className="border border-[#EDEDED] rounded-lg divide-y divide-slate-200">
+                    <div className="p-4 flex justify-between">
+                      <span className="font-primary text-[#606170]">Service Package</span>
+                      <span className="font-medium font-primary text-[#02041D]">{config.currency || 'Rp'}{(config.amount || 5000).toLocaleString('id-ID')}</span>
+                    </div>
+                    <div className="p-4 flex justify-between">
+                      <span className="font-primary text-[#606170]">Tax</span>
+                      <span className="font-medium font-primary text-[#02041D]">Rp 0</span>
+                    </div>
+                    <div className="p-4 flex justify-between bg-[#EDEDED]">
+                      <span className="font-semibold font-primary text-[#02041D]">Total</span>
+                      <span className="font-bold font-primary text-[#02041D]">{config.currency || 'Rp'}{(config.amount || 5000).toLocaleString('id-ID')}</span>
+                    </div>
+                  </div>
+                  <p className="text-sm font-primary text-[#606170] text-center">
+                    Click "Pay Now" to proceed with QRIS payment
+                  </p>
+                </>
+              ) : (
+                <QRISPayment
+                  orderId={`FUNNEL-${funnelId || 'unknown'}-${sessionId || Date.now()}`}
+                  amount={config.amount || 5000}
+                  currency={config.currency || 'IDR'}
+                  customerDetails={{
+                    first_name: formData.name || signerName || "Client",
+                    last_name: "",
+                    email: formData.email || signerEmail || "",
+                    phone: formData.phone || "",
+                  }}
+                  itemDetails={[{
+                    id: "funnel-package",
+                    price: config.amount || 5000,
+                    quantity: 1,
+                    name: "Onboarding Package",
+                  }]}
+                  onPaymentSuccess={async (transactionId) => {
+                    setPaymentTransactionId(transactionId);
+                    // Complete the payment step
+                    if (sessionId) {
+                      await completeOnboardingStep(
+                        sessionId,
+                        currentStepIndex,
+                        'invoice',
+                        {
+                          amount: config.amount || 5000,
+                          currency: config.currency || 'IDR',
+                          transaction_id: transactionId,
+                          payment_method: 'qris',
+                          paid: true,
+                        }
+                      );
+                    }
+                    // Move to next step
+                    if (!isLastStep) {
+                      setCurrentStepIndex(currentStepIndex + 1);
+                      setCompletedSteps([...completedSteps, currentStepIndex]);
+                    }
+                    toast.success("Payment successful!");
+                  }}
+                  onPaymentError={(error) => {
+                    toast.error(error || "Payment failed");
+                    setPaymentInitiated(false);
+                  }}
+                />
+              )}
             </div>
           )}
 

@@ -16,10 +16,11 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
-import { CheckCircle2, Circle, CheckSquare, Clock, AlertTriangle } from "lucide-react";
+import { CheckCircle2, Circle, CheckSquare, Clock, AlertTriangle, Repeat, Workflow } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SearchInput } from "@/components/dashboard/tasks/search-input";
 import { StatusFilter } from "@/components/dashboard/tasks/status-filter";
+import { TaskFilters } from "@/components/dashboard/tasks/task-filters";
 import { TaskActions } from "@/components/dashboard/tasks/task-actions";
 import { TaskStatusBadge } from "@/components/dashboard/tasks/task-status-badge";
 import { TaskDetailDialog } from "@/components/dashboard/tasks/task-detail-dialog";
@@ -39,8 +40,11 @@ export default function TasksPage() {
     const fetchData = async () => {
       const search = searchParams.get("search") || undefined;
       const status = searchParams.get("status") || undefined;
+      const flowId = searchParams.get("flowId") || undefined;
+      const clientId = searchParams.get("clientId") || undefined;
+      const assigneeId = searchParams.get("assigneeId") || undefined;
       const page = parseInt(searchParams.get("page") || "1", 10);
-      const tasksResult = await getTasks(search, status, page, 20);
+      const tasksResult = await getTasks(search, status, flowId, clientId, assigneeId, page, 20);
       const clientsResult = await getClients(1, 1000);
       setTasks(tasksResult.tasks);
       setClients(clientsResult.clients);
@@ -143,7 +147,7 @@ export default function TasksPage() {
 
       {/* Main Content */}
       <Card className="border border-[#EDEDED] shadow-lg bg-white backdrop-blur-sm">
-        <CardHeader className="p-4 sm:p-6">
+        <CardHeader className="p-4 sm:p-6 space-y-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <CardTitle className="font-primary text-[#02041D] text-base sm:text-lg">{t("tasks.taskList")}</CardTitle>
             <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto min-w-0">
@@ -155,6 +159,7 @@ export default function TasksPage() {
               </div>
             </div>
           </div>
+          <TaskFilters />
         </CardHeader>
         <CardContent>
           <div className="rounded-xl border border-[#EDEDED] bg-white overflow-hidden">
@@ -191,8 +196,22 @@ export default function TasksPage() {
                       </TableCell>
                       <TableCell className="font-medium font-primary text-[#02041D]" onClick={() => handleTaskClick(task)}>
                         <div className="flex flex-col">
-                          <span className="text-sm font-semibold">{task.title}</span>
+                          <div className="flex items-center gap-2">
+                            {task.parent_task_id && (
+                              <span className="text-[#606170]">└─</span>
+                            )}
+                            <span className="text-sm font-semibold">{task.title}</span>
+                            {task.is_recurring && (
+                              <Repeat className="h-3 w-3 text-[#0A33C6]" title="Recurring task" />
+                            )}
+                          </div>
                           {task.description && <span className="text-xs font-primary text-[#606170] truncate max-w-[250px] mt-0.5">{task.description}</span>}
+                          {task.flow_id && (
+                            <div className="flex items-center gap-1 mt-1">
+                              <Workflow className="h-3 w-3 text-[#606170]" />
+                              <span className="text-xs font-primary text-[#606170]">Flow</span>
+                            </div>
+                          )}
                         </div>
                       </TableCell>
                       <TableCell className="font-primary text-[#606170]" onClick={() => handleTaskClick(task)}>

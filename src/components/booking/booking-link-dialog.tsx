@@ -49,9 +49,12 @@ export function BookingLinkDialog() {
     description: "",
     duration_minutes: 30,
     buffer_minutes: 0,
+    minimum_notice_hours: 2,
+    daily_limit: null as number | null,
     location_type: "google_meet",
     location_details: "",
-    availability: DEFAULT_AVAILABILITY
+    availability: DEFAULT_AVAILABILITY,
+    google_calendar_sync: false,
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -69,9 +72,12 @@ export function BookingLinkDialog() {
         description: "",
         duration_minutes: 30,
         buffer_minutes: 0,
+        minimum_notice_hours: 2,
+        daily_limit: null,
         location_type: "google_meet",
         location_details: "",
-        availability: DEFAULT_AVAILABILITY
+        availability: DEFAULT_AVAILABILITY,
+        google_calendar_sync: false,
       });
     } else {
       alert(result.error || "Failed to create booking link");
@@ -186,6 +192,35 @@ export function BookingLinkDialog() {
                       <SelectItem value="30">30 minutes</SelectItem>
                     </SelectContent>
                   </Select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="minimum_notice" className="font-primary text-[#02041D]">Minimum Notice (hours)</Label>
+                  <Input
+                    id="minimum_notice"
+                    type="number"
+                    min="0"
+                    value={formData.minimum_notice_hours}
+                    onChange={(e) => setFormData({ ...formData, minimum_notice_hours: parseInt(e.target.value) || 2 })}
+                    className="bg-white border-[#EDEDED] font-primary text-[#02041D]"
+                  />
+                  <p className="text-xs font-primary text-[#606170]">Minimum hours before booking</p>
+                </div>
+                
+                <div className="grid gap-2">
+                  <Label htmlFor="daily_limit" className="font-primary text-[#02041D]">Daily Limit</Label>
+                  <Input
+                    id="daily_limit"
+                    type="number"
+                    min="1"
+                    value={formData.daily_limit || ""}
+                    onChange={(e) => setFormData({ ...formData, daily_limit: e.target.value ? parseInt(e.target.value) : null })}
+                    placeholder="Unlimited"
+                    className="bg-white border-[#EDEDED] font-primary text-[#02041D]"
+                  />
+                  <p className="text-xs font-primary text-[#606170]">Max bookings per day (leave empty for unlimited)</p>
                 </div>
               </div>
             </div>

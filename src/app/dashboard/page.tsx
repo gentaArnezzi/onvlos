@@ -25,6 +25,13 @@ import {
 } from "@/components/ui/table";
 import { t } from "@/lib/i18n/server";
 import { Language } from "@/lib/i18n/translations";
+import { QuotesWorldClock } from "@/components/dashboard/widgets/quotes-world-clock";
+import { RecentChats } from "@/components/dashboard/widgets/recent-chats";
+import { RecentFlows } from "@/components/dashboard/widgets/recent-flows";
+import { SalesPipelineSnapshot } from "@/components/dashboard/widgets/sales-pipeline-snapshot";
+import { getRecentFlows } from "@/actions/flows";
+import { getConversations } from "@/actions/messages";
+import { getBoards } from "@/actions/boards";
 
 export default async function DashboardPage() {
   const session = await getSession();
@@ -58,26 +65,41 @@ export default async function DashboardPage() {
     );
   const activeClientsCount = Number(activeClientsCountResult[0]?.count || 0);
 
-  const paidInvoices = await db.select().from(invoices).where(
-    and(
-      eq(invoices.status, 'paid'),
-      eq(invoices.workspace_id, workspace.id)
-    )
-  ).orderBy(desc(invoices.created_at)).limit(5);
+  // Fetch paid invoices with error handling
+  let paidInvoices: any[] = [];
+  try {
+    paidInvoices = await db.select().from(invoices).where(
+      and(
+        eq(invoices.status, 'paid'),
+        eq(invoices.workspace_id, workspace.id)
+      )
+    ).orderBy(desc(invoices.created_at)).limit(5);
+  } catch (error) {
+    console.error("Error fetching paid invoices:", error);
+    // If query fails, return empty array to prevent page crash
+    paidInvoices = [];
+  }
 
   // Use analytics data for total revenue if available, otherwise calculate from paid invoices
   const totalRevenue = analyticsData?.stats?.yearRevenue || paidInvoices.reduce((sum, inv) => sum + Number(inv.total_amount || 0), 0);
 
-  const sentInvoicesCountResult = await db
-    .select({ count: sql<number>`count(*)` })
-    .from(invoices)
-    .where(
-      and(
-        eq(invoices.status, 'sent'),
-        eq(invoices.workspace_id, workspace.id)
-      )
-    );
-  const sentInvoicesCount = Number(sentInvoicesCountResult[0]?.count || 0);
+  // Fetch sent invoices count with error handling
+  let sentInvoicesCount = 0;
+  try {
+    const sentInvoicesCountResult = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(invoices)
+      .where(
+        and(
+          eq(invoices.status, 'sent'),
+          eq(invoices.workspace_id, workspace.id)
+        )
+      );
+    sentInvoicesCount = Number(sentInvoicesCountResult[0]?.count || 0);
+  } catch (error) {
+    console.error("Error fetching sent invoices count:", error);
+    sentInvoicesCount = 0;
+  }
 
   // Fetch Recent Tasks
   const recentTasks = await db.select().from(tasks)
@@ -101,6 +123,73 @@ export default async function DashboardPage() {
 
   const defaultCurrencySymbol = getCurrencySymbol(workspace?.default_currency || "USD");
   const language = (workspace?.default_language as Language) || "en";
+  
+  // Fetch data for widgets
+  const recentFlows = await getRecentFlows(4);
+  const conversationsData = await getConversations();
+  const boardData = await getBoards();
+  
+  // Prepare recent chats (limit to 5) - combine all conversation types
+  const allConversations = [
+    ...(conversationsData.flows || []).map(conv => ({
+      id: conv.id,
+      conversationId: conv.id,
+      clientId: null,
+      clientName: conv.flow_name || conv.title,
+      type: "flow" as const,
+      lastMessage: conv.lastMessage,
+      lastMessageTime: conv.lastMessageTime,
+      unreadCount: 0,
+    })),
+    ...(conversationsData.clientsInternal || []).map(conv => ({
+      id: conv.id,
+      conversationId: conv.id,
+      clientId: conv.client_id,
+      clientName: conv.client_name || conv.client_company_name || "Client",
+      type: "client_internal" as const,
+      lastMessage: conv.lastMessage,
+      lastMessageTime: conv.lastMessageTime,
+      unreadCount: 0,
+    })),
+    ...(conversationsData.clientsExternal || []).map(conv => ({
+      id: conv.id,
+      conversationId: conv.id,
+      clientId: conv.client_id,
+      clientName: conv.client_name || conv.client_company_name || "Client",
+      type: "client_external" as const,
+      lastMessage: conv.lastMessage,
+      lastMessageTime: conv.lastMessageTime,
+      unreadCount: 0,
+    })),
+    ...(conversationsData.direct || []).map(conv => ({
+      id: conv.id,
+      conversationId: conv.id,
+      clientId: null,
+      clientName: conv.other_user_name || "User",
+      type: "direct" as const,
+      lastMessage: conv.lastMessage,
+      lastMessageTime: conv.lastMessageTime,
+      unreadCount: 0,
+    })),
+  ].sort((a, b) => {
+    // Sort by last message time (most recent first)
+    const timeA = a.lastMessageTime ? new Date(a.lastMessageTime).getTime() : 0;
+    const timeB = b.lastMessageTime ? new Date(b.lastMessageTime).getTime() : 0;
+    return timeB - timeA;
+  });
+  
+  const recentChatsData = allConversations.slice(0, 5);
+  
+  // Prepare sales pipeline snapshot
+  const pipelineColumns = boardData.columns?.map(col => ({
+    name: col.name,
+    count: col.cards?.length || 0,
+    estimatedValue: col.cards?.reduce((sum: number, card: any) => {
+      // Assuming cards have estimated_value field, if not, use 0
+      return sum + (card.estimated_value || 0);
+    }, 0) || 0,
+  })) || [];
+  const totalPipelineValue = pipelineColumns.reduce((sum, col) => sum + col.estimatedValue, 0);
   
   const stats = [
     {
@@ -298,6 +387,25 @@ export default async function DashboardPage() {
 
         {/* Sidebar Content - Right Column */}
         <div className="lg:col-span-4 xl:col-span-3 space-y-6 sm:space-y-8">
+          {/* Quotes & World Clock */}
+          <QuotesWorldClock language={language} />
+          
+          {/* Recent Chats */}
+          <RecentChats chats={recentChatsData} language={language} />
+          
+          {/* Recent Flows */}
+          <RecentFlows flows={recentFlows} language={language} />
+          
+          {/* Sales Pipeline Snapshot */}
+          {pipelineColumns.length > 0 && (
+            <SalesPipelineSnapshot 
+              columns={pipelineColumns} 
+              totalValue={totalPipelineValue}
+              currencySymbol={defaultCurrencySymbol}
+              language={language}
+            />
+          )}
+          
           {/* Quick Actions */}
           <Card className="border-none shadow-lg bg-[#0A33C6] text-white">
             <CardHeader>

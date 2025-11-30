@@ -85,6 +85,7 @@ export function NotificationsDropdown() {
         <Button
           variant="ghost"
           size="icon"
+          suppressHydrationWarning
           className="relative font-primary text-[#606170] hover:font-primary text-[#02041D] hover:bg-[#EDEDED] rounded-lg"
         >
           <Bell className="h-5 w-5" />

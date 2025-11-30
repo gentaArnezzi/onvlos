@@ -154,6 +154,14 @@ export async function moveCard(cardId: string, newColumnId: string, newOrder: nu
             console.error(`[moveCard] Card not found or update failed: ${cardId}`);
             return { success: false, error: "Card not found or update failed" };
         }
+
+        // Trigger workflow if card moved to 'Signed' or 'Closed' column
+        const columnNameLower = newColumn.name.toLowerCase();
+        if ((columnNameLower.includes('signed') || columnNameLower.includes('closed')) && result[0].client_id) {
+            // TODO: Trigger funnel workflow for this client
+            // This would typically create a client space or trigger onboarding
+            console.log(`[moveCard] Card moved to ${newColumn.name}, should trigger workflow for client ${result[0].client_id}`);
+        }
         
         revalidatePath("/dashboard/boards");
         return { success: true };
@@ -163,7 +171,7 @@ export async function moveCard(cardId: string, newColumnId: string, newOrder: nu
     }
 }
 
-export async function createCard(columnId: string, title: string, description: string | null = null) {
+export async function createCard(columnId: string, title: string, description: string | null = null, estimatedValue: number | null = null) {
     try {
         const session = await getSession();
         if (!session) {
@@ -197,6 +205,7 @@ export async function createCard(columnId: string, title: string, description: s
             column_id: columnId,
             title: title,
             description: description,
+            estimated_value: estimatedValue ? estimatedValue.toString() : null,
             order: 999, // Append to end
         }).returning();
         
@@ -213,6 +222,7 @@ export async function updateCard(cardId: string, data: {
     description?: string | null;
     client_id?: string | null;
     due_date?: string | null;
+    estimated_value?: number | null;
 }) {
     try {
         const session = await getSession();
@@ -257,7 +267,9 @@ export async function updateCard(cardId: string, data: {
         if (data.description !== undefined) updateData.description = data.description;
         if (data.client_id !== undefined) updateData.client_id = data.client_id;
         if (data.due_date !== undefined) updateData.due_date = data.due_date;
-        updateData.updated_at = new Date();
+        if (data.estimated_value !== undefined) {
+            updateData.estimated_value = data.estimated_value ? data.estimated_value.toString() : null;
+        }
 
         const [updatedCard] = await db.update(cards)
             .set(updateData)
@@ -318,5 +330,131 @@ export async function deleteCard(cardId: string) {
     } catch (error) {
         console.error("Failed to delete card:", error);
         return { success: false, error: "Failed to delete card" };
+    }
+}
+
+export async function exportBoardToCSV(boardId: string) {
+    try {
+        const session = await getSession();
+        if (!session) {
+            return { success: false, csv: null, error: "Not authenticated" };
+        }
+
+        const workspace = await getOrCreateWorkspace();
+        if (!workspace) {
+            return { success: false, csv: null, error: "Workspace not found" };
+        }
+
+        const board = await db.query.boards.findFirst({
+            where: and(
+                eq(boards.id, boardId),
+                eq(boards.workspace_id, workspace.id)
+            )
+        });
+
+        if (!board) {
+            return { success: false, csv: null, error: "Board not found" };
+        }
+
+        const columns = await db.select()
+            .from(board_columns)
+            .where(eq(board_columns.board_id, boardId))
+            .orderBy(asc(board_columns.order));
+
+        const columnIds = columns.map(col => col.id);
+        const allCards = await db.select()
+            .from(cards)
+            .where(inArray(cards.column_id, columnIds));
+
+        // Create CSV
+        const headers = ["Title", "Description", "Column", "Client", "Estimated Value", "Due Date"];
+        const rows = allCards.map(card => {
+            const column = columns.find(col => col.id === card.column_id);
+            return [
+                card.title || "",
+                card.description || "",
+                column?.name || "",
+                card.client_id || "",
+                card.estimated_value || "",
+                card.due_date || "",
+            ];
+        });
+
+        const csv = [
+            headers.join(","),
+            ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(","))
+        ].join("\n");
+
+        return { success: true, csv };
+    } catch (error) {
+        console.error("Failed to export board:", error);
+        return { success: false, csv: null, error: "Failed to export board" };
+    }
+}
+
+export async function importBoardFromCSV(boardId: string, csvText: string) {
+    try {
+        const session = await getSession();
+        if (!session) {
+            return { success: false, error: "Not authenticated" };
+        }
+
+        const workspace = await getOrCreateWorkspace();
+        if (!workspace) {
+            return { success: false, error: "Workspace not found" };
+        }
+
+        const board = await db.query.boards.findFirst({
+            where: and(
+                eq(boards.id, boardId),
+                eq(boards.workspace_id, workspace.id)
+            )
+        });
+
+        if (!board) {
+            return { success: false, error: "Board not found" };
+        }
+
+        const columns = await db.select()
+            .from(board_columns)
+            .where(eq(board_columns.board_id, boardId))
+            .orderBy(asc(board_columns.order));
+
+        // Parse CSV
+        const lines = csvText.split("\n").filter(line => line.trim());
+        if (lines.length < 2) {
+            return { success: false, error: "Invalid CSV format" };
+        }
+
+        const headers = lines[0].split(",").map(h => h.trim().replace(/^"|"$/g, ""));
+        const dataLines = lines.slice(1);
+
+        for (const line of dataLines) {
+            const values = line.split(",").map(v => v.trim().replace(/^"|"$/g, ""));
+            if (values.length < 1 || !values[0]) continue;
+
+            const title = values[0] || "";
+            const description = values[1] || null;
+            const columnName = values[2] || "";
+            const estimatedValue = values[4] ? parseFloat(values[4]) : null;
+
+            // Find column by name
+            const column = columns.find(col => col.name === columnName);
+            if (!column) continue;
+
+            await db.insert(cards).values({
+                column_id: column.id,
+                title,
+                description,
+                estimated_value: estimatedValue ? estimatedValue.toString() : null,
+                order: 999,
+            });
+        }
+
+        revalidatePath("/dashboard/boards");
+        return { success: true };
+    } catch (error) {
+        console.error("Failed to import board:", error);
+        return { success: false, error: "Failed to import board" };
     }
 }

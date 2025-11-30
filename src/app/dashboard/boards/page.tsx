@@ -1,6 +1,7 @@
 import { getBoards } from "@/actions/boards";
 import { Button } from "@/components/ui/button";
 import { KanbanBoard } from "@/components/dashboard/boards/kanban-board";
+import { BoardActions } from "@/components/dashboard/boards/board-actions";
 import { Plus } from "lucide-react";
 import { getOrCreateWorkspace } from "@/actions/workspace";
 import { t } from "@/lib/i18n/server";
@@ -23,9 +24,7 @@ export default async function BoardsPage() {
             {t("boards.description", language)}
           </p>
         </div>
-        {/* <Button className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white shadow-lg shadow-orange-500/20 border-0">
-            <Plus className="mr-2 h-4 w-4" /> New Board
-        </Button> */}
+        {board.id && <BoardActions boardId={board.id} />}
       </div>
 
       {/* Board Area */}

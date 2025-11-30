@@ -79,6 +79,8 @@ export async function createBookingLink(data: {
       description: data.description,
       duration_minutes: data.duration_minutes,
       buffer_minutes: data.buffer_minutes || 0,
+      minimum_notice_hours: data.minimum_notice_hours || 2,
+      daily_limit: data.daily_limit || null,
       location_type: data.location_type,
       location_details: data.location_details,
       availability: data.availability,
@@ -106,6 +108,37 @@ export async function getAvailableSlots(
     if (!link || !link.is_active) {
       return [];
     }
+
+    // Check minimum notice
+    const now = new Date();
+    const minimumNotice = link.minimum_notice_hours || 2;
+    const hoursUntilBooking = (date.getTime() - now.getTime()) / (1000 * 60 * 60);
+    
+    if (hoursUntilBooking < minimumNotice) {
+      return []; // Too short notice
+    }
+
+    // Check daily limit
+    if (link.daily_limit) {
+      const startOfDate = startOfDay(date);
+      const endOfDate = endOfDay(date);
+
+      const bookingsToday = await db.select()
+        .from(bookings)
+        .where(and(
+          eq(bookings.booking_link_id, bookingLinkId),
+          gte(bookings.scheduled_date, startOfDate),
+          lte(bookings.scheduled_date, endOfDate),
+          eq(bookings.status, "confirmed")
+        ));
+
+      if (bookingsToday.length >= link.daily_limit) {
+        return []; // Daily limit reached
+      }
+    }
+
+    // Auto-detect timezone if not provided
+    const timezone = inviteeTimezone || link.availability?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone;
 
     // Get day of week
     const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
@@ -187,7 +220,11 @@ export async function getAvailableSlots(
           );
         });
 
-        if (!hasConflict && currentTime > new Date()) { // Only future slots
+        // Check minimum notice for this specific slot
+        const hoursUntilSlot = (currentTime.getTime() - now.getTime()) / (1000 * 60 * 60);
+        const meetsMinimumNotice = hoursUntilSlot >= minimumNotice;
+
+        if (!hasConflict && currentTime > now && meetsMinimumNotice) { // Only future slots with minimum notice
           availableSlots.push(new Date(currentTime));
         }
 
@@ -225,6 +262,36 @@ export async function createBooking(data: {
     const scheduledEnd = new Date(
       data.scheduled_date.getTime() + link.duration_minutes * 60 * 1000
     );
+
+    // Check minimum notice
+    const now = new Date();
+    const minimumNotice = link.minimum_notice_hours || 2;
+    const hoursUntilBooking = (data.scheduled_date.getTime() - now.getTime()) / (1000 * 60 * 60);
+    
+    if (hoursUntilBooking < minimumNotice) {
+      return { success: false, error: `Booking must be made at least ${minimumNotice} hours in advance` };
+    }
+
+    // Check daily limit
+    if (link.daily_limit) {
+      const startOfDay = new Date(data.scheduled_date);
+      startOfDay.setHours(0, 0, 0, 0);
+      const endOfDay = new Date(data.scheduled_date);
+      endOfDay.setHours(23, 59, 59, 999);
+
+      const bookingsToday = await db.select()
+        .from(bookings)
+        .where(and(
+          eq(bookings.booking_link_id, data.booking_link_id),
+          gte(bookings.scheduled_date, startOfDay),
+          lte(bookings.scheduled_date, endOfDay),
+          eq(bookings.status, "confirmed")
+        ));
+
+      if (bookingsToday.length >= link.daily_limit) {
+        return { success: false, error: `Daily booking limit of ${link.daily_limit} has been reached` };
+      }
+    }
 
     // Check if slot is still available
     const existingBooking = await db.query.bookings.findFirst({

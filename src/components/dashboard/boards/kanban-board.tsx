@@ -63,6 +63,7 @@ interface BoardCard {
     description: string | null;
     column_id: string;
     order: number | null;
+    estimated_value: string | null;
 }
 
 interface BoardColumn {
@@ -89,6 +90,7 @@ function SortableCard({ card, onCardUpdated, onCardDeleted }: {
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [editTitle, setEditTitle] = useState(card.title);
     const [editDescription, setEditDescription] = useState(card.description || "");
+    const [editEstimatedValue, setEditEstimatedValue] = useState(card.estimated_value || "");
     const [isDeleting, setIsDeleting] = useState(false);
 
     const {
@@ -110,6 +112,7 @@ function SortableCard({ card, onCardUpdated, onCardDeleted }: {
         const result = await updateCard(card.id, {
             title: editTitle,
             description: editDescription || null,
+            estimated_value: editEstimatedValue ? parseFloat(editEstimatedValue) : null,
         });
         if (result.success) {
             toast.success(t("boards.cardUpdated") || "Card updated successfully");
@@ -231,6 +234,16 @@ function SortableCard({ card, onCardUpdated, onCardDeleted }: {
                                 rows={3}
                             />
                         </div>
+                        <div className="space-y-2">
+                            <Label className="font-primary text-[#02041D]">{t("boards.estimatedValue", "Estimated Value")}</Label>
+                            <Input
+                                type="number"
+                                value={editEstimatedValue}
+                                onChange={(e) => setEditEstimatedValue(e.target.value)}
+                                placeholder="0.00"
+                                className="bg-white border-[#EDEDED] font-primary text-[#02041D]"
+                            />
+                        </div>
                     </div>
                     <DialogFooter>
                         <Button
@@ -285,11 +298,23 @@ const Column = memo(function Column({ column, onCardAdded, onCardDeleted }: { co
 
     return (
         <div className="w-80 flex flex-col bg-white rounded-xl border border-[#EDEDED] h-full max-h-full shadow-sm">
-            <div className="p-4 font-semibold text-sm flex items-center justify-between border-b border-[#EDEDED] bg-[#EDEDED]/50 rounded-t-xl">
-                <span className="font-primary text-[#02041D]">{translatedColumnName}</span>
-                <span className="text-xs font-medium font-primary text-[#606170] bg-slate-200 px-2.5 py-1 rounded-full min-w-[24px] text-center">
-                    {column.cards.length}
-                </span>
+            <div className="p-4 font-semibold text-sm border-b border-[#EDEDED] bg-[#EDEDED]/50 rounded-t-xl space-y-2">
+                <div className="flex items-center justify-between">
+                    <span className="font-primary text-[#02041D]">{translatedColumnName}</span>
+                    <span className="text-xs font-medium font-primary text-[#606170] bg-slate-200 px-2.5 py-1 rounded-full min-w-[24px] text-center">
+                        {column.cards.length}
+                    </span>
+                </div>
+                {(() => {
+                    const totalValue = column.cards.reduce((sum, card) => {
+                        return sum + (card.estimated_value ? Number(card.estimated_value) : 0);
+                    }, 0);
+                    return totalValue > 0 ? (
+                        <div className="text-xs font-medium font-primary text-[#0A33C6]">
+                            {t("boards.totalValue", "Total Value")}: ${totalValue.toLocaleString()}
+                        </div>
+                    ) : null;
+                })()}
             </div>
             
             <div 
@@ -337,19 +362,26 @@ function AddCardButton({ columnId, onCardAdded }: { columnId: string; onCardAdde
     const [loading, setLoading] = useState(false);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+    const [estimatedValue, setEstimatedValue] = useState("");
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!title.trim()) return;
 
         setLoading(true);
-        const result = await createCard(columnId, title.trim(), description.trim() || null);
+        const result = await createCard(
+            columnId, 
+            title.trim(), 
+            description.trim() || null,
+            estimatedValue ? parseFloat(estimatedValue) : null
+        );
         setLoading(false);
 
         if (result.success && result.card) {
             setOpen(false);
             setTitle("");
             setDescription("");
+            setEstimatedValue("");
             // Pass the new card to parent for optimistic update
             if (onCardAdded) {
                 onCardAdded({
@@ -357,7 +389,8 @@ function AddCardButton({ columnId, onCardAdded }: { columnId: string; onCardAdde
                     title: result.card.title,
                     description: result.card.description,
                     column_id: result.card.column_id,
-                    order: result.card.order
+                    order: result.card.order,
+                    estimated_value: result.card.estimated_value
                 });
             }
         }
@@ -407,6 +440,19 @@ function AddCardButton({ columnId, onCardAdded }: { columnId: string; onCardAdde
                                 placeholder={t("boards.enterCardDescription")}
                                 className="bg-white border-[#EDEDED] font-primary text-[#02041D] resize-none"
                                 rows={3}
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="estimatedValue" className="font-primary text-[#02041D]">
+                                {t("boards.estimatedValue", "Estimated Value")} ({t("common.optional")})
+                            </Label>
+                            <Input
+                                id="estimatedValue"
+                                type="number"
+                                value={estimatedValue}
+                                onChange={(e) => setEstimatedValue(e.target.value)}
+                                placeholder="0.00"
+                                className="bg-white border-[#EDEDED] font-primary text-[#02041D]"
                             />
                         </div>
                     </div>
