@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Trash2, Plus } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useTranslation } from "@/lib/i18n/context";
 
 interface FormField {
     id: string;
@@ -22,8 +23,9 @@ interface StepConfigFormProps {
 }
 
 export function StepConfigForm({ config, onUpdate }: StepConfigFormProps) {
-    const [title, setTitle] = useState(config.title || "Questionnaire");
-    const [description, setDescription] = useState(config.description || "Please fill out the following information.");
+    const { t } = useTranslation();
+    const [title, setTitle] = useState(config.title || t('funnels.editor.form.defaultTitle'));
+    const [description, setDescription] = useState(config.description || t('funnels.editor.form.defaultDescription'));
     const [fields, setFields] = useState<FormField[]>(config.fields || []);
 
     useEffect(() => {
@@ -33,7 +35,7 @@ export function StepConfigForm({ config, onUpdate }: StepConfigFormProps) {
     const addField = () => {
         setFields([...fields, {
             id: `field-${Date.now()}`,
-            label: "New Question",
+            label: t('funnels.editor.form.newQuestion'),
             type: "text",
             required: true
         }]);
@@ -50,7 +52,7 @@ export function StepConfigForm({ config, onUpdate }: StepConfigFormProps) {
     return (
         <div className="space-y-6">
             <div className="space-y-2">
-                <Label className="text-slate-900 dark:text-white">Form Title</Label>
+                <Label className="text-slate-900 dark:text-white">{t('funnels.editor.form.title')}</Label>
                 <Input
                     value={title}
                     onChange={e => setTitle(e.target.value)}
@@ -58,7 +60,7 @@ export function StepConfigForm({ config, onUpdate }: StepConfigFormProps) {
                 />
             </div>
             <div className="space-y-2">
-                <Label className="text-slate-900 dark:text-white">Description</Label>
+                <Label className="text-slate-900 dark:text-white">{t('funnels.editor.form.description')}</Label>
                 <Textarea
                     value={description}
                     onChange={e => setDescription(e.target.value)}
@@ -68,9 +70,9 @@ export function StepConfigForm({ config, onUpdate }: StepConfigFormProps) {
 
             <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                    <Label className="text-slate-900 dark:text-white">Form Fields</Label>
+                    <Label className="text-slate-900 dark:text-white">{t('funnels.editor.form.fields')}</Label>
                     <Button size="sm" variant="outline" onClick={addField} className="text-slate-900 dark:text-white border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800">
-                        <Plus className="h-3 w-3 mr-1" /> Add Field
+                        <Plus className="h-3 w-3 mr-1" /> {t('funnels.editor.form.addField')}
                     </Button>
                 </div>
 
@@ -93,10 +95,10 @@ export function StepConfigForm({ config, onUpdate }: StepConfigFormProps) {
                                     value={field.type}
                                     onChange={e => updateField(field.id, { type: e.target.value })}
                                 >
-                                    <option value="text">Short Text</option>
-                                    <option value="textarea">Long Text</option>
+                                    <option value="text">{t('funnels.editor.form.shortText')}</option>
+                                    <option value="textarea">{t('funnels.editor.form.longText')}</option>
                                     <option value="email">Email</option>
-                                    <option value="file">File Upload</option>
+                                    <option value="file">{t('funnels.editor.form.fileUpload')}</option>
                                 </select>
                             </div>
                             <div className="flex items-center space-x-2">
@@ -106,7 +108,7 @@ export function StepConfigForm({ config, onUpdate }: StepConfigFormProps) {
                                     onCheckedChange={(c) => updateField(field.id, { required: c as boolean })}
                                     className="border-slate-300 dark:border-slate-600 data-[state=checked]:bg-violet-600 data-[state=checked]:border-violet-600"
                                 />
-                                <Label htmlFor={`req-${field.id}`} className="text-sm font-normal text-slate-700 dark:text-slate-300">Required</Label>
+                                <Label htmlFor={`req-${field.id}`} className="text-sm font-normal text-slate-700 dark:text-slate-300">{t('funnels.editor.form.required')}</Label>
                             </div>
                         </div>
                     </div>

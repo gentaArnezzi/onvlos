@@ -17,6 +17,7 @@ import { StepConfigInvoice } from "./steps/step-config-invoice";
 import { StepConfigAutomation } from "./steps/step-config-automation";
 import { StepPreview } from "./steps/step-preview";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/lib/i18n/context";
 import {
     DndContext,
     closestCenter,
@@ -42,12 +43,7 @@ interface FunnelEditorProps {
     funnel: any;
 }
 
-const stepTypes = [
-    { type: 'form', label: 'Form', icon: FileText, description: 'Collect info' },
-    { type: 'contract', label: 'Contract', icon: FileSignature, description: 'E-signature' },
-    { type: 'invoice', label: 'Invoice', icon: Receipt, description: 'Collect payment' },
-    { type: 'automation', label: 'Automation', icon: Zap, description: 'Trigger actions' },
-];
+// stepTypes will be defined inside the component to use translation
 
 function SortableStepItem({
     step,
@@ -62,6 +58,7 @@ function SortableStepItem({
     onSelect: () => void;
     onDelete: (e: React.MouseEvent) => void;
 }) {
+    const { t } = useTranslation();
     const {
         attributes,
         listeners,
@@ -70,6 +67,16 @@ function SortableStepItem({
         transition,
         isDragging,
     } = useSortable({ id: step.id });
+
+    const getStepTypeLabel = (stepType: string) => {
+        switch (stepType) {
+            case 'form': return t('funnels.editor.stepType.form');
+            case 'contract': return t('funnels.editor.stepType.contract');
+            case 'invoice': return t('funnels.editor.stepType.invoice');
+            case 'automation': return t('funnels.editor.stepType.automation');
+            default: return stepType;
+        }
+    };
 
     const style = {
         transform: CSS.Transform.toString(transform),
@@ -109,10 +116,10 @@ function SortableStepItem({
 
             <div className="flex-1 min-w-0">
                 <div className="font-medium text-sm text-slate-900 dark:text-white truncate">
-                    {step.config?.title || step.step_type}
+                    {step.config?.title || getStepTypeLabel(step.step_type)}
                 </div>
-                <div className="text-xs text-slate-500 dark:text-slate-400 capitalize flex items-center mt-0.5">
-                    {step.step_type}
+                <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center mt-0.5">
+                    {getStepTypeLabel(step.step_type)}
                 </div>
             </div>
 
@@ -134,12 +141,20 @@ function SortableStepItem({
 
 export function FunnelEditor({ funnel }: FunnelEditorProps) {
     const router = useRouter();
+    const { t } = useTranslation();
     const [steps, setSteps] = useState(funnel.steps || []);
     const [selectedStepId, setSelectedStepId] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
     const [previewMode, setPreviewMode] = useState<'desktop' | 'mobile'>('desktop');
     const [published, setPublished] = useState(funnel.published || false);
+
+    const stepTypes = [
+        { type: 'form', label: t('funnels.editor.stepType.form'), icon: FileText, description: t('funnels.editor.stepDescription.collectInfo') },
+        { type: 'contract', label: t('funnels.editor.stepType.contract'), icon: FileSignature, description: t('funnels.editor.stepDescription.eSignature') },
+        { type: 'invoice', label: t('funnels.editor.stepType.invoice'), icon: Receipt, description: t('funnels.editor.stepDescription.collectPayment') },
+        { type: 'automation', label: t('funnels.editor.stepType.automation'), icon: Zap, description: t('funnels.editor.stepDescription.triggerActions') },
+    ];
 
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -164,7 +179,7 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
 
     const handleDeleteStep = async (stepId: string, e: React.MouseEvent) => {
         e.stopPropagation();
-        if (confirm("Are you sure you want to delete this step?")) {
+        if (confirm(t("funnels.editor.deleteStepConfirm"))) {
             await deleteFunnelStep(stepId);
             if (selectedStepId === stepId) setSelectedStepId(null);
         }
@@ -223,7 +238,7 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
                                     ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
                                     : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"
                             )}>
-                                {published ? 'Live' : 'Draft'}
+                                {published ? t('funnels.live') : t('funnels.draft')}
                             </span>
                         </h1>
                         <a
@@ -248,7 +263,7 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
                                     : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
                             )}
                         >
-                            Draft
+                            {t('funnels.draft')}
                         </button>
                         <button
                             onClick={() => togglePublished(true)}
@@ -259,9 +274,9 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
                                     : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
                             )}
                         >
-                            Live
+                            {t('funnels.live')}
                         </button>
-                    </div>
+                                </div>
 
                     <div className="h-6 w-px bg-slate-200 dark:bg-slate-700" />
 
@@ -277,8 +292,8 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
                         >
                             <Monitor className="h-4 w-4" />
                         </Button>
-                        <Button
-                            variant="ghost"
+                                <Button 
+                                    variant="ghost" 
                             size="sm"
                             onClick={() => setPreviewMode('mobile')}
                             className={cn(
@@ -305,7 +320,7 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
                         ) : (
                             <Save className="mr-2 h-4 w-4" />
                         )}
-                        Save Changes
+                        {t('funnels.editor.saveChanges')}
                     </Button>
                 </div>
             </header>
@@ -314,8 +329,8 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
                 {/* Left Sidebar: Steps Timeline */}
                 <aside className="w-80 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col z-10">
                     <div className="p-5 border-b border-slate-100 dark:border-slate-800/50">
-                        <h2 className="text-sm font-semibold text-slate-900 dark:text-white mb-1">Funnel Steps</h2>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">Manage the client journey</p>
+                        <h2 className="text-sm font-semibold text-slate-900 dark:text-white mb-1">{t('funnels.editor.funnelSteps')}</h2>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">{t('funnels.editor.manageClientJourney')}</p>
                     </div>
 
                     <div className="flex-1 overflow-y-auto p-4 space-y-3">
@@ -339,8 +354,8 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
                                                 onSelect={() => setSelectedStepId(step.id)}
                                                 onDelete={(e) => handleDeleteStep(step.id, e)}
                                             />
-                                        ))}
-                                    </div>
+                    ))}
+                </div>
                                 </SortableContext>
                             </DndContext>
                         ) : (
@@ -349,10 +364,10 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
                                     <Layout className="h-8 w-8 text-slate-300 dark:text-slate-600" />
                                 </div>
                                 <p className="text-sm font-medium text-slate-900 dark:text-white mb-1">
-                                    Empty Funnel
+                                    {t('funnels.editor.emptyFunnel')}
                                 </p>
                                 <p className="text-xs text-slate-500 dark:text-slate-400">
-                                    Add your first step below to get started
+                                    {t('funnels.editor.addFirstStep')}
                                 </p>
                             </div>
                         )}
@@ -360,14 +375,14 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
                         {/* Add Step Button Area */}
                         <div className="pt-4 mt-2 border-t border-slate-100 dark:border-slate-800/50">
                             <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-3 px-1 uppercase tracking-wider">
-                                Add Step
+                                {t('funnels.editor.addStep')}
                             </p>
-                            <div className="grid grid-cols-2 gap-2">
-                                {stepTypes.map((t) => (
+                    <div className="grid grid-cols-2 gap-2">
+                        {stepTypes.map((t) => (
                                     <button
-                                        key={t.type}
-                                        onClick={() => handleAddStep(t.type)}
-                                        disabled={loading}
+                                key={t.type} 
+                                onClick={() => handleAddStep(t.type)}
+                                disabled={loading}
                                         className="flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-violet-300 dark:hover:border-violet-700 hover:bg-violet-50 dark:hover:bg-violet-900/10 transition-all group text-center"
                                     >
                                         <t.icon className="h-5 w-5 text-slate-400 group-hover:text-violet-600 dark:text-slate-500 dark:group-hover:text-violet-400 mb-2" />
@@ -375,17 +390,17 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
                                             {t.label}
                                         </span>
                                     </button>
-                                ))}
-                            </div>
-                        </div>
+                        ))}
                     </div>
+                </div>
+            </div>
                 </aside>
 
                 {/* Center Canvas: Preview */}
                 <main className="flex-1 bg-slate-50/50 dark:bg-slate-950 relative overflow-hidden flex flex-col items-center justify-center p-8">
                     <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-[0.03] pointer-events-none" />
 
-                    {selectedStep ? (
+                {selectedStep ? (
                         <div className={cn(
                             "relative transition-all duration-500 ease-in-out flex flex-col shadow-2xl rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800",
                             previewMode === 'mobile' ? "w-[375px] h-[667px]" : "w-full max-w-4xl h-full max-h-[800px]"
@@ -415,10 +430,10 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
                                 <Layout className="h-10 w-10 text-violet-600 dark:text-violet-400" />
                             </div>
                             <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
-                                Select a Step to Edit
+                                {t('funnels.editor.selectStepToEdit')}
                             </h3>
                             <p className="text-slate-500 dark:text-slate-400">
-                                Click on any step in the sidebar to configure its settings and see a live preview here.
+                                {t('funnels.editor.clickStepToConfigure')}
                             </p>
                         </div>
                     )}
@@ -431,7 +446,7 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
                             <div className="flex items-center space-x-2">
                                 <Settings className="h-4 w-4 text-slate-400" />
                                 <h3 className="font-semibold text-sm text-slate-900 dark:text-white">
-                                    Configuration
+                                    {t('funnels.editor.configuration')}
                                 </h3>
                             </div>
                             <div className="text-xs font-medium px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 capitalize">
@@ -440,25 +455,25 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
                         </div>
 
                         <div className="flex-1 overflow-y-auto p-6">
-                            {selectedStep.step_type === 'form' && (
-                                <StepConfigForm
-                                    config={selectedStep.config || {}}
-                                    onUpdate={handleUpdateConfig}
-                                />
-                            )}
-                            {selectedStep.step_type === 'contract' && (
-                                <StepConfigContract
-                                    config={selectedStep.config || {}}
-                                    onUpdate={handleUpdateConfig}
-                                />
-                            )}
-                            {selectedStep.step_type === 'invoice' && (
-                                <StepConfigInvoice
-                                    config={selectedStep.config || {}}
-                                    onUpdate={handleUpdateConfig}
-                                />
-                            )}
-                            {selectedStep.step_type === 'automation' && (
+                                        {selectedStep.step_type === 'form' && (
+                                            <StepConfigForm 
+                                                config={selectedStep.config || {}} 
+                                                onUpdate={handleUpdateConfig} 
+                                            />
+                                        )}
+                                        {selectedStep.step_type === 'contract' && (
+                                            <StepConfigContract 
+                                                config={selectedStep.config || {}} 
+                                                onUpdate={handleUpdateConfig} 
+                                            />
+                                        )}
+                                        {selectedStep.step_type === 'invoice' && (
+                                            <StepConfigInvoice 
+                                                config={selectedStep.config || {}} 
+                                                onUpdate={handleUpdateConfig} 
+                                            />
+                                        )}
+                                        {selectedStep.step_type === 'automation' && (
                                 <StepConfigAutomation
                                     config={selectedStep.config || {}}
                                     onUpdate={handleUpdateConfig}
