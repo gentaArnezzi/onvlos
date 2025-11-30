@@ -42,8 +42,8 @@ export default function SignupPage() {
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 relative overflow-hidden">
             {/* Animated Background Elements */}
             <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse" />
-                <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse delay-1000" />
+                <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#0731c2]/20 rounded-full blur-3xl animate-pulse" />
+                <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#010119]/20 rounded-full blur-3xl animate-pulse delay-1000" />
             </div>
 
             <div className="relative z-10 w-full max-w-md px-4">
@@ -79,7 +79,7 @@ export default function SignupPage() {
                                 <Input 
                                     id="name" 
                                     placeholder="John Doe"
-                                    className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500 focus:border-purple-500 focus:ring-purple-500/20"
+                                    className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500 focus:border-[#0731c2] focus:ring-[#0731c2]/20"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
                                     required 
@@ -93,7 +93,7 @@ export default function SignupPage() {
                                     id="email" 
                                     type="email" 
                                     placeholder="m@example.com"
-                                    className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500 focus:border-purple-500 focus:ring-purple-500/20"
+                                    className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500 focus:border-[#0731c2] focus:ring-[#0731c2]/20"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required 
@@ -106,7 +106,7 @@ export default function SignupPage() {
                                 <Input 
                                     id="password" 
                                     type="password"
-                                    className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500 focus:border-purple-500 focus:ring-purple-500/20"
+                                    className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500 focus:border-[#0731c2] focus:ring-[#0731c2]/20"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     required 
@@ -115,7 +115,7 @@ export default function SignupPage() {
                         </CardContent>
                         <CardFooter className="flex flex-col space-y-4 pt-6">
                             <Button 
-                                className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/40 transition-all" 
+                                className="w-full bg-gradient-to-r from-[#0731c2] to-[#010119] hover:from-[#0525a0] hover:to-[#00000f] text-white shadow-lg shadow-[#0731c2]/30 hover:shadow-xl hover:shadow-[#0731c2]/40 transition-all" 
                                 type="submit" 
                                 disabled={loading}
                             >
@@ -126,7 +126,7 @@ export default function SignupPage() {
                                 Already have an account?{" "}
                                 <Link 
                                     href="/login" 
-                                    className="text-purple-400 hover:text-purple-300 hover:underline font-medium transition-colors"
+                                    className="text-[#0731c2] hover:text-[#0525a0] hover:underline font-medium transition-colors"
                                 >
                                     Sign in
                                 </Link>

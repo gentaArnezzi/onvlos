@@ -28,7 +28,7 @@ export function BookingLinkCard({ link, baseUrl }: BookingLinkCardProps) {
 
     return (
         <Card className="group hover:shadow-xl transition-all duration-300 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 overflow-hidden">
-            <div className="h-1 w-full bg-gradient-to-r from-blue-500 to-indigo-500" />
+            <div className="h-1 w-full bg-gradient-to-r from-[#0731c2] to-[#010119]" />
             <CardHeader className="pb-3">
                 <div className="flex justify-between items-start">
                     <CardTitle className="text-lg font-semibold text-slate-900 dark:text-white">

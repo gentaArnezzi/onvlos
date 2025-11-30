@@ -106,7 +106,7 @@ export function CreateTaskDialog({ clients, taskToEdit, initialClientId, open: c
     <Dialog open={open} onOpenChange={setOpen}>
       {!isControlled && (
         <DialogTrigger asChild>
-          <Button className="bg-violet-600 hover:bg-violet-700 text-white">
+          <Button className="bg-[#0731c2] hover:bg-[#0525a0] text-white">
             <Plus className="mr-2 h-4 w-4" /> {t("tasks.newTask")}
           </Button>
         </DialogTrigger>
@@ -183,7 +183,7 @@ export function CreateTaskDialog({ clients, taskToEdit, initialClientId, open: c
             <Button
               type="submit"
               disabled={loading}
-              className="bg-violet-600 hover:bg-violet-700 text-white"
+              className="bg-[#0731c2] hover:bg-[#0525a0] text-white"
             >
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {taskToEdit ? t("tasks.saveChanges") : t("tasks.createTask")}

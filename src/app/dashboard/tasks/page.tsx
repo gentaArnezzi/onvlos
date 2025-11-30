@@ -70,7 +70,7 @@ export default function TasksPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-violet-600 to-indigo-500 bg-clip-text text-transparent">
+          <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-[#0731c2] to-[#010119] bg-clip-text text-transparent">
             {t("tasks.title")}
           </h2>
           <p className="text-slate-300 mt-1">
@@ -90,7 +90,7 @@ export default function TasksPage() {
             <CardTitle className="text-sm font-medium text-slate-300">
               {t("tasks.totalTasks")}
             </CardTitle>
-            <div className="p-2 rounded-lg bg-violet-100 text-violet-600 dark:bg-violet-900/30 dark:text-violet-400">
+            <div className="p-2 rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
               <CheckSquare className="h-4 w-4" />
             </div>
           </CardHeader>

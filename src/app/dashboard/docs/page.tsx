@@ -145,7 +145,7 @@ export default function DocsPage() {
     <div className="flex-1 space-y-8 p-8 max-w-7xl mx-auto">
       {/* Header */}
       <div>
-        <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+        <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-[#0731c2] via-[#0731c2] to-[#010119] bg-clip-text text-transparent">
           Documentation
         </h2>
         <p className="text-slate-600 dark:text-slate-400 mt-1">
@@ -171,7 +171,7 @@ export default function DocsPage() {
       {/* Getting Started */}
       <div>
         <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-          <Book className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+          <Book className="h-5 w-5 text-[#0731c2] dark:text-[#0731c2]" />
           Getting Started
         </h3>
         <div className="grid gap-4 md:grid-cols-2">
@@ -179,18 +179,18 @@ export default function DocsPage() {
             <Card key={index} className="border border-slate-200 dark:border-slate-700 shadow-sm bg-white dark:bg-slate-800/50 hover:shadow-md transition-shadow cursor-pointer group">
               <CardContent className="p-6">
                 <div className="flex items-start gap-4">
-                  <div className="p-2 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-200 dark:group-hover:bg-indigo-900/50 transition-colors">
+                  <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-[#0731c2] dark:text-[#0731c2] group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 transition-colors">
                     <guide.icon className="h-5 w-5" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-semibold text-slate-900 dark:text-white mb-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                    <h4 className="font-semibold text-slate-900 dark:text-white mb-1 group-hover:text-[#0731c2] dark:group-hover:text-[#0731c2] transition-colors">
                       {guide.title}
                     </h4>
                     <p className="text-sm text-slate-600 dark:text-slate-400">
                       {guide.description}
                     </p>
                   </div>
-                  <ChevronRight className="h-5 w-5 text-slate-400 dark:text-slate-500 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors" />
+                  <ChevronRight className="h-5 w-5 text-slate-400 dark:text-slate-500 group-hover:text-[#0731c2] dark:group-hover:text-[#0731c2] transition-colors" />
                 </div>
               </CardContent>
             </Card>
@@ -208,7 +208,7 @@ export default function DocsPage() {
             <Card key={catIndex} className="border border-slate-200 dark:border-slate-700 shadow-sm bg-white dark:bg-slate-800/50">
               <CardHeader>
                 <CardTitle className="text-lg font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-                  <div className="p-2 rounded-lg bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400">
+                  <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-[#0731c2] dark:text-[#0731c2]">
                     <category.icon className="h-4 w-4" />
                   </div>
                   {category.category}
@@ -219,21 +219,21 @@ export default function DocsPage() {
                   {category.guides.map((guide, guideIndex) => (
                     <div 
                       key={guideIndex}
-                      className="p-4 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-700 hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors cursor-pointer group"
+                      className="p-4 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-[#0731c2] dark:hover:border-[#0731c2] hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors cursor-pointer group"
                     >
                       <div className="flex items-start gap-3">
-                        <div className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/30 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                        <div className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/30 group-hover:text-[#0731c2] dark:group-hover:text-[#0731c2] transition-colors">
                           <guide.icon className="h-4 w-4" />
                         </div>
                         <div className="flex-1">
-                          <h4 className="font-medium text-slate-900 dark:text-white mb-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                          <h4 className="font-medium text-slate-900 dark:text-white mb-1 group-hover:text-[#0731c2] dark:group-hover:text-[#0731c2] transition-colors">
                             {guide.title}
                           </h4>
                           <p className="text-sm text-slate-600 dark:text-slate-400">
                             {guide.description}
                           </p>
                         </div>
-                        <ChevronRight className="h-4 w-4 text-slate-400 dark:text-slate-500 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors opacity-0 group-hover:opacity-100" />
+                        <ChevronRight className="h-4 w-4 text-slate-400 dark:text-slate-500 group-hover:text-[#0731c2] dark:group-hover:text-[#0731c2] transition-colors opacity-0 group-hover:opacity-100" />
                       </div>
                     </div>
                   ))}
@@ -245,11 +245,11 @@ export default function DocsPage() {
       </div>
 
       {/* API Documentation */}
-      <Card className="border border-indigo-200 dark:border-indigo-800 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950/30 dark:to-purple-950/30">
+      <Card className="border border-blue-200 dark:border-blue-800 bg-gradient-to-r from-blue-50 to-blue-50 dark:from-blue-950/30 dark:to-blue-950/30">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="p-3 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400">
+              <div className="p-3 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-[#0731c2] dark:text-[#0731c2]">
                 <Code className="h-6 w-6" />
               </div>
               <div>
@@ -263,7 +263,7 @@ export default function DocsPage() {
             </div>
             <Button 
               variant="outline"
-              className="border-indigo-300 dark:border-indigo-700 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 hover:border-indigo-400 dark:hover:border-indigo-600"
+              className="border-[#0731c2] dark:border-[#0731c2] text-[#0731c2] dark:text-[#0731c2] hover:bg-blue-50 dark:hover:bg-blue-950/50 hover:border-[#0525a0] dark:hover:border-[#0525a0]"
               asChild
             >
               <a href="#" target="_blank">

@@ -96,7 +96,7 @@ export function BookingCalendar({ bookings: initialBookings }: BookingCalendarPr
   };
 
   const eventStyleGetter = (event: BookingEvent) => {
-    let backgroundColor = '#3b82f6'; // Default blue
+    let backgroundColor = '#0731c2'; // Primary blue
     
     switch (event.resource.status) {
       case 'confirmed':

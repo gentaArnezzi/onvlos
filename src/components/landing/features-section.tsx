@@ -27,7 +27,7 @@ const features = [
     icon: FileText,
     title: "Proposals & Contracts",
     description: "Create beautiful proposals and get them signed electronically in minutes.",
-    gradient: "from-purple-500 to-pink-500",
+    gradient: "from-[#0731c2] to-[#010119]",
   },
   {
     icon: Calendar,
@@ -45,7 +45,7 @@ const features = [
     icon: MessageSquare,
     title: "Real-time Chat",
     description: "Communicate with clients instantly through integrated messaging.",
-    gradient: "from-indigo-500 to-purple-500",
+    gradient: "from-[#0731c2] to-[#010119]",
   },
   {
     icon: CreditCard,
@@ -67,12 +67,12 @@ export function FeaturesSection() {
           viewport={{ once: true }}
           className="text-center max-w-3xl mx-auto mb-16"
         >
-          <span className="inline-block px-4 py-1 mb-6 text-sm font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-300 rounded-full">
+          <span className="inline-block px-4 py-1 mb-6 text-sm font-medium bg-blue-100 text-[#0731c2] dark:bg-blue-900/50 dark:text-[#0731c2] rounded-full">
             Features
           </span>
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
             Everything you need to
-            <span className="block bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400">
+            <span className="block bg-clip-text text-transparent bg-gradient-to-r from-[#0731c2] to-[#010119] dark:from-[#0731c2] dark:to-[#010119]">
               run your agency
             </span>
           </h2>
@@ -134,7 +134,7 @@ export function FeaturesSection() {
             </p>
           </div>
           <div>
-            <div className="inline-flex p-3 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 mb-4">
+            <div className="inline-flex p-3 rounded-lg bg-gradient-to-br from-[#0731c2] to-[#010119] mb-4">
               <Globe className="w-6 h-6 text-white" />
             </div>
             <h4 className="font-semibold text-gray-900 dark:text-white">Global CDN</h4>

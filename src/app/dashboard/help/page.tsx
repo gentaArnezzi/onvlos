@@ -135,7 +135,7 @@ export default function HelpPage() {
     <div className="flex-1 space-y-8 p-8 max-w-7xl mx-auto">
       {/* Header */}
       <div>
-        <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+        <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-[#0731c2] via-[#0731c2] to-[#010119] bg-clip-text text-transparent">
           Help & Support
         </h2>
         <p className="text-slate-600 dark:text-slate-400 mt-1">
@@ -161,14 +161,14 @@ export default function HelpPage() {
       {/* Support Options */}
       <div>
         <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-          <LifeBuoy className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+          <LifeBuoy className="h-5 w-5 text-[#0731c2] dark:text-[#0731c2]" />
           Get Support
         </h3>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {supportOptions.map((option, index) => (
             <Card key={index} className="border border-slate-200 dark:border-slate-700 shadow-sm bg-white dark:bg-slate-800/50 hover:shadow-md transition-shadow">
               <CardHeader className="pb-3">
-                <div className="p-2 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 w-fit mb-2">
+                <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-[#0731c2] dark:text-[#0731c2] w-fit mb-2">
                   <option.icon className="h-5 w-5" />
                 </div>
                 <CardTitle className="text-base font-semibold text-slate-900 dark:text-white">
@@ -199,7 +199,7 @@ export default function HelpPage() {
       {/* Quick Start Guides */}
       <div>
         <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-          <BookOpen className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+          <BookOpen className="h-5 w-5 text-[#0731c2] dark:text-[#0731c2]" />
           Quick Start Guides
         </h3>
         <div className="grid gap-4 md:grid-cols-2">
@@ -207,18 +207,18 @@ export default function HelpPage() {
             <Card key={index} className="border border-slate-200 dark:border-slate-700 shadow-sm bg-white dark:bg-slate-800/50 hover:shadow-md transition-shadow cursor-pointer group">
               <CardContent className="p-6">
                 <div className="flex items-start gap-4">
-                  <div className="p-2 rounded-lg bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 group-hover:bg-purple-200 dark:group-hover:bg-purple-900/50 transition-colors">
+                  <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-[#0731c2] dark:text-[#0731c2] group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 transition-colors">
                     <guide.icon className="h-5 w-5" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-semibold text-slate-900 dark:text-white mb-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                    <h4 className="font-semibold text-slate-900 dark:text-white mb-1 group-hover:text-[#0731c2] dark:group-hover:text-[#0731c2] transition-colors">
                       {guide.title}
                     </h4>
                     <p className="text-sm text-slate-600 dark:text-slate-400">
                       {guide.description}
                     </p>
                   </div>
-                  <ChevronRight className="h-5 w-5 text-slate-400 dark:text-slate-500 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors" />
+                  <ChevronRight className="h-5 w-5 text-slate-400 dark:text-slate-500 group-hover:text-[#0731c2] dark:group-hover:text-[#0731c2] transition-colors" />
                 </div>
               </CardContent>
             </Card>
@@ -229,7 +229,7 @@ export default function HelpPage() {
       {/* FAQ Section */}
       <div>
         <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-          <HelpCircle className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+          <HelpCircle className="h-5 w-5 text-[#0731c2] dark:text-[#0731c2]" />
           Frequently Asked Questions
         </h3>
         <div className="space-y-6">
@@ -258,7 +258,7 @@ export default function HelpPage() {
       </div>
 
       {/* Still Need Help */}
-      <Card className="border border-indigo-200 dark:border-indigo-800 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950/30 dark:to-purple-950/30">
+      <Card className="border border-blue-200 dark:border-blue-800 bg-gradient-to-r from-blue-50 to-blue-50 dark:from-blue-950/30 dark:to-blue-950/30">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -270,7 +270,7 @@ export default function HelpPage() {
               </p>
             </div>
             <Button 
-              className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white"
+              className="bg-gradient-to-r from-[#0731c2] to-[#010119] hover:from-[#0525a0] hover:to-[#00000f] text-white"
               asChild
             >
               <a href="mailto:support@onvlo.com">

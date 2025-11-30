@@ -110,8 +110,8 @@ export default async function DashboardPage() {
       icon: DollarSign,
       trend: `${revenueTrendUp ? '+' : ''}${revenueTrend}%`,
       trendUp: revenueTrendUp,
-      gradient: "from-violet-500 to-purple-600",
-      shadow: "shadow-violet-500/20"
+      gradient: "from-[#0731c2] to-[#010119]",
+      shadow: "shadow-[#0731c2]/20"
     },
     {
       title: t("dashboard.activeClients", language),
@@ -164,7 +164,7 @@ export default async function DashboardPage() {
             <Calendar className="mr-2 h-4 w-4" />
             {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
           </Button>
-          <Button className="bg-violet-600 hover:bg-violet-700 text-white shadow-lg shadow-violet-500/20">
+          <Button className="bg-[#0731c2] hover:bg-[#0525a0] text-white shadow-lg shadow-[#0731c2]/20">
             <Plus className="mr-2 h-4 w-4" /> {t("tasks.newProject", language)}
           </Button>
         </div>
@@ -246,7 +246,7 @@ export default async function DashboardPage() {
                   <CardTitle className="text-lg font-semibold text-white">{t("dashboard.recentTransactions", language)}</CardTitle>
                   <CardDescription className="text-slate-400">{t("dashboard.recentActivity", language)}</CardDescription>
               </div>
-              <Button variant="ghost" size="sm" className="text-violet-500 hover:text-violet-600" asChild>
+              <Button variant="ghost" size="sm" className="text-[#0731c2] hover:text-[#0525a0]" asChild>
                 <Link href="/dashboard/invoices">{t("dashboard.viewAll", language)}</Link>
               </Button>
             </CardHeader>
@@ -302,10 +302,10 @@ export default async function DashboardPage() {
         {/* Sidebar Content - Right Column */}
         <div className="lg:col-span-4 xl:col-span-3 space-y-8">
           {/* Quick Actions */}
-          <Card className="border-none shadow-lg bg-gradient-to-br from-violet-600 to-indigo-600 text-white">
+          <Card className="border-none shadow-lg bg-gradient-to-br from-[#0731c2] to-[#010119] text-white">
             <CardHeader>
               <CardTitle className="text-lg font-semibold">{t("dashboard.quickActions", language)}</CardTitle>
-              <p className="text-violet-100 text-sm">{t("dashboard.quickActionsDesc", language)}</p>
+              <p className="text-blue-100 text-sm">{t("dashboard.quickActionsDesc", language)}</p>
             </CardHeader>
             <CardContent className="grid grid-cols-2 gap-4">
               <Button variant="secondary" className="h-auto py-4 flex flex-col gap-2 bg-white/10 hover:bg-white/20 border-none text-white" asChild>
@@ -373,7 +373,7 @@ export default async function DashboardPage() {
 
           {/* Pro Plan Promo */}
           <Card className="border-none shadow-lg bg-slate-900 dark:bg-black text-white overflow-hidden relative">
-            <div className="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 bg-gradient-to-br from-violet-500 to-fuchsia-500 blur-2xl opacity-50 rounded-full" />
+            <div className="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 bg-gradient-to-br from-[#0731c2] to-[#010119] blur-2xl opacity-50 rounded-full" />
             <CardHeader>
               <div className="flex items-center gap-2 mb-2">
                 <Zap className="h-5 w-5 text-yellow-400 fill-yellow-400" />

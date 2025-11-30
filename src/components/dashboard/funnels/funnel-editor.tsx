@@ -92,7 +92,7 @@ function SortableStepItem({
             className={cn(
                 "group relative flex items-center p-3 rounded-xl border transition-all duration-200 cursor-pointer",
                 isSelected
-                    ? "bg-violet-50/50 border-violet-200 dark:bg-violet-900/20 dark:border-violet-800 shadow-sm"
+                    ? "bg-blue-50/50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800 shadow-sm"
                     : "bg-white border-slate-200 hover:border-slate-300 hover:shadow-sm dark:bg-slate-900 dark:border-slate-800 dark:hover:border-slate-700"
             )}
             onClick={onSelect}
@@ -108,7 +108,7 @@ function SortableStepItem({
             <div className={cn(
                 "h-8 w-8 rounded-lg flex items-center justify-center text-xs font-bold flex-shrink-0 mr-3 transition-colors",
                 isSelected
-                    ? "bg-violet-600 text-white shadow-sm"
+                    ? "bg-[#0731c2] text-white shadow-sm"
                     : "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400"
             )}>
                 {index + 1}
@@ -133,7 +133,7 @@ function SortableStepItem({
             </Button>
 
             {isSelected && (
-                <div className="absolute -right-[1px] top-1/2 -translate-y-1/2 w-1 h-8 bg-violet-600 rounded-l-full" />
+                <div className="absolute -right-[1px] top-1/2 -translate-y-1/2 w-1 h-8 bg-[#0731c2] rounded-l-full" />
             )}
         </div>
     );
@@ -244,7 +244,7 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
                         <a
                             href={`/onboard/${funnel.public_url}`}
                             target="_blank"
-                            className="text-xs text-slate-500 dark:text-slate-400 hover:text-violet-600 dark:hover:text-violet-400 flex items-center mt-0.5 transition-colors"
+                            className="text-xs text-slate-500 dark:text-slate-400 hover:text-[#0731c2] dark:hover:text-[#0731c2] flex items-center mt-0.5 transition-colors"
                         >
                             onvlo.com/onboard/{funnel.public_url}
                             <Eye className="h-3 w-3 ml-1" />
@@ -311,7 +311,7 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
                         onClick={saveConfig}
                         disabled={saving || !selectedStep}
                         className={cn(
-                            "bg-violet-600 hover:bg-violet-700 text-white shadow-md shadow-violet-500/20 transition-all",
+                            "bg-[#0731c2] hover:bg-[#0525a0] text-white shadow-md shadow-[#0731c2]/20 transition-all",
                             saving && "opacity-80"
                         )}
                     >
@@ -383,10 +383,10 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
                                 key={t.type} 
                                 onClick={() => handleAddStep(t.type)}
                                 disabled={loading}
-                                        className="flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-violet-300 dark:hover:border-violet-700 hover:bg-violet-50 dark:hover:bg-violet-900/10 transition-all group text-center"
+                                        className="flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-[#0731c2] dark:hover:border-[#0731c2] hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-all group text-center"
                                     >
-                                        <t.icon className="h-5 w-5 text-slate-400 group-hover:text-violet-600 dark:text-slate-500 dark:group-hover:text-violet-400 mb-2" />
-                                        <span className="text-xs font-medium text-slate-700 dark:text-slate-300 group-hover:text-violet-700 dark:group-hover:text-violet-300">
+                                        <t.icon className="h-5 w-5 text-slate-400 group-hover:text-[#0731c2] dark:text-slate-500 dark:group-hover:text-[#0731c2] mb-2" />
+                                        <span className="text-xs font-medium text-slate-700 dark:text-slate-300 group-hover:text-[#0731c2] dark:group-hover:text-[#0731c2]">
                                             {t.label}
                                         </span>
                                     </button>
@@ -426,8 +426,8 @@ export function FunnelEditor({ funnel }: FunnelEditorProps) {
                         </div>
                     ) : (
                         <div className="text-center max-w-md">
-                            <div className="w-24 h-24 bg-violet-100 dark:bg-violet-900/20 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse">
-                                <Layout className="h-10 w-10 text-violet-600 dark:text-violet-400" />
+                            <div className="w-24 h-24 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse">
+                                <Layout className="h-10 w-10 text-[#0731c2] dark:text-[#0731c2]" />
                             </div>
                             <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
                                 {t('funnels.editor.selectStepToEdit')}

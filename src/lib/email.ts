@@ -68,10 +68,10 @@ export const emailTemplates = {
           <style>
             body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
             .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; overflow: hidden; }
-            .header { background: #3b82f6; color: white; padding: 30px; text-align: center; }
+            .header { background: #0731c2; color: white; padding: 30px; text-align: center; }
             .content { padding: 30px; }
             .credentials { background: #f3f4f6; padding: 20px; border-radius: 5px; margin: 20px 0; }
-            .button { display: inline-block; padding: 12px 24px; background: #3b82f6; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+            .button { display: inline-block; padding: 12px 24px; background: #0731c2; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
           </style>
         </head>
         <body>
@@ -149,10 +149,10 @@ export const emailTemplates = {
           <style>
             body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
             .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; }
-            .header { background: #8b5cf6; color: white; padding: 30px; text-align: center; }
+            .header { background: #0731c2; color: white; padding: 30px; text-align: center; }
             .content { padding: 30px; }
-            .task-box { background: #f3f4f6; padding: 15px; border-left: 4px solid #8b5cf6; margin: 20px 0; }
-            .button { display: inline-block; padding: 12px 24px; background: #8b5cf6; color: white; text-decoration: none; border-radius: 5px; }
+            .task-box { background: #f3f4f6; padding: 15px; border-left: 4px solid #0731c2; margin: 20px 0; }
+            .button { display: inline-block; padding: 12px 24px; background: #0731c2; color: white; text-decoration: none; border-radius: 5px; }
           </style>
         </head>
         <body>

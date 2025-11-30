@@ -153,7 +153,7 @@ export function SettingsTabs({ user, workspace, billing, language: propLanguage 
       case "starter":
         return "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400";
       case "professional":
-        return "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400";
+        return "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400";
       case "enterprise":
         return "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400";
       default:
@@ -166,21 +166,21 @@ export function SettingsTabs({ user, workspace, billing, language: propLanguage 
       <TabsList className="bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 w-fit">
         <TabsTrigger 
           value="profile" 
-          className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white text-slate-700 dark:text-slate-300"
+          className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700 dark:text-slate-300"
         >
           <User className="h-4 w-4 mr-2" />
           {t("settings.profile")}
         </TabsTrigger>
         <TabsTrigger 
           value="workspace" 
-          className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white text-slate-700 dark:text-slate-300"
+          className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700 dark:text-slate-300"
         >
           <Building className="h-4 w-4 mr-2" />
           {t("settings.workspace")}
         </TabsTrigger>
         <TabsTrigger 
           value="billing" 
-          className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white text-slate-700 dark:text-slate-300"
+          className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700 dark:text-slate-300"
         >
           <CreditCard className="h-4 w-4 mr-2" />
           {t("settings.billing")}
@@ -199,7 +199,7 @@ export function SettingsTabs({ user, workspace, billing, language: propLanguage 
             <div className="flex items-center space-x-4">
               <Avatar className="h-20 w-20 border-2 border-slate-200 dark:border-slate-700">
                 <AvatarImage src={profileAvatar || undefined} />
-                <AvatarFallback className="bg-gradient-to-br from-purple-500 to-blue-600 text-white text-xl">
+                <AvatarFallback className="bg-gradient-to-br from-[#0731c2] to-[#010119] text-white text-xl">
                   {getInitials(profileName)}
                 </AvatarFallback>
               </Avatar>
@@ -235,7 +235,7 @@ export function SettingsTabs({ user, workspace, billing, language: propLanguage 
             <Button 
               onClick={handleSaveProfile} 
               disabled={loading} 
-              className="ml-auto bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-0"
+              className="ml-auto bg-gradient-to-r from-[#0731c2] to-[#010119] hover:from-[#0525a0] hover:to-[#00000f] text-white border-0"
             >
               {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
               {t("settings.saveChanges")}
@@ -334,7 +334,7 @@ export function SettingsTabs({ user, workspace, billing, language: propLanguage 
             <Button 
               onClick={handleSaveWorkspace} 
               disabled={loading} 
-              className="ml-auto bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-0"
+              className="ml-auto bg-gradient-to-r from-[#0731c2] to-[#010119] hover:from-[#0525a0] hover:to-[#00000f] text-white border-0"
             >
               {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
               {t("settings.saveChanges")}

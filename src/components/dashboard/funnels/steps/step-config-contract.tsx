@@ -47,7 +47,7 @@ export function StepConfigContract({ config, onUpdate }: StepConfigContractProps
                     id="req-sig"
                     checked={requireSignature}
                     onCheckedChange={(c) => setRequireSignature(c as boolean)}
-                    className="border-slate-300 dark:border-slate-600 data-[state=checked]:bg-violet-600 data-[state=checked]:border-violet-600"
+                    className="border-slate-300 dark:border-slate-600 data-[state=checked]:bg-[#0731c2] data-[state=checked]:border-[#0731c2]"
                 />
                 <Label htmlFor="req-sig" className="text-slate-900 dark:text-white">{t('funnels.editor.contract.requireSignature')}</Label>
             </div>

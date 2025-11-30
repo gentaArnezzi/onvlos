@@ -55,7 +55,7 @@ interface AnalyticsData {
   }>;
 }
 
-const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6'];
+const COLORS = ['#10b981', '#0731c2', '#f59e0b', '#ef4444', '#010119'];
 
 export function AnalyticsDashboard({ data, currencySymbol = '$' }: { data: AnalyticsData; currencySymbol?: string }) {
   const revenueChange = data.stats.lastMonthRevenue > 0
@@ -160,9 +160,9 @@ export function AnalyticsDashboard({ data, currencySymbol = '$' }: { data: Analy
                 <Line 
                   type="monotone" 
                   dataKey="revenue" 
-                  stroke="#3b82f6" 
+                  stroke="#0731c2" 
                   strokeWidth={2}
-                  dot={{ fill: '#3b82f6', strokeWidth: 2 }}
+                  dot={{ fill: '#0731c2', strokeWidth: 2 }}
                 />
               </LineChart>
             </ResponsiveContainer>

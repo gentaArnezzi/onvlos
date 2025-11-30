@@ -1,8 +1,8 @@
 import { Server as HTTPServer } from "http";
 import { Server as SocketIOServer } from "socket.io";
 import { db } from "./db";
-import { messages, conversations } from "./db/schema";
-import { eq } from "drizzle-orm";
+import { messages, conversations, client_spaces, client_companies } from "./db/schema";
+import { eq, desc } from "drizzle-orm";
 
 let io: SocketIOServer | null = null;
 
@@ -28,7 +28,7 @@ export function initSocketServer(httpServer: HTTPServer) {
       socket.leave(`conversation-${conversationId}`);
     });
 
-    // Handle message sending
+    // Handle message sending (from admin)
     socket.on("send-message", async (data: {
       conversationId: string;
       content: string;
@@ -54,6 +54,68 @@ export function initSocketServer(httpServer: HTTPServer) {
         });
       } catch (error) {
         console.error("Error sending message:", error);
+        socket.emit("error", { message: "Failed to send message" });
+      }
+    });
+
+    // Handle message sending from portal (no auth required)
+    socket.on("send-message-portal", async (data: {
+      conversationId: string;
+      content: string;
+      userId: string;
+      userName: string;
+    }) => {
+      try {
+        // Import sendMessageFromPortal function
+        const { sendMessageFromPortal } = await import("@/actions/chat");
+        
+        // Save message to database using portal function
+        const result = await sendMessageFromPortal(data.conversationId, data.content);
+        
+        if (result.success) {
+          // Get the conversation to find client space and user info
+          const conversation = await db.query.conversations.findFirst({
+            where: eq(conversations.id, data.conversationId)
+          });
+
+          if (conversation) {
+            // Get client space and client info for user name
+            const clientSpace = await db.query.client_spaces.findFirst({
+              where: eq(client_spaces.id, conversation.client_space_id)
+            });
+
+            if (clientSpace) {
+              const client = await db.query.client_companies.findFirst({
+                where: eq(client_companies.id, clientSpace.client_id)
+              });
+
+              // Get the latest message from database
+              const latestMessages = await db.select()
+                .from(messages)
+                .where(eq(messages.conversation_id, data.conversationId))
+                .orderBy(desc(messages.created_at))
+                .limit(1);
+              
+              const latestMessage = latestMessages[0];
+
+              if (latestMessage) {
+                // Broadcast to all users in the conversation
+                io?.to(`conversation-${data.conversationId}`).emit("new-message", {
+                  id: latestMessage.id,
+                  content: latestMessage.content,
+                  user_id: latestMessage.user_id,
+                  user_name: client?.name || client?.company_name || data.userName || "Client",
+                  created_at: latestMessage.created_at,
+                  conversation_id: data.conversationId
+                });
+              }
+            }
+          }
+        } else {
+          socket.emit("error", { message: result.error || "Failed to send message" });
+        }
+      } catch (error) {
+        console.error("Error sending message from portal:", error);
         socket.emit("error", { message: "Failed to send message" });
       }
     });

@@ -49,23 +49,23 @@
   --radius: 0.75rem;
 
   /* Base Colors - Light Mode */
-  --background: 255 255 255;
-  --foreground: 15 23 42;
+  --background: 237 237 237;
+  --foreground: 1 1 25;
 
   /* Card Colors */
   --card: 255 255 255;
-  --card-foreground: 15 23 42;
+  --card-foreground: 1 1 25;
 
   /* Popover */
   --popover: 255 255 255;
-  --popover-foreground: 15 23 42;
+  --popover-foreground: 1 1 25;
 
-  /* Primary - Vibrant Purple */
-  --primary: 139 92 246;
+  /* Primary - Blue */
+  --primary: 7 49 194;
   --primary-foreground: 255 255 255;
 
-  /* Secondary - Vibrant Blue */
-  --secondary: 59 130 246;
+  /* Secondary - Black */
+  --secondary: 1 1 25;
   --secondary-foreground: 255 255 255;
 
   /* Muted */
@@ -83,24 +83,24 @@
   /* Border & Input */
   --border: 226 232 240;
   --input: 226 232 240;
-  --ring: 139 92 246;
+  --ring: 7 49 194;
 
   /* Chart Colors */
-  --chart-1: 139 92 246;
-  --chart-2: 59 130 246;
+  --chart-1: 7 49 194;
+  --chart-2: 1 1 25;
   --chart-3: 236 72 153;
   --chart-4: 245 158 11;
   --chart-5: 34 197 94;
 
   /* Sidebar */
   --sidebar: 255 255 255;
-  --sidebar-foreground: 15 23 42;
-  --sidebar-primary: 139 92 246;
+  --sidebar-foreground: 1 1 25;
+  --sidebar-primary: 7 49 194;
   --sidebar-primary-foreground: 255 255 255;
   --sidebar-accent: 241 245 249;
-  --sidebar-accent-foreground: 15 23 42;
+  --sidebar-accent-foreground: 1 1 25;
   --sidebar-border: 226 232 240;
-  --sidebar-ring: 139 92 246;
+  --sidebar-ring: 7 49 194;
 
   /* Glassmorphism */
   --glass-bg: rgba(255, 255, 255, 0.1);
@@ -109,36 +109,36 @@
   --backdrop-blur: 20px;
 
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, rgb(139, 92, 246) 0%, rgb(124, 58, 237) 100%);
-  --gradient-secondary: linear-gradient(135deg, rgb(59, 130, 246) 0%, rgb(37, 99, 235) 100%);
+  --gradient-primary: linear-gradient(135deg, rgb(7, 49, 194) 0%, rgb(5, 35, 150) 100%);
+  --gradient-secondary: linear-gradient(135deg, rgb(1, 1, 25) 0%, rgb(0, 0, 15) 100%);
   --gradient-accent: linear-gradient(135deg, rgb(240, 147, 251) 0%, rgb(245, 87, 108) 100%);
-  --gradient-hero: radial-gradient(circle at top right, rgba(139, 92, 246, 0.15), transparent 50%),
-    radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.15), transparent 50%);
-  --gradient-mesh: radial-gradient(at 40% 20%, rgb(139, 92, 246) 0px, transparent 50%),
-    radial-gradient(at 80% 0%, rgb(59, 130, 246) 0px, transparent 50%),
+  --gradient-hero: radial-gradient(circle at top right, rgba(7, 49, 194, 0.15), transparent 50%),
+    radial-gradient(circle at bottom left, rgba(1, 1, 25, 0.15), transparent 50%);
+  --gradient-mesh: radial-gradient(at 40% 20%, rgb(7, 49, 194) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, rgb(1, 1, 25) 0px, transparent 50%),
     radial-gradient(at 0% 50%, rgb(236, 72, 153) 0px, transparent 50%);
 }
 
 .dark {
   /* Base Colors - Dark Mode */
-  --background: 10 10 15;
-  --foreground: 248 250 252;
+  --background: 1 1 25;
+  --foreground: 237 237 237;
 
   /* Card Colors */
   --card: 24 24 32;
-  --card-foreground: 248 250 252;
+  --card-foreground: 237 237 237;
 
   /* Popover - Lighter for better visibility */
   --popover: 51 65 85;
-  --popover-foreground: 248 250 252;
+  --popover-foreground: 237 237 237;
 
-  /* Primary - Brighter Purple in Dark Mode */
-  --primary: 167 139 250;
-  --primary-foreground: 15 23 42;
+  /* Primary - Blue in Dark Mode */
+  --primary: 7 49 194;
+  --primary-foreground: 255 255 255;
 
-  /* Secondary - Brighter Blue in Dark Mode */
-  --secondary: 96 165 250;
-  --secondary-foreground: 15 23 42;
+  /* Secondary - Black in Dark Mode */
+  --secondary: 1 1 25;
+  --secondary-foreground: 237 237 237;
 
   /* Muted */
   --muted: 30 41 59;
@@ -155,24 +155,24 @@
   /* Border & Input */
   --border: 51 65 85;
   --input: 51 65 85;
-  --ring: 167 139 250;
+  --ring: 7 49 194;
 
   /* Chart Colors */
-  --chart-1: 167 139 250;
-  --chart-2: 96 165 250;
+  --chart-1: 7 49 194;
+  --chart-2: 1 1 25;
   --chart-3: 244 114 182;
   --chart-4: 251 191 36;
   --chart-5: 74 222 128;
 
   /* Sidebar - Deep Dark with Glass Effect */
-  --sidebar: 15 15 20;
-  --sidebar-foreground: 248 250 252;
-  --sidebar-primary: 167 139 250;
-  --sidebar-primary-foreground: 15 23 42;
+  --sidebar: 1 1 25;
+  --sidebar-foreground: 237 237 237;
+  --sidebar-primary: 7 49 194;
+  --sidebar-primary-foreground: 255 255 255;
   --sidebar-accent: 30 41 59;
-  --sidebar-accent-foreground: 248 250 252;
+  --sidebar-accent-foreground: 237 237 237;
   --sidebar-border: 51 65 85;
-  --sidebar-ring: 167 139 250;
+  --sidebar-ring: 7 49 194;
 
   /* Glassmorphism - Dark Mode */
   --glass-bg: rgba(255, 255, 255, 0.05);
@@ -180,13 +180,13 @@
   --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 
   /* Gradients - Dark Mode */
-  --gradient-primary: linear-gradient(135deg, rgb(167, 139, 250) 0%, rgb(139, 92, 246) 100%);
-  --gradient-secondary: linear-gradient(135deg, rgb(96, 165, 250) 0%, rgb(59, 130, 246) 100%);
+  --gradient-primary: linear-gradient(135deg, rgb(7, 49, 194) 0%, rgb(5, 35, 150) 100%);
+  --gradient-secondary: linear-gradient(135deg, rgb(1, 1, 25) 0%, rgb(0, 0, 15) 100%);
   --gradient-accent: linear-gradient(135deg, rgb(244, 114, 182) 0%, rgb(236, 72, 153) 100%);
-  --gradient-hero: radial-gradient(circle at top right, rgba(167, 139, 250, 0.2), transparent 50%),
-    radial-gradient(circle at bottom left, rgba(96, 165, 250, 0.2), transparent 50%);
-  --gradient-mesh: radial-gradient(at 40% 20%, rgba(167, 139, 250, 0.3) 0px, transparent 50%),
-    radial-gradient(at 80% 0%, rgba(96, 165, 250, 0.3) 0px, transparent 50%),
+  --gradient-hero: radial-gradient(circle at top right, rgba(7, 49, 194, 0.2), transparent 50%),
+    radial-gradient(circle at bottom left, rgba(1, 1, 25, 0.2), transparent 50%);
+  --gradient-mesh: radial-gradient(at 40% 20%, rgba(7, 49, 194, 0.3) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, rgba(1, 1, 25, 0.3) 0px, transparent 50%),
     radial-gradient(at 0% 50%, rgba(244, 114, 182, 0.3) 0px, transparent 50%);
 }
 
@@ -294,11 +294,11 @@
 
     0%,
     100% {
-      box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+      box-shadow: 0 0 20px rgba(7, 49, 194, 0.4);
     }
 
     50% {
-      box-shadow: 0 0 40px rgba(139, 92, 246, 0.6);
+      box-shadow: 0 0 40px rgba(7, 49, 194, 0.6);
     }
   }
 

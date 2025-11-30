@@ -95,7 +95,7 @@ export default async function BrainPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+          <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-[#0731c2] via-[#0731c2] to-[#010119] bg-clip-text text-transparent">
             {t("brain.title", language)}
           </h2>
           <p className="text-slate-500 dark:text-slate-400 mt-1.5 text-sm">
@@ -145,7 +145,7 @@ export default async function BrainPage() {
           <Card className="border border-slate-200 dark:border-slate-700 shadow-sm bg-white dark:bg-slate-800/50">
             <CardHeader>
               <CardTitle className="text-slate-900 dark:text-white flex items-center gap-2 text-base">
-                <FileText className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+                <FileText className="h-5 w-5 text-[#0731c2] dark:text-[#0731c2]" />
                 {t("brain.comingSoon", language)}
               </CardTitle>
               <CardDescription className="text-slate-600 dark:text-slate-400 text-sm">
@@ -153,8 +153,8 @@ export default async function BrainPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="flex items-start gap-3 p-3 rounded-lg bg-gradient-to-r from-slate-50 to-slate-100/50 dark:from-slate-900/50 dark:to-slate-800/30 border border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors group">
-                <div className="p-2 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-200 dark:group-hover:bg-indigo-900/50 transition-colors">
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-gradient-to-r from-slate-50 to-slate-100/50 dark:from-slate-900/50 dark:to-slate-800/30 border border-slate-200 dark:border-slate-700 hover:border-[#0731c2] dark:hover:border-[#0731c2] transition-colors group">
+                <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-[#0731c2] dark:text-[#0731c2] group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 transition-colors">
                   <Upload className="h-4 w-4" />
                 </div>
                 <div className="flex-1">
@@ -162,8 +162,8 @@ export default async function BrainPage() {
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{t("brain.documentUploadDesc", language)}</p>
                 </div>
               </div>
-              <div className="flex items-start gap-3 p-3 rounded-lg bg-gradient-to-r from-slate-50 to-slate-100/50 dark:from-slate-900/50 dark:to-slate-800/30 border border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors group">
-                <div className="p-2 rounded-lg bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 group-hover:bg-purple-200 dark:group-hover:bg-purple-900/50 transition-colors">
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-gradient-to-r from-slate-50 to-slate-100/50 dark:from-slate-900/50 dark:to-slate-800/30 border border-slate-200 dark:border-slate-700 hover:border-[#0731c2] dark:hover:border-[#0731c2] transition-colors group">
+                <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-[#0731c2] dark:text-[#0731c2] group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 transition-colors">
                   <Brain className="h-4 w-4" />
                 </div>
                 <div className="flex-1">
@@ -171,7 +171,7 @@ export default async function BrainPage() {
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{t("brain.knowledgeBaseDesc", language)}</p>
                 </div>
               </div>
-              <div className="flex items-start gap-3 p-3 rounded-lg bg-gradient-to-r from-slate-50 to-slate-100/50 dark:from-slate-900/50 dark:to-slate-800/30 border border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors group">
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-gradient-to-r from-slate-50 to-slate-100/50 dark:from-slate-900/50 dark:to-slate-800/30 border border-slate-200 dark:border-slate-700 hover:border-[#0731c2] dark:hover:border-[#0731c2] transition-colors group">
                 <div className="p-2 rounded-lg bg-pink-100 dark:bg-pink-900/30 text-pink-600 dark:text-pink-400 group-hover:bg-pink-200 dark:group-hover:bg-pink-900/50 transition-colors">
                   <Sparkles className="h-4 w-4" />
                 </div>

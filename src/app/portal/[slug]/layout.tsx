@@ -23,7 +23,7 @@ export default function PortalLayout({
           <div className="flex items-center space-x-4">
              <div className="flex items-center space-x-2 text-sm text-slate-600 dark:text-slate-400">
                  <Avatar className="h-8 w-8 border-2 border-slate-200 dark:border-slate-700">
-                    <AvatarFallback className="bg-gradient-to-br from-blue-500 to-indigo-600 text-white text-xs">CL</AvatarFallback>
+                    <AvatarFallback className="bg-gradient-to-br from-[#0731c2] to-[#010119] text-white text-xs">CL</AvatarFallback>
                  </Avatar>
                  <span className="hidden sm:inline-block">Client User</span>
              </div>

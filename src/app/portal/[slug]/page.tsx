@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { CheckCircle2, Circle, FileText, Receipt, MessageSquare, Calendar, TrendingUp, Clock, AlertCircle } from "lucide-react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
-import { getConversation } from "@/actions/chat";
+import { getConversationForPortal } from "@/actions/chat";
 import { ChatInterface } from "@/components/chat/chat-interface";
 import { FileManager } from "@/components/dashboard/files/file-manager";
 
@@ -25,10 +25,11 @@ export default async function PortalPage({ params }: { params: Promise<{ slug: s
   }
 
   const { client, space, tasks, invoices } = data;
-  const chatData = await getConversation(space.id);
+  const chatData = await getConversationForPortal(space.id);
   
-  // Mock client user ID for chat
-  const CLIENT_USER_ID = "client-user-id"; 
+  // Portal client user ID - will be resolved in getConversationForPortal
+  // We use a format that can be matched in the component
+  const CLIENT_USER_ID = `portal-user-${space.id}`; 
 
   // Calculate stats for summary
   const completedTasks = tasks.filter(t => t.status === 'done').length;
@@ -39,7 +40,7 @@ export default async function PortalPage({ params }: { params: Promise<{ slug: s
   return (
     <div className="space-y-8">
       {/* Welcome Header with Gradient */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-700 dark:via-indigo-700 dark:to-purple-700 p-8 rounded-xl shadow-lg">
+      <div className="relative overflow-hidden bg-gradient-to-r from-[#0731c2] via-[#0731c2] to-[#010119] dark:from-[#0731c2] dark:via-[#0731c2] dark:to-[#010119] p-8 rounded-xl shadow-lg">
         <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:20px_20px]" />
         <div className="relative z-10">
           <h1 className="text-3xl font-bold text-white mb-2">Welcome, {client.company_name || client.name}</h1>
@@ -49,19 +50,19 @@ export default async function PortalPage({ params }: { params: Promise<{ slug: s
 
       <Tabs defaultValue="summary" className="space-y-6">
         <TabsList className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-1 rounded-lg">
-            <TabsTrigger value="summary" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white text-slate-700 dark:text-slate-300">
+            <TabsTrigger value="summary" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700 dark:text-slate-300">
                 <TrendingUp className="h-4 w-4" /> Summary
             </TabsTrigger>
-            <TabsTrigger value="tasks" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white text-slate-700 dark:text-slate-300">
+            <TabsTrigger value="tasks" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700 dark:text-slate-300">
                 <CheckCircle2 className="h-4 w-4" /> Tasks
             </TabsTrigger>
-            <TabsTrigger value="chat" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white text-slate-700 dark:text-slate-300">
+            <TabsTrigger value="chat" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700 dark:text-slate-300">
                 <MessageSquare className="h-4 w-4" /> Chat
             </TabsTrigger>
-            <TabsTrigger value="invoices" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white text-slate-700 dark:text-slate-300">
+            <TabsTrigger value="invoices" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700 dark:text-slate-300">
                 <Receipt className="h-4 w-4" /> Invoices
             </TabsTrigger>
-            <TabsTrigger value="files" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white text-slate-700 dark:text-slate-300">
+            <TabsTrigger value="files" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white text-slate-700 dark:text-slate-300">
                 <FileText className="h-4 w-4" /> Files
             </TabsTrigger>
         </TabsList>
@@ -188,6 +189,7 @@ export default async function PortalPage({ params }: { params: Promise<{ slug: s
                     initialMessages={chatData.messages}
                     currentUserId={CLIENT_USER_ID}
                     className="h-[600px] bg-white"
+                    isPortal={true}
                 />
             ) : (
                 <Card>
@@ -213,7 +215,7 @@ export default async function PortalPage({ params }: { params: Promise<{ slug: s
                             invoices.map(invoice => (
                                 <div key={invoice.id} className="flex items-center justify-between p-4 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900/50 hover:shadow-md transition-shadow">
                                     <div className="flex items-center space-x-4 flex-1">
-                                        <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-sm">
+                                        <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-[#0731c2] to-[#010119] flex items-center justify-center shadow-sm">
                                             <Receipt className="h-6 w-6 text-white" />
                                         </div>
                                         <div className="flex-1">

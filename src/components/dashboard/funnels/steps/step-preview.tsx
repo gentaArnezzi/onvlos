@@ -76,7 +76,7 @@ export function StepPreview({ step }: StepPreviewProps) {
                         </p>
                     </div>
                 )}
-                <Button className="w-full bg-violet-600 hover:bg-violet-700 text-white h-11 text-base font-medium shadow-lg shadow-violet-500/20" disabled>
+                <Button className="w-full bg-[#0731c2] hover:bg-[#0525a0] text-white h-11 text-base font-medium shadow-lg shadow-[#0731c2]/20" disabled>
                     {t('funnels.editor.form.continue')}
                 </Button>
             </div>
@@ -102,13 +102,13 @@ export function StepPreview({ step }: StepPreviewProps) {
                 <div className="p-6 bg-white dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700 space-y-4">
                     {config.requireSignature && (
                         <div className="flex items-start space-x-3 p-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg">
-                            <input type="checkbox" disabled className="mt-1 rounded border-slate-300 text-violet-600 focus:ring-violet-500" />
+                            <input type="checkbox" disabled className="mt-1 rounded border-slate-300 text-[#0731c2] focus:ring-[#0731c2]" />
                             <Label className="text-sm text-slate-700 dark:text-slate-300 leading-tight">
                                 {t('funnels.editor.contract.agreeTerms')}
                             </Label>
                         </div>
                     )}
-                    <Button className="w-full bg-violet-600 hover:bg-violet-700 text-white h-11 text-base font-medium shadow-lg shadow-violet-500/20" disabled>
+                    <Button className="w-full bg-[#0731c2] hover:bg-[#0525a0] text-white h-11 text-base font-medium shadow-lg shadow-[#0731c2]/20" disabled>
                         {t('funnels.editor.contract.signAndContinue')}
                     </Button>
                 </div>

@@ -106,7 +106,7 @@ export function StepConfigForm({ config, onUpdate }: StepConfigFormProps) {
                                     id={`req-${field.id}`}
                                     checked={field.required}
                                     onCheckedChange={(c) => updateField(field.id, { required: c as boolean })}
-                                    className="border-slate-300 dark:border-slate-600 data-[state=checked]:bg-violet-600 data-[state=checked]:border-violet-600"
+                                    className="border-slate-300 dark:border-slate-600 data-[state=checked]:bg-[#0731c2] data-[state=checked]:border-[#0731c2]"
                                 />
                                 <Label htmlFor={`req-${field.id}`} className="text-sm font-normal text-slate-700 dark:text-slate-300">{t('funnels.editor.form.required')}</Label>
                             </div>

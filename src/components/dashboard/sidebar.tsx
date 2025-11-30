@@ -31,8 +31,8 @@ const routes = [
     label: "Clients",
     icon: Users,
     href: "/dashboard/clients",
-    color: "text-violet-500",
-    gradient: "from-violet-500 to-purple-500",
+    color: "text-[#0731c2]",
+    gradient: "from-[#0731c2] to-[#010119]",
   },
   {
     label: "Funnels",
@@ -52,8 +52,8 @@ const routes = [
     label: "Tasks",
     icon: CheckSquare,
     href: "/dashboard/tasks",
-    color: "text-purple-500",
-    gradient: "from-purple-500 to-fuchsia-500",
+    color: "text-[#0731c2]",
+    gradient: "from-[#0731c2] to-[#010119]",
   },
   {
     label: "Invoices",
@@ -84,7 +84,7 @@ export function Sidebar() {
   return (
     <div className="relative h-full flex flex-col bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 border-r border-slate-200 dark:border-slate-800">
       {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-blue-500/5 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0731c2]/5 via-transparent to-[#010119]/5 pointer-events-none" />
 
       <div className="relative px-6 py-6 flex flex-col h-full">
         {/* Logo */}
@@ -97,7 +97,7 @@ export function Sidebar() {
             />
           </div>
           <div className="flex flex-col">
-            <h1 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-400 dark:to-blue-400 bg-clip-text text-transparent">
+            <h1 className="text-xl font-bold bg-gradient-to-r from-[#0731c2] to-[#010119] dark:from-[#0731c2] dark:to-[#010119] bg-clip-text text-transparent">
               Onvlo
             </h1>
             <p className="text-xs text-slate-500 dark:text-slate-400">Modern Workspace</p>
@@ -146,7 +146,7 @@ export function Sidebar() {
 
                 {/* Hover Glow */}
                 {!isActive && (
-                  <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-r from-purple-500/10 to-blue-500/10" />
+                  <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-r from-[#0731c2]/10 to-[#010119]/10" />
                 )}
               </Link>
             );
@@ -189,7 +189,7 @@ export function Sidebar() {
                   </span>
 
                   {!isActive && (
-                    <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-r from-purple-500/10 to-blue-500/10" />
+                    <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-r from-[#0731c2]/10 to-[#010119]/10" />
                   )}
                 </Link>
               );
@@ -216,8 +216,8 @@ export function Sidebar() {
           {/* User Profile Card */}
           <div className="glass-card p-3 mt-2">
             <div className="flex items-center gap-3">
-              <Avatar className="h-9 w-9 ring-2 ring-purple-500/20">
-                <AvatarFallback className="bg-gradient-to-br from-purple-500 to-blue-500 text-white text-sm font-semibold">
+              <Avatar className="h-9 w-9 ring-2 ring-[#0731c2]/20">
+                <AvatarFallback className="bg-gradient-to-br from-[#0731c2] to-[#010119] text-white text-sm font-semibold">
                   AD
                 </AvatarFallback>
               </Avatar>

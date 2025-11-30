@@ -9,7 +9,7 @@ export function HeroSection() {
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
       {/* Animated Background Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-indigo-950">
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-900 dark:to-[#010119]">
         <div className="absolute inset-0 bg-grid-slate-100 [mask-image:radial-gradient(ellipse_at_center,white,transparent)] dark:bg-grid-slate-800" />
       </div>
       
@@ -25,7 +25,7 @@ export function HeroSection() {
             repeat: Infinity,
             ease: "easeInOut",
           }}
-          className="absolute top-20 left-10 w-64 h-64 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 dark:opacity-20"
+          className="absolute top-20 left-10 w-64 h-64 bg-[#0731c2] rounded-full mix-blend-multiply filter blur-xl opacity-70 dark:opacity-20"
         />
         <motion.div
           animate={{
@@ -62,7 +62,7 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-300 mb-6">
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-blue-100 text-[#0731c2] dark:bg-blue-900/50 dark:text-[#0731c2] mb-6">
               <Sparkles className="w-4 h-4" />
               The Future of Client Management
             </span>
@@ -75,7 +75,7 @@ export function HeroSection() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight"
           >
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#0731c2] to-[#010119] dark:from-[#0731c2] dark:to-[#010119]">
               All-in-One Platform
             </span>
             <br />
@@ -104,7 +104,7 @@ export function HeroSection() {
           >
             <Button
               size="lg"
-              className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg shadow-indigo-500/25 group"
+              className="bg-gradient-to-r from-[#0731c2] to-[#010119] hover:from-[#0525a0] hover:to-[#00000f] text-white shadow-lg shadow-[#0731c2]/25 group"
               asChild
             >
               <Link href="/signup">
@@ -140,7 +140,7 @@ export function HeroSection() {
               <span>10,000+ Teams</span>
             </div>
             <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-              <Globe className="w-5 h-5 text-purple-500" />
+              <Globe className="w-5 h-5 text-[#0731c2]" />
               <span>150+ Countries</span>
             </div>
             <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
@@ -164,7 +164,7 @@ export function HeroSection() {
                   <div className="w-3 h-3 rounded-full bg-yellow-500" />
                   <div className="w-3 h-3 rounded-full bg-green-500" />
                 </div>
-                <div className="p-8 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-gray-900 dark:to-indigo-950">
+                <div className="p-8 bg-gradient-to-br from-blue-50 to-blue-50 dark:from-gray-900 dark:to-[#010119]">
                   <div className="grid grid-cols-3 gap-4 mb-4">
                     <div className="h-32 bg-white/50 dark:bg-gray-800/50 rounded-lg backdrop-blur" />
                     <div className="h-32 bg-white/50 dark:bg-gray-800/50 rounded-lg backdrop-blur" />

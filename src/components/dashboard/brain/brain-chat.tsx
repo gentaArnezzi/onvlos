@@ -179,7 +179,7 @@ export function BrainChat({ language: propLanguage }: BrainChatProps) {
             }}
         >
             {/* Header - Fixed */}
-            <CardHeader className="p-5 border-b border-slate-200 dark:border-slate-700 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white flex-shrink-0">
+            <CardHeader className="p-5 border-b border-slate-200 dark:border-slate-700 bg-gradient-to-r from-[#0731c2] via-[#0731c2] to-[#010119] text-white flex-shrink-0">
                 <div className="flex items-center space-x-3">
                     <div className="p-2 rounded-lg bg-white/20 backdrop-blur-sm">
                         <Sparkles className="h-5 w-5" />
@@ -210,7 +210,7 @@ export function BrainChat({ language: propLanguage }: BrainChatProps) {
                             )}
                         >
                             {msg.role === 'assistant' && (
-                                <Avatar className="h-10 w-10 bg-gradient-to-br from-indigo-500 to-purple-600 border-2 border-white dark:border-slate-700 shadow-lg flex-shrink-0 ring-2 ring-indigo-500/20">
+                                <Avatar className="h-10 w-10 bg-gradient-to-br from-[#0731c2] to-[#010119] border-2 border-white dark:border-slate-700 shadow-lg flex-shrink-0 ring-2 ring-[#0731c2]/20">
                                     <AvatarFallback className="text-white">
                                         <Bot className="h-5 w-5" />
                                     </AvatarFallback>
@@ -219,14 +219,14 @@ export function BrainChat({ language: propLanguage }: BrainChatProps) {
                             <div className={cn(
                                 "p-4 rounded-2xl text-sm max-w-[75%] shadow-md break-words transition-all hover:shadow-lg",
                                 msg.role === 'user' 
-                                    ? "bg-gradient-to-r from-indigo-600 to-purple-500 text-white rounded-tr-sm" 
+                                    ? "bg-gradient-to-r from-[#0731c2] to-[#010119] text-white rounded-tr-sm" 
                                     : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-tl-sm"
                             )}>
                                 <div className="whitespace-pre-wrap leading-relaxed">{msg.content}</div>
                                 {msg.timestamp && (
                                     <div className={cn(
                                         "text-xs mt-3 opacity-70 flex items-center gap-1",
-                                        msg.role === 'user' ? "text-indigo-100" : "text-slate-500 dark:text-slate-400"
+                                        msg.role === 'user' ? "text-blue-100" : "text-slate-500 dark:text-slate-400"
                                     )}>
                                         <span>{msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                                     </div>
@@ -243,13 +243,13 @@ export function BrainChat({ language: propLanguage }: BrainChatProps) {
                     ))}
                     {loading && (
                         <div className="flex gap-4 justify-start items-start animate-in fade-in slide-in-from-bottom-2 duration-300">
-                            <Avatar className="h-10 w-10 bg-gradient-to-br from-indigo-500 to-purple-600 border-2 border-white dark:border-slate-700 shadow-lg flex-shrink-0 ring-2 ring-indigo-500/20">
+                            <Avatar className="h-10 w-10 bg-gradient-to-br from-[#0731c2] to-[#010119] border-2 border-white dark:border-slate-700 shadow-lg flex-shrink-0 ring-2 ring-[#0731c2]/20">
                                 <AvatarFallback className="text-white">
                                     <Bot className="h-5 w-5" />
                                 </AvatarFallback>
                             </Avatar>
                             <div className="p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 text-sm rounded-tl-sm shadow-md flex items-center gap-3">
-                                <Loader2 className="h-4 w-4 animate-spin text-indigo-600 dark:text-indigo-400" />
+                                <Loader2 className="h-4 w-4 animate-spin text-[#0731c2] dark:text-[#0731c2]" />
                                 <span>{t("brain.thinking")}</span>
                             </div>
                         </div>
@@ -274,7 +274,7 @@ export function BrainChat({ language: propLanguage }: BrainChatProps) {
                         value={inputValue} 
                         onChange={e => setInputValue(e.target.value)}
                         placeholder={t("brain.placeholder")}
-                        className="flex-1 min-w-0 bg-slate-50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 h-12 text-sm"
+                        className="flex-1 min-w-0 bg-slate-50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:ring-2 focus:ring-[#0731c2] dark:focus:ring-[#0731c2] focus:border-[#0731c2] dark:focus:border-[#0731c2] h-12 text-sm"
                         disabled={loading}
                         autoFocus={false}
                         tabIndex={0}
@@ -294,7 +294,7 @@ export function BrainChat({ language: propLanguage }: BrainChatProps) {
                         type="submit" 
                         size="icon" 
                         disabled={loading || !inputValue.trim()} 
-                        className="bg-gradient-to-r from-indigo-600 to-purple-500 hover:from-indigo-700 hover:to-purple-600 text-white shadow-lg shadow-indigo-500/30 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0 h-12 w-12 transition-all hover:scale-105 active:scale-95"
+                        className="bg-gradient-to-r from-[#0731c2] to-[#010119] hover:from-[#0525a0] hover:to-[#00000f] text-white shadow-lg shadow-[#0731c2]/30 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0 h-12 w-12 transition-all hover:scale-105 active:scale-95"
                     >
                         {loading ? (
                             <Loader2 className="h-5 w-5 animate-spin" />

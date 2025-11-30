@@ -25,7 +25,7 @@ export default async function CalendarPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+          <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-[#0731c2] to-[#010119] bg-clip-text text-transparent">
             Calendar & Bookings
           </h2>
           <p className="text-slate-500 dark:text-slate-400 mt-1">
@@ -68,7 +68,7 @@ export default async function CalendarPage() {
             <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">
               Total Bookings
             </CardTitle>
-            <div className="p-2 rounded-lg bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400">
+            <div className="p-2 rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
               <Users className="h-4 w-4" />
             </div>
           </CardHeader>
@@ -103,15 +103,15 @@ export default async function CalendarPage() {
 
       <Tabs defaultValue="calendar" className="flex-1 flex flex-col space-y-6">
         <TabsList className="glass-card border-0 w-fit">
-          <TabsTrigger value="calendar" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white">
+          <TabsTrigger value="calendar" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white">
             <CalendarIcon className="h-4 w-4 mr-2" />
             Calendar
           </TabsTrigger>
-          <TabsTrigger value="bookings" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white">
+          <TabsTrigger value="bookings" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white">
             <Users className="h-4 w-4 mr-2" />
             Bookings
           </TabsTrigger>
-          <TabsTrigger value="links" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white">
+          <TabsTrigger value="links" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#0731c2] data-[state=active]:to-[#010119] data-[state=active]:text-white">
             <Link2 className="h-4 w-4 mr-2" />
             Booking Links
           </TabsTrigger>

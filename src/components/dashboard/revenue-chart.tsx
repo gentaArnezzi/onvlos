@@ -35,12 +35,12 @@ export function RevenueChart({ data = [], currencySymbol = '$' }: RevenueChartPr
             <AreaChart data={chartData}>
                 <defs>
                     <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3} />
-                        <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
+                        <stop offset="5%" stopColor="#0731c2" stopOpacity={0.3} />
+                        <stop offset="95%" stopColor="#0731c2" stopOpacity={0} />
                     </linearGradient>
                     <linearGradient id="colorExpenses" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                        <stop offset="5%" stopColor="#010119" stopOpacity={0.3} />
+                        <stop offset="95%" stopColor="#010119" stopOpacity={0} />
                     </linearGradient>
                 </defs>
                 <XAxis
@@ -69,7 +69,7 @@ export function RevenueChart({ data = [], currencySymbol = '$' }: RevenueChartPr
                 <Area
                     type="monotone"
                     dataKey="revenue"
-                    stroke="#8b5cf6"
+                    stroke="#0731c2"
                     strokeWidth={2}
                     fillOpacity={1}
                     fill="url(#colorRevenue)"
@@ -77,7 +77,7 @@ export function RevenueChart({ data = [], currencySymbol = '$' }: RevenueChartPr
                 <Area
                     type="monotone"
                     dataKey="expenses"
-                    stroke="#3b82f6"
+                    stroke="#010119"
                     strokeWidth={2}
                     fillOpacity={1}
                     fill="url(#colorExpenses)"

@@ -126,7 +126,7 @@ export function ClientsTable({ clients: initialClients }: { clients: Client[] })
                     <div className="flex items-center space-x-4">
                       <Avatar className="h-10 w-10 border-2 border-white dark:border-slate-700 shadow-sm">
                         <AvatarImage src={client.logo_url || ""} />
-                        <AvatarFallback className="bg-gradient-to-br from-blue-500 to-indigo-600 text-white font-medium">
+                        <AvatarFallback className="bg-gradient-to-br from-[#0731c2] to-[#010119] text-white font-medium">
                           {client.name.substring(0, 2).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>

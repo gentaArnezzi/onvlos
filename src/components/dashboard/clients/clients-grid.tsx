@@ -240,7 +240,7 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
                     <div className="flex items-center space-x-3 flex-1 min-w-0">
                       <Avatar className="h-12 w-12 border-2 border-slate-200 dark:border-slate-700 flex-shrink-0">
                         <AvatarImage src={client.logo_url || ""} />
-                        <AvatarFallback className="bg-gradient-to-br from-blue-500 to-indigo-600 text-white font-semibold text-sm">
+                        <AvatarFallback className="bg-gradient-to-br from-[#0731c2] to-[#010119] text-white font-semibold text-sm">
                           {initials}
                         </AvatarFallback>
                       </Avatar>

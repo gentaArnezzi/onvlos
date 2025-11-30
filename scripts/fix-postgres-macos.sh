@@ -160,3 +160,4 @@ echo "1. Update .env.local dengan DATABASE_URL yang benar"
 echo "2. Jalankan: npm run db:push"
 echo "3. (Optional) Jalankan: npm run db:seed"
 
+
