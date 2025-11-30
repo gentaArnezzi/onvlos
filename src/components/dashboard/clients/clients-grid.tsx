@@ -262,7 +262,7 @@ export function ClientsGrid({ clients: initialClients, totalPages = 1, currentPa
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity font-primary text-[#606170] hover:font-primary text-[#02041D]"
+                          className="h-8 w-8 opacity-100 font-primary text-[#606170] hover:font-primary text-[#02041D]"
                         >
                           <MoreVertical className="h-4 w-4" />
                         </Button>
@@ -452,6 +452,7 @@ export function ClientsGrid({ clients: initialClients, totalPages = 1, currentPa
               variant="destructive"
               onClick={() => deletingClientId && handleDelete(deletingClientId)}
               disabled={loading}
+              className="bg-red-600 hover:bg-red-700 text-white font-primary"
             >
               {loading ? (
                 <>

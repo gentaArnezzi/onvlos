@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,13 +19,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
-import { ArrowRight, Layout, MoreVertical, Copy, Trash2, Eye, Search, Users } from "lucide-react";
+import { ArrowRight, Layout, MoreVertical, Copy, Trash2, Eye, Search, Users, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { CreateFunnelDialog } from "./create-funnel-dialog";
 import { Filter } from "lucide-react";
 import { format } from "date-fns";
 import { useTranslation } from "@/lib/i18n/context";
 import { Language } from "@/lib/i18n/translations";
+import { deleteFunnel } from "@/actions/funnels";
+import { toast } from "sonner";
 
 interface Funnel {
   id: string;
@@ -41,10 +44,13 @@ interface FunnelsListProps {
   language?: Language;
 }
 
-export function FunnelsList({ funnels, language: propLanguage }: FunnelsListProps) {
+export function FunnelsList({ funnels: initialFunnels, language: propLanguage }: FunnelsListProps) {
   const { t, language: contextLanguage } = useTranslation();
   const language = propLanguage || contextLanguage;
   const [searchQuery, setSearchQuery] = useState("");
+  const [funnels, setFunnels] = useState(initialFunnels);
+  const [deletingFunnelId, setDeletingFunnelId] = useState<string | null>(null);
+  const router = useRouter();
 
   const filteredFunnels = funnels.filter((funnel) =>
     funnel.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -57,10 +63,21 @@ export function FunnelsList({ funnels, language: propLanguage }: FunnelsListProp
   };
 
   const handleDelete = async (funnelId: string) => {
-    if (confirm(t("funnels.deleteConfirm"))) {
-      // TODO: Implement delete functionality
-      console.log("Delete funnel:", funnelId);
+    if (!confirm(t("funnels.deleteConfirm") || "Are you sure you want to delete this funnel? This action cannot be undone.")) {
+      return;
     }
+
+    setDeletingFunnelId(funnelId);
+    const result = await deleteFunnel(funnelId);
+
+    if (result.success) {
+      setFunnels(funnels.filter(f => f.id !== funnelId));
+      toast.success(t("funnels.funnelDeleted") || "Funnel deleted successfully");
+      router.refresh();
+    } else {
+      toast.error(result.error || t("funnels.deleteError") || "Failed to delete funnel");
+    }
+    setDeletingFunnelId(null);
   };
 
   return (
@@ -126,10 +143,20 @@ export function FunnelsList({ funnels, language: propLanguage }: FunnelsListProp
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => handleDelete(funnel.id)}
+                          disabled={deletingFunnelId === funnel.id}
                           className="text-red-600 hover:bg-red-50"
                         >
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          {t("funnels.delete")}
+                          {deletingFunnelId === funnel.id ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              {t("funnels.deleting") || "Deleting..."}
+                            </>
+                          ) : (
+                            <>
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              {t("funnels.delete")}
+                            </>
+                          )}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>

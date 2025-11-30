@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FileText, Upload, MoreVertical, Trash2, Download, Loader2, FileImage, FileArchive, File } from "lucide-react";
+import { toast } from "sonner";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -67,17 +68,22 @@ export function FileManager({ clientId }: { clientId?: string }) {
 
             const data = await response.json();
 
-            if (data.success) {
-                await fetchFiles(); // Refresh file list
-                if (fileInputRef.current) {
-                    fileInputRef.current.value = "";
-                }
-            } else {
-                toast.error(data.error || "Upload failed");
+            if (!response.ok || !data.success) {
+                const errorMessage = data.error || `Upload failed with status ${response.status}`;
+                console.error("Upload failed:", data);
+                toast.error(errorMessage);
+                return;
+            }
+
+            toast.success("File uploaded successfully");
+            await fetchFiles(); // Refresh file list
+            if (fileInputRef.current) {
+                fileInputRef.current.value = "";
             }
         } catch (error) {
             console.error("Upload error:", error);
-            toast.error("Failed to upload file");
+            const errorMessage = error instanceof Error ? error.message : "Failed to upload file";
+            toast.error(errorMessage);
         } finally {
             setUploading(false);
         }

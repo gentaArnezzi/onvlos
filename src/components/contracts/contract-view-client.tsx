@@ -22,7 +22,12 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import SignatureCanvas from 'react-signature-canvas';
+import dynamic from 'next/dynamic';
+
+const SignatureCanvas = dynamic(
+  () => import('react-signature-canvas').then((mod) => mod.default),
+  { ssr: false }
+);
 
 interface ContractViewClientProps {
   contract: any;
@@ -36,7 +41,7 @@ export function ContractViewClient({ contract }: ContractViewClientProps) {
   const [selectedPartyId, setSelectedPartyId] = useState<string | null>(null);
   const [signerName, setSignerName] = useState("");
   const [signerEmail, setSignerEmail] = useState("");
-  const sigCanvas = useRef<SignatureCanvas>(null);
+  const sigCanvas = useRef<any>(null);
 
   const isFullySigned = contract.fully_signed;
   const isSigned = contract.status === "signed";

@@ -1,8 +1,10 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { client_companies, client_spaces, conversations, workspaces, tasks, invoices } from "@/lib/db/schema";
-import { desc, eq, and, sql } from "drizzle-orm";
+import { client_companies, client_spaces, conversations, workspaces, tasks, invoices, cards } from "@/lib/db/schema";
+import { proposals, contracts } from "@/lib/db/schema-proposals";
+import { files, file_shares } from "@/lib/db/schema-files";
+import { desc, eq, and, sql, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { getSession } from "@/lib/get-session";
 import { sendEmail } from "@/lib/email";
@@ -115,13 +117,59 @@ export async function deleteClient(clientId: string) {
     
     if (!workspace) throw new Error("No workspace found");
     
-    // Delete related records first
-    await db.delete(conversations)
-      .where(eq(conversations.client_space_id, clientId));
-      
+    // Get client space IDs first (needed for conversations)
+    const clientSpaces = await db.select({ id: client_spaces.id })
+      .from(client_spaces)
+      .where(eq(client_spaces.client_id, clientId));
+    const spaceIds = clientSpaces.map(space => space.id);
+    
+    // Delete related records in correct order (respecting foreign key constraints)
+    
+    // 1. Delete conversations (via client_space_id)
+    if (spaceIds.length > 0) {
+      await db.delete(conversations)
+        .where(inArray(conversations.client_space_id, spaceIds));
+    }
+    
+    // 2. Delete tasks (onDelete: set null, so we need to delete manually)
+    await db.delete(tasks)
+      .where(eq(tasks.client_id, clientId));
+    
+    // 3. Delete cards (onDelete: set null, so we need to delete manually)
+    await db.delete(cards)
+      .where(eq(cards.client_id, clientId));
+    
+    // 4. Delete proposals
+    await db.delete(proposals)
+      .where(eq(proposals.client_id, clientId));
+    
+    // 5. Delete contracts
+    await db.delete(contracts)
+      .where(eq(contracts.client_id, clientId));
+    
+    // 6. Delete file shares that reference this client
+    await db.delete(file_shares)
+      .where(
+        and(
+          eq(file_shares.share_type, "client"),
+          eq(file_shares.shared_with, clientId)
+        )
+      );
+    
+    // 7. Delete files associated with this client
+    await db.delete(files)
+      .where(eq(files.client_id, clientId));
+    
+    // 8. Delete client spaces (this will cascade delete conversations via FK)
     await db.delete(client_spaces)
       .where(eq(client_spaces.client_id, clientId));
     
+    // 9. Delete invoices (onDelete: cascade, but we'll delete explicitly for clarity)
+    // Note: invoice_items and payments will cascade delete automatically
+    await db.delete(invoices)
+      .where(eq(invoices.client_id, clientId));
+    
+    // 10. Finally, delete the client company
     await db.delete(client_companies)
       .where(
         and(
@@ -131,6 +179,9 @@ export async function deleteClient(clientId: string) {
       );
 
     revalidatePath("/dashboard/clients");
+    revalidatePath("/dashboard/tasks");
+    revalidatePath("/dashboard/invoices");
+    revalidatePath("/dashboard/proposals");
     return { success: true };
   } catch (error) {
     console.error("Failed to delete client:", error);

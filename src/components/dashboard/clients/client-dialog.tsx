@@ -16,9 +16,12 @@ import { useState } from "react";
 import { createClient } from "@/actions/clients";
 import { Plus } from "lucide-react";
 import { useTranslation } from "@/lib/i18n/context";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export function ClientDialog() {
   const { t } = useTranslation();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -27,15 +30,25 @@ export function ClientDialog() {
     setLoading(true);
     const formData = new FormData(e.currentTarget);
 
-    await createClient({
+    const result = await createClient({
       name: formData.get("name") as string,
       email: formData.get("email") as string,
       company_name: formData.get("company_name") as string,
       status: "active",
     });
 
+    if (result.success) {
+      toast.success(t("clients.clientCreated") || "Client created successfully");
+      setOpen(false);
+      // Reset form
+      e.currentTarget.reset();
+      // Refresh the page to show new client
+      router.refresh();
+    } else {
+      toast.error(result.error || t("clients.createError") || "Failed to create client");
+    }
+
     setLoading(false);
-    setOpen(false);
   };
 
   return (

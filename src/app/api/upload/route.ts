@@ -46,17 +46,30 @@ export async function POST(request: NextRequest) {
     const publicId = `flazy/${workspace.id}/${folder}/${fileName}`;
 
     // Upload to Cloudinary
-    const uploadResult = await uploadFile(buffer, {
-      folder: `flazy/${workspace.id}/${folder}`,
-      publicId: publicId,
-      resourceType: "auto",
-    });
+    let fileUrl: string;
+    
+    // Check if Cloudinary is configured
+    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+      // Fallback: Store file info without Cloudinary (for development)
+      // In production, you should configure Cloudinary
+      console.warn("Cloudinary not configured. Using placeholder URL.");
+      fileUrl = `placeholder://${file.name}`;
+    } else {
+      const uploadResult = await uploadFile(buffer, {
+        folder: `flazy/${workspace.id}/${folder}`,
+        publicId: publicId,
+        resourceType: "auto",
+      });
 
-    if (!uploadResult.success || !uploadResult.url) {
-      return NextResponse.json(
-        { error: uploadResult.error || "Failed to upload file to Cloudinary" },
-        { status: 500 }
-      );
+      if (!uploadResult.success || !uploadResult.url) {
+        console.error("Cloudinary upload failed:", uploadResult.error);
+        return NextResponse.json(
+          { error: uploadResult.error || "Failed to upload file to Cloudinary", success: false },
+          { status: 500 }
+        );
+      }
+      
+      fileUrl = uploadResult.url;
     }
 
     // Save file info to database
@@ -65,7 +78,7 @@ export async function POST(request: NextRequest) {
       client_id: clientId,
       uploaded_by: session.user.id,
       file_name: file.name,
-      file_url: uploadResult.url,
+      file_url: fileUrl,
       file_size: file.size,
       file_type: file.type || "application/octet-stream",
       folder: folder
@@ -83,8 +96,15 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("Upload error:", error);
+    const errorMessage = error instanceof Error ? error.message : "Failed to upload file";
+    const errorStack = error instanceof Error ? error.stack : undefined;
+    console.error("Error stack:", errorStack);
     return NextResponse.json(
-      { error: "Failed to upload file" },
+      { 
+        error: errorMessage, 
+        success: false,
+        details: process.env.NODE_ENV === "development" ? errorStack : undefined
+      },
       { status: 500 }
     );
   }

@@ -272,3 +272,48 @@ export async function updateFunnelStatus(funnelId: string, published: boolean) {
         return { success: false, error: "Failed to update status" };
     }
 }
+
+export async function deleteFunnel(funnelId: string) {
+    try {
+        const session = await getSession();
+        if (!session) {
+            return { success: false, error: "Not authenticated" };
+        }
+
+        const workspace = await getOrCreateWorkspace();
+        if (!workspace) {
+            return { success: false, error: "Workspace not found" };
+        }
+
+        // Verify that the funnel belongs to the user's workspace
+        const funnel = await db.query.funnels.findFirst({
+            where: and(
+                eq(funnels.id, funnelId),
+                eq(funnels.workspace_id, workspace.id)
+            )
+        });
+
+        if (!funnel) {
+            return { success: false, error: "Funnel not found or access denied" };
+        }
+
+        // Delete related records first (respecting foreign key constraints)
+        // 1. Delete client onboarding sessions
+        await db.delete(client_onboarding_sessions)
+            .where(eq(client_onboarding_sessions.funnel_id, funnelId));
+
+        // 2. Delete funnel steps
+        await db.delete(funnel_steps)
+            .where(eq(funnel_steps.funnel_id, funnelId));
+
+        // 3. Finally, delete the funnel
+        await db.delete(funnels)
+            .where(eq(funnels.id, funnelId));
+
+        revalidatePath("/dashboard/funnels");
+        return { success: true };
+    } catch (error) {
+        console.error("Failed to delete funnel:", error);
+        return { success: false, error: "Failed to delete funnel" };
+    }
+}

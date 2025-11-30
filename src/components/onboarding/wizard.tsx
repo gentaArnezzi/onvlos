@@ -9,7 +9,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CheckCircle2, FileText, FileSignature, Receipt, Zap, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import SignatureCanvas from 'react-signature-canvas';
+import dynamic from 'next/dynamic';
+
+const SignatureCanvas = dynamic(
+  () => import('react-signature-canvas').then((mod) => mod.default),
+  { ssr: false }
+);
 import { toast } from "sonner";
 
 interface FormField {
@@ -46,7 +51,7 @@ export function OnboardingWizard({ steps }: OnboardingWizardProps) {
   const [signerEmail, setSignerEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
-  const sigCanvas = useRef<SignatureCanvas>(null);
+  const sigCanvas = useRef<any>(null);
 
   const currentStep = steps[currentStepIndex];
   const isLastStep = currentStepIndex === steps.length - 1;

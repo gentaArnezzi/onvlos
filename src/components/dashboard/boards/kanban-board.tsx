@@ -27,7 +27,7 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { useState, useMemo, useCallback, useRef, memo } from "react";
+import { useState, useMemo, useCallback, useRef, memo, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus, Loader2, Pencil, Trash2, MoreVertical } from "lucide-react";
@@ -274,7 +274,7 @@ function translateColumnName(name: string, t: (key: string) => string): string {
     return name; // Return original if no mapping found
 }
 
-const Column = memo(function Column({ column, onCardAdded }: { column: BoardColumn; onCardAdded?: (card: BoardCard) => void }) {
+const Column = memo(function Column({ column, onCardAdded, onCardDeleted }: { column: BoardColumn; onCardAdded?: (card: BoardCard) => void; onCardDeleted?: (cardId: string) => void }) {
     const { t } = useTranslation();
     const { setNodeRef } = useSortable({
         id: column.id,
@@ -316,11 +316,7 @@ const Column = memo(function Column({ column, onCardAdded }: { column: BoardColu
                                     // Refresh will be handled by router.refresh() in SortableCard
                                 }}
                                 onCardDeleted={() => {
-                                    // Remove card from local state
-                                    setColumns(prev => prev.map(col => ({
-                                        ...col,
-                                        cards: col.cards.filter(c => c.id !== card.id)
-                                    })));
+                                    onCardDeleted?.(card.id);
                                 }}
                             />
                         ))}
@@ -451,10 +447,16 @@ export function KanbanBoard({ boardId, initialColumns }: KanbanBoardProps) {
     const [columns, setColumns] = useState(initialColumns);
     const [activeCard, setActiveCard] = useState<BoardCard | null>(null);
     const [dragStartState, setDragStartState] = useState<{ cardId: string; columnId: string; index: number } | null>(null);
+    const [isMounted, setIsMounted] = useState(false);
     const dragOverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const lastDragOverState = useRef<{ activeId: string; overId: string } | null>(null);
     const dragOffsetRef = useRef<{ x: number; y: number } | null>(null);
     const cardDimensionsRef = useRef<{ width: number; height: number } | null>(null);
+
+    // Prevent hydration mismatch by only rendering DndContext on client
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     const handleCardAdded = useCallback((newCard: BoardCard) => {
         // Optimistic update: add card to the column immediately
@@ -465,6 +467,14 @@ export function KanbanBoard({ boardId, initialColumns }: KanbanBoardProps) {
                     : col
             )
         );
+    }, []);
+
+    const handleCardDeleted = useCallback((cardId: string) => {
+        // Remove card from local state
+        setColumns(prev => prev.map(col => ({
+            ...col,
+            cards: col.cards.filter(c => c.id !== cardId)
+        })));
     }, []);
 
     const sensors = useSensors(
@@ -747,6 +757,21 @@ export function KanbanBoard({ boardId, initialColumns }: KanbanBoardProps) {
             });
     }, [columns, dragStartState, findColumn]);
 
+    // Memoize columns rendering - must be called before any early returns to follow Rules of Hooks
+    const renderedColumns = useMemo(() => 
+        columns.map((column) => (
+            <Column key={column.id} column={column} onCardAdded={handleCardAdded} onCardDeleted={handleCardDeleted} />
+        )), [columns, handleCardAdded, handleCardDeleted]);
+
+    // Render static content during SSR to prevent hydration mismatch
+    if (!isMounted) {
+        return (
+            <div className="flex h-full space-x-4 overflow-x-auto overflow-y-hidden pb-2 min-w-full scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent">
+                {renderedColumns}
+            </div>
+        );
+    }
+
     return (
         <DndContext
             sensors={sensors}
@@ -756,10 +781,7 @@ export function KanbanBoard({ boardId, initialColumns }: KanbanBoardProps) {
             onDragEnd={handleDragEnd}
         >
             <div className="flex h-full space-x-4 overflow-x-auto overflow-y-hidden pb-2 min-w-full scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent">
-                {useMemo(() => 
-                    columns.map((column) => (
-                    <Column key={column.id} column={column} onCardAdded={handleCardAdded} />
-                    )), [columns, handleCardAdded])}
+                {renderedColumns}
             </div>
             
             <DragOverlay

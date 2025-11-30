@@ -156,7 +156,7 @@ export function ClientsTable({ clients: initialClients }: { clients: Client[] })
                   <TableCell className="text-right pr-6">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8 font-primary text-[#606170] hover:font-primary text-[#02041D]">
+                        <Button variant="ghost" size="icon" className="opacity-100 h-8 w-8 font-primary text-[#606170] hover:font-primary text-[#02041D]">
                           <MoreVertical className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
@@ -294,6 +294,7 @@ export function ClientsTable({ clients: initialClients }: { clients: Client[] })
               variant="destructive"
               onClick={() => deletingClientId && handleDelete(deletingClientId)}
               disabled={loading}
+              className="bg-red-600 hover:bg-red-700 text-white font-primary"
             >
               {loading ? (
                 <>

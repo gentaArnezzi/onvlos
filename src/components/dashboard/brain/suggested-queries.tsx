@@ -3,7 +3,8 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Sparkles, ArrowRight } from "lucide-react";
 import { useTranslation } from "@/lib/i18n/context";
-import { Language } from "@/lib/i18n/translations";
+import { Language, getTranslation } from "@/lib/i18n/translations";
+import { useState, useEffect } from "react";
 
 interface SuggestedQueriesProps {
   queries: {
@@ -14,8 +15,28 @@ interface SuggestedQueriesProps {
 }
 
 export function SuggestedQueries({ queries, language: propLanguage }: SuggestedQueriesProps) {
-  const { t, language: contextLanguage } = useTranslation();
-  const language = propLanguage || contextLanguage;
+  // Use propLanguage as initial state to ensure hydration matches server render
+  // This is critical: initial state must match server render exactly
+  const [language, setLanguage] = useState<Language>(() => propLanguage || "en");
+  const { language: contextLanguage } = useTranslation();
+  const [isMounted, setIsMounted] = useState(false);
+  
+  // Mark as mounted after hydration
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+  
+  // Only update from context after hydration if prop is not provided
+  // This prevents hydration mismatch by ensuring initial render uses prop language
+  useEffect(() => {
+    if (isMounted && !propLanguage && contextLanguage) {
+      setLanguage(contextLanguage);
+    }
+  }, [isMounted, propLanguage, contextLanguage]);
+  
+  // Use getTranslation directly with explicit language to prevent hydration mismatch
+  // This ensures the same translation is used on both server and client
+  const t = (key: string) => getTranslation(key, language);
   
   const handleQueryClick = (query: string) => {
     const event = new CustomEvent('suggested-query', { detail: { query } });
