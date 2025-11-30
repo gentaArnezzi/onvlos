@@ -254,19 +254,19 @@ export function WorkflowsList({ workflows, language: propLanguage }: WorkflowsLi
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge variant="outline" className="text-xs">
+                    <Badge variant="outline" className="text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700">
                       {getTriggerLabel(workflow.trigger)}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-sm text-slate-600 dark:text-slate-400">
+                  <TableCell className="text-sm text-slate-700 dark:text-slate-300">
                     {getActionsSummary(workflow.actions)}
                   </TableCell>
                   <TableCell>
                     <Badge 
                       variant={workflow.enabled ? "default" : "secondary"}
                       className={workflow.enabled 
-                        ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400" 
-                        : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"
+                        ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border-0" 
+                        : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-200 dark:border-slate-700"
                       }
                     >
                       {workflow.enabled ? t("workflows.active") : t("workflows.paused")}
@@ -284,7 +284,7 @@ export function WorkflowsList({ workflows, language: propLanguage }: WorkflowsLi
                   <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
                           <MoreVertical className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>

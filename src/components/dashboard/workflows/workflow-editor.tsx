@@ -31,73 +31,75 @@ import {
 } from "lucide-react";
 import { updateWorkflow, toggleWorkflow } from "@/actions/workflows";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/lib/i18n/context";
 
 interface WorkflowEditorProps {
   workflow: any;
 }
 
-const triggerOptions = [
-  { 
-    value: "invoice_paid", 
-    label: "Invoice Paid",
-    description: "Triggers when an invoice is paid",
-    icon: "💰"
-  },
-  { 
-    value: "funnel_step_completed", 
-    label: "Funnel Step Completed",
-    description: "Triggers when a funnel step is completed",
-    icon: "🎯"
-  },
-  { 
-    value: "new_client_created", 
-    label: "New Client Created",
-    description: "Triggers when a new client is added",
-    icon: "👤"
-  },
-  { 
-    value: "due_date_approaching", 
-    label: "Due Date Approaching",
-    description: "Triggers when a task due date is approaching",
-    icon: "⏰"
-  },
-  { 
-    value: "task_completed", 
-    label: "Task Completed",
-    description: "Triggers when a task is marked as completed",
-    icon: "✅"
-  },
-];
-
-const actionOptions = [
-  { 
-    value: "send_email", 
-    label: "Send Email",
-    description: "Send an email notification",
-    icon: Mail
-  },
-  { 
-    value: "create_task", 
-    label: "Create Task",
-    description: "Create a new task",
-    icon: CheckSquare
-  },
-  { 
-    value: "move_card", 
-    label: "Move Card",
-    description: "Move a card on a board",
-    icon: MoveRight
-  },
-  { 
-    value: "send_chat_message", 
-    label: "Send Chat Message",
-    description: "Send a message in chat",
-    icon: MessageSquare
-  },
-];
-
 export function WorkflowEditor({ workflow }: WorkflowEditorProps) {
   const router = useRouter();
+  const { t } = useTranslation();
+
+  const triggerOptions = [
+    { 
+      value: "invoice_paid", 
+      label: t("workflows.editor.trigger.invoicePaid"),
+      description: t("workflows.editor.trigger.invoicePaidDesc"),
+      icon: "💰"
+    },
+    { 
+      value: "funnel_step_completed", 
+      label: t("workflows.editor.trigger.funnelStepCompleted"),
+      description: t("workflows.editor.trigger.funnelStepCompletedDesc"),
+      icon: "🎯"
+    },
+    { 
+      value: "new_client_created", 
+      label: t("workflows.editor.trigger.newClientCreated"),
+      description: t("workflows.editor.trigger.newClientCreatedDesc"),
+      icon: "👤"
+    },
+    { 
+      value: "due_date_approaching", 
+      label: t("workflows.editor.trigger.dueDateApproaching"),
+      description: t("workflows.editor.trigger.dueDateApproachingDesc"),
+      icon: "⏰"
+    },
+    { 
+      value: "task_completed", 
+      label: t("workflows.editor.trigger.taskCompleted"),
+      description: t("workflows.editor.trigger.taskCompletedDesc"),
+      icon: "✅"
+    },
+  ];
+
+  const actionOptions = [
+    { 
+      value: "send_email", 
+      label: t("workflows.action.sendEmail"),
+      description: "Send an email notification",
+      icon: Mail
+    },
+    { 
+      value: "create_task", 
+      label: t("workflows.action.createTask"),
+      description: "Create a new task",
+      icon: CheckSquare
+    },
+    { 
+      value: "move_card", 
+      label: t("workflows.action.moveCard"),
+      description: "Move a card on a board",
+      icon: MoveRight
+    },
+    { 
+      value: "send_chat_message", 
+      label: t("workflows.action.sendChatMessage"),
+      description: "Send a message in chat",
+      icon: MessageSquare
+    },
+  ];
   const [saving, setSaving] = useState(false);
   const [name, setName] = useState(workflow.name || "");
   const [description, setDescription] = useState(workflow.description || "");
@@ -183,28 +185,28 @@ export function WorkflowEditor({ workflow }: WorkflowEditorProps) {
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label className="text-slate-900 dark:text-white">Client (Optional)</Label>
+              <Label className="text-slate-900 dark:text-white">{t("workflows.editor.config.clientOptional")}</Label>
               <Input
-                placeholder="Leave empty for all clients"
+                placeholder={t("workflows.editor.config.leaveEmptyForAllClients")}
                 value={trigger.config?.client_id || ""}
                 onChange={(e) => updateTriggerConfig("client_id", e.target.value || undefined)}
                 className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
               />
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Specific client ID, or leave empty to trigger for all clients
+                {t("workflows.editor.config.specificClientId")}
               </p>
             </div>
             <div className="space-y-2">
-              <Label className="text-slate-900 dark:text-white">Amount Threshold (Optional)</Label>
+              <Label className="text-slate-900 dark:text-white">{t("workflows.editor.config.amountThreshold")}</Label>
               <Input
                 type="number"
-                placeholder="e.g., 1000"
+                placeholder={t("workflows.editor.config.amountThresholdPlaceholder")}
                 value={trigger.config?.amount_threshold || ""}
                 onChange={(e) => updateTriggerConfig("amount_threshold", e.target.value ? parseFloat(e.target.value) : undefined)}
                 className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
               />
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Only trigger if invoice amount is above this value
+                {t("workflows.editor.config.onlyTriggerIfAmountAbove")}
               </p>
             </div>
           </div>
@@ -213,28 +215,28 @@ export function WorkflowEditor({ workflow }: WorkflowEditorProps) {
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label className="text-slate-900 dark:text-white">Funnel ID</Label>
+              <Label className="text-slate-900 dark:text-white">{t("workflows.editor.config.funnelId")}</Label>
               <Input
-                placeholder="Funnel ID"
+                placeholder={t("workflows.editor.config.funnelId")}
                 value={trigger.config?.funnel_id || ""}
                 onChange={(e) => updateTriggerConfig("funnel_id", e.target.value)}
                 className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-slate-900 dark:text-white">Step Type</Label>
+              <Label className="text-slate-900 dark:text-white">{t("workflows.editor.config.stepType")}</Label>
               <Select
                 value={trigger.config?.step_type || ""}
                 onValueChange={(value) => updateTriggerConfig("step_type", value)}
               >
                 <SelectTrigger className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
-                  <SelectValue placeholder="Select step type" />
+                  <SelectValue placeholder={t("workflows.editor.config.selectStepType")} />
                 </SelectTrigger>
                 <SelectContent className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
-                  <SelectItem value="form" className="text-slate-900 dark:text-white">Form</SelectItem>
-                  <SelectItem value="contract" className="text-slate-900 dark:text-white">Contract</SelectItem>
-                  <SelectItem value="invoice" className="text-slate-900 dark:text-white">Invoice</SelectItem>
-                  <SelectItem value="automation" className="text-slate-900 dark:text-white">Automation</SelectItem>
+                  <SelectItem value="form" className="text-slate-900 dark:text-white">{t("funnels.editor.stepType.form")}</SelectItem>
+                  <SelectItem value="contract" className="text-slate-900 dark:text-white">{t("funnels.editor.stepType.contract")}</SelectItem>
+                  <SelectItem value="invoice" className="text-slate-900 dark:text-white">{t("funnels.editor.stepType.invoice")}</SelectItem>
+                  <SelectItem value="automation" className="text-slate-900 dark:text-white">{t("funnels.editor.stepType.automation")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -244,16 +246,16 @@ export function WorkflowEditor({ workflow }: WorkflowEditorProps) {
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label className="text-slate-900 dark:text-white">Days Before</Label>
+              <Label className="text-slate-900 dark:text-white">{t("workflows.editor.config.daysBefore")}</Label>
               <Input
                 type="number"
-                placeholder="e.g., 3"
+                placeholder={t("workflows.editor.config.daysBeforePlaceholder")}
                 value={trigger.config?.days_before || ""}
                 onChange={(e) => updateTriggerConfig("days_before", e.target.value ? parseInt(e.target.value) : undefined)}
                 className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
               />
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Number of days before due date to trigger
+                {t("workflows.editor.config.numberOfDaysBeforeDueDate")}
               </p>
             </div>
           </div>
@@ -262,15 +264,15 @@ export function WorkflowEditor({ workflow }: WorkflowEditorProps) {
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label className="text-slate-900 dark:text-white">Task ID (Optional)</Label>
+              <Label className="text-slate-900 dark:text-white">{t("workflows.editor.config.taskIdOptional")}</Label>
               <Input
-                placeholder="Leave empty for any task"
+                placeholder={t("workflows.editor.config.leaveEmptyForAnyTask")}
                 value={trigger.config?.task_id || ""}
                 onChange={(e) => updateTriggerConfig("task_id", e.target.value || undefined)}
                 className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
               />
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Specific task ID, or leave empty to trigger for any task
+                {t("workflows.editor.config.specificTaskId")}
               </p>
             </div>
           </div>
@@ -278,7 +280,7 @@ export function WorkflowEditor({ workflow }: WorkflowEditorProps) {
       default:
         return (
           <div className="text-sm text-slate-500 dark:text-slate-400">
-            No additional configuration needed for this trigger.
+            {t("workflows.editor.config.noAdditionalConfiguration")}
           </div>
         );
     }
@@ -290,7 +292,7 @@ export function WorkflowEditor({ workflow }: WorkflowEditorProps) {
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label className="text-slate-900 dark:text-white">Recipient</Label>
+              <Label className="text-slate-900 dark:text-white">{t("workflows.editor.action.recipient")}</Label>
               <Select
                 value={action.config?.recipient || "client"}
                 onValueChange={(value) => updateActionConfig(index, "recipient", value)}
@@ -299,15 +301,15 @@ export function WorkflowEditor({ workflow }: WorkflowEditorProps) {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
-                  <SelectItem value="client" className="text-slate-900 dark:text-white">Client</SelectItem>
-                  <SelectItem value="assigned_user" className="text-slate-900 dark:text-white">Assigned User</SelectItem>
-                  <SelectItem value="custom" className="text-slate-900 dark:text-white">Custom Email</SelectItem>
+                  <SelectItem value="client" className="text-slate-900 dark:text-white">{t("workflows.editor.action.client")}</SelectItem>
+                  <SelectItem value="assigned_user" className="text-slate-900 dark:text-white">{t("workflows.editor.action.assignedUser")}</SelectItem>
+                  <SelectItem value="custom" className="text-slate-900 dark:text-white">{t("workflows.editor.action.customEmail")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             {action.config?.recipient === "custom" && (
               <div className="space-y-2">
-                <Label className="text-slate-900 dark:text-white">Email Address</Label>
+                <Label className="text-slate-900 dark:text-white">{t("workflows.editor.action.emailAddress")}</Label>
                 <Input
                   type="email"
                   placeholder="email@example.com"
@@ -318,24 +320,24 @@ export function WorkflowEditor({ workflow }: WorkflowEditorProps) {
               </div>
             )}
             <div className="space-y-2">
-              <Label className="text-slate-900 dark:text-white">Subject</Label>
+              <Label className="text-slate-900 dark:text-white">{t("workflows.editor.action.subject")}</Label>
               <Input
-                placeholder="Email subject"
+                placeholder={t("workflows.editor.action.emailSubject")}
                 value={action.config?.subject || ""}
                 onChange={(e) => updateActionConfig(index, "subject", e.target.value)}
                 className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-slate-900 dark:text-white">Message</Label>
+              <Label className="text-slate-900 dark:text-white">{t("workflows.editor.action.message")}</Label>
               <Textarea
-                placeholder="Email message (supports {{variables}})"
+                placeholder={t("workflows.editor.action.emailMessage")}
                 value={action.config?.message || ""}
                 onChange={(e) => updateActionConfig(index, "message", e.target.value)}
                 className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white min-h-[100px]"
               />
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Available variables: {"{{client_name}}"}, {"{{invoice_amount}}"}, {"{{task_title}}"}
+                {t("workflows.editor.action.availableVariables")}
               </p>
             </div>
           </div>
@@ -344,34 +346,34 @@ export function WorkflowEditor({ workflow }: WorkflowEditorProps) {
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label className="text-slate-900 dark:text-white">Title</Label>
+              <Label className="text-slate-900 dark:text-white">{t("workflows.editor.action.title")}</Label>
               <Input
-                placeholder="Task title"
+                placeholder={t("workflows.editor.action.taskTitle")}
                 value={action.config?.title || ""}
                 onChange={(e) => updateActionConfig(index, "title", e.target.value)}
                 className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-slate-900 dark:text-white">Description</Label>
+              <Label className="text-slate-900 dark:text-white">{t("common.description")}</Label>
               <Textarea
-                placeholder="Task description"
+                placeholder={t("workflows.editor.action.taskDescription")}
                 value={action.config?.description || ""}
                 onChange={(e) => updateActionConfig(index, "description", e.target.value)}
                 className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-slate-900 dark:text-white">Due Date Offset (days)</Label>
+              <Label className="text-slate-900 dark:text-white">{t("workflows.editor.action.dueDateOffset")}</Label>
               <Input
                 type="number"
-                placeholder="e.g., 7"
+                placeholder={t("workflows.editor.action.dueDateOffsetPlaceholder")}
                 value={action.config?.due_date_offset || ""}
                 onChange={(e) => updateActionConfig(index, "due_date_offset", e.target.value ? parseInt(e.target.value) : undefined)}
                 className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
               />
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Number of days from trigger date to set as due date
+                {t("workflows.editor.action.numberOfDaysFromTrigger")}
               </p>
             </div>
           </div>
@@ -380,18 +382,18 @@ export function WorkflowEditor({ workflow }: WorkflowEditorProps) {
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label className="text-slate-900 dark:text-white">Board ID</Label>
+              <Label className="text-slate-900 dark:text-white">{t("workflows.editor.action.boardId")}</Label>
               <Input
-                placeholder="Board ID"
+                placeholder={t("workflows.editor.action.boardId")}
                 value={action.config?.board_id || ""}
                 onChange={(e) => updateActionConfig(index, "board_id", e.target.value)}
                 className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-slate-900 dark:text-white">Target Column ID</Label>
+              <Label className="text-slate-900 dark:text-white">{t("workflows.editor.action.targetColumnId")}</Label>
               <Input
-                placeholder="Column ID"
+                placeholder={t("workflows.editor.action.columnId")}
                 value={action.config?.column_id || ""}
                 onChange={(e) => updateActionConfig(index, "column_id", e.target.value)}
                 className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
@@ -403,21 +405,21 @@ export function WorkflowEditor({ workflow }: WorkflowEditorProps) {
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label className="text-slate-900 dark:text-white">Message</Label>
+              <Label className="text-slate-900 dark:text-white">{t("workflows.editor.action.message")}</Label>
               <Textarea
-                placeholder="Chat message (supports {{variables}})"
+                placeholder={t("workflows.editor.action.chatMessage")}
                 value={action.config?.message || ""}
                 onChange={(e) => updateActionConfig(index, "message", e.target.value)}
                 className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white min-h-[100px]"
               />
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Available variables: {"{{client_name}}"}, {"{{task_title}}"}, {"{{invoice_amount}}"}
+                {t("workflows.editor.action.chatAvailableVariables")}
               </p>
             </div>
             <div className="space-y-2">
-              <Label className="text-slate-900 dark:text-white">Client Space ID (Optional)</Label>
+              <Label className="text-slate-900 dark:text-white">{t("workflows.editor.action.clientSpaceIdOptional")}</Label>
               <Input
-                placeholder="Leave empty for all client spaces"
+                placeholder={t("workflows.editor.action.leaveEmptyForAllSpaces")}
                 value={action.config?.client_space_id || ""}
                 onChange={(e) => updateActionConfig(index, "client_space_id", e.target.value || undefined)}
                 className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
@@ -443,10 +445,10 @@ export function WorkflowEditor({ workflow }: WorkflowEditorProps) {
           <Separator orientation="vertical" className="h-6" />
           <div>
             <h1 className="text-sm font-semibold text-slate-900 dark:text-white">
-              Edit Workflow
+              {t("workflows.editor.editWorkflow")}
             </h1>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              Configure automation rules
+              {t("workflows.editor.configureAutomationRules")}
             </p>
           </div>
         </div>
@@ -454,7 +456,7 @@ export function WorkflowEditor({ workflow }: WorkflowEditorProps) {
         <div className="flex items-center space-x-3">
           <div className="flex items-center space-x-2">
             <Label htmlFor="enabled" className="text-sm text-slate-600 dark:text-slate-400">
-              {enabled ? "Active" : "Paused"}
+              {enabled ? t("workflows.active") : t("workflows.paused")}
             </Label>
             <Switch
               id="enabled"
@@ -472,7 +474,7 @@ export function WorkflowEditor({ workflow }: WorkflowEditorProps) {
             ) : (
               <Save className="mr-2 h-4 w-4" />
             )}
-            Save Changes
+            {t("workflows.editor.saveChanges")}
           </Button>
         </div>
       </header>
@@ -482,27 +484,27 @@ export function WorkflowEditor({ workflow }: WorkflowEditorProps) {
           {/* Basic Info */}
           <Card className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
             <CardHeader>
-              <CardTitle className="text-slate-900 dark:text-white">Basic Information</CardTitle>
+              <CardTitle className="text-slate-900 dark:text-white">{t("workflows.editor.basicInformation")}</CardTitle>
               <CardDescription className="text-slate-500 dark:text-slate-400">
-                Name and describe your workflow
+                {t("workflows.editor.nameAndDescribe")}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label className="text-slate-900 dark:text-white">Name</Label>
+                <Label className="text-slate-900 dark:text-white">{t("workflows.editor.name")}</Label>
                 <Input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Workflow name"
+                  placeholder={t("workflows.editor.workflowName")}
                   className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-slate-900 dark:text-white">Description</Label>
+                <Label className="text-slate-900 dark:text-white">{t("workflows.editor.description")}</Label>
                 <Textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="What does this workflow do?"
+                  placeholder={t("workflows.editor.whatDoesThisWorkflowDo")}
                   className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
                 />
               </div>
@@ -518,15 +520,15 @@ export function WorkflowEditor({ workflow }: WorkflowEditorProps) {
                     <span className="flex items-center justify-center w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-xs font-bold">
                       1
                     </span>
-                    Select Trigger
+                    {t("workflows.editor.selectTrigger")}
                   </CardTitle>
                   <CardDescription className="text-slate-500 dark:text-slate-400 mt-1">
-                    When should this workflow run?
+                    {t("workflows.editor.whenShouldThisWorkflowRun")}
                   </CardDescription>
                 </div>
                 {currentStep >= 1 && (
                   <Badge variant="outline" className="bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800">
-                    Configured
+                    {t("workflows.editor.configured")}
                   </Badge>
                 )}
               </div>
@@ -575,15 +577,15 @@ export function WorkflowEditor({ workflow }: WorkflowEditorProps) {
                       <span className="flex items-center justify-center w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-xs font-bold">
                         2
                       </span>
-                      Configure Trigger
+                      {t("workflows.editor.configureTrigger")}
                     </CardTitle>
                     <CardDescription className="text-slate-500 dark:text-slate-400 mt-1">
-                      Set up trigger conditions
+                      {t("workflows.editor.setUpTriggerConditions")}
                     </CardDescription>
                   </div>
                   {currentStep >= 2 && (
                     <Badge variant="outline" className="bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800">
-                      Configured
+                      {t("workflows.editor.configured")}
                     </Badge>
                   )}
                 </div>
@@ -603,15 +605,15 @@ export function WorkflowEditor({ workflow }: WorkflowEditorProps) {
                     <span className="flex items-center justify-center w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-xs font-bold">
                       3
                     </span>
-                    Configure Actions
+                    {t("workflows.editor.configureActions")}
                   </CardTitle>
                   <CardDescription className="text-slate-500 dark:text-slate-400 mt-1">
-                    What should happen when triggered?
+                    {t("workflows.editor.whatShouldHappenWhenTriggered")}
                   </CardDescription>
                 </div>
                 {actions.length > 0 && (
                   <Badge variant="outline" className="bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800">
-                    {actions.length} {actions.length === 1 ? "Action" : "Actions"}
+                    {actions.length} {actions.length === 1 ? t("workflows.editor.action") : t("workflows.editor.actions")}
                   </Badge>
                 )}
               </div>
@@ -629,7 +631,7 @@ export function WorkflowEditor({ workflow }: WorkflowEditorProps) {
                           </div>
                           <div>
                             <CardTitle className="text-sm text-slate-900 dark:text-white">
-                              Action {index + 1}
+                              {t("workflows.editor.action")} {index + 1}
                             </CardTitle>
                             <CardDescription className="text-xs text-slate-500 dark:text-slate-400">
                               {actionOptions.find((opt) => opt.value === action.type)?.label}
@@ -686,7 +688,7 @@ export function WorkflowEditor({ workflow }: WorkflowEditorProps) {
                 className="w-full border-dashed border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900/50 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800"
               >
                 <Plus className="mr-2 h-4 w-4" />
-                Add Action
+                {t("workflows.editor.addAction")}
               </Button>
             </CardContent>
           </Card>

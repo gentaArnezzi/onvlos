@@ -8,6 +8,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Bot, Send, Loader2, Sparkles } from "lucide-react";
 import { askAi } from "@/actions/ai";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/lib/i18n/context";
+import { Language } from "@/lib/i18n/translations";
 
 interface Message {
     role: 'user' | 'assistant';
@@ -15,11 +17,18 @@ interface Message {
     timestamp?: Date;
 }
 
-export function BrainChat() {
+interface BrainChatProps {
+    language?: Language;
+}
+
+export function BrainChat({ language: propLanguage }: BrainChatProps) {
+    const { t, language: contextLanguage } = useTranslation();
+    const language = propLanguage || contextLanguage;
+    
     const [messages, setMessages] = useState<Message[]>([
         { 
             role: 'assistant', 
-            content: "Hi! I'm your AI assistant. I can help you with:\n\n• Task queries and status\n• Invoice information and revenue\n• Client summaries and activity\n• Quick insights about your workspace\n\nTry asking me something like 'How many tasks are pending?' or 'What's our total revenue?'",
+            content: t("brain.welcomeMessage"),
             timestamp: new Date()
         }
     ]);
@@ -59,7 +68,7 @@ export function BrainChat() {
                 }).catch(() => {
                     const errorMsg: Message = {
                         role: 'assistant',
-                        content: "Sorry, I encountered an error. Please try again.",
+                        content: t("brain.errorMessage"),
                         timestamp: new Date()
                     };
                     setMessages(prev => [...prev, errorMsg]);
@@ -149,7 +158,7 @@ export function BrainChat() {
         } catch (error) {
             const errorMsg: Message = {
                 role: 'assistant',
-                content: "Sorry, I encountered an error. Please try again.",
+                content: t("brain.errorMessage"),
                 timestamp: new Date()
             };
             setMessages(prev => [...prev, errorMsg]);
@@ -176,8 +185,8 @@ export function BrainChat() {
                         <Sparkles className="h-5 w-5" />
                     </div>
                     <div>
-                        <CardTitle className="text-lg font-semibold">AI Assistant</CardTitle>
-                        <p className="text-xs text-white/80 mt-0.5">Powered by AI</p>
+                        <CardTitle className="text-lg font-semibold">{t("brain.aiAssistant")}</CardTitle>
+                        <p className="text-xs text-white/80 mt-0.5">{t("brain.poweredByAI")}</p>
                     </div>
                 </div>
             </CardHeader>
@@ -226,7 +235,7 @@ export function BrainChat() {
                             {msg.role === 'user' && (
                                 <Avatar className="h-10 w-10 bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-600 border-2 border-white dark:border-slate-800 flex-shrink-0 shadow-lg">
                                     <AvatarFallback className="text-slate-700 dark:text-slate-200 text-xs font-semibold">
-                                        You
+                                        {t("brain.you")}
                                     </AvatarFallback>
                                 </Avatar>
                             )}
@@ -241,7 +250,7 @@ export function BrainChat() {
                             </Avatar>
                             <div className="p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 text-sm rounded-tl-sm shadow-md flex items-center gap-3">
                                 <Loader2 className="h-4 w-4 animate-spin text-indigo-600 dark:text-indigo-400" />
-                                <span>Thinking...</span>
+                                <span>{t("brain.thinking")}</span>
                             </div>
                         </div>
                     )}
@@ -264,7 +273,7 @@ export function BrainChat() {
                         ref={inputRef}
                         value={inputValue} 
                         onChange={e => setInputValue(e.target.value)}
-                        placeholder="Ask me anything about your workspace..."
+                        placeholder={t("brain.placeholder")}
                         className="flex-1 min-w-0 bg-slate-50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 h-12 text-sm"
                         disabled={loading}
                         autoFocus={false}

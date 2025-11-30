@@ -2,15 +2,21 @@
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Sparkles, ArrowRight } from "lucide-react";
+import { useTranslation } from "@/lib/i18n/context";
+import { Language } from "@/lib/i18n/translations";
 
 interface SuggestedQueriesProps {
   queries: {
     category: string;
     queries: string[];
   }[];
+  language?: Language;
 }
 
-export function SuggestedQueries({ queries }: SuggestedQueriesProps) {
+export function SuggestedQueries({ queries, language: propLanguage }: SuggestedQueriesProps) {
+  const { t, language: contextLanguage } = useTranslation();
+  const language = propLanguage || contextLanguage;
+  
   const handleQueryClick = (query: string) => {
     const event = new CustomEvent('suggested-query', { detail: { query } });
     window.dispatchEvent(event);
@@ -23,10 +29,10 @@ export function SuggestedQueries({ queries }: SuggestedQueriesProps) {
           <div className="p-2 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400">
             <Sparkles className="h-4 w-4" />
           </div>
-          Suggested Queries
+          {t("brain.suggestedQueries")}
         </CardTitle>
         <CardDescription className="text-slate-600 dark:text-slate-400 text-sm mt-1">
-          Try asking these questions
+          {t("brain.tryAskingTheseQuestions")}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-5 pt-0">

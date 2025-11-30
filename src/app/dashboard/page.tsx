@@ -304,25 +304,33 @@ export default async function DashboardPage() {
           {/* Quick Actions */}
           <Card className="border-none shadow-lg bg-gradient-to-br from-violet-600 to-indigo-600 text-white">
             <CardHeader>
-              <CardTitle className="text-lg font-semibold">Quick Actions</CardTitle>
-              <p className="text-violet-100 text-sm">Common tasks to get you started</p>
+              <CardTitle className="text-lg font-semibold">{t("dashboard.quickActions", language)}</CardTitle>
+              <p className="text-violet-100 text-sm">{t("dashboard.quickActionsDesc", language)}</p>
             </CardHeader>
             <CardContent className="grid grid-cols-2 gap-4">
-              <Button variant="secondary" className="h-auto py-4 flex flex-col gap-2 bg-white/10 hover:bg-white/20 border-none text-white">
-                <FileText className="h-6 w-6" />
-                <span className="text-xs">New Invoice</span>
+              <Button variant="secondary" className="h-auto py-4 flex flex-col gap-2 bg-white/10 hover:bg-white/20 border-none text-white" asChild>
+                <Link href="/dashboard/invoices">
+                  <FileText className="h-6 w-6" />
+                  <span className="text-xs">{t("dashboard.newInvoice", language)}</span>
+                </Link>
               </Button>
-              <Button variant="secondary" className="h-auto py-4 flex flex-col gap-2 bg-white/10 hover:bg-white/20 border-none text-white">
-                <Users className="h-6 w-6" />
-                <span className="text-xs">Add Client</span>
+              <Button variant="secondary" className="h-auto py-4 flex flex-col gap-2 bg-white/10 hover:bg-white/20 border-none text-white" asChild>
+                <Link href="/dashboard/clients">
+                  <Users className="h-6 w-6" />
+                  <span className="text-xs">{t("dashboard.addClient", language)}</span>
+                </Link>
               </Button>
-              <Button variant="secondary" className="h-auto py-4 flex flex-col gap-2 bg-white/10 hover:bg-white/20 border-none text-white">
-                <CheckCircle2 className="h-6 w-6" />
-                <span className="text-xs">Create Task</span>
+              <Button variant="secondary" className="h-auto py-4 flex flex-col gap-2 bg-white/10 hover:bg-white/20 border-none text-white" asChild>
+                <Link href="/dashboard/tasks">
+                  <CheckCircle2 className="h-6 w-6" />
+                  <span className="text-xs">{t("dashboard.createTask", language)}</span>
+                </Link>
               </Button>
-              <Button variant="secondary" className="h-auto py-4 flex flex-col gap-2 bg-white/10 hover:bg-white/20 border-none text-white">
-                <Zap className="h-6 w-6" />
-                <span className="text-xs">Automation</span>
+              <Button variant="secondary" className="h-auto py-4 flex flex-col gap-2 bg-white/10 hover:bg-white/20 border-none text-white" asChild>
+                <Link href="/dashboard/workflows">
+                  <Zap className="h-6 w-6" />
+                  <span className="text-xs">{t("dashboard.automation", language)}</span>
+                </Link>
               </Button>
             </CardContent>
           </Card>

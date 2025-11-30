@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock, User, FileText } from "lucide-react";
 import { format } from "date-fns";
+import { useTranslation } from "@/lib/i18n/context";
 
 interface TaskDetailDialogProps {
     task: any;
@@ -12,7 +13,28 @@ interface TaskDetailDialogProps {
 }
 
 export function TaskDetailDialog({ task, open, onOpenChange }: TaskDetailDialogProps) {
+    const { t } = useTranslation();
+    
     if (!task) return null;
+
+    const getStatusLabel = (status: string) => {
+        switch (status) {
+            case 'todo': return t('tasks.toDo');
+            case 'in_progress': return t('tasks.inProgress');
+            case 'in_review': return t('tasks.inReview');
+            case 'done': return t('tasks.done');
+            default: return status.replace('_', ' ');
+        }
+    };
+
+    const getPriorityLabel = (priority: string) => {
+        switch (priority) {
+            case 'low': return t('tasks.low');
+            case 'medium': return t('tasks.medium');
+            case 'high': return t('tasks.high');
+            default: return priority;
+        }
+    };
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -25,13 +47,13 @@ export function TaskDetailDialog({ task, open, onOpenChange }: TaskDetailDialogP
                     {/* Status and Priority */}
                     <div className="flex items-center gap-4">
                         <div>
-                            <p className="text-xs text-slate-400 mb-1">Status</p>
+                            <p className="text-xs text-slate-400 mb-1">{t('tasks.status')}</p>
                             <Badge variant="secondary" className="capitalize bg-slate-700 text-slate-200">
-                                {(task.status || 'todo').replace('_', ' ')}
+                                {getStatusLabel(task.status || 'todo')}
                             </Badge>
                         </div>
                         <div>
-                            <p className="text-xs text-slate-400 mb-1">Priority</p>
+                            <p className="text-xs text-slate-400 mb-1">{t('tasks.priority')}</p>
                             <Badge
                                 variant="outline"
                                 className={`
@@ -41,7 +63,7 @@ export function TaskDetailDialog({ task, open, onOpenChange }: TaskDetailDialogP
                   ${task.priority === 'low' ? 'bg-blue-900/30 text-blue-400' : ''}
                 `}
                             >
-                                {task.priority}
+                                {getPriorityLabel(task.priority || 'low')}
                             </Badge>
                         </div>
                     </div>
@@ -51,7 +73,7 @@ export function TaskDetailDialog({ task, open, onOpenChange }: TaskDetailDialogP
                         <div>
                             <div className="flex items-center gap-2 mb-2">
                                 <FileText className="h-4 w-4 text-slate-400" />
-                                <p className="text-sm font-medium text-slate-300">Description</p>
+                                <p className="text-sm font-medium text-slate-300">{t('common.description')}</p>
                             </div>
                             <p className="text-slate-400 text-sm leading-relaxed pl-6">
                                 {task.description}
@@ -64,7 +86,7 @@ export function TaskDetailDialog({ task, open, onOpenChange }: TaskDetailDialogP
                         <div>
                             <div className="flex items-center gap-2 mb-2">
                                 <User className="h-4 w-4 text-slate-400" />
-                                <p className="text-sm font-medium text-slate-300">Client</p>
+                                <p className="text-sm font-medium text-slate-300">{t('tasks.client')}</p>
                             </div>
                             <div className="flex items-center gap-2 pl-6">
                                 <div className="h-8 w-8 rounded-full bg-slate-700 flex items-center justify-center text-sm font-medium text-slate-300">
@@ -80,7 +102,7 @@ export function TaskDetailDialog({ task, open, onOpenChange }: TaskDetailDialogP
                         <div>
                             <div className="flex items-center gap-2 mb-2">
                                 <Calendar className="h-4 w-4 text-slate-400" />
-                                <p className="text-sm font-medium text-slate-300">Due Date</p>
+                                <p className="text-sm font-medium text-slate-300">{t('tasks.dueDate')}</p>
                             </div>
                             <p className="text-slate-400 text-sm pl-6">
                                 {format(new Date(task.due_date), "MMMM d, yyyy")}
@@ -93,7 +115,7 @@ export function TaskDetailDialog({ task, open, onOpenChange }: TaskDetailDialogP
                         <div>
                             <div className="flex items-center gap-2 mb-2">
                                 <Clock className="h-4 w-4 text-slate-400" />
-                                <p className="text-sm font-medium text-slate-300">Created</p>
+                                <p className="text-sm font-medium text-slate-300">{t('tasks.created')}</p>
                             </div>
                             <p className="text-slate-400 text-sm pl-6">
                                 {format(new Date(task.created_at), "MMMM d, yyyy 'at' h:mm a")}

@@ -8,6 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Brain, Sparkles, TrendingUp, Users, CreditCard, CheckSquare, FileText, Upload } from "lucide-react";
 import { getAnalyticsData } from "@/actions/analytics";
 import { getCurrencySymbol } from "@/lib/currency";
+import { t } from "@/lib/i18n/server";
+import { Language } from "@/lib/i18n/translations";
 
 export default async function BrainPage() {
   const clients = await getClients();
@@ -24,36 +26,37 @@ export default async function BrainPage() {
     .reduce((sum, inv) => sum + Number(inv.amount || 0), 0);
   const pendingTasks = tasks.filter(t => t.status !== 'done').length;
   const overdueInvoices = invoices.filter(inv => inv.status === 'overdue').length;
+  const language = (workspace?.default_language as Language) || "en";
 
   const quickInsights = [
     {
-      title: "Active Clients",
+      title: t("brain.activeClients", language),
       value: activeClients.toString(),
-      description: `out of ${totalClients} total clients`,
+      description: t("brain.outOfTotalClients", language).replace("{total}", totalClients.toString()),
       icon: Users,
       color: "text-blue-600 dark:text-blue-400",
       bgColor: "bg-blue-100 dark:bg-blue-900/30"
     },
     {
-      title: "Total Revenue",
+      title: t("brain.totalRevenue", language),
       value: `${getCurrencySymbol(workspace?.default_currency || "USD")}${totalRevenue.toLocaleString()}`,
-      description: "from paid invoices",
+      description: t("brain.fromPaidInvoices", language),
       icon: CreditCard,
       color: "text-emerald-600 dark:text-emerald-400",
       bgColor: "bg-emerald-100 dark:bg-emerald-900/30"
     },
     {
-      title: "Pending Tasks",
+      title: t("brain.pendingTasks", language),
       value: pendingTasks.toString(),
-      description: "tasks to complete",
+      description: t("brain.tasksToComplete", language),
       icon: CheckSquare,
       color: "text-orange-600 dark:text-orange-400",
       bgColor: "bg-orange-100 dark:bg-orange-900/30"
     },
     {
-      title: "Overdue Invoices",
+      title: t("brain.overdueInvoices", language),
       value: overdueInvoices.toString(),
-      description: "invoices past due",
+      description: t("brain.invoicesPastDue", language),
       icon: TrendingUp,
       color: "text-red-600 dark:text-red-400",
       bgColor: "bg-red-100 dark:bg-red-900/30"
@@ -62,27 +65,27 @@ export default async function BrainPage() {
 
   const suggestedQueries = [
     {
-      category: "Tasks",
+      category: t("brain.category.tasks", language),
       queries: [
-        "How many tasks are pending?",
-        "What tasks are due this week?",
-        "Show me high priority tasks"
+        t("brain.query.howManyTasksPending", language),
+        t("brain.query.whatTasksDueThisWeek", language),
+        t("brain.query.showHighPriorityTasks", language)
       ]
     },
     {
-      category: "Invoices",
+      category: t("brain.category.invoices", language),
       queries: [
-        "What's our total revenue?",
-        "Which invoices are overdue?",
-        "Show me unpaid invoices"
+        t("brain.query.whatsTotalRevenue", language),
+        t("brain.query.whichInvoicesOverdue", language),
+        t("brain.query.showUnpaidInvoices", language)
       ]
     },
     {
-      category: "Clients",
+      category: t("brain.category.clients", language),
       queries: [
-        "How many active clients do we have?",
-        "List all clients",
-        "Show client activity summary"
+        t("brain.query.howManyActiveClients", language),
+        t("brain.query.listAllClients", language),
+        t("brain.query.showClientActivitySummary", language)
       ]
     }
   ];
@@ -93,10 +96,10 @@ export default async function BrainPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
-            Brain
+            {t("brain.title", language)}
           </h2>
           <p className="text-slate-500 dark:text-slate-400 mt-1.5 text-sm">
-            Your AI-powered assistant for insights and automation.
+            {t("brain.description", language)}
           </p>
         </div>
       </div>
@@ -130,23 +133,23 @@ export default async function BrainPage() {
       <div className="grid gap-6 lg:grid-cols-12">
         {/* AI Chat - Takes 8 columns */}
         <div className="lg:col-span-8">
-          <BrainChat />
+          <BrainChat language={language} />
         </div>
 
         {/* Sidebar - Suggested Queries & Features - Takes 4 columns */}
         <div className="lg:col-span-4 space-y-6 flex flex-col">
           {/* Suggested Queries */}
-          <SuggestedQueries queries={suggestedQueries} />
+          <SuggestedQueries queries={suggestedQueries} language={language} />
 
           {/* Coming Soon Features */}
           <Card className="border border-slate-200 dark:border-slate-700 shadow-sm bg-white dark:bg-slate-800/50">
             <CardHeader>
               <CardTitle className="text-slate-900 dark:text-white flex items-center gap-2 text-base">
                 <FileText className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
-                Coming Soon
+                {t("brain.comingSoon", language)}
               </CardTitle>
               <CardDescription className="text-slate-600 dark:text-slate-400 text-sm">
-                Advanced features in development
+                {t("brain.advancedFeaturesInDevelopment", language)}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -155,8 +158,8 @@ export default async function BrainPage() {
                   <Upload className="h-4 w-4" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Document Upload</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Upload PDFs, proposals, and documents for AI indexing</p>
+                  <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{t("brain.documentUpload", language)}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{t("brain.documentUploadDesc", language)}</p>
                 </div>
               </div>
               <div className="flex items-start gap-3 p-3 rounded-lg bg-gradient-to-r from-slate-50 to-slate-100/50 dark:from-slate-900/50 dark:to-slate-800/30 border border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors group">
@@ -164,8 +167,8 @@ export default async function BrainPage() {
                   <Brain className="h-4 w-4" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Knowledge Base</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Build a searchable knowledge base from your documents</p>
+                  <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{t("brain.knowledgeBase", language)}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{t("brain.knowledgeBaseDesc", language)}</p>
                 </div>
               </div>
               <div className="flex items-start gap-3 p-3 rounded-lg bg-gradient-to-r from-slate-50 to-slate-100/50 dark:from-slate-900/50 dark:to-slate-800/30 border border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors group">
@@ -173,8 +176,8 @@ export default async function BrainPage() {
                   <Sparkles className="h-4 w-4" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Content Generation</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Generate email templates, proposals, and SOPs</p>
+                  <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{t("brain.contentGeneration", language)}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{t("brain.contentGenerationDesc", language)}</p>
                 </div>
               </div>
             </CardContent>
