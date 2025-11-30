@@ -13,6 +13,8 @@ import { Badge } from "@/components/ui/badge";
 import { updateUserProfile, updateWorkspaceSettings } from "@/actions/settings";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useTranslation } from "@/lib/i18n/context";
+import { Language } from "@/lib/i18n/translations";
 
 interface SettingsTabsProps {
   user: {
@@ -28,15 +30,19 @@ interface SettingsTabsProps {
     logo_url: string | null;
     billing_email: string | null;
     default_currency: string | null;
+    default_language: string | null;
   } | null;
   billing: {
     subscription_tier: string;
     subscription_status: string;
     billing_email: string | null;
   } | null;
+  language?: Language;
 }
 
-export function SettingsTabs({ user, workspace, billing }: SettingsTabsProps) {
+export function SettingsTabs({ user, workspace, billing, language: propLanguage }: SettingsTabsProps) {
+  const { t, language: contextLanguage } = useTranslation();
+  const language = propLanguage || contextLanguage;
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   
@@ -50,6 +56,7 @@ export function SettingsTabs({ user, workspace, billing }: SettingsTabsProps) {
   const [workspaceLogo, setWorkspaceLogo] = useState(workspace?.logo_url || "");
   const [billingEmail, setBillingEmail] = useState(workspace?.billing_email || "");
   const [defaultCurrency, setDefaultCurrency] = useState(workspace?.default_currency || "USD");
+  const [defaultLanguage, setDefaultLanguage] = useState(workspace?.default_language || "en");
 
   useEffect(() => {
     if (user) {
@@ -62,12 +69,13 @@ export function SettingsTabs({ user, workspace, billing }: SettingsTabsProps) {
       setWorkspaceLogo(workspace.logo_url || "");
       setBillingEmail(workspace.billing_email || "");
       setDefaultCurrency(workspace.default_currency || "USD");
+      setDefaultLanguage(workspace.default_language || "en");
     }
   }, [user, workspace]);
 
   const handleSaveProfile = async () => {
     if (!profileName.trim()) {
-      toast.error("Name is required");
+      toast.error(t("settings.nameRequired"));
       return;
     }
 
@@ -79,14 +87,14 @@ export function SettingsTabs({ user, workspace, billing }: SettingsTabsProps) {
       });
       
       if (result.success) {
-        toast.success("Profile updated successfully!");
+        toast.success(t("settings.profileUpdated"));
         router.refresh();
       } else {
-        toast.error(result.error || "Failed to update profile");
+        toast.error(result.error || t("settings.failedToUpdateProfile"));
       }
     } catch (error) {
       console.error("Error updating profile:", error);
-      toast.error("An error occurred. Please try again.");
+      toast.error(t("settings.anErrorOccurred"));
     } finally {
       setLoading(false);
     }
@@ -94,7 +102,7 @@ export function SettingsTabs({ user, workspace, billing }: SettingsTabsProps) {
 
   const handleSaveWorkspace = async () => {
     if (!workspaceName.trim()) {
-      toast.error("Workspace name is required");
+      toast.error(t("settings.workspaceNameRequired"));
       return;
     }
 
@@ -106,24 +114,25 @@ export function SettingsTabs({ user, workspace, billing }: SettingsTabsProps) {
         logo_url: workspaceLogo.trim() || null,
         billing_email: billingEmail.trim() || null,
         default_currency: defaultCurrency,
+        default_language: defaultLanguage,
       });
       
       if (result.success) {
-        toast.success("Workspace settings updated successfully!");
+        toast.success(t("settings.workspaceUpdated"));
         router.refresh();
       } else {
-        toast.error(result.error || "Failed to update workspace settings");
+        toast.error(result.error || t("settings.failedToUpdateWorkspace"));
       }
     } catch (error) {
       console.error("Error updating workspace:", error);
-      toast.error("An error occurred. Please try again.");
+      toast.error(t("settings.anErrorOccurred"));
     } finally {
       setLoading(false);
     }
   };
 
   const handleChangeAvatar = () => {
-    const url = prompt("Enter avatar URL:");
+    const url = prompt(t("settings.enterAvatarUrl"));
     if (url) {
       setProfileAvatar(url);
     }
@@ -160,30 +169,30 @@ export function SettingsTabs({ user, workspace, billing }: SettingsTabsProps) {
           className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white text-slate-700 dark:text-slate-300"
         >
           <User className="h-4 w-4 mr-2" />
-          Profile
+          {t("settings.profile")}
         </TabsTrigger>
         <TabsTrigger 
           value="workspace" 
           className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white text-slate-700 dark:text-slate-300"
         >
           <Building className="h-4 w-4 mr-2" />
-          Workspace
+          {t("settings.workspace")}
         </TabsTrigger>
         <TabsTrigger 
           value="billing" 
           className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white text-slate-700 dark:text-slate-300"
         >
           <CreditCard className="h-4 w-4 mr-2" />
-          Billing
+          {t("settings.billing")}
         </TabsTrigger>
       </TabsList>
 
       <TabsContent value="profile" className="mt-0">
         <Card className="border border-slate-200 dark:border-slate-700 shadow-lg bg-white dark:bg-slate-800/50">
           <CardHeader>
-            <CardTitle className="text-slate-900 dark:text-white">Profile Information</CardTitle>
+            <CardTitle className="text-slate-900 dark:text-white">{t("settings.profileInformation")}</CardTitle>
             <CardDescription className="text-slate-600 dark:text-slate-400">
-              Manage your public profile and account settings.
+              {t("settings.profileDescription")}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -199,13 +208,13 @@ export function SettingsTabs({ user, workspace, billing }: SettingsTabsProps) {
                 onClick={handleChangeAvatar}
                 className="border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800"
               >
-                Change Avatar
+                {t("settings.changeAvatar")}
               </Button>
             </div>
 
             <div className="grid gap-6 md:grid-cols-2">
               <div className="space-y-2">
-                <Label className="text-slate-900 dark:text-white">Full Name</Label>
+                <Label className="text-slate-900 dark:text-white">{t("settings.fullName")}</Label>
                 <Input 
                   value={profileName}
                   onChange={(e) => setProfileName(e.target.value)}
@@ -213,7 +222,7 @@ export function SettingsTabs({ user, workspace, billing }: SettingsTabsProps) {
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-slate-900 dark:text-white">Email</Label>
+                <Label className="text-slate-900 dark:text-white">{t("settings.profile.email")}</Label>
                 <Input 
                   value={user?.email || ""} 
                   disabled 
@@ -229,7 +238,7 @@ export function SettingsTabs({ user, workspace, billing }: SettingsTabsProps) {
               className="ml-auto bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-0"
             >
               {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
-              Save Changes
+              {t("settings.saveChanges")}
             </Button>
           </CardFooter>
         </Card>
@@ -238,14 +247,14 @@ export function SettingsTabs({ user, workspace, billing }: SettingsTabsProps) {
       <TabsContent value="workspace" className="mt-0">
         <Card className="border border-slate-200 dark:border-slate-700 shadow-lg bg-white dark:bg-slate-800/50">
           <CardHeader>
-            <CardTitle className="text-slate-900 dark:text-white">Workspace Settings</CardTitle>
+            <CardTitle className="text-slate-900 dark:text-white">{t("settings.workspaceSettings")}</CardTitle>
             <CardDescription className="text-slate-600 dark:text-slate-400">
-              Manage your agency workspace settings.
+              {t("settings.workspaceDescription")}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="space-y-2">
-              <Label className="text-slate-900 dark:text-white">Workspace Name</Label>
+              <Label className="text-slate-900 dark:text-white">{t("settings.workspace.name")}</Label>
               <Input 
                 value={workspaceName}
                 onChange={(e) => setWorkspaceName(e.target.value)}
@@ -253,7 +262,7 @@ export function SettingsTabs({ user, workspace, billing }: SettingsTabsProps) {
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-slate-900 dark:text-white">Timezone</Label>
+              <Label className="text-slate-900 dark:text-white">{t("settings.workspace.timezone")}</Label>
               <Select value={workspaceTimezone} onValueChange={setWorkspaceTimezone}>
                 <SelectTrigger className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
                   <SelectValue />
@@ -272,7 +281,7 @@ export function SettingsTabs({ user, workspace, billing }: SettingsTabsProps) {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label className="text-slate-900 dark:text-white">Logo URL (Optional)</Label>
+              <Label className="text-slate-900 dark:text-white">{t("settings.logoUrlOptional")}</Label>
               <Input 
                 value={workspaceLogo}
                 onChange={(e) => setWorkspaceLogo(e.target.value)}
@@ -281,7 +290,7 @@ export function SettingsTabs({ user, workspace, billing }: SettingsTabsProps) {
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-slate-900 dark:text-white">Billing Email</Label>
+              <Label className="text-slate-900 dark:text-white">{t("settings.workspace.billingEmail")}</Label>
               <Input 
                 type="email"
                 value={billingEmail}
@@ -291,7 +300,7 @@ export function SettingsTabs({ user, workspace, billing }: SettingsTabsProps) {
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-slate-900 dark:text-white">Default Currency</Label>
+              <Label className="text-slate-900 dark:text-white">{t("settings.workspace.defaultCurrency")}</Label>
               <Select value={defaultCurrency} onValueChange={setDefaultCurrency}>
                 <SelectTrigger className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
                   <SelectValue />
@@ -319,7 +328,39 @@ export function SettingsTabs({ user, workspace, billing }: SettingsTabsProps) {
                 </SelectContent>
               </Select>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                This currency will be used as the default for all new invoices.
+                {t("settings.workspace.currencyDescription")}
+              </p>
+            </div>
+            <div className="space-y-2">
+              <Label className="text-slate-900 dark:text-white">{t("settings.workspace.defaultLanguage")}</Label>
+              <Select value={defaultLanguage} onValueChange={setDefaultLanguage}>
+                <SelectTrigger className="bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="en">English</SelectItem>
+                  <SelectItem value="id">Bahasa Indonesia</SelectItem>
+                  <SelectItem value="ms">Bahasa Melayu</SelectItem>
+                  <SelectItem value="th">ไทย (Thai)</SelectItem>
+                  <SelectItem value="vi">Tiếng Việt (Vietnamese)</SelectItem>
+                  <SelectItem value="zh">中文 (Chinese)</SelectItem>
+                  <SelectItem value="ja">日本語 (Japanese)</SelectItem>
+                  <SelectItem value="ko">한국어 (Korean)</SelectItem>
+                  <SelectItem value="es">Español (Spanish)</SelectItem>
+                  <SelectItem value="fr">Français (French)</SelectItem>
+                  <SelectItem value="de">Deutsch (German)</SelectItem>
+                  <SelectItem value="pt">Português (Portuguese)</SelectItem>
+                  <SelectItem value="ru">Русский (Russian)</SelectItem>
+                  <SelectItem value="ar">العربية (Arabic)</SelectItem>
+                  <SelectItem value="hi">हिन्दी (Hindi)</SelectItem>
+                  <SelectItem value="it">Italiano (Italian)</SelectItem>
+                  <SelectItem value="nl">Nederlands (Dutch)</SelectItem>
+                  <SelectItem value="pl">Polski (Polish)</SelectItem>
+                  <SelectItem value="tr">Türkçe (Turkish)</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                {t("settings.workspace.languageDescription")}
               </p>
             </div>
           </CardContent>
@@ -330,7 +371,7 @@ export function SettingsTabs({ user, workspace, billing }: SettingsTabsProps) {
               className="ml-auto bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-0"
             >
               {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
-              Save Changes
+              {t("settings.saveChanges")}
             </Button>
           </CardFooter>
         </Card>
@@ -339,9 +380,9 @@ export function SettingsTabs({ user, workspace, billing }: SettingsTabsProps) {
       <TabsContent value="billing" className="mt-0">
         <Card className="border border-slate-200 dark:border-slate-700 shadow-lg bg-white dark:bg-slate-800/50">
           <CardHeader>
-            <CardTitle className="text-slate-900 dark:text-white">Billing & Subscription</CardTitle>
+            <CardTitle className="text-slate-900 dark:text-white">{t("settings.billingSubscription")}</CardTitle>
             <CardDescription className="text-slate-600 dark:text-slate-400">
-              Manage your subscription and payment methods.
+              {t("settings.billingDescription")}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -349,7 +390,7 @@ export function SettingsTabs({ user, workspace, billing }: SettingsTabsProps) {
               <div className="space-y-4">
                 <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-slate-700">
                   <div>
-                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Current Plan</p>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">{t("settings.currentPlan")}</p>
                     <div className="flex items-center gap-2">
                       <p className="text-lg font-semibold text-slate-900 dark:text-white capitalize">
                         {billing.subscription_tier}
@@ -363,7 +404,7 @@ export function SettingsTabs({ user, workspace, billing }: SettingsTabsProps) {
                 
                 {billing.billing_email && (
                   <div className="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-slate-700">
-                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Billing Email</p>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">{t("settings.billingEmail")}</p>
                     <p className="text-slate-900 dark:text-white">{billing.billing_email}</p>
                   </div>
                 )}
@@ -372,8 +413,8 @@ export function SettingsTabs({ user, workspace, billing }: SettingsTabsProps) {
             
             <div className="text-center py-12 text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-dashed border-slate-200 dark:border-slate-700">
               <CreditCard className="h-12 w-12 mx-auto mb-4 text-slate-400 dark:text-slate-500" />
-              <p className="mb-2 font-medium text-slate-900 dark:text-white">Billing management is handled via Stripe</p>
-              <p className="text-sm text-slate-600 dark:text-slate-400">You will be redirected to the secure customer portal.</p>
+              <p className="mb-2 font-medium text-slate-900 dark:text-white">{t("settings.billingHandledViaStripe")}</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400">{t("settings.redirectedToCustomerPortal")}</p>
             </div>
           </CardContent>
           <CardFooter className="justify-center p-6">
@@ -382,10 +423,10 @@ export function SettingsTabs({ user, workspace, billing }: SettingsTabsProps) {
               className="w-full sm:w-auto border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800"
               onClick={() => {
                 // TODO: Implement Stripe customer portal redirect
-                alert("Stripe customer portal integration coming soon");
+                alert(t("settings.stripePortalComingSoon"));
               }}
             >
-              Open Customer Portal
+              {t("settings.openCustomerPortal")}
             </Button>
           </CardFooter>
         </Card>

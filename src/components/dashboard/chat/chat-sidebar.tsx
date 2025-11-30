@@ -6,6 +6,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Search, Building2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
+import { useTranslation } from "@/lib/i18n/context";
+import { Language } from "@/lib/i18n/translations";
 
 interface Conversation {
     clientId: string;
@@ -24,6 +26,7 @@ interface ChatSidebarProps {
     onSelectClient: (clientId: string) => void;
     searchQuery: string;
     onSearchChange: (query: string) => void;
+    language?: Language;
 }
 
 export function ChatSidebar({
@@ -32,7 +35,10 @@ export function ChatSidebar({
     onSelectClient,
     searchQuery,
     onSearchChange,
+    language: propLanguage,
 }: ChatSidebarProps) {
+    const { t, language: contextLanguage } = useTranslation();
+    const language = propLanguage || contextLanguage;
     return (
         <Card className="h-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 backdrop-blur-sm flex flex-col overflow-hidden">
             {/* Search */}
@@ -40,7 +46,7 @@ export function ChatSidebar({
                 <div className="relative">
                     <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400 dark:text-slate-500" />
                     <Input
-                        placeholder="Search clients..."
+                        placeholder={t("chat.searchClients")}
                         value={searchQuery}
                         onChange={(e) => onSearchChange(e.target.value)}
                         className="pl-9 bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
@@ -55,7 +61,7 @@ export function ChatSidebar({
                         <div className="mx-auto w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-700/30 flex items-center justify-center mb-3">
                             <Building2 className="w-6 h-6 text-slate-400 dark:text-slate-500" />
                         </div>
-                        <p className="text-sm text-slate-500 dark:text-slate-400">No clients found</p>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">{t("chat.noClientsFound")}</p>
                     </div>
                 ) : (
                     <div className="divide-y divide-slate-200 dark:divide-slate-700/50">
@@ -104,7 +110,7 @@ export function ChatSidebar({
                                             </p>
                                         ) : (
                                             <p className="text-xs text-slate-500 dark:text-slate-500 italic">
-                                                No messages yet
+                                                {t("chat.noMessagesYet")}
                                             </p>
                                         )}
                                     </div>

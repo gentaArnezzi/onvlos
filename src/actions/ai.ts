@@ -6,9 +6,13 @@ import { eq, desc, inArray } from "drizzle-orm";
 import { getSession } from "@/lib/get-session";
 import { getOrCreateWorkspace } from "./workspace";
 
-// OpenRouter API Key - can be set via environment variable or use default
-const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY || "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";
+// OpenRouter API Key - must be set via environment variable
+// Load from environment at runtime to ensure it's always fresh
 const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
+
+function getOpenRouterApiKey(): string | undefined {
+    return process.env.OPENROUTER_API_KEY;
+}
 
 interface ContextData {
     tasks: any[];
@@ -147,13 +151,24 @@ RESPONSE STYLE:
 }
 
 async function callOpenRouter(query: string, context: ContextData): Promise<string> {
+    const apiKey = getOpenRouterApiKey();
+    
+    if (!apiKey) {
+        console.error("OPENROUTER_API_KEY is missing. Available env vars:", {
+            hasKey: !!process.env.OPENROUTER_API_KEY,
+            keyLength: process.env.OPENROUTER_API_KEY?.length || 0,
+            allEnvKeys: Object.keys(process.env).filter(k => k.includes('OPEN') || k.includes('ROUTER'))
+        });
+        throw new Error("OpenRouter API key is not configured. Please set OPENROUTER_API_KEY in your .env.local file and restart the server.");
+    }
+
     const systemPrompt = buildSystemPrompt(context);
     
     const response = await fetch(OPENROUTER_API_URL, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+            'Authorization': `Bearer ${apiKey}`,
             'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
             'X-Title': 'Onvlo AI Assistant'
         },
@@ -175,9 +190,32 @@ async function callOpenRouter(query: string, context: ContextData): Promise<stri
     });
 
     if (!response.ok) {
-        const error = await response.text();
-        console.error('OpenRouter API Error:', error);
-        throw new Error(`OpenRouter API error: ${response.status}`);
+        const errorText = await response.text();
+        let errorMessage = `OpenRouter API error: ${response.status}`;
+        
+        try {
+            const errorJson = JSON.parse(errorText);
+            if (errorJson.error?.message) {
+                errorMessage = errorJson.error.message;
+            }
+        } catch {
+            // If error is not JSON, use the text as is
+            if (errorText) {
+                errorMessage = errorText;
+            }
+        }
+        
+        console.error('OpenRouter API Error:', {
+            status: response.status,
+            statusText: response.statusText,
+            error: errorMessage
+        });
+        
+        if (response.status === 401) {
+            throw new Error("Invalid OpenRouter API key. Please check your OPENROUTER_API_KEY environment variable.");
+        }
+        
+        throw new Error(errorMessage);
     }
 
     const data = await response.json();
@@ -205,6 +243,20 @@ export async function askAi(query: string) {
         return { response };
     } catch (error) {
         console.error("AI Error:", error);
+        
+        // Provide more specific error messages
+        if (error instanceof Error) {
+            if (error.message.includes("API key") || error.message.includes("401")) {
+                return { 
+                    response: "AI Assistant is not configured. Please add OPENROUTER_API_KEY to your .env.local file. Contact your administrator for setup instructions." 
+                };
+            }
+            if (error.message.includes("not configured")) {
+                return { 
+                    response: "AI Assistant is not configured. Please set OPENROUTER_API_KEY in your environment variables." 
+                };
+            }
+        }
         
         // Fallback to simple keyword matching if API fails
         const q = query.toLowerCase();

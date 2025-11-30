@@ -5,6 +5,7 @@ import { getTasks } from "@/actions/tasks";
 import { getClients } from "@/actions/clients";
 import { updateTask } from "@/actions/tasks";
 import { CreateTaskDialog } from "@/components/dashboard/tasks/create-task-dialog";
+import { useTranslation } from "@/lib/i18n/context";
 import {
   Table,
   TableBody,
@@ -30,6 +31,7 @@ export default function TasksPage() {
   const [clients, setClients] = useState<any[]>([]);
   const [selectedTask, setSelectedTask] = useState<any>(null);
   const [detailOpen, setDetailOpen] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -69,10 +71,10 @@ export default function TasksPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-violet-600 to-indigo-500 bg-clip-text text-transparent">
-            Tasks
+            {t("tasks.title")}
           </h2>
           <p className="text-slate-300 mt-1">
-            Track and manage your project deliverables.
+            {t("tasks.description")}
           </p>
         </div>
         <CreateTaskDialog clients={clients} />
@@ -86,7 +88,7 @@ export default function TasksPage() {
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-slate-300">
-              Total Tasks
+              {t("tasks.totalTasks")}
             </CardTitle>
             <div className="p-2 rounded-lg bg-violet-100 text-violet-600 dark:bg-violet-900/30 dark:text-violet-400">
               <CheckSquare className="h-4 w-4" />
@@ -95,7 +97,7 @@ export default function TasksPage() {
           <CardContent>
             <div className="text-2xl font-bold text-white">{totalTasks}</div>
             <p className="text-xs text-slate-400 mt-1">
-              All assignments
+              {t("tasks.allAssignments")}
             </p>
           </CardContent>
         </Card>
@@ -106,7 +108,7 @@ export default function TasksPage() {
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-slate-300">
-              Pending
+              {t("tasks.pending")}
             </CardTitle>
             <div className="p-2 rounded-lg bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400">
               <Clock className="h-4 w-4" />
@@ -115,7 +117,7 @@ export default function TasksPage() {
           <CardContent>
             <div className="text-2xl font-bold text-white">{pendingTasks}</div>
             <p className="text-xs text-slate-400 mt-1">
-              To do & In progress
+              {t("tasks.toDoInProgress")}
             </p>
           </CardContent>
         </Card>
@@ -126,7 +128,7 @@ export default function TasksPage() {
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-slate-300">
-              High Priority
+              {t("tasks.highPriority")}
             </CardTitle>
             <div className="p-2 rounded-lg bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400">
               <AlertTriangle className="h-4 w-4" />
@@ -135,7 +137,7 @@ export default function TasksPage() {
           <CardContent>
             <div className="text-2xl font-bold text-white">{highPriorityTasks}</div>
             <p className="text-xs text-slate-400 mt-1">
-              Needs attention
+              {t("tasks.needsAttention")}
             </p>
           </CardContent>
         </Card>
@@ -145,7 +147,7 @@ export default function TasksPage() {
       <Card className="border border-slate-700/50 shadow-lg bg-slate-800/50 backdrop-blur-sm">
         <CardHeader>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <CardTitle className="text-white">Task List</CardTitle>
+            <CardTitle className="text-white">{t("tasks.taskList")}</CardTitle>
             <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
               <StatusFilter />
               <SearchInput />
@@ -158,11 +160,11 @@ export default function TasksPage() {
               <TableHeader className="bg-slate-900/50">
                 <TableRow className="hover:bg-transparent border-slate-700">
                   <TableHead className="w-[50px] pl-6 h-12"></TableHead>
-                  <TableHead className="h-12 text-xs font-medium text-slate-400 uppercase tracking-wider">Title</TableHead>
-                  <TableHead className="h-12 text-xs font-medium text-slate-400 uppercase tracking-wider">Client</TableHead>
-                  <TableHead className="h-12 text-xs font-medium text-slate-400 uppercase tracking-wider">Priority</TableHead>
-                  <TableHead className="h-12 text-xs font-medium text-slate-400 uppercase tracking-wider">Due Date</TableHead>
-                  <TableHead className="h-12 text-xs font-medium text-slate-400 uppercase tracking-wider">Status</TableHead>
+                  <TableHead className="h-12 text-xs font-medium text-slate-400 uppercase tracking-wider">{t("table.title")}</TableHead>
+                  <TableHead className="h-12 text-xs font-medium text-slate-400 uppercase tracking-wider">{t("table.client")}</TableHead>
+                  <TableHead className="h-12 text-xs font-medium text-slate-400 uppercase tracking-wider">{t("table.priority")}</TableHead>
+                  <TableHead className="h-12 text-xs font-medium text-slate-400 uppercase tracking-wider">{t("table.dueDate")}</TableHead>
+                  <TableHead className="h-12 text-xs font-medium text-slate-400 uppercase tracking-wider">{t("table.status")}</TableHead>
                   <TableHead className="h-12 w-[50px]"></TableHead>
                 </TableRow>
               </TableHeader>
@@ -170,7 +172,7 @@ export default function TasksPage() {
                 {tasks.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={7} className="h-32 text-center text-slate-400">
-                      No tasks found.
+                      {t("tasks.noTasks")}
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -200,7 +202,7 @@ export default function TasksPage() {
                             <span className="text-sm">{task.client_name}</span>
                           </div>
                         ) : (
-                          <span className="text-slate-400 italic text-sm">No Client</span>
+                          <span className="text-slate-400 italic text-sm">{t("tasks.noClient")}</span>
                         )}
                       </TableCell>
                       <TableCell onClick={() => handleTaskClick(task)}>

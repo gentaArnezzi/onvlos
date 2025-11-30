@@ -30,9 +30,10 @@ interface ProposalEditorProps {
     name: string;
     company_name?: string | null;
   }>;
+  currencySymbol?: string;
 }
 
-export function ProposalEditor({ clients }: ProposalEditorProps) {
+export function ProposalEditor({ clients, currencySymbol = "$" }: ProposalEditorProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [sendingProposal, setSendingProposal] = useState(false);
@@ -148,25 +149,25 @@ export function ProposalEditor({ clients }: ProposalEditorProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-transparent">
       {/* Client Selection */}
-      <Card>
+      <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 shadow-sm">
         <CardHeader>
-          <CardTitle>Client Information</CardTitle>
+          <CardTitle className="text-slate-900 dark:text-white">Client Information</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-4">
           <div className="grid gap-2">
-            <Label htmlFor="client">Select Client *</Label>
+            <Label htmlFor="client" className="text-slate-900 dark:text-white">Select Client *</Label>
             <Select
               value={formData.client_id}
               onValueChange={(value) => setFormData({ ...formData, client_id: value })}
             >
-              <SelectTrigger>
+              <SelectTrigger className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
                 <SelectValue placeholder="Choose a client" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
                 {clients.map((client) => (
-                  <SelectItem key={client.id} value={client.id}>
+                  <SelectItem key={client.id} value={client.id} className="text-slate-900 dark:text-white focus:bg-slate-100 dark:focus:bg-slate-800">
                     {client.company_name || client.name}
                   </SelectItem>
                 ))}
@@ -175,110 +176,119 @@ export function ProposalEditor({ clients }: ProposalEditorProps) {
           </div>
           
           <div className="grid gap-2">
-            <Label htmlFor="title">Proposal Title *</Label>
+            <Label htmlFor="title" className="text-slate-900 dark:text-white">Proposal Title *</Label>
             <Input
               id="title"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               placeholder="e.g., Website Development Proposal"
+              className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
             />
           </div>
           
           <div className="grid gap-2">
-            <Label htmlFor="valid_days">Valid For (days)</Label>
+            <Label htmlFor="valid_days" className="text-slate-900 dark:text-white">Valid For (days)</Label>
             <Input
               id="valid_days"
               type="number"
               value={formData.valid_days}
               onChange={(e) => setFormData({ ...formData, valid_days: parseInt(e.target.value) || 30 })}
+              className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
             />
           </div>
         </CardContent>
       </Card>
 
       {/* Proposal Content */}
-      <Card>
+      <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 shadow-sm">
         <CardHeader>
-          <CardTitle>Proposal Content</CardTitle>
+          <CardTitle className="text-slate-900 dark:text-white">Proposal Content</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-2">
-            <Label htmlFor="introduction">Introduction</Label>
+            <Label htmlFor="introduction" className="text-slate-900 dark:text-white">Introduction</Label>
             <Textarea
               id="introduction"
               value={formData.introduction}
               onChange={(e) => setFormData({ ...formData, introduction: e.target.value })}
               placeholder="Brief introduction about the proposal..."
               rows={4}
+              className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
             />
           </div>
           
           <div className="grid gap-2">
-            <Label htmlFor="scope">Scope of Work</Label>
+            <Label htmlFor="scope" className="text-slate-900 dark:text-white">Scope of Work</Label>
             <Textarea
               id="scope"
               value={formData.scope}
               onChange={(e) => setFormData({ ...formData, scope: e.target.value })}
               placeholder="Detailed scope of work..."
               rows={6}
+              className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
             />
           </div>
           
           <div className="grid gap-2">
-            <Label htmlFor="timeline">Timeline</Label>
+            <Label htmlFor="timeline" className="text-slate-900 dark:text-white">Timeline</Label>
             <Textarea
               id="timeline"
               value={formData.timeline}
               onChange={(e) => setFormData({ ...formData, timeline: e.target.value })}
               placeholder="Project timeline and milestones..."
               rows={4}
+              className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
             />
           </div>
         </CardContent>
       </Card>
 
       {/* Pricing */}
-      <Card>
+      <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 shadow-sm">
         <CardHeader>
-          <CardTitle>Pricing</CardTitle>
+          <CardTitle className="text-slate-900 dark:text-white">Pricing</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {items.map((item, index) => (
               <div key={index} className="grid grid-cols-12 gap-2 items-end">
                 <div className="col-span-4">
-                  <Label>Item Name</Label>
+                  <Label className="text-slate-900 dark:text-white">Item Name</Label>
                   <Input
                     value={item.name}
                     onChange={(e) => updateItem(index, 'name', e.target.value)}
                     placeholder="Service/Product"
+                    className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
                   />
                 </div>
                 <div className="col-span-3">
-                  <Label>Description</Label>
+                  <Label className="text-slate-900 dark:text-white">Description</Label>
                   <Input
                     value={item.description}
                     onChange={(e) => updateItem(index, 'description', e.target.value)}
                     placeholder="Brief description"
+                    className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
                   />
                 </div>
                 <div className="col-span-2">
-                  <Label>Quantity</Label>
+                  <Label className="text-slate-900 dark:text-white">Quantity</Label>
                   <Input
                     type="number"
                     value={item.quantity}
                     onChange={(e) => updateItem(index, 'quantity', e.target.value)}
                     min="1"
+                    className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
                   />
                 </div>
                 <div className="col-span-2">
-                  <Label>Unit Price</Label>
+                  <Label className="text-slate-900 dark:text-white">Unit Price</Label>
                   <Input
                     type="number"
                     value={item.unit_price}
                     onChange={(e) => updateItem(index, 'unit_price', e.target.value)}
                     min="0"
                     step="0.01"
+                    className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
                   />
                 </div>
                 <div className="col-span-1">
@@ -288,6 +298,7 @@ export function ProposalEditor({ clients }: ProposalEditorProps) {
                     size="icon"
                     onClick={() => removeItem(index)}
                     disabled={items.length === 1}
+                    className="text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -299,15 +310,15 @@ export function ProposalEditor({ clients }: ProposalEditorProps) {
               type="button"
               variant="outline"
               onClick={addItem}
-              className="w-full"
+              className="w-full border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
             >
               <Plus className="h-4 w-4 mr-2" />
               Add Item
             </Button>
             
-            <div className="text-right pt-4 border-t">
-              <div className="text-2xl font-bold">
-                Total: ${calculateTotal().toFixed(2)}
+            <div className="text-right pt-4 border-t border-slate-200 dark:border-slate-700">
+              <div className="text-2xl font-bold text-slate-900 dark:text-white">
+                Total: {currencySymbol}{calculateTotal().toFixed(2)}
               </div>
             </div>
           </div>
@@ -315,9 +326,9 @@ export function ProposalEditor({ clients }: ProposalEditorProps) {
       </Card>
 
       {/* Terms & Conditions */}
-      <Card>
+      <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 shadow-sm">
         <CardHeader>
-          <CardTitle>Terms & Conditions</CardTitle>
+          <CardTitle className="text-slate-900 dark:text-white">Terms & Conditions</CardTitle>
         </CardHeader>
         <CardContent>
           <Textarea
@@ -325,6 +336,7 @@ export function ProposalEditor({ clients }: ProposalEditorProps) {
             onChange={(e) => setFormData({ ...formData, terms: e.target.value })}
             placeholder="Terms and conditions..."
             rows={6}
+            className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
           />
         </CardContent>
       </Card>
@@ -334,12 +346,14 @@ export function ProposalEditor({ clients }: ProposalEditorProps) {
         <Button
           variant="outline"
           onClick={() => router.push("/dashboard/proposals")}
+          className="border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
         >
           Cancel
         </Button>
         <Button
           onClick={() => handleSave(false)}
           disabled={loading || !formData.client_id || !formData.title}
+          className="bg-blue-600 hover:bg-blue-700 text-white"
         >
           {loading ? (
             <>
@@ -356,6 +370,7 @@ export function ProposalEditor({ clients }: ProposalEditorProps) {
         <Button
           onClick={() => handleSave(true)}
           disabled={loading || sendingProposal || !formData.client_id || !formData.title}
+          className="bg-gradient-to-r from-fuchsia-600 to-pink-600 hover:from-fuchsia-700 hover:to-pink-700 text-white"
         >
           {sendingProposal ? (
             <>

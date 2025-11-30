@@ -1,4 +1,5 @@
 import { getFunnels } from "@/actions/funnels";
+import { getOrCreateWorkspace } from "@/actions/workspace";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -20,9 +21,13 @@ import { Plus, ArrowRight, Filter, Zap, Layout, Globe, Lock, Search, MoreVertica
 import { CreateFunnelDialog } from "@/components/dashboard/funnels/create-funnel-dialog";
 import { Badge } from "@/components/ui/badge";
 import { FunnelsList } from "@/components/dashboard/funnels/funnels-list";
+import { t } from "@/lib/i18n/server";
+import { Language } from "@/lib/i18n/translations";
 
 export default async function FunnelsPage() {
   const funnels = await getFunnels();
+  const workspace = await getOrCreateWorkspace();
+  const language = (workspace?.default_language as Language) || "en";
 
   // Calculate stats
   const totalFunnels = funnels.length;
@@ -35,10 +40,10 @@ export default async function FunnelsPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent">
-            Onboarding Funnels
+            {t("funnels.title", language)}
           </h2>
           <p className="text-slate-300 mt-1">
-            Create and manage your client onboarding flows.
+            {t("funnels.description", language)}
           </p>
         </div>
         <CreateFunnelDialog />
@@ -52,7 +57,7 @@ export default async function FunnelsPage() {
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-slate-300">
-              Total Funnels
+              {t("funnels.totalFunnels", language)}
             </CardTitle>
             <div className="p-2 rounded-lg bg-pink-100 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400">
               <Filter className="h-4 w-4" />
@@ -61,7 +66,7 @@ export default async function FunnelsPage() {
           <CardContent>
             <div className="text-2xl font-bold text-white">{totalFunnels}</div>
             <p className="text-xs text-slate-400 mt-1">
-              Active workflows
+              {t("funnels.activeWorkflows", language)}
             </p>
           </CardContent>
         </Card>
@@ -72,7 +77,7 @@ export default async function FunnelsPage() {
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-slate-300">
-              Published
+              {t("funnels.published", language)}
             </CardTitle>
             <div className="p-2 rounded-lg bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
               <Globe className="h-4 w-4" />
@@ -81,7 +86,7 @@ export default async function FunnelsPage() {
           <CardContent>
             <div className="text-2xl font-bold text-white">{publishedFunnels}</div>
             <p className="text-xs text-slate-400 mt-1">
-              Live and accessible
+              {t("funnels.liveAndAccessible", language)}
             </p>
           </CardContent>
         </Card>
@@ -92,7 +97,7 @@ export default async function FunnelsPage() {
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-slate-300">
-              Drafts
+              {t("funnels.drafts", language)}
             </CardTitle>
             <div className="p-2 rounded-lg bg-slate-100 text-slate-600 dark:bg-slate-700/50 dark:text-slate-400">
               <Lock className="h-4 w-4" />
@@ -101,14 +106,14 @@ export default async function FunnelsPage() {
           <CardContent>
             <div className="text-2xl font-bold text-white">{draftFunnels}</div>
             <p className="text-xs text-slate-400 mt-1">
-              Work in progress
+              {t("funnels.workInProgress", language)}
             </p>
           </CardContent>
         </Card>
       </div>
 
       {/* Funnels List with Search */}
-      <FunnelsList funnels={funnels} />
+      <FunnelsList funnels={funnels} language={language} />
     </div>
   );
 }

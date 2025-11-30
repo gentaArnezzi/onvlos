@@ -2,6 +2,8 @@ import { getProposals, getContracts } from "@/actions/proposals";
 import { getClients } from "@/actions/clients";
 import { getOrCreateWorkspace } from "@/actions/workspace";
 import { ProposalEditor } from "@/components/proposals/proposal-editor";
+import { t } from "@/lib/i18n/server";
+import { Language } from "@/lib/i18n/translations";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -33,6 +35,7 @@ export default async function ProposalsPage() {
   const clients = await getClients();
   const workspace = await getOrCreateWorkspace();
   const defaultCurrencySymbol = getCurrencySymbol(workspace?.default_currency || "USD");
+  const language = (workspace?.default_language as Language) || "en";
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -72,24 +75,24 @@ export default async function ProposalsPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-fuchsia-600 to-pink-600 bg-clip-text text-transparent">
-            Proposals & Contracts
+            {t("proposals.proposalsAndContracts", language)}
           </h2>
           <p className="text-slate-500 dark:text-slate-400 mt-1">
-            Create, send, and track your business proposals.
+            {t("proposals.description", language)}
           </p>
         </div>
         <Dialog>
           <DialogTrigger asChild>
             <Button className="bg-gradient-to-r from-fuchsia-600 to-pink-600 hover:from-fuchsia-700 hover:to-pink-700 text-white shadow-lg shadow-fuchsia-500/20 border-0">
               <Plus className="h-4 w-4 mr-2" />
-              New Proposal
+              {t("proposals.newProposal", language)}
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
             <DialogHeader>
-              <DialogTitle>Create New Proposal</DialogTitle>
+              <DialogTitle className="text-slate-900 dark:text-white">{t("proposals.createNewProposal", language)}</DialogTitle>
             </DialogHeader>
-            <ProposalEditor clients={clients} />
+            <ProposalEditor clients={clients} currencySymbol={defaultCurrencySymbol} />
           </DialogContent>
         </Dialog>
       </div>
@@ -101,14 +104,14 @@ export default async function ProposalsPage() {
             <FileText className="h-16 w-16" />
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">Total Proposals</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">{t("proposals.totalProposals", language)}</CardTitle>
             <div className="p-2 rounded-lg bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400">
               <FileText className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-slate-900 dark:text-white">{totalProposals}</div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">All time created</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{t("proposals.allTimeCreated", language)}</p>
           </CardContent>
         </Card>
 
@@ -117,14 +120,14 @@ export default async function ProposalsPage() {
             <Send className="h-16 w-16" />
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">Sent</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">{t("proposals.sentProposals", language)}</CardTitle>
             <div className="p-2 rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
               <Send className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-slate-900 dark:text-white">{sentProposals}</div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Awaiting response</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{t("proposals.awaitingResponse", language)}</p>
           </CardContent>
         </Card>
 
@@ -133,14 +136,14 @@ export default async function ProposalsPage() {
             <FileSignature className="h-16 w-16" />
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">Accepted</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">{t("proposals.acceptedProposals", language)}</CardTitle>
             <div className="p-2 rounded-lg bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
               <FileSignature className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-slate-900 dark:text-white">{acceptedProposals}</div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Successfully closed</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{t("proposals.successfullyClosed", language)}</p>
           </CardContent>
         </Card>
 
@@ -149,27 +152,27 @@ export default async function ProposalsPage() {
             <CheckCircle2 className="h-16 w-16" />
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">Total Value</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">{t("proposals.totalValue", language)}</CardTitle>
             <div className="p-2 rounded-lg bg-fuchsia-100 text-fuchsia-600 dark:bg-fuchsia-900/30 dark:text-fuchsia-400">
               <CheckCircle2 className="h-4 w-4" />
             </div>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-slate-900 dark:text-white">{defaultCurrencySymbol}{totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Potential revenue</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{t("proposals.potentialRevenue", language)}</p>
           </CardContent>
         </Card>
       </div>
 
       <Tabs defaultValue="proposals" className="space-y-6">
-        <TabsList className="glass-card border-0 w-fit">
-          <TabsTrigger value="proposals" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-fuchsia-600 data-[state=active]:to-pink-600 data-[state=active]:text-white">
+        <TabsList className="glass-card border-0 w-fit bg-slate-100 dark:bg-slate-800/50">
+          <TabsTrigger value="proposals" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-fuchsia-600 data-[state=active]:to-pink-600 data-[state=active]:text-white text-slate-700 dark:text-slate-300">
             <FileText className="h-4 w-4 mr-2" />
-            Proposals
+            {t("proposals.title", language)}
           </TabsTrigger>
-          <TabsTrigger value="contracts" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-fuchsia-600 data-[state=active]:to-pink-600 data-[state=active]:text-white">
+          <TabsTrigger value="contracts" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-fuchsia-600 data-[state=active]:to-pink-600 data-[state=active]:text-white text-slate-700 dark:text-slate-300">
             <FileSignature className="h-4 w-4 mr-2" />
-            Contracts
+            {t("proposals.contracts", language)}
           </TabsTrigger>
         </TabsList>
 
@@ -177,10 +180,10 @@ export default async function ProposalsPage() {
           <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50">
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle>All Proposals</CardTitle>
+                <CardTitle className="text-slate-900 dark:text-white">{t("proposals.allProposals", language)}</CardTitle>
                 <div className="relative w-64 hidden md:block">
-                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-slate-500" />
-                  <Input placeholder="Search proposals..." className="pl-8 bg-slate-50 dark:bg-slate-900/50 border-none" />
+                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-slate-500 dark:text-slate-400" />
+                  <Input placeholder="Search proposals..." className="pl-8 bg-slate-50 dark:bg-slate-900/50 border-none text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400" />
                 </div>
               </div>
             </CardHeader>
@@ -189,21 +192,21 @@ export default async function ProposalsPage() {
                 <Table>
                   <TableHeader className="bg-slate-50 dark:bg-slate-900/50">
                     <TableRow className="hover:bg-transparent border-slate-200 dark:border-slate-700">
-                      <TableHead className="pl-6 h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Proposal #</TableHead>
-                      <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Title</TableHead>
-                      <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Client</TableHead>
-                      <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Amount</TableHead>
-                      <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</TableHead>
-                      <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Created</TableHead>
-                      <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Valid Until</TableHead>
-                      <TableHead className="text-right pr-6 h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Actions</TableHead>
+                      <TableHead className="pl-6 h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t("proposals.proposalNumber", language)}</TableHead>
+                      <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t("proposals.proposalTitle", language)}</TableHead>
+                      <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t("table.client", language)}</TableHead>
+                      <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t("table.amount", language)}</TableHead>
+                      <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t("table.status", language)}</TableHead>
+                      <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t("proposals.created", language)}</TableHead>
+                      <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t("proposals.validUntil", language)}</TableHead>
+                      <TableHead className="text-right pr-6 h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t("table.actions", language)}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {proposals.length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={8} className="h-32 text-center text-slate-500 dark:text-slate-400">
-                          No proposals found
+                          {t("proposals.noProposals", language)}
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -259,10 +262,10 @@ export default async function ProposalsPage() {
           <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50">
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle>All Contracts</CardTitle>
+                <CardTitle className="text-slate-900 dark:text-white">{t("proposals.allContracts", language)}</CardTitle>
                 <div className="relative w-64 hidden md:block">
-                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-slate-500" />
-                  <Input placeholder="Search contracts..." className="pl-8 bg-slate-50 dark:bg-slate-900/50 border-none" />
+                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-slate-500 dark:text-slate-400" />
+                  <Input placeholder="Search contracts..." className="pl-8 bg-slate-50 dark:bg-slate-900/50 border-none text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400" />
                 </div>
               </div>
             </CardHeader>
@@ -271,20 +274,20 @@ export default async function ProposalsPage() {
                 <Table>
                   <TableHeader className="bg-slate-50 dark:bg-slate-900/50">
                     <TableRow className="hover:bg-transparent border-slate-200 dark:border-slate-700">
-                      <TableHead className="pl-6 h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Contract #</TableHead>
-                      <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Title</TableHead>
-                      <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Client</TableHead>
-                      <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</TableHead>
-                      <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Effective Date</TableHead>
-                      <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Fully Signed</TableHead>
-                      <TableHead className="text-right pr-6 h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Actions</TableHead>
+                      <TableHead className="pl-6 h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t("proposals.contractNumber", language)}</TableHead>
+                      <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t("proposals.proposalTitle", language)}</TableHead>
+                      <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t("table.client", language)}</TableHead>
+                      <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t("table.status", language)}</TableHead>
+                      <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t("proposals.effectiveDate", language)}</TableHead>
+                      <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t("proposals.fullySigned", language)}</TableHead>
+                      <TableHead className="text-right pr-6 h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t("table.actions", language)}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {contracts.length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={7} className="h-32 text-center text-slate-500 dark:text-slate-400">
-                          No contracts found
+                          {t("proposals.noContracts", language)}
                         </TableCell>
                       </TableRow>
                     ) : (

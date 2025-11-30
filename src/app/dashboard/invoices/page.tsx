@@ -6,12 +6,15 @@ import { InvoicesList } from "@/components/dashboard/invoices/invoices-list";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CreditCard, CheckCircle, Clock } from "lucide-react";
 import { getCurrencySymbol } from "@/lib/currency";
+import { t } from "@/lib/i18n/server";
+import { Language } from "@/lib/i18n/translations";
 
 export default async function InvoicesPage() {
   const invoices = await getInvoices();
   const clients = await getClients();
   const workspace = await getOrCreateWorkspace();
   const defaultCurrencySymbol = getCurrencySymbol(workspace?.default_currency || "USD");
+  const language = (workspace?.default_language as Language) || "en";
 
   // Calculate stats - filter out archived invoices
   const activeInvoices = invoices.filter(inv => inv.status !== 'archived');
@@ -28,10 +31,10 @@ export default async function InvoicesPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">
-            Invoices
+            {t("invoices.title", language)}
           </h2>
           <p className="text-slate-500 dark:text-slate-400 mt-1">
-            Manage your billing and financial records.
+            {t("invoices.description", language)}
           </p>
         </div>
         <CreateInvoiceDialog clients={clients} defaultCurrency={workspace?.default_currency || "USD"} />
@@ -45,7 +48,7 @@ export default async function InvoicesPage() {
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">
-              Total Revenue
+              {t("stats.totalRevenue", language)}
             </CardTitle>
             <div className="p-2 rounded-lg bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
               <CreditCard className="h-4 w-4" />
@@ -56,7 +59,7 @@ export default async function InvoicesPage() {
               {defaultCurrencySymbol}{totalRevenue.toLocaleString()}
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              All time invoiced amount
+              {t("stats.allTimeInvoiced", language)}
             </p>
           </CardContent>
         </Card>
@@ -67,7 +70,7 @@ export default async function InvoicesPage() {
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">
-              Paid
+              {t("stats.paid", language)}
             </CardTitle>
             <div className="p-2 rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
               <CheckCircle className="h-4 w-4" />
@@ -78,7 +81,7 @@ export default async function InvoicesPage() {
               {defaultCurrencySymbol}{paidAmount.toLocaleString()}
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              {paidInvoices.length} invoices paid
+              {paidInvoices.length} {t("stats.invoicesPaid", language)}
             </p>
           </CardContent>
         </Card>
@@ -89,7 +92,7 @@ export default async function InvoicesPage() {
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">
-              Pending
+              {t("stats.pending", language)}
             </CardTitle>
             <div className="p-2 rounded-lg bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400">
               <Clock className="h-4 w-4" />
@@ -100,7 +103,7 @@ export default async function InvoicesPage() {
               {defaultCurrencySymbol}{pendingAmount.toLocaleString()}
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              {pendingInvoices.length} invoices pending
+              {pendingInvoices.length} {t("stats.invoicesPending", language)}
             </p>
           </CardContent>
         </Card>
@@ -109,7 +112,7 @@ export default async function InvoicesPage() {
       {/* Main Content */}
       <Card className="border-none shadow-lg bg-white dark:bg-slate-800/50">
         <CardHeader>
-          <CardTitle className="text-slate-900 dark:text-white">Invoice History</CardTitle>
+          <CardTitle className="text-slate-900 dark:text-white">{t("stats.invoiceHistory", language)}</CardTitle>
         </CardHeader>
         <CardContent>
           <InvoicesList initialInvoices={invoices} clients={clients} />

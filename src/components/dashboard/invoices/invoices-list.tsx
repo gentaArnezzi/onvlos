@@ -25,6 +25,7 @@ import { useRouter } from "next/navigation";
 import { CreateInvoiceDialog } from "./create-invoice-dialog";
 import { updateInvoiceStatus, sendInvoice, duplicateInvoice } from "@/actions/invoices";
 import { getCurrencySymbol } from "@/lib/currency";
+import { useTranslation } from "@/lib/i18n/context";
 
 interface Invoice {
   id: string;
@@ -44,10 +45,24 @@ interface InvoicesListProps {
 }
 
 export function InvoicesList({ initialInvoices, clients }: InvoicesListProps) {
+  const { t } = useTranslation();
   const [invoices, setInvoices] = useState<Invoice[]>(initialInvoices);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const router = useRouter();
+
+  // Helper function to translate status
+  const translateStatus = (status: string): string => {
+    const statusMap: Record<string, string> = {
+      "draft": t("invoices.draft"),
+      "sent": t("invoices.sent"),
+      "paid": t("invoices.paid"),
+      "overdue": t("invoices.overdue"),
+      "archived": t("invoices.archived"),
+      "pending": t("invoices.pending") || "Pending",
+    };
+    return statusMap[status] || status;
+  };
 
   // Filter invoices
   useEffect(() => {
@@ -82,48 +97,48 @@ export function InvoicesList({ initialInvoices, clients }: InvoicesListProps) {
   const handleSend = async (invoiceId: string) => {
     const result = await sendInvoice(invoiceId);
     if (result.success) {
-      alert("Invoice sent successfully");
+      alert(t("invoices.invoiceSent"));
       router.refresh();
     } else {
-      alert(result.error || "Failed to send invoice");
+      alert(result.error || t("invoices.failedToSend"));
     }
   };
 
   const handleMarkPaid = async (invoiceId: string) => {
     const result = await updateInvoiceStatus(invoiceId, 'paid');
     if (result.success) {
-      alert("Invoice marked as paid");
+      alert(t("invoices.invoiceMarkedPaid"));
       router.refresh();
     } else {
-      alert(result.error || "Failed to update invoice");
+      alert(result.error || t("invoices.failedToUpdate"));
     }
   };
 
   const handleArchive = async (invoiceId: string) => {
-    if (!confirm("Are you sure you want to archive this invoice?")) return;
+    if (!confirm(t("invoices.archiveConfirm"))) return;
     
     const result = await updateInvoiceStatus(invoiceId, 'archived');
     if (result.success) {
-      alert("Invoice archived");
+      alert(t("invoices.invoiceArchived"));
       router.refresh();
     } else {
-      alert(result.error || "Failed to archive invoice");
+      alert(result.error || t("invoices.failedToArchive"));
     }
   };
 
   const handleDuplicate = async (invoiceId: string) => {
     const result = await duplicateInvoice(invoiceId);
     if (result.success) {
-      alert("Invoice duplicated successfully");
+      alert(t("invoices.invoiceDuplicated"));
       router.refresh();
     } else {
-      alert(result.error || "Failed to duplicate invoice");
+      alert(result.error || t("invoices.failedToDuplicate"));
     }
   };
 
   const handleDownload = async (invoiceId: string) => {
     // TODO: Implement PDF download
-    alert("PDF download functionality coming soon");
+    alert(t("common.comingSoon") || "PDF download functionality coming soon");
   };
 
   return (
@@ -134,7 +149,7 @@ export function InvoicesList({ initialInvoices, clients }: InvoicesListProps) {
           <div className="relative flex-1">
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-slate-500 dark:text-slate-400" />
             <Input
-              placeholder="Search invoices..."
+              placeholder={t("invoices.search")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-8 bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
@@ -142,15 +157,15 @@ export function InvoicesList({ initialInvoices, clients }: InvoicesListProps) {
           </div>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger className="w-[140px] bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
-              <SelectValue placeholder="All Status" />
+              <SelectValue placeholder={t("invoices.allStatus")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="draft">Draft</SelectItem>
-              <SelectItem value="sent">Sent</SelectItem>
-              <SelectItem value="paid">Paid</SelectItem>
-              <SelectItem value="overdue">Overdue</SelectItem>
-              <SelectItem value="archived">Archived</SelectItem>
+              <SelectItem value="all">{t("invoices.allStatus")}</SelectItem>
+              <SelectItem value="draft">{t("invoices.draft")}</SelectItem>
+              <SelectItem value="sent">{t("invoices.sent")}</SelectItem>
+              <SelectItem value="paid">{t("invoices.paid")}</SelectItem>
+              <SelectItem value="overdue">{t("invoices.overdue")}</SelectItem>
+              <SelectItem value="archived">{t("invoices.archived")}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -161,11 +176,11 @@ export function InvoicesList({ initialInvoices, clients }: InvoicesListProps) {
         <Table>
           <TableHeader className="bg-slate-50 dark:bg-slate-900/50">
             <TableRow className="hover:bg-transparent border-slate-200 dark:border-slate-700">
-              <TableHead className="pl-6 h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Invoice #</TableHead>
-              <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Client</TableHead>
-              <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</TableHead>
-              <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Due Date</TableHead>
-              <TableHead className="text-right pr-6 h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Amount</TableHead>
+              <TableHead className="pl-6 h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t("invoices.invoiceNumber")}</TableHead>
+              <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t("invoices.client")}</TableHead>
+              <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t("invoices.status")}</TableHead>
+              <TableHead className="h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t("invoices.dueDate")}</TableHead>
+              <TableHead className="text-right pr-6 h-12 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t("invoices.amount")}</TableHead>
               <TableHead className="w-[50px]"></TableHead>
             </TableRow>
           </TableHeader>
@@ -178,12 +193,12 @@ export function InvoicesList({ initialInvoices, clients }: InvoicesListProps) {
                       <CreditCard className="w-8 h-8 text-slate-400 dark:text-slate-500" />
                     </div>
                     <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
-                      {searchQuery || statusFilter !== "all" ? "No invoices found" : "No invoices yet"}
+                      {searchQuery || statusFilter !== "all" ? t("invoices.noInvoices") : t("invoices.noInvoicesYet")}
                     </h3>
                     <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 max-w-md text-center">
                       {searchQuery || statusFilter !== "all" 
-                        ? "Try adjusting your search or filter criteria."
-                        : "Create your first invoice to start tracking your billing and payments."}
+                        ? t("invoices.tryAdjustingSearch")
+                        : t("invoices.createFirstInvoice")}
                     </p>
                     {!searchQuery && statusFilter === "all" && (
                       <CreateInvoiceDialog clients={clients} />
@@ -208,7 +223,7 @@ export function InvoicesList({ initialInvoices, clients }: InvoicesListProps) {
                     </div>
                   </TableCell>
                   <TableCell className="text-slate-600 dark:text-slate-300 font-medium">
-                    {invoice.client_company_name || invoice.client_name || "Unknown Client"}
+                    {invoice.client_company_name || invoice.client_name || t("invoices.unknownClient")}
                   </TableCell>
                   <TableCell>
                     <Badge
@@ -223,7 +238,7 @@ export function InvoicesList({ initialInvoices, clients }: InvoicesListProps) {
                         ${invoice.status === 'archived' ? 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400' : ''}
                       `}
                     >
-                      {invoice.status}
+                      {translateStatus(invoice.status)}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-slate-600 dark:text-slate-300">
@@ -242,38 +257,38 @@ export function InvoicesList({ initialInvoices, clients }: InvoicesListProps) {
                       <DropdownMenuContent align="end" className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
                         <DropdownMenuItem onClick={() => handleView(invoice.id)} className="text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700">
                           <Eye className="mr-2 h-4 w-4" />
-                          View
+                          {t("invoices.view")}
                         </DropdownMenuItem>
                         {invoice.status === 'draft' && (
                           <DropdownMenuItem onClick={() => handleEdit(invoice.id)} className="text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700">
                             <Edit className="mr-2 h-4 w-4" />
-                            Edit
+                            {t("invoices.edit")}
                           </DropdownMenuItem>
                         )}
                         {invoice.status !== 'paid' && invoice.status !== 'archived' && (
                           <DropdownMenuItem onClick={() => handleSend(invoice.id)} className="text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700">
                             <Send className="mr-2 h-4 w-4" />
-                            Send
+                            {t("invoices.send")}
                           </DropdownMenuItem>
                         )}
                         {invoice.status !== 'paid' && invoice.status !== 'archived' && (
                           <DropdownMenuItem onClick={() => handleMarkPaid(invoice.id)} className="text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700">
                             <CheckCircle className="mr-2 h-4 w-4" />
-                            Mark as Paid
+                            {t("invoices.markAsPaid")}
                           </DropdownMenuItem>
                         )}
                         <DropdownMenuItem onClick={() => handleDownload(invoice.id)} className="text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700">
                           <Download className="mr-2 h-4 w-4" />
-                          Download PDF
+                          {t("invoices.downloadPDF")}
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => handleDuplicate(invoice.id)} className="text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700">
                           <Copy className="mr-2 h-4 w-4" />
-                          Duplicate
+                          {t("invoices.duplicate")}
                         </DropdownMenuItem>
                         {invoice.status !== 'archived' && (
                           <DropdownMenuItem onClick={() => handleArchive(invoice.id)} className="text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20">
                             <Archive className="mr-2 h-4 w-4" />
-                            Archive
+                            {t("invoices.archive")}
                           </DropdownMenuItem>
                         )}
                       </DropdownMenuContent>

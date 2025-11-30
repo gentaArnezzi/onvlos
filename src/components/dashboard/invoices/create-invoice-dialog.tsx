@@ -25,6 +25,7 @@ import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getCurrencySymbol } from "@/lib/currency";
+import { useTranslation } from "@/lib/i18n/context";
 
 interface CreateInvoiceDialogProps {
   clients: { id: string; name: string; company_name: string | null }[];
@@ -35,6 +36,7 @@ interface CreateInvoiceDialogProps {
 }
 
 export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency = "USD", open: controlledOpen, onOpenChange: setControlledOpen }: CreateInvoiceDialogProps) {
+  const { t } = useTranslation();
   const [internalOpen, setInternalOpen] = useState(false);
   const isControlled = controlledOpen !== undefined;
   const open = isControlled ? controlledOpen : internalOpen;
@@ -143,25 +145,25 @@ export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency 
       {!isControlled && (
         <DialogTrigger asChild>
           <Button className="bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-700 hover:to-teal-600 text-white shadow-lg shadow-emerald-500/20 border-0">
-            <Plus className="mr-2 h-4 w-4" /> Create Invoice
+            <Plus className="mr-2 h-4 w-4" /> {t("invoices.createInvoice")}
           </Button>
         </DialogTrigger>
       )}
       <DialogContent className="sm:max-w-[600px] bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
         <DialogHeader>
-          <DialogTitle className="text-slate-900 dark:text-white">Create Invoice</DialogTitle>
+          <DialogTitle className="text-slate-900 dark:text-white">{t("invoices.createInvoice")}</DialogTitle>
           <DialogDescription className="text-slate-600 dark:text-slate-400">
-            Generate a new invoice for a client.
+            {t("invoices.generateNewInvoice")}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-2">
-                    <Label className="text-slate-900 dark:text-white">Client</Label>
+                    <Label className="text-slate-900 dark:text-white">{t("invoices.client")}</Label>
                     <Select value={selectedClient} onValueChange={setSelectedClient} required>
                         <SelectTrigger className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
-                            <SelectValue placeholder="Select client" />
+                            <SelectValue placeholder={t("invoices.selectClient")} />
                         </SelectTrigger>
                         <SelectContent>
                             {clients.map(c => (
@@ -173,7 +175,7 @@ export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency 
                     </Select>
                 </div>
                 <div className="space-y-2">
-                    <Label className="text-slate-900 dark:text-white">Currency</Label>
+                    <Label className="text-slate-900 dark:text-white">{t("invoices.currency")}</Label>
                     <Select value={currency} onValueChange={setCurrency}>
                         <SelectTrigger className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
                             <SelectValue />
@@ -202,7 +204,7 @@ export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency 
                     </Select>
                 </div>
                 <div className="space-y-2">
-                    <Label className="text-slate-900 dark:text-white">Due Date</Label>
+                    <Label className="text-slate-900 dark:text-white">{t("invoices.dueDate")}</Label>
                     <Popover>
                         <PopoverTrigger asChild>
                             <Button
@@ -213,7 +215,7 @@ export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency 
                             )}
                             >
                             <CalendarIcon className="mr-2 h-4 w-4" />
-                            {date ? format(date, "PPP") : <span>Pick a date</span>}
+                            {date ? format(date, "PPP") : <span>{t("invoices.pickDate")}</span>}
                             </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 shadow-lg">
@@ -231,7 +233,7 @@ export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency 
 
             <div className="space-y-4 mt-4">
                 <div className="flex items-center justify-between">
-                    <Label className="text-slate-900 dark:text-white">Items</Label>
+                    <Label className="text-slate-900 dark:text-white">{t("invoices.items")}</Label>
                     <Button 
                         type="button" 
                         variant="ghost" 
@@ -239,7 +241,7 @@ export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency 
                         onClick={handleAddItem}
                         className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                     >
-                        <Plus className="h-3 w-3 mr-1" /> Add Item
+                        <Plus className="h-3 w-3 mr-1" /> {t("invoices.addItem")}
                     </Button>
                 </div>
                 
@@ -247,17 +249,17 @@ export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency 
                     {items.map((item, index) => (
                         <div key={index} className="flex gap-2 items-end p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700">
                             <div className="flex-1 space-y-1">
-                                <Label className="text-xs text-slate-700 dark:text-slate-300">Description</Label>
+                                <Label className="text-xs text-slate-700 dark:text-slate-300">{t("invoices.description")}</Label>
                                 <Input 
                                     value={item.name} 
                                     onChange={e => handleItemChange(index, 'name', e.target.value)}
-                                    placeholder="Service name"
+                                    placeholder={t("invoices.serviceName")}
                                     className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
                                     required 
                                 />
                             </div>
                             <div className="w-20 space-y-1">
-                                <Label className="text-xs text-slate-700 dark:text-slate-300">Qty</Label>
+                                <Label className="text-xs text-slate-700 dark:text-slate-300">{t("invoices.qty")}</Label>
                                 <Input 
                                     type="number" 
                                     value={item.quantity} 
@@ -268,7 +270,7 @@ export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency 
                                 />
                             </div>
                             <div className="w-28 space-y-1">
-                                <Label className="text-xs text-slate-700 dark:text-slate-300">Price</Label>
+                                <Label className="text-xs text-slate-700 dark:text-slate-300">{t("invoices.price")}</Label>
                                 <Input 
                                     type="number" 
                                     value={item.unit_price} 
@@ -296,14 +298,14 @@ export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency 
                 <div className="space-y-3 pt-4 border-t border-slate-200 dark:border-slate-700">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <Label className="text-slate-900 dark:text-white">Discount</Label>
+                            <Label className="text-slate-900 dark:text-white">{t("invoices.discount")}</Label>
                             <div className="flex gap-2">
                                 <Select value={discountType} onValueChange={(v: "amount" | "percentage") => setDiscountType(v)}>
                                     <SelectTrigger className="w-24 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="amount">$</SelectItem>
+                                        <SelectItem value="amount">{getCurrencySymbol(currency)}</SelectItem>
                                         <SelectItem value="percentage">%</SelectItem>
                                     </SelectContent>
                                 </Select>
@@ -319,7 +321,7 @@ export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency 
                             </div>
                         </div>
                         <div className="space-y-2">
-                            <Label className="text-slate-900 dark:text-white">Tax Rate (%)</Label>
+                            <Label className="text-slate-900 dark:text-white">{t("invoices.taxRate")}</Label>
                             <Input
                                 type="number"
                                 value={taxRate}
@@ -333,11 +335,11 @@ export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency 
                     </div>
                     
                     <div className="space-y-2">
-                        <Label className="text-slate-900 dark:text-white">Notes / Terms (Optional)</Label>
+                        <Label className="text-slate-900 dark:text-white">{t("invoices.notesTerms")}</Label>
                         <textarea
                             value={notes}
                             onChange={e => setNotes(e.target.value)}
-                            placeholder="Payment terms, notes, etc."
+                            placeholder={t("invoices.paymentTerms")}
                             rows={3}
                             className="w-full px-3 py-2 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 resize-none"
                         />
@@ -346,25 +348,25 @@ export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency 
                     <div className="flex justify-between items-center pt-2">
                         <div className="space-y-1">
                             <div className="flex justify-between text-sm text-slate-600 dark:text-slate-400">
-                                <span>Subtotal:</span>
+                                <span>{t("invoices.subtotal")}</span>
                                 <span>{getCurrencySymbol(currency)}{calculateTotals().subtotal.toLocaleString()}</span>
                             </div>
                             {calculateTotals().discount > 0 && (
                                 <div className="flex justify-between text-sm text-slate-600 dark:text-slate-400">
-                                    <span>Discount:</span>
+                                    <span>{t("invoices.discount")}:</span>
                                     <span className="text-red-600 dark:text-red-400">-{getCurrencySymbol(currency)}{calculateTotals().discount.toLocaleString()}</span>
                                 </div>
                             )}
                             {calculateTotals().tax > 0 && (
                                 <div className="flex justify-between text-sm text-slate-600 dark:text-slate-400">
-                                    <span>Tax:</span>
+                                    <span>{t("invoices.tax")}</span>
                                     <span>{getCurrencySymbol(currency)}{calculateTotals().tax.toLocaleString()}</span>
                                 </div>
                             )}
                         </div>
                         <div className="text-right">
                             <div className="text-lg font-bold text-slate-900 dark:text-white">
-                                Total: <span className="text-emerald-600 dark:text-emerald-400">{getCurrencySymbol(currency)}{calculateTotals().total.toLocaleString()}</span>
+                                {t("invoices.total")} <span className="text-emerald-600 dark:text-emerald-400">{getCurrencySymbol(currency)}{calculateTotals().total.toLocaleString()}</span>
                             </div>
                         </div>
                     </div>
@@ -372,14 +374,14 @@ export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency 
             </div>
             
             <div className="space-y-2 pt-4 border-t border-slate-200 dark:border-slate-700">
-                <Label className="text-slate-900 dark:text-white">Status</Label>
+                <Label className="text-slate-900 dark:text-white">{t("invoices.status")}</Label>
                 <Select value={status} onValueChange={(v: "draft" | "sent") => setStatus(v)}>
                     <SelectTrigger className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
                         <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="draft">Save as Draft</SelectItem>
-                        <SelectItem value="sent">Send to Client</SelectItem>
+                        <SelectItem value="draft">{t("invoices.saveAsDraft")}</SelectItem>
+                        <SelectItem value="sent">{t("invoices.sendToClient")}</SelectItem>
                     </SelectContent>
                 </Select>
             </div>
@@ -391,7 +393,7 @@ export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency 
                 onClick={() => setOpen(false)}
                 className="border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700"
             >
-                Cancel
+                {t("common.cancel")}
             </Button>
             <Button 
                 type="submit" 
@@ -401,10 +403,10 @@ export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency 
                 {loading ? (
                     <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Creating...
+                        {t("invoices.creating")}
                     </>
                 ) : (
-                    "Create Invoice"
+                    t("invoices.createInvoice")
                 )}
             </Button>
           </DialogFooter>

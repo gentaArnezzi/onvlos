@@ -4,8 +4,10 @@ import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useTranslation } from "@/lib/i18n/context";
 
 export function SearchInput() {
+    const { t } = useTranslation();
     const searchParams = useSearchParams();
     const { replace } = useRouter();
 
@@ -31,7 +33,7 @@ export function SearchInput() {
         <div className="relative w-64 hidden md:block">
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-slate-400" />
             <Input
-                placeholder="Search tasks..."
+                placeholder={t("tasks.searchPlaceholder")}
                 className="pl-8 bg-slate-900/50 border-slate-700 text-slate-200 placeholder:text-slate-500"
                 onChange={(e) => setSearchTerm(e.target.value)}
                 value={searchTerm}

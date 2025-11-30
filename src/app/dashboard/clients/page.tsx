@@ -3,8 +3,13 @@ import { ClientDialog } from "@/components/dashboard/clients/client-dialog";
 import { ClientsGrid } from "@/components/dashboard/clients/clients-grid";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, UserCheck, UserPlus } from "lucide-react";
+import { getOrCreateWorkspace } from "@/actions/workspace";
+import { t } from "@/lib/i18n/server";
+import { Language } from "@/lib/i18n/translations";
 
 export default async function ClientsPage() {
+  const workspace = await getOrCreateWorkspace();
+  const language = (workspace?.default_language as Language) || "en";
   const clients = await getClients();
 
   // Calculate stats
@@ -18,10 +23,10 @@ export default async function ClientsPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
-            Clients
+            {t("clients.title", language)}
           </h2>
           <p className="text-slate-500 dark:text-slate-400 mt-1">
-            Manage your client relationships and portals.
+            {t("clients.description", language)}
           </p>
         </div>
         <ClientDialog />
@@ -35,7 +40,7 @@ export default async function ClientsPage() {
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">
-              Total Clients
+              {t("stats.totalClients", language)}
             </CardTitle>
             <div className="p-2 rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
               <Users className="h-4 w-4" />
@@ -44,7 +49,7 @@ export default async function ClientsPage() {
           <CardContent>
             <div className="text-2xl font-bold text-slate-900 dark:text-white">{totalClients}</div>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Across all workspaces
+              {t("stats.acrossAllWorkspaces", language)}
             </p>
           </CardContent>
         </Card>
@@ -55,7 +60,7 @@ export default async function ClientsPage() {
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">
-              Active Clients
+              {t("stats.activeClients", language)}
             </CardTitle>
             <div className="p-2 rounded-lg bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
               <UserCheck className="h-4 w-4" />
@@ -64,7 +69,7 @@ export default async function ClientsPage() {
           <CardContent>
             <div className="text-2xl font-bold text-slate-900 dark:text-white">{activeClients}</div>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Currently active projects
+              {t("stats.currentlyActiveProjects", language)}
             </p>
           </CardContent>
         </Card>
@@ -75,7 +80,7 @@ export default async function ClientsPage() {
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">
-              Pending / Leads
+              {t("stats.pendingLeads", language)}
             </CardTitle>
             <div className="p-2 rounded-lg bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400">
               <UserPlus className="h-4 w-4" />
@@ -84,7 +89,7 @@ export default async function ClientsPage() {
           <CardContent>
             <div className="text-2xl font-bold text-slate-900 dark:text-white">{pendingClients}</div>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Potential opportunities
+              {t("stats.potentialOpportunities", language)}
             </p>
           </CardContent>
         </Card>

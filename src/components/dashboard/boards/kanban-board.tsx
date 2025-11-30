@@ -46,6 +46,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "@/lib/i18n/context";
+import { Language } from "@/lib/i18n/translations";
 
 // --- Types ---
 interface BoardCard {
@@ -65,6 +67,7 @@ interface BoardColumn {
 interface KanbanBoardProps {
     boardId: string;
     initialColumns: BoardColumn[];
+    language?: Language;
 }
 
 // --- Components ---
@@ -112,16 +115,40 @@ function SortableCard({ card }: { card: BoardCard }) {
     );
 }
 
+// Helper function to translate column names
+function translateColumnName(name: string, t: (key: string) => string): string {
+    const columnNameMap: Record<string, string> = {
+        "Leads": "boards.column.leads",
+        "Contacted": "boards.column.contacted",
+        "Proposal Sent": "boards.column.proposalSent",
+        "Closed": "boards.column.closed",
+        // Indonesian fallbacks
+        "Lead": "boards.column.leads",
+        "Dihubungi": "boards.column.contacted",
+        "Proposal Dikirim": "boards.column.proposalSent",
+        "Ditutup": "boards.column.closed",
+    };
+    
+    const translationKey = columnNameMap[name];
+    if (translationKey) {
+        return t(translationKey);
+    }
+    return name; // Return original if no mapping found
+}
+
 const Column = memo(function Column({ column, onCardAdded }: { column: BoardColumn; onCardAdded?: (card: BoardCard) => void }) {
+    const { t } = useTranslation();
     const { setNodeRef } = useSortable({
         id: column.id,
         data: { type: "Column", column },
     });
 
+    const translatedColumnName = translateColumnName(column.name, t);
+
     return (
         <div className="w-80 flex flex-col bg-white dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 h-full max-h-full shadow-sm">
             <div className="p-4 font-semibold text-sm flex items-center justify-between border-b border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/30 rounded-t-xl">
-                <span className="text-slate-900 dark:text-white">{column.name}</span>
+                <span className="text-slate-900 dark:text-white">{translatedColumnName}</span>
                 <span className="text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-200 dark:bg-slate-700 px-2.5 py-1 rounded-full min-w-[24px] text-center">
                     {column.cards.length}
                 </span>
@@ -139,7 +166,7 @@ const Column = memo(function Column({ column, onCardAdded }: { column: BoardColu
                         <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-3">
                             <Plus className="w-5 h-5 text-slate-400 dark:text-slate-500" />
                         </div>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">No cards yet</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">{t("boards.noCardsYet")}</p>
                     </div>
                 ) : (
                     <SortableContext items={column.cards.map(c => c.id)} strategy={verticalListSortingStrategy}>
@@ -158,6 +185,7 @@ const Column = memo(function Column({ column, onCardAdded }: { column: BoardColu
 });
 
 function AddCardButton({ columnId, onCardAdded }: { columnId: string; onCardAdded?: (card: BoardCard) => void }) {
+    const { t } = useTranslation();
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [title, setTitle] = useState("");
@@ -195,27 +223,27 @@ function AddCardButton({ columnId, onCardAdded }: { columnId: string; onCardAdde
                     variant="ghost" 
                     className="w-full justify-start text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700/50 transition-colors"
                 >
-                    <Plus className="mr-2 h-4 w-4" /> Add Card
+                    <Plus className="mr-2 h-4 w-4" /> {t("boards.addCard")}
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px] bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
                 <DialogHeader>
-                    <DialogTitle className="text-slate-900 dark:text-white">Add New Card</DialogTitle>
+                    <DialogTitle className="text-slate-900 dark:text-white">{t("boards.addNewCard")}</DialogTitle>
                     <DialogDescription className="text-slate-600 dark:text-slate-400">
-                        Create a new card for this column.
+                        {t("boards.createNewCard")}
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit}>
                     <div className="grid gap-4 py-4">
                         <div className="space-y-2">
                             <Label htmlFor="title" className="text-slate-900 dark:text-white">
-                                Title
+                                {t("common.title")}
                             </Label>
                             <Input
                                 id="title"
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
-                                placeholder="Enter card title..."
+                                placeholder={t("boards.enterCardTitle")}
                                 className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
                                 required
                                 autoFocus
@@ -223,13 +251,13 @@ function AddCardButton({ columnId, onCardAdded }: { columnId: string; onCardAdde
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="description" className="text-slate-900 dark:text-white">
-                                Description (Optional)
+                                {t("common.description")} ({t("common.optional")})
                             </Label>
                             <Textarea
                                 id="description"
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
-                                placeholder="Enter card description..."
+                                placeholder={t("boards.enterCardDescription")}
                                 className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white resize-none"
                                 rows={3}
                             />
@@ -242,7 +270,7 @@ function AddCardButton({ columnId, onCardAdded }: { columnId: string; onCardAdde
                             onClick={() => setOpen(false)}
                             className="border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700"
                         >
-                            Cancel
+                            {t("common.cancel")}
                         </Button>
                         <Button
                             type="submit"
@@ -252,10 +280,10 @@ function AddCardButton({ columnId, onCardAdded }: { columnId: string; onCardAdde
                             {loading ? (
                                 <>
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    Creating...
+                                    {t("boards.creating")}
                                 </>
                             ) : (
-                                "Create Card"
+                                t("boards.createCard")
                             )}
                         </Button>
                     </DialogFooter>

@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { conversations, messages, client_spaces, users } from "@/lib/db/schema";
+import { conversations, messages, client_spaces, client_companies, users } from "@/lib/db/schema";
 import { eq, asc, desc, and } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { getOrCreateWorkspace } from "@/actions/workspace";

@@ -35,6 +35,8 @@ import { format } from "date-fns";
 import { toggleWorkflow, deleteWorkflow } from "@/actions/workflows";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useTranslation } from "@/lib/i18n/context";
+import { Language } from "@/lib/i18n/translations";
 
 interface Workflow {
   id: string;
@@ -55,27 +57,30 @@ interface Workflow {
 
 interface WorkflowsListProps {
   workflows: Workflow[];
+  language?: Language;
 }
 
-const triggerLabels: Record<string, string> = {
-  invoice_paid: "Invoice Paid",
-  funnel_step_completed: "Funnel Step Completed",
-  new_client_created: "New Client Created",
-  due_date_approaching: "Due Date Approaching",
-  task_completed: "Task Completed",
-};
-
-const actionLabels: Record<string, string> = {
-  send_email: "Send Email",
-  create_task: "Create Task",
-  move_card: "Move Card",
-  send_chat_message: "Send Chat Message",
-};
-
-export function WorkflowsList({ workflows }: WorkflowsListProps) {
+export function WorkflowsList({ workflows, language: propLanguage }: WorkflowsListProps) {
+  const { t, language: contextLanguage } = useTranslation();
+  const language = propLanguage || contextLanguage;
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [filterTrigger, setFilterTrigger] = useState<string>("all");
+
+  const triggerLabels: Record<string, string> = {
+    invoice_paid: t("workflows.trigger.invoicePaid"),
+    funnel_step_completed: t("workflows.trigger.funnelStepCompleted"),
+    new_client_created: t("workflows.trigger.newClientCreated"),
+    due_date_approaching: t("workflows.trigger.dueDateApproaching"),
+    task_completed: t("workflows.trigger.taskCompleted"),
+  };
+
+  const actionLabels: Record<string, string> = {
+    send_email: t("workflows.action.sendEmail"),
+    create_task: t("workflows.action.createTask"),
+    move_card: t("workflows.action.moveCard"),
+    send_chat_message: t("workflows.action.sendChatMessage"),
+  };
 
   // Calculate stats
   const totalWorkflows = workflows.length;
@@ -96,7 +101,7 @@ export function WorkflowsList({ workflows }: WorkflowsListProps) {
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm("Are you sure you want to delete this workflow?")) {
+    if (confirm(t("workflows.deleteConfirm"))) {
       await deleteWorkflow(id);
       router.refresh();
     }
@@ -107,11 +112,11 @@ export function WorkflowsList({ workflows }: WorkflowsListProps) {
   };
 
   const getActionsSummary = (actions: any[]) => {
-    if (!actions || actions.length === 0) return "No actions";
+    if (!actions || actions.length === 0) return t("workflows.noActions");
     if (actions.length === 1) {
       return actionLabels[actions[0].type] || actions[0].type;
     }
-    return `${actions.length} actions`;
+    return t("workflows.actionsCount").replace("{count}", actions.length.toString());
   };
 
   return (
@@ -120,13 +125,13 @@ export function WorkflowsList({ workflows }: WorkflowsListProps) {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">
-            Automations
+            {t("workflows.title")}
           </h2>
           <p className="text-slate-600 dark:text-slate-400 mt-1">
-            Streamline your processes with automated workflows.
+            {t("workflows.description")}
           </p>
         </div>
-        <CreateWorkflowDialog />
+        <CreateWorkflowDialog language={language} />
       </div>
 
       {/* Stats Cards */}
@@ -137,7 +142,7 @@ export function WorkflowsList({ workflows }: WorkflowsListProps) {
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-slate-600 dark:text-slate-400">
-              Total Workflows
+              {t("workflows.totalWorkflows")}
             </CardTitle>
             <div className="p-2 rounded-lg bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400">
               <Zap className="h-4 w-4" />
@@ -146,7 +151,7 @@ export function WorkflowsList({ workflows }: WorkflowsListProps) {
           <CardContent>
             <div className="text-2xl font-bold text-slate-900 dark:text-white">{totalWorkflows}</div>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Automation rules
+              {t("workflows.automationRules")}
             </p>
           </CardContent>
         </Card>
@@ -157,7 +162,7 @@ export function WorkflowsList({ workflows }: WorkflowsListProps) {
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-slate-600 dark:text-slate-400">
-              Active
+              {t("workflows.active")}
             </CardTitle>
             <div className="p-2 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400">
               <Play className="h-4 w-4" />
@@ -166,7 +171,7 @@ export function WorkflowsList({ workflows }: WorkflowsListProps) {
           <CardContent>
             <div className="text-2xl font-bold text-slate-900 dark:text-white">{activeWorkflows}</div>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Running automatically
+              {t("workflows.runningAutomatically")}
             </p>
           </CardContent>
         </Card>
@@ -177,7 +182,7 @@ export function WorkflowsList({ workflows }: WorkflowsListProps) {
           </div>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-slate-600 dark:text-slate-400">
-              Paused
+              {t("workflows.paused")}
             </CardTitle>
             <div className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
               <Pause className="h-4 w-4" />
@@ -186,7 +191,7 @@ export function WorkflowsList({ workflows }: WorkflowsListProps) {
           <CardContent>
             <div className="text-2xl font-bold text-slate-900 dark:text-white">{pausedWorkflows}</div>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Inactive rules
+              {t("workflows.inactiveRules")}
             </p>
           </CardContent>
         </Card>
@@ -197,7 +202,7 @@ export function WorkflowsList({ workflows }: WorkflowsListProps) {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
           <Input
-            placeholder="Search workflows..."
+            placeholder={t("workflows.searchPlaceholder")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
@@ -210,7 +215,7 @@ export function WorkflowsList({ workflows }: WorkflowsListProps) {
             onChange={(e) => setFilterTrigger(e.target.value)}
             className="pl-10 pr-8 py-2 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/50 text-slate-900 dark:text-white text-sm"
           >
-            <option value="all">All Triggers</option>
+            <option value="all">{t("workflows.allTriggers")}</option>
             {Object.entries(triggerLabels).map(([value, label]) => (
               <option key={value} value={value}>{label}</option>
             ))}
@@ -224,12 +229,12 @@ export function WorkflowsList({ workflows }: WorkflowsListProps) {
           <Table>
             <TableHeader>
               <TableRow className="border-slate-200 dark:border-slate-800">
-                <TableHead className="text-slate-600 dark:text-slate-400">Name</TableHead>
-                <TableHead className="text-slate-600 dark:text-slate-400">Trigger</TableHead>
-                <TableHead className="text-slate-600 dark:text-slate-400">Actions</TableHead>
-                <TableHead className="text-slate-600 dark:text-slate-400">Status</TableHead>
-                <TableHead className="text-slate-600 dark:text-slate-400">Last Run</TableHead>
-                <TableHead className="text-right text-slate-600 dark:text-slate-400">Actions</TableHead>
+                <TableHead className="text-slate-600 dark:text-slate-400">{t("workflows.name")}</TableHead>
+                <TableHead className="text-slate-600 dark:text-slate-400">{t("workflows.trigger")}</TableHead>
+                <TableHead className="text-slate-600 dark:text-slate-400">{t("workflows.actions")}</TableHead>
+                <TableHead className="text-slate-600 dark:text-slate-400">{t("workflows.status")}</TableHead>
+                <TableHead className="text-slate-600 dark:text-slate-400">{t("workflows.lastRun")}</TableHead>
+                <TableHead className="text-right text-slate-600 dark:text-slate-400">{t("common.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -264,7 +269,7 @@ export function WorkflowsList({ workflows }: WorkflowsListProps) {
                         : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"
                       }
                     >
-                      {workflow.enabled ? "Active" : "Paused"}
+                      {workflow.enabled ? t("workflows.active") : t("workflows.paused")}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-sm text-slate-500 dark:text-slate-400">
@@ -285,9 +290,9 @@ export function WorkflowsList({ workflows }: WorkflowsListProps) {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
                         <DropdownMenuItem asChild>
-                          <Link href={`/dashboard/workflows/${workflow.id}`} className="flex items-center">
+                          <Link href={`/dashboard/workflows/${workflow.id}`} className="flex items-center text-slate-900 dark:text-white">
                             <Edit className="mr-2 h-4 w-4" />
-                            Edit
+                            {t("workflows.edit")}
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem 
@@ -297,12 +302,12 @@ export function WorkflowsList({ workflows }: WorkflowsListProps) {
                           {workflow.enabled ? (
                             <>
                               <Pause className="mr-2 h-4 w-4" />
-                              Pause
+                              {t("workflows.paused")}
                             </>
                           ) : (
                             <>
                               <Play className="mr-2 h-4 w-4" />
-                              Activate
+                              {t("workflows.activate")}
                             </>
                           )}
                         </DropdownMenuItem>
@@ -311,7 +316,7 @@ export function WorkflowsList({ workflows }: WorkflowsListProps) {
                           className="text-red-600 dark:text-red-400"
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
-                          Delete
+                          {t("workflows.delete")}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -328,14 +333,14 @@ export function WorkflowsList({ workflows }: WorkflowsListProps) {
               <Zap className="h-8 w-8 text-amber-600 dark:text-amber-400" />
             </div>
             <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
-              {searchQuery || filterTrigger !== "all" ? "No workflows found" : "No automations yet"}
+              {searchQuery || filterTrigger !== "all" ? t("workflows.noWorkflowsFound") : t("workflows.noAutomationsYet")}
             </h3>
             <p className="text-slate-600 dark:text-slate-400 mb-6 max-w-md text-center">
               {searchQuery || filterTrigger !== "all"
-                ? "Try adjusting your search or filter criteria."
-                : "Create your first workflow to save time and automate repetitive tasks."}
+                ? t("workflows.tryAdjustingSearch")
+                : t("workflows.createFirstWorkflow")}
             </p>
-            {!searchQuery && filterTrigger === "all" && <CreateWorkflowDialog />}
+            {!searchQuery && filterTrigger === "all" && <CreateWorkflowDialog language={language} />}
           </CardContent>
         </Card>
       )}

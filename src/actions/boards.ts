@@ -6,6 +6,8 @@ import { eq, asc, inArray, and } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { getOrCreateWorkspace } from "@/actions/workspace";
 import { getSession } from "@/lib/get-session";
+import { t } from "@/lib/i18n/server";
+import { Language } from "@/lib/i18n/translations";
 
 export async function getBoards() {
     try {
@@ -19,19 +21,22 @@ export async function getBoards() {
             .where(eq(boards.workspace_id, workspaceId));
         
         if (existingBoards.length === 0) {
+            // Get workspace language for default column names
+            const defaultLanguage = (workspace?.default_language as Language) || "en";
+            
             // Seed default board
             const [newBoard] = await db.insert(boards).values({
                 workspace_id: workspaceId,
-                name: "Client Pipeline",
+                name: t("boards.clientPipeline", defaultLanguage),
                 board_type: "sales"
             }).returning();
             
-            // Seed columns
+            // Seed columns with translated names
             await db.insert(board_columns).values([
-                { board_id: newBoard.id, name: "Leads", order: 0 },
-                { board_id: newBoard.id, name: "Contacted", order: 1 },
-                { board_id: newBoard.id, name: "Proposal Sent", order: 2 },
-                { board_id: newBoard.id, name: "Closed", order: 3 },
+                { board_id: newBoard.id, name: t("boards.column.leads", defaultLanguage), order: 0 },
+                { board_id: newBoard.id, name: t("boards.column.contacted", defaultLanguage), order: 1 },
+                { board_id: newBoard.id, name: t("boards.column.proposalSent", defaultLanguage), order: 2 },
+                { board_id: newBoard.id, name: t("boards.column.closed", defaultLanguage), order: 3 },
             ]);
             
             return await getBoardData(newBoard.id);

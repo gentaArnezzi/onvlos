@@ -50,6 +50,7 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { CreateInvoiceDialog } from "@/components/dashboard/invoices/create-invoice-dialog";
 import { CreateTaskDialog } from "@/components/dashboard/tasks/create-task-dialog";
+import { useTranslation } from "@/lib/i18n/context";
 
 interface Client {
   id: string;
@@ -81,6 +82,7 @@ const statusColors: Record<string, string> = {
 };
 
 export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
+  const { t } = useTranslation();
   const router = useRouter();
   const [clients, setClients] = useState(initialClients);
   const [searchQuery, setSearchQuery] = useState("");
@@ -137,7 +139,7 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
       setClients(clients.filter(c => c.id !== clientId));
       setDeletingClientId(null);
     } else {
-      alert("Failed to delete client");
+      alert(t("clients.failedToDelete"));
     }
     setLoading(false);
   };
@@ -167,7 +169,7 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
       <div className="flex flex-col sm:flex-row gap-4 mb-6">
         <div className="relative flex-1">
           <Input
-            placeholder="Search clients by name, email, or description..."
+            placeholder={t("clients.searchPlaceholder")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
@@ -177,23 +179,23 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
         <div className="flex gap-2">
           <Select value={filterStatus} onValueChange={setFilterStatus}>
             <SelectTrigger className="w-[140px] bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
-              <SelectValue placeholder="Status" />
+              <SelectValue placeholder={t("clients.status")} />
             </SelectTrigger>
             <SelectContent className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
-              <SelectItem value="all" className="text-slate-900 dark:text-white">All Status</SelectItem>
-              <SelectItem value="active" className="text-slate-900 dark:text-white">Active</SelectItem>
-              <SelectItem value="lead" className="text-slate-900 dark:text-white">Lead</SelectItem>
-              <SelectItem value="onboarding" className="text-slate-900 dark:text-white">Onboarding</SelectItem>
-              <SelectItem value="completed" className="text-slate-900 dark:text-white">Completed</SelectItem>
-              <SelectItem value="archived" className="text-slate-900 dark:text-white">Archived</SelectItem>
+              <SelectItem value="all" className="text-slate-900 dark:text-white">{t("clients.allStatus")}</SelectItem>
+              <SelectItem value="active" className="text-slate-900 dark:text-white">{t("clients.active")}</SelectItem>
+              <SelectItem value="lead" className="text-slate-900 dark:text-white">{t("clients.lead")}</SelectItem>
+              <SelectItem value="onboarding" className="text-slate-900 dark:text-white">{t("clients.onboarding")}</SelectItem>
+              <SelectItem value="completed" className="text-slate-900 dark:text-white">{t("clients.completed")}</SelectItem>
+              <SelectItem value="archived" className="text-slate-900 dark:text-white">{t("clients.archived")}</SelectItem>
             </SelectContent>
           </Select>
           <Select value={filterCategory} onValueChange={setFilterCategory}>
             <SelectTrigger className="w-[140px] bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
-              <SelectValue placeholder="Category" />
+              <SelectValue placeholder={t("clients.category")} />
             </SelectTrigger>
             <SelectContent className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
-              <SelectItem value="all" className="text-slate-900 dark:text-white">All Categories</SelectItem>
+              <SelectItem value="all" className="text-slate-900 dark:text-white">{t("clients.allCategories")}</SelectItem>
               {categories.map((cat) => (
                 <SelectItem key={cat} value={cat || ""} className="text-slate-900 dark:text-white">
                   {cat}
@@ -203,13 +205,13 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
           </Select>
           <Select value={sortBy} onValueChange={setSortBy}>
             <SelectTrigger className="w-[140px] bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white">
-              <SelectValue placeholder="Sort by" />
+              <SelectValue placeholder={t("clients.sortBy")} />
             </SelectTrigger>
             <SelectContent className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
-              <SelectItem value="created" className="text-slate-900 dark:text-white">Newest</SelectItem>
-              <SelectItem value="updated" className="text-slate-900 dark:text-white">Recently Updated</SelectItem>
-              <SelectItem value="name" className="text-slate-900 dark:text-white">Name</SelectItem>
-              <SelectItem value="value" className="text-slate-900 dark:text-white">Contract Value</SelectItem>
+              <SelectItem value="created" className="text-slate-900 dark:text-white">{t("clients.newest")}</SelectItem>
+              <SelectItem value="updated" className="text-slate-900 dark:text-white">{t("clients.recentlyUpdated")}</SelectItem>
+              <SelectItem value="name" className="text-slate-900 dark:text-white">{t("clients.name")}</SelectItem>
+              <SelectItem value="value" className="text-slate-900 dark:text-white">{t("clients.contractValue")}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -245,7 +247,7 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
                       <div className="flex-1 min-w-0">
                         <Link href={`/dashboard/clients/${client.id}`}>
                           <h3 className="font-semibold text-slate-900 dark:text-white truncate hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                            {client.company_name || "No Company"}
+                            {client.company_name || t("clients.noCompany")}
                           </h3>
                         </Link>
                         <p className="text-sm text-slate-500 dark:text-slate-400 truncate">
@@ -268,7 +270,7 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
                           <DropdownMenuItem asChild className="text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700 focus:bg-slate-100 dark:focus:bg-slate-700">
                             <Link href={`/portal/${client.space_public_url}`} target="_blank" className="cursor-pointer flex items-center">
                               <ExternalLink className="mr-2 h-4 w-4 text-slate-600 dark:text-slate-400" />
-                              Open Space
+                              {t("clients.openSpace")}
                             </Link>
                           </DropdownMenuItem>
                         )}
@@ -280,7 +282,7 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
                           className="cursor-pointer text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700 focus:bg-slate-100 dark:focus:bg-slate-700"
                         >
                           <FileText className="mr-2 h-4 w-4 text-slate-600 dark:text-slate-400" />
-                          New Invoice
+                          {t("clients.newInvoice")}
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => {
@@ -290,12 +292,12 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
                           className="cursor-pointer text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700 focus:bg-slate-100 dark:focus:bg-slate-700"
                         >
                           <CheckSquare className="mr-2 h-4 w-4 text-slate-600 dark:text-slate-400" />
-                          New Task
+                          {t("clients.newTask")}
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild className="text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700 focus:bg-slate-100 dark:focus:bg-slate-700">
                           <Link href={`/dashboard/funnels`} className="cursor-pointer flex items-center">
                             <Zap className="mr-2 h-4 w-4 text-slate-600 dark:text-slate-400" />
-                            Start Funnel
+                            {t("clients.startFunnel")}
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator className="bg-slate-200 dark:bg-slate-700" />
@@ -304,14 +306,14 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
                           className="cursor-pointer text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 focus:bg-slate-100 dark:focus:bg-slate-700"
                         >
                           <Archive className="mr-2 h-4 w-4" />
-                          Archive
+                          {t("clients.archive")}
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => setDeletingClientId(client.id)}
                           className="cursor-pointer text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 focus:bg-red-50 dark:focus:bg-red-900/20"
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
-                          Delete
+                          {t("clients.delete")}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -339,7 +341,7 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
                   {/* Engagement Bar */}
                   <div className="mb-4">
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Engagement</span>
+                      <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{t("clients.engagement")}</span>
                       <span className="text-xs text-slate-500 dark:text-slate-500">{engagement}%</span>
                     </div>
                     <Progress value={engagement} className="h-2" />
@@ -349,11 +351,11 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
                   <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-4">
                     <div className="flex items-center gap-1">
                       <CheckSquare className="h-3 w-3" />
-                      <span>{client.task_count || 0} tasks</span>
+                      <span>{client.task_count || 0} {t("clients.tasks")}</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <FileText className="h-3 w-3" />
-                      <span>{client.invoice_count || 0} invoices</span>
+                      <span>{client.invoice_count || 0} {t("clients.invoices")}</span>
                     </div>
                   </div>
 
@@ -387,13 +389,13 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
             </div>
             <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
               {searchQuery || filterStatus !== "all" || filterCategory !== "all" 
-                ? "No clients found" 
-                : "No clients yet"}
+                ? t("clients.noClients") 
+                : t("clients.noClientsYet")}
             </h3>
             <p className="text-slate-600 dark:text-slate-400 mb-6 max-w-md text-center">
               {searchQuery || filterStatus !== "all" || filterCategory !== "all"
-                ? "Try adjusting your search or filter criteria."
-                : "Get started by adding your first client."}
+                ? t("clients.tryAdjustingSearch")
+                : t("clients.getStartedByAdding")}
             </p>
           </CardContent>
         </Card>
@@ -431,10 +433,9 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
       <Dialog open={!!deletingClientId} onOpenChange={(open) => !open && setDeletingClientId(null)}>
         <DialogContent className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
           <DialogHeader>
-            <DialogTitle className="text-slate-900 dark:text-white">Delete Client</DialogTitle>
+            <DialogTitle className="text-slate-900 dark:text-white">{t("clients.deleteClient")}</DialogTitle>
             <DialogDescription className="text-slate-600 dark:text-slate-400">
-              Are you sure you want to delete this client? This action cannot be undone.
-              All related data (portal, conversations, files) will be permanently deleted.
+              {t("clients.deleteConfirm")}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -443,7 +444,7 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
               onClick={() => setDeletingClientId(null)}
               className="border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800"
             >
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button
               variant="destructive"
@@ -453,10 +454,10 @@ export function ClientsGrid({ clients: initialClients }: ClientsGridProps) {
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Deleting...
+                  {t("clients.deleting")}
                 </>
               ) : (
-                "Delete Client"
+                t("clients.deleteClient")
               )}
             </Button>
           </DialogFooter>

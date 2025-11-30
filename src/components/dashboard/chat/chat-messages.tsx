@@ -5,6 +5,8 @@ import { ChatInput } from "./chat-input";
 import { getMessages } from "@/actions/messages";
 import { Loader2, Calendar } from "lucide-react";
 import { format, isSameDay } from "date-fns";
+import { useTranslation } from "@/lib/i18n/context";
+import { Language } from "@/lib/i18n/translations";
 
 interface Message {
     id: string;
@@ -21,9 +23,12 @@ interface ChatMessagesProps {
     clientName: string;
     clientLogo: string | null;
     currentUserId: string;
+    language?: Language;
 }
 
-export function ChatMessages({ clientId, clientName, clientLogo, currentUserId }: ChatMessagesProps) {
+export function ChatMessages({ clientId, clientName, clientLogo, currentUserId, language: propLanguage }: ChatMessagesProps) {
+    const { t, language: contextLanguage } = useTranslation();
+    const language = propLanguage || contextLanguage;
     const [messages, setMessages] = useState<Message[]>([]);
     const [loading, setLoading] = useState(true);
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -92,7 +97,7 @@ export function ChatMessages({ clientId, clientName, clientLogo, currentUserId }
                     )}
                     <div>
                         <h3 className="font-semibold text-slate-900 dark:text-white">{clientName}</h3>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">Client</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">{t("chat.client")}</p>
                     </div>
                 </div>
             </div>
@@ -113,9 +118,9 @@ export function ChatMessages({ clientId, clientName, clientLogo, currentUserId }
                             <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-700/30 flex items-center justify-center mb-4">
                                 <Calendar className="w-8 h-8 text-slate-400 dark:text-slate-500" />
                             </div>
-                            <h4 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">No messages yet</h4>
+                            <h4 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">{t("chat.noMessagesYet")}</h4>
                             <p className="text-sm text-slate-500 dark:text-slate-400 max-w-sm">
-                                Start the conversation by sending a message below
+                                {t("chat.startConversation")}
                             </p>
                         </div>
                     ) : (
@@ -172,6 +177,7 @@ export function ChatMessages({ clientId, clientName, clientLogo, currentUserId }
                 <ChatInput
                     key={`input-${clientId}`}
                     clientId={clientId}
+                    language={language}
                     onMessageSent={(newMessage) => {
                         setMessages((prev) => [...prev, newMessage as Message]);
                         setTimeout(() => {

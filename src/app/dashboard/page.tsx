@@ -23,6 +23,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { t } from "@/lib/i18n/server";
+import { Language } from "@/lib/i18n/translations";
 
 export default async function DashboardPage() {
   const session = await getSession();
@@ -98,10 +100,11 @@ export default async function DashboardPage() {
   const revenueTrendUp = Number(revenueTrend) >= 0;
 
   const defaultCurrencySymbol = getCurrencySymbol(workspace?.default_currency || "USD");
+  const language = (workspace?.default_language as Language) || "en";
   
   const stats = [
     {
-      title: "Total Revenue",
+      title: t("dashboard.totalRevenue", language),
       value: `${defaultCurrencySymbol}${totalRevenue.toLocaleString()}`,
       description: "Lifetime collected",
       icon: DollarSign,
@@ -111,9 +114,9 @@ export default async function DashboardPage() {
       shadow: "shadow-violet-500/20"
     },
     {
-      title: "Active Clients",
+      title: t("dashboard.activeClients", language),
       value: activeClientsCount.toString(),
-      description: "Clients currently active",
+      description: t("stats.clientsCurrentlyActive", language),
       icon: Users,
       trend: analyticsData?.stats && analyticsData.stats.totalClients > 0 
         ? `${((activeClientsCount / analyticsData.stats.totalClients) * 100).toFixed(0)}% active`
@@ -123,9 +126,9 @@ export default async function DashboardPage() {
       shadow: "shadow-blue-500/20"
     },
     {
-      title: "Pending Invoices",
+      title: t("dashboard.sentInvoices", language),
       value: sentInvoicesCount.toString(),
-      description: "Awaiting payment",
+      description: t("stats.awaitingPayment", language),
       icon: CreditCard,
       trend: "0",
       trendUp: false,
@@ -133,9 +136,9 @@ export default async function DashboardPage() {
       shadow: "shadow-orange-500/20"
     },
     {
-      title: "Completion Rate",
+      title: t("dashboard.completionRate", language),
       value: `${completionRate}%`,
-      description: "Tasks completed on time",
+      description: t("stats.tasksCompletedOnTime", language),
       icon: CheckCircle2,
       trend: "+0%",
       trendUp: true,
@@ -150,10 +153,10 @@ export default async function DashboardPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-white">
-            Good morning, {user?.name?.split(' ')[0] || 'User'} 👋
+            {language === "id" ? "Selamat pagi" : "Good morning"}, {user?.name?.split(' ')[0] || 'User'} 👋
           </h1>
           <p className="text-slate-300 mt-1">
-            Here's what's happening with your workspace today.
+            {t("dashboard.description", language)}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -162,7 +165,7 @@ export default async function DashboardPage() {
             {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
           </Button>
           <Button className="bg-violet-600 hover:bg-violet-700 text-white shadow-lg shadow-violet-500/20">
-            <Plus className="mr-2 h-4 w-4" /> New Project
+            <Plus className="mr-2 h-4 w-4" /> {t("tasks.newProject", language)}
           </Button>
         </div>
       </div>
@@ -189,7 +192,7 @@ export default async function DashboardPage() {
                   {stat.trendUp ? <ArrowUpRight className="h-3 w-3 mr-1" /> : <ArrowDownRight className="h-3 w-3 mr-1" />}
                   {stat.trend}
                 </span>
-                <span className="text-xs text-slate-400 ml-2">vs last month</span>
+                <span className="text-xs text-slate-400 ml-2">{t("tasks.vsLastMonth", language)}</span>
               </div>
             </CardContent>
           </Card>
@@ -204,8 +207,8 @@ export default async function DashboardPage() {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-lg font-semibold text-white">Revenue Overview</CardTitle>
-                  <CardDescription className="text-slate-400">Monthly revenue vs expenses</CardDescription>
+                  <CardTitle className="text-lg font-semibold text-white">{t("dashboard.revenueOverview", language)}</CardTitle>
+                  <CardDescription className="text-slate-400">{t("dashboard.monthlyRevenue", language)}</CardDescription>
                 </div>
                 <Tabs defaultValue="6m" className="w-[200px]">
                   <TabsList className="grid w-full grid-cols-3 !bg-slate-800 !border !border-slate-600">
@@ -240,11 +243,11 @@ export default async function DashboardPage() {
           <Card className="border border-slate-700/50 shadow-lg bg-slate-800/50 backdrop-blur-sm">
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle className="text-lg font-semibold text-white">Recent Transactions</CardTitle>
-                <CardDescription className="text-slate-400">Latest financial activity</CardDescription>
+                  <CardTitle className="text-lg font-semibold text-white">{t("dashboard.recentTransactions", language)}</CardTitle>
+                  <CardDescription className="text-slate-400">{t("dashboard.recentActivity", language)}</CardDescription>
               </div>
               <Button variant="ghost" size="sm" className="text-violet-500 hover:text-violet-600" asChild>
-                <Link href="/dashboard/invoices">View All</Link>
+                <Link href="/dashboard/invoices">{t("dashboard.viewAll", language)}</Link>
               </Button>
             </CardHeader>
             <CardContent>
@@ -252,9 +255,9 @@ export default async function DashboardPage() {
                 <Table>
                   <TableHeader className="bg-slate-900/50">
                     <TableRow className="hover:bg-transparent border-slate-700">
-                      <TableHead className="pl-6 h-12 text-xs font-medium text-slate-400 uppercase tracking-wider">Invoice</TableHead>
-                      <TableHead className="h-12 text-xs font-medium text-slate-400 uppercase tracking-wider">Date</TableHead>
-                      <TableHead className="text-right pr-6 h-12 text-xs font-medium text-slate-400 uppercase tracking-wider">Amount</TableHead>
+                      <TableHead className="pl-6 h-12 text-xs font-medium text-slate-400 uppercase tracking-wider">{t("table.invoice", language)}</TableHead>
+                      <TableHead className="h-12 text-xs font-medium text-slate-400 uppercase tracking-wider">{t("table.date", language)}</TableHead>
+                      <TableHead className="text-right pr-6 h-12 text-xs font-medium text-slate-400 uppercase tracking-wider">{t("table.amount", language)}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -270,13 +273,13 @@ export default async function DashboardPage() {
                             </div>
                           </TableCell>
                           <TableCell className="text-slate-400 text-sm">
-                            {inv.paid_date ? new Date(inv.paid_date).toLocaleDateString() : 'Paid recently'}
+                            {inv.paid_date ? new Date(inv.paid_date).toLocaleDateString() : t("tasks.paidRecently", language)}
                           </TableCell>
                           <TableCell className="text-right pr-6">
                             <div className="flex flex-col items-end">
                               <span className="font-bold text-white">+{defaultCurrencySymbol}{Number(inv.total_amount).toLocaleString()}</span>
                               <Badge variant="secondary" className="bg-emerald-900/30 text-emerald-400 border-none text-[10px] px-1.5 py-0 h-5">
-                                Paid
+                                {t("invoices.paid", language)}
                               </Badge>
                             </div>
                           </TableCell>
@@ -285,7 +288,7 @@ export default async function DashboardPage() {
                     ) : (
                       <TableRow>
                         <TableCell colSpan={3} className="h-24 text-center text-slate-400">
-                          No recent transactions
+                          {t("dashboard.noTransactions", language)}
                         </TableCell>
                       </TableRow>
                     )}
@@ -327,7 +330,7 @@ export default async function DashboardPage() {
           {/* Upcoming Tasks */}
           <Card className="border border-slate-700/50 shadow-lg bg-slate-800/50 backdrop-blur-sm">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-lg font-semibold text-white">Upcoming Tasks</CardTitle>
+              <CardTitle className="text-lg font-semibold text-white">{t("dashboard.upcomingTasks", language)}</CardTitle>
               <Button variant="ghost" size="icon" className="h-8 w-8">
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
@@ -351,10 +354,10 @@ export default async function DashboardPage() {
                     </div>
                   ))
                 ) : (
-                  <div className="text-center py-8 text-slate-400">No pending tasks</div>
+                  <div className="text-center py-8 text-slate-400">{t("dashboard.noPendingTasks", language)}</div>
                 )}
                 <Button variant="outline" className="w-full text-xs border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white" asChild>
-                  <Link href="/dashboard/tasks">View All Tasks</Link>
+                  <Link href="/dashboard/tasks">{t("dashboard.viewAllTasks", language)}</Link>
                 </Button>
               </div>
             </CardContent>
@@ -368,14 +371,14 @@ export default async function DashboardPage() {
                 <Zap className="h-5 w-5 text-yellow-400 fill-yellow-400" />
                 <span className="font-semibold text-sm text-yellow-400">Pro Plan</span>
               </div>
-              <CardTitle className="text-lg">Upgrade to Pro</CardTitle>
+              <CardTitle className="text-lg">{t("dashboard.upgradeToPro", language)}</CardTitle>
               <CardDescription className="text-slate-400">
-                Unlock advanced analytics, unlimited clients, and AI features.
+                {t("dashboard.upgradeDesc", language)}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <Button className="w-full bg-white text-slate-900 hover:bg-slate-100">
-                Upgrade Now
+                {t("dashboard.upgradeNow", language)}
               </Button>
             </CardContent>
           </Card>

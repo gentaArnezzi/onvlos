@@ -32,59 +32,66 @@ import {
   HelpCircle,
   FileText,
   LogOut,
-  ChevronDown
+  ChevronDown,
+  FileSignature
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 import { SearchDialog } from "./navbar/search-dialog";
 import { NotificationsDropdown } from "./navbar/notifications-dropdown";
+import { useTranslation } from "@/lib/i18n/context";
 
 const navItems = [
   {
-    label: "Dashboard",
+    key: "nav.dashboard",
     icon: LayoutDashboard,
     href: "/dashboard",
   },
   {
-    label: "Funnel",
+    key: "nav.funnels",
     icon: Filter,
     href: "/dashboard/funnels",
   },
   {
-    label: "My Tasks",
+    key: "nav.tasks",
     icon: CheckSquare,
     href: "/dashboard/tasks",
   },
   {
-    label: "Chat",
+    key: "nav.chat",
     icon: MessageSquare,
     href: "/dashboard/chat",
   },
   {
-    label: "Flows",
+    key: "nav.workflows",
     icon: Workflow,
     href: "/dashboard/workflows",
   },
   {
-    label: "Clients",
+    key: "nav.clients",
     icon: Users,
     href: "/dashboard/clients",
   },
   {
-    label: "Boards",
+    key: "nav.boards",
     icon: Kanban,
     href: "/dashboard/boards",
   },
   {
-    label: "Brain",
+    key: "nav.brain",
     icon: Brain,
     href: "/dashboard/brain",
   },
   {
-    label: "Invoices",
+    key: "nav.invoices",
     icon: Receipt,
     href: "/dashboard/invoices",
+  },
+  {
+    key: "nav.proposals",
+    icon: FileSignature,
+    href: "/dashboard/proposals",
   },
 ];
 
@@ -100,6 +107,7 @@ export function Navbar({ user }: NavbarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [searchOpen, setSearchOpen] = useState(false);
+  const { t } = useTranslation();
 
   const handleLogout = async () => {
     await authClient.signOut({
@@ -148,7 +156,7 @@ export function Navbar({ user }: NavbarProps) {
                 )}
               >
                 <item.icon className={cn("w-4 h-4", isActive ? "text-white" : "text-slate-400 group-hover:text-slate-100")} />
-                <span>{item.label}</span>
+                <span>{t(item.key)}</span>
               </Link>
             );
           })}
@@ -168,7 +176,7 @@ export function Navbar({ user }: NavbarProps) {
               <DropdownMenuItem className="focus:bg-slate-800 focus:text-white cursor-pointer" asChild>
                 <Link href="/dashboard/settings">
                   <Settings className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
+                  <span>{t("nav.settings")}</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem className="focus:bg-slate-800 focus:text-white cursor-pointer" asChild>
@@ -234,7 +242,7 @@ export function Navbar({ user }: NavbarProps) {
               <DropdownMenuItem className="focus:bg-slate-800 focus:text-white cursor-pointer" asChild>
                 <Link href="/dashboard/settings">
                   <Settings className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
+                  <span>{t("nav.settings")}</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator className="bg-slate-800" />
@@ -243,7 +251,7 @@ export function Navbar({ user }: NavbarProps) {
                 onClick={handleLogout}
               >
                 <LogOut className="mr-2 h-4 w-4" />
-                <span>Log out</span>
+                <span>{t("nav.logout")}</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

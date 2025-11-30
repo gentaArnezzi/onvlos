@@ -23,6 +23,8 @@ import { Badge } from "@/components/ui/badge";
 import { CreateFunnelDialog } from "./create-funnel-dialog";
 import { Filter } from "lucide-react";
 import { format } from "date-fns";
+import { useTranslation } from "@/lib/i18n/context";
+import { Language } from "@/lib/i18n/translations";
 
 interface Funnel {
   id: string;
@@ -36,9 +38,12 @@ interface Funnel {
 
 interface FunnelsListProps {
   funnels: Funnel[];
+  language?: Language;
 }
 
-export function FunnelsList({ funnels }: FunnelsListProps) {
+export function FunnelsList({ funnels, language: propLanguage }: FunnelsListProps) {
+  const { t, language: contextLanguage } = useTranslation();
+  const language = propLanguage || contextLanguage;
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredFunnels = funnels.filter((funnel) =>
@@ -52,7 +57,7 @@ export function FunnelsList({ funnels }: FunnelsListProps) {
   };
 
   const handleDelete = async (funnelId: string) => {
-    if (confirm("Are you sure you want to delete this funnel?")) {
+    if (confirm(t("funnels.deleteConfirm"))) {
       // TODO: Implement delete functionality
       console.log("Delete funnel:", funnelId);
     }
@@ -65,7 +70,7 @@ export function FunnelsList({ funnels }: FunnelsListProps) {
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
         <Input
           type="text"
-          placeholder="Search funnels by name or description..."
+          placeholder={t("funnels.searchPlaceholder")}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="pl-10 bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
@@ -93,7 +98,7 @@ export function FunnelsList({ funnels }: FunnelsListProps) {
                         ? "bg-emerald-600 hover:bg-emerald-700 text-white"
                         : "bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"}
                     >
-                      {funnel.published ? "Live" : "Draft"}
+                      {funnel.published ? t("funnels.live") : t("funnels.draft")}
                     </Badge>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -109,7 +114,7 @@ export function FunnelsList({ funnels }: FunnelsListProps) {
                         <DropdownMenuItem asChild className="text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700">
                           <Link href={`/dashboard/funnels/${funnel.id}`}>
                             <ArrowRight className="mr-2 h-4 w-4" />
-                            Edit
+                            {t("funnels.edit")}
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem
@@ -117,14 +122,14 @@ export function FunnelsList({ funnels }: FunnelsListProps) {
                           className="text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700"
                         >
                           <Copy className="mr-2 h-4 w-4" />
-                          Duplicate
+                          {t("funnels.duplicate")}
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => handleDelete(funnel.id)}
                           className="text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
-                          Delete
+                          {t("funnels.delete")}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -134,16 +139,16 @@ export function FunnelsList({ funnels }: FunnelsListProps) {
                   {funnel.name}
                 </CardTitle>
                 <CardDescription className="line-clamp-2 text-slate-400">
-                  {funnel.description || "No description provided for this funnel."}
+                  {funnel.description || t("funnels.noDescription")}
                 </CardDescription>
                 <div className="text-xs text-slate-500 dark:text-slate-400 mt-2">
-                  Created {funnel.created_at ? format(new Date(funnel.created_at), "MMM d, yyyy") : "Unknown date"}
+                  {t("funnels.created")} {funnel.created_at ? format(new Date(funnel.created_at), "MMM d, yyyy") : t("funnels.unknownDate")}
                 </div>
               </CardHeader>
               <CardFooter className="flex justify-between items-center border-t border-slate-100 dark:border-slate-700/50 pt-4 mt-2">
                 <div className="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-1">
                   <Users className="h-3 w-3" />
-                  <span>{funnel.onboarded_count || 0} Clients</span>
+                  <span>{funnel.onboarded_count || 0} {t("funnels.clients")}</span>
                 </div>
                 <Button
                   asChild
@@ -152,7 +157,7 @@ export function FunnelsList({ funnels }: FunnelsListProps) {
                   className="text-slate-300 hover:text-pink-400 hover:bg-pink-900/20"
                 >
                   <Link href={`/dashboard/funnels/${funnel.id}`}>
-                    Edit Funnel <ArrowRight className="ml-2 h-4 w-4" />
+                    {t("funnels.editFunnel")} <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
               </CardFooter>
@@ -165,12 +170,12 @@ export function FunnelsList({ funnels }: FunnelsListProps) {
             <Filter className="h-8 w-8 text-pink-600 dark:text-pink-400" />
           </div>
           <h3 className="text-xl font-semibold text-white mb-2">
-            {searchQuery ? "No funnels found" : "No funnels yet"}
+            {searchQuery ? t("funnels.noFunnelsFound") : t("funnels.noFunnelsYet")}
           </h3>
           <p className="text-slate-400 mb-6 max-w-md text-center">
             {searchQuery
-              ? "Try adjusting your search query."
-              : "Create your first onboarding funnel to start automating your client intake process."}
+              ? t("funnels.tryAdjustingSearch")
+              : t("funnels.createFirstFunnel")}
           </p>
           {!searchQuery && <CreateFunnelDialog />}
         </div>

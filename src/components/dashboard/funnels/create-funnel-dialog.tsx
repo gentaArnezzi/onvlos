@@ -17,8 +17,10 @@ import { useState } from "react";
 import { createFunnel } from "@/actions/funnels";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "@/lib/i18n/context";
 
 export function CreateFunnelDialog() {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -45,21 +47,21 @@ export function CreateFunnelDialog() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="bg-violet-600 hover:bg-violet-700 text-white">
-          <Plus className="mr-2 h-4 w-4" /> New Funnel
+          <Plus className="mr-2 h-4 w-4" /> {t("funnels.newFunnel")}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
         <DialogHeader>
-          <DialogTitle className="text-slate-900 dark:text-white">Create Funnel</DialogTitle>
+          <DialogTitle className="text-slate-900 dark:text-white">{t("funnels.createFunnel")}</DialogTitle>
           <DialogDescription className="text-slate-600 dark:text-slate-400">
-            Start a new onboarding flow.
+            {t("funnels.startNewFlow")}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="name" className="text-right text-slate-900 dark:text-white">
-                Name
+                {t("funnels.name")}
               </Label>
               <Input 
                 id="name" 
@@ -71,7 +73,7 @@ export function CreateFunnelDialog() {
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="description" className="text-right text-slate-900 dark:text-white">
-                Description
+                {t("common.description")}
               </Label>
               <Textarea 
                 id="description" 
@@ -87,7 +89,7 @@ export function CreateFunnelDialog() {
               disabled={loading}
               className="bg-violet-600 hover:bg-violet-700 text-white"
             >
-              {loading ? "Creating..." : "Create Funnel"}
+              {loading ? t("funnels.creating") : t("funnels.createFunnel")}
             </Button>
           </DialogFooter>
         </form>
