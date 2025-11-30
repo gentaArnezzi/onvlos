@@ -182,24 +182,7 @@ export function CreateInvoiceDialog({ clients, initialClientId, defaultCurrency 
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="USD">USD - US Dollar ($)</SelectItem>
-                            <SelectItem value="EUR">EUR - Euro (€)</SelectItem>
-                            <SelectItem value="GBP">GBP - British Pound (£)</SelectItem>
                             <SelectItem value="IDR">IDR - Indonesian Rupiah (Rp)</SelectItem>
-                            <SelectItem value="SGD">SGD - Singapore Dollar (S$)</SelectItem>
-                            <SelectItem value="AUD">AUD - Australian Dollar (A$)</SelectItem>
-                            <SelectItem value="JPY">JPY - Japanese Yen (¥)</SelectItem>
-                            <SelectItem value="CNY">CNY - Chinese Yuan (¥)</SelectItem>
-                            <SelectItem value="MYR">MYR - Malaysian Ringgit (RM)</SelectItem>
-                            <SelectItem value="THB">THB - Thai Baht (฿)</SelectItem>
-                            <SelectItem value="PHP">PHP - Philippine Peso (₱)</SelectItem>
-                            <SelectItem value="VND">VND - Vietnamese Dong (₫)</SelectItem>
-                            <SelectItem value="INR">INR - Indian Rupee (₹)</SelectItem>
-                            <SelectItem value="KRW">KRW - South Korean Won (₩)</SelectItem>
-                            <SelectItem value="HKD">HKD - Hong Kong Dollar (HK$)</SelectItem>
-                            <SelectItem value="CAD">CAD - Canadian Dollar (C$)</SelectItem>
-                            <SelectItem value="NZD">NZD - New Zealand Dollar (NZ$)</SelectItem>
-                            <SelectItem value="CHF">CHF - Swiss Franc (CHF)</SelectItem>
-                            <SelectItem value="AED">AED - UAE Dirham (د.إ)</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>

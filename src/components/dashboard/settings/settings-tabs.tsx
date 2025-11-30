@@ -307,24 +307,7 @@ export function SettingsTabs({ user, workspace, billing, language: propLanguage 
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="USD">USD - US Dollar ($)</SelectItem>
-                  <SelectItem value="EUR">EUR - Euro (€)</SelectItem>
-                  <SelectItem value="GBP">GBP - British Pound (£)</SelectItem>
                   <SelectItem value="IDR">IDR - Indonesian Rupiah (Rp)</SelectItem>
-                  <SelectItem value="SGD">SGD - Singapore Dollar (S$)</SelectItem>
-                  <SelectItem value="AUD">AUD - Australian Dollar (A$)</SelectItem>
-                  <SelectItem value="JPY">JPY - Japanese Yen (¥)</SelectItem>
-                  <SelectItem value="CNY">CNY - Chinese Yuan (¥)</SelectItem>
-                  <SelectItem value="MYR">MYR - Malaysian Ringgit (RM)</SelectItem>
-                  <SelectItem value="THB">THB - Thai Baht (฿)</SelectItem>
-                  <SelectItem value="PHP">PHP - Philippine Peso (₱)</SelectItem>
-                  <SelectItem value="VND">VND - Vietnamese Dong (₫)</SelectItem>
-                  <SelectItem value="INR">INR - Indian Rupee (₹)</SelectItem>
-                  <SelectItem value="KRW">KRW - South Korean Won (₩)</SelectItem>
-                  <SelectItem value="HKD">HKD - Hong Kong Dollar (HK$)</SelectItem>
-                  <SelectItem value="CAD">CAD - Canadian Dollar (C$)</SelectItem>
-                  <SelectItem value="NZD">NZD - New Zealand Dollar (NZ$)</SelectItem>
-                  <SelectItem value="CHF">CHF - Swiss Franc (CHF)</SelectItem>
-                  <SelectItem value="AED">AED - UAE Dirham (د.إ)</SelectItem>
                 </SelectContent>
               </Select>
               <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -340,23 +323,6 @@ export function SettingsTabs({ user, workspace, billing, language: propLanguage 
                 <SelectContent>
                   <SelectItem value="en">English</SelectItem>
                   <SelectItem value="id">Bahasa Indonesia</SelectItem>
-                  <SelectItem value="ms">Bahasa Melayu</SelectItem>
-                  <SelectItem value="th">ไทย (Thai)</SelectItem>
-                  <SelectItem value="vi">Tiếng Việt (Vietnamese)</SelectItem>
-                  <SelectItem value="zh">中文 (Chinese)</SelectItem>
-                  <SelectItem value="ja">日本語 (Japanese)</SelectItem>
-                  <SelectItem value="ko">한국어 (Korean)</SelectItem>
-                  <SelectItem value="es">Español (Spanish)</SelectItem>
-                  <SelectItem value="fr">Français (French)</SelectItem>
-                  <SelectItem value="de">Deutsch (German)</SelectItem>
-                  <SelectItem value="pt">Português (Portuguese)</SelectItem>
-                  <SelectItem value="ru">Русский (Russian)</SelectItem>
-                  <SelectItem value="ar">العربية (Arabic)</SelectItem>
-                  <SelectItem value="hi">हिन्दी (Hindi)</SelectItem>
-                  <SelectItem value="it">Italiano (Italian)</SelectItem>
-                  <SelectItem value="nl">Nederlands (Dutch)</SelectItem>
-                  <SelectItem value="pl">Polski (Polish)</SelectItem>
-                  <SelectItem value="tr">Türkçe (Turkish)</SelectItem>
                 </SelectContent>
               </Select>
               <p className="text-xs text-slate-500 dark:text-slate-400">

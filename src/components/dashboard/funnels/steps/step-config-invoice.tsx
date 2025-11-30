@@ -49,8 +49,6 @@ export function StepConfigInvoice({ config, onUpdate }: StepConfigInvoiceProps) 
                         onChange={e => setCurrency(e.target.value)}
                     >
                         <option value="USD">USD ($)</option>
-                        <option value="EUR">EUR (€)</option>
-                        <option value="GBP">GBP (£)</option>
                         <option value="IDR">IDR (Rp)</option>
                     </select>
                 </div>
