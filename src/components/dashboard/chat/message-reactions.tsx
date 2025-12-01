@@ -11,11 +11,12 @@ import { cn } from "@/lib/utils";
 interface MessageReactionsProps {
     messageId: string;
     currentUserId: string;
+    isOwnMessage?: boolean;
 }
 
 const COMMON_EMOJIS = ["👍", "❤️", "😂", "😮", "😢", "🙏", "🔥", "🎉"];
 
-export function MessageReactions({ messageId, currentUserId }: MessageReactionsProps) {
+export function MessageReactions({ messageId, currentUserId, isOwnMessage = false }: MessageReactionsProps) {
     const [reactions, setReactions] = useState<Record<string, Array<{ user_id: string; emoji: string }>>>({});
     const [loading, setLoading] = useState(false);
     const { socket } = useSocket();
@@ -72,13 +73,13 @@ export function MessageReactions({ messageId, currentUserId }: MessageReactionsP
         setLoading(true);
         try {
             const hasReacted = reactions[emoji]?.some(r => r.user_id === currentUserId);
-            
+
             if (hasReacted) {
                 await removeReaction(messageId, emoji);
             } else {
                 await addReaction(messageId, emoji);
             }
-            
+
             await loadReactions();
         } catch (error) {
             console.error("Error toggling reaction:", error);
@@ -93,39 +94,10 @@ export function MessageReactions({ messageId, currentUserId }: MessageReactionsP
 
     const reactionEntries = Object.entries(reactions);
 
-    if (reactionEntries.length === 0) {
-        return (
-            <Popover>
-                <PopoverTrigger asChild>
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-6 px-2 text-xs text-gray-500 hover:text-gray-700"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <Smile className="h-3 w-3 mr-1" />
-                        Add reaction
-                    </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-64 p-2" onClick={(e) => e.stopPropagation()}>
-                    <div className="grid grid-cols-4 gap-2">
-                        {COMMON_EMOJIS.map((emoji) => (
-                            <Button
-                                key={emoji}
-                                variant="ghost"
-                                size="sm"
-                                className="h-10 w-10 text-lg hover:bg-gray-100"
-                                onClick={() => handleQuickReact(emoji)}
-                                disabled={loading}
-                            >
-                                {emoji}
-                            </Button>
-                        ))}
-                    </div>
-                </PopoverContent>
-            </Popover>
-        );
-    }
+    // Always render to allow adding reactions
+    // if (reactionEntries.length === 0) {
+    //     return null;
+    // }
 
     return (
         <div className="flex flex-wrap gap-1 mt-1">
@@ -138,7 +110,14 @@ export function MessageReactions({ messageId, currentUserId }: MessageReactionsP
                         size="sm"
                         className={cn(
                             "h-6 px-2 text-xs",
-                            hasReacted && "bg-blue-100 text-blue-700 hover:bg-blue-200"
+                            "h-6 px-2 text-xs",
+                            hasReacted
+                                ? (isOwnMessage
+                                    ? "bg-white/20 text-white border-white/30 hover:bg-white/30"
+                                    : "bg-[#0A33C6]/10 text-[#0A33C6] hover:bg-[#0A33C6]/20 border-[#0A33C6]/20")
+                                : (isOwnMessage
+                                    ? "text-white/70 border-white/20 hover:bg-white/10 hover:text-white"
+                                    : "text-gray-500 border-gray-200 hover:bg-gray-100")
                         )}
                         onClick={(e) => {
                             e.stopPropagation();
@@ -157,7 +136,10 @@ export function MessageReactions({ messageId, currentUserId }: MessageReactionsP
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="h-6 w-6 p-0 text-gray-400 hover:text-gray-600"
+                        className={cn(
+                            "h-4 w-4 p-0 hover:bg-black/5 rounded-full flex items-center justify-center",
+                            isOwnMessage ? "text-white/70 hover:text-white hover:bg-white/10" : "text-gray-500 hover:text-gray-700"
+                        )}
                         onClick={(e) => e.stopPropagation()}
                     >
                         <Smile className="h-3 w-3" />

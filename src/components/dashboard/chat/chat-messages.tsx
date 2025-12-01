@@ -138,14 +138,25 @@ function ChatMessagesComponent({
         conversationId || conversationData?.id || null
     );
 
-    // Update actualConversationId when conversationId or conversationData changes
+    // Track loaded conversationId to prevent duplicate loads
+    const loadedConversationIdRef = useRef<string | null>(null);
+
+    // Update actualConversationId when conversationId prop changes
+    // Only depend on conversationId prop, not conversationData (to avoid object reference issues)
     useEffect(() => {
-        const newId = conversationId || conversationData?.id || null;
+        const newId = conversationId || null;
+
+        // Only update if ID actually changed (not just object reference)
         if (newId !== actualConversationId) {
             setActualConversationId(newId);
+            // Reset loaded ref so messages can be reloaded
+            if (newId && newId !== loadedConversationIdRef.current) {
+                loadedConversationIdRef.current = null;
+            }
         }
+        // Only depend on conversationId prop (primitive value)
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [conversationId, conversationData?.id]);
+    }, [conversationId]);
 
     // Load mute status
     useEffect(() => {
@@ -161,10 +172,10 @@ function ChatMessagesComponent({
     // Socket.io integration for real-time messaging
     useEffect(() => {
         if (!socket || !actualConversationId) {
-            console.log("ChatMessages: Socket or conversation ID not available", { 
-                hasSocket: !!socket, 
+            console.log("ChatMessages: Socket or conversation ID not available", {
+                hasSocket: !!socket,
                 conversationId: actualConversationId,
-                isConnected 
+                isConnected
             });
             return;
         }
@@ -184,12 +195,12 @@ function ChatMessagesComponent({
         const handleNewMessage = (message: any) => {
             console.log("ChatMessages: Received new message via socket:", {
                 messageId: message.id,
-                conversationId: message.conversation_id,
+                messageConversationId: message.conversation_id,
                 actualConversationId,
-                conversationId: conversationId,
+                conversationIdProp: conversationId,
                 content: message.content?.substring(0, 50)
             });
-            
+
             // Only handle messages for this conversation
             if (message.conversation_id && message.conversation_id !== actualConversationId && message.conversation_id !== conversationId) {
                 console.log("ChatMessages: Message is for different conversation, ignoring:", {
@@ -227,7 +238,7 @@ function ChatMessagesComponent({
                 // Add new message at the end (newest messages go to bottom)
                 const updated = [...filtered, formattedMessage];
                 // Ensure messages are sorted by created_at (oldest first, newest last)
-                return updated.sort((a, b) => 
+                return updated.sort((a, b) =>
                     new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
                 );
             });
@@ -276,7 +287,7 @@ function ChatMessagesComponent({
 
         // Listen for delivery status updates
         const handleMessageDelivered = (data: { messageId: string; userId: string; deliveredAt: Date }) => {
-            setMessages(prev => prev.map(msg => 
+            setMessages(prev => prev.map(msg =>
                 msg.id === data.messageId && msg.delivery_status === "sent"
                     ? { ...msg, delivery_status: "delivered" as const }
                     : msg
@@ -285,7 +296,7 @@ function ChatMessagesComponent({
 
         // Listen for read status updates
         const handleMessageRead = (data: { messageId: string; userId: string; readAt: Date }) => {
-            setMessages(prev => prev.map(msg => 
+            setMessages(prev => prev.map(msg =>
                 msg.id === data.messageId
                     ? { ...msg, delivery_status: "read" as const }
                     : msg
@@ -327,8 +338,8 @@ function ChatMessagesComponent({
                 const msgs = actualConversationId
                     ? await getMessagesByConversationId(actualConversationId)
                     : clientId
-                    ? await getMessages(clientId)
-                    : [];
+                        ? await getMessages(clientId)
+                        : [];
 
                 if (msgs && msgs.length > 0) {
                     // Merge with existing messages, avoiding duplicates
@@ -347,7 +358,7 @@ function ChatMessagesComponent({
 
                         if (newMessages.length > 0) {
                             // Merge and sort by created_at
-                            const merged = [...prev, ...newMessages].sort((a, b) => 
+                            const merged = [...prev, ...newMessages].sort((a, b) =>
                                 new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
                             );
                             return merged;
@@ -369,24 +380,38 @@ function ChatMessagesComponent({
     // Load messages
     useEffect(() => {
         async function loadMessages() {
-            // Use conversationId from props or from conversationData
-            const targetConversationId = conversationId || conversationData?.id;
-            
+            // Use conversationId from props
+            const targetConversationId = conversationId;
+
+            // Prevent duplicate loads - only load if conversationId actually changed
+            if (targetConversationId === loadedConversationIdRef.current && targetConversationId) {
+                console.log("ChatMessages: Skipping load - conversationId already loaded", {
+                    targetConversationId,
+                    loadedId: loadedConversationIdRef.current
+                });
+                return;
+            }
+
             console.log("ChatMessages: loadMessages called", {
                 conversationId,
                 conversationDataId: conversationData?.id,
                 targetConversationId,
                 clientId,
-                hasConversationData: !!conversationData
+                hasConversationData: !!conversationData,
+                loadedId: loadedConversationIdRef.current
             });
-            
+
             if (!targetConversationId && !clientId) {
                 console.log("ChatMessages: No conversationId or clientId, clearing messages");
                 setMessages([]);
                 setLoading(false);
+                loadedConversationIdRef.current = null;
                 return;
             }
-            
+
+            // Mark as loading
+            loadedConversationIdRef.current = targetConversationId || null;
+
             setLoading(true);
             try {
                 // Always prefer conversationId over clientId for fetching messages
@@ -395,11 +420,11 @@ function ChatMessagesComponent({
                     hasClientId: !!clientId,
                     willUseConversationId: !!targetConversationId
                 });
-                
+
                 const msgs = targetConversationId
                     ? await getMessagesByConversationId(targetConversationId)
                     : await getMessages(clientId!);
-                
+
                 console.log("ChatMessages: Fetched messages", {
                     targetConversationId,
                     messageCount: msgs?.length || 0,
@@ -420,7 +445,7 @@ function ChatMessagesComponent({
                 }));
 
                 // Sort by created_at ascending (oldest first, newest at bottom)
-                formattedMessages.sort((a, b) => 
+                formattedMessages.sort((a, b) =>
                     new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
                 );
 
@@ -451,14 +476,17 @@ function ChatMessagesComponent({
                     stack: error?.stack
                 });
                 setMessages([]);
+                // Reset loaded ref on error so we can retry
+                loadedConversationIdRef.current = null;
             } finally {
                 setLoading(false);
                 setTimeout(scrollToBottom, 100);
             }
         }
         loadMessages();
+        // Only depend on conversationId and clientId (both primitive values)
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [conversationId, conversationData?.id, clientId, currentUserId]);
+    }, [conversationId, clientId]);
 
     // Auto-scroll on new messages
     useEffect(() => {
@@ -499,7 +527,7 @@ function ChatMessagesComponent({
                                 conversationData?.title ||
                                 clientName ||
                                 "Chat";
-                            const displayLogo = conversationData?.client_logo || 
+                            const displayLogo = conversationData?.client_logo ||
                                 conversationData?.group_avatar_url ||
                                 conversationData?.avatar_url ||
                                 clientLogo;
@@ -541,9 +569,9 @@ function ChatMessagesComponent({
 
                     {/* Actions */}
                     <div className="flex items-center gap-1">
-                        <Button 
-                            variant="ghost" 
-                            size="icon" 
+                        <Button
+                            variant="ghost"
+                            size="icon"
                             className="h-8 w-8 text-[#606170] hover:text-[#02041D] hover:bg-[#F6F6F6]"
                             onClick={() => setChatSearchOpen(true)}
                             title={t("chat.search") || "Search"}
@@ -615,17 +643,17 @@ function ChatMessagesComponent({
 
             {/* Messages - Scrollable Area */}
             <div
-                className="flex-1 overflow-y-auto bg-[#F0F2F5] scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent"
+                className="flex-1 overflow-y-auto bg-[#FAFAFA] scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent"
                 ref={scrollAreaRef}
                 style={{ minHeight: 0, maxHeight: '100%' }}
             >
                 {/* Connection Indicator */}
                 {connectionState !== 'connected' && (
-                    <div className="sticky top-0 z-10 p-2 bg-[#F0F2F5]">
+                    <div className="sticky top-0 z-10 p-2 bg-[#FAFAFA]">
                         <ConnectionIndicator connectionState={connectionState} />
                     </div>
                 )}
-                <div className="p-4 space-y-3">
+                <div className="p-2 space-y-1">
                     {loading ? (
                         <div className="flex items-center justify-center min-h-[400px]">
                             <Loader2 className="w-6 h-6 font-primary text-[#606170] animate-spin" />
@@ -647,7 +675,7 @@ function ChatMessagesComponent({
                                     </div>
 
                                     {/* Messages for this date */}
-                                    <div className="space-y-2">
+                                    <div className="space-y-0.5">
                                         {group.messages.map((message, msgIdx) => {
                                             const isOwnMessage = message.user_id === currentUserId;
                                             const showAvatar = !isOwnMessage && (msgIdx === 0 || group.messages[msgIdx - 1].user_id !== message.user_id);
@@ -655,7 +683,7 @@ function ChatMessagesComponent({
                                             return (
                                                 <div
                                                     key={message.id}
-                                                    className={`flex ${isOwnMessage ? "justify-end" : "justify-start"} group items-end gap-2`}
+                                                    className={`flex ${isOwnMessage ? "justify-end" : "justify-start"} group items-end gap-1.5`}
                                                     onDoubleClick={(e) => {
                                                         // Double click to add thumbs up reaction
                                                         if (!isOwnMessage) {
@@ -673,25 +701,25 @@ function ChatMessagesComponent({
                                                     }}
                                                 >
                                                     {!isOwnMessage && (
-                                                        <div className="w-8 flex-shrink-0">
+                                                        <div className="w-7 flex-shrink-0">
                                                             {showAvatar && (
-                                                                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#0A33C6] to-[#4B6BFB] flex items-center justify-center text-white text-xs font-medium">
+                                                                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#0A33C6] to-[#4B6BFB] flex items-center justify-center text-white text-[13px] font-medium">
                                                                     {message.user_name?.substring(0, 1).toUpperCase() || "U"}
                                                                 </div>
                                                             )}
                                                         </div>
                                                     )}
 
-                                                    <div className={`max-w-[65%] relative group`}>
+                                                    <div className={`max-w-[75%] relative group`}>
                                                         <div
-                                                            className={`rounded-lg px-3 py-2 relative shadow-sm ${isOwnMessage
-                                                                ? "bg-[#0084FF] text-white rounded-br-sm"
-                                                                : "bg-white text-[#111B21] rounded-bl-sm border border-gray-200"
+                                                            className={`rounded-2xl px-4 py-2.5 relative shadow-sm ${isOwnMessage
+                                                                ? "bg-gradient-to-br from-[#0A33C6] to-[#4B6BFB] text-white rounded-br-[4px]"
+                                                                : "bg-white text-[#111B21] rounded-bl-[4px] border border-[#EDEDED]"
                                                                 }`}
                                                         >
                                                             {/* Reply indicator */}
                                                             {message.reply_to_message_id && message.reply_to_message && (
-                                                                <div className={`mb - 2 pb - 2 border - l - 2 ${isOwnMessage ? "border-white/30" : "border-[#0A33C6]/30"} pl - 2 text - xs opacity - 70`}>
+                                                                <div className={`mb-1.5 pb-1.5 border-l-2 ${isOwnMessage ? "border-white/40" : "border-[#0A33C6]/40"} pl-2 text-xs opacity-80`}>
                                                                     <p className="font-medium">{message.reply_to_message.user_name}</p>
                                                                     <p className="truncate">{message.reply_to_message.content}</p>
                                                                 </div>
@@ -722,36 +750,36 @@ function ChatMessagesComponent({
                                                                 return null;
                                                             })()}
 
-                                                            {/* Message Content */}
-                                                            <div className="text-sm leading-relaxed break-words">
+                                                            {/* Message Content with Inline Timestamp */}
+                                                            <div className="text-[14.2px] leading-[19px] break-words relative">
                                                                 <MessageMentions content={message.content} mentions={[]} />
-                                                            </div>
 
-                                                            {/* Timestamp inline with message */}
-                                                            <div className="flex items-center justify-end gap-1 mt-1">
-                                                                <span className={`text-[11px] ${isOwnMessage ? "text-white/70" : "text-gray-500"
-                                                                    }`}>
-                                                                    {format(new Date(message.created_at), "HH:mm")}
+                                                                {/* Timestamp inline - float right to wrap text around it */}
+                                                                <span className="float-right ml-2 mt-0.5 select-none flex items-center gap-1">
+                                                                    <span className={`text-[11px] leading-[13px] ${isOwnMessage ? "text-white/70" : "text-[#667781]"}`}>
+                                                                        {format(new Date(message.created_at), "HH:mm")}
+                                                                    </span>
+                                                                    {isOwnMessage && (
+                                                                        <MessageStatusIndicator
+                                                                            status={message.delivery_status}
+                                                                            isOwnMessage={true}
+                                                                            className={isOwnMessage ? "text-white/70" : ""}
+                                                                        />
+                                                                    )}
+                                                                    <div className="ml-1 flex items-center">
+                                                                        <MessageReactions messageId={message.id} currentUserId={currentUserId} isOwnMessage={isOwnMessage} />
+                                                                    </div>
                                                                 </span>
-                                                                {isOwnMessage && (
-                                                                    <MessageStatusIndicator 
-                                                                        status={message.delivery_status}
-                                                                        isOwnMessage={true}
-                                                                        className={isOwnMessage ? "text-white/90" : ""}
-                                                                    />
-                                                                )}
                                                             </div>
 
-                                                            {/* Reactions */}
-                                                            <div className="mt-1">
-                                                                <MessageReactions messageId={message.id} currentUserId={currentUserId} />
-                                                            </div>
+                                                            {/* Reactions moved inline */}
+                                                            {/* <MessageReactions messageId={message.id} currentUserId={currentUserId} isOwnMessage={isOwnMessage} /> */}
                                                         </div>
 
 
 
                                                         {/* Message actions menu */}
-                                                        <div className={`absolute ${isOwnMessage ? "left-0" : "right-0"} -top - 8 opacity - 0 group - hover: opacity - 100 transition - opacity`}>
+                                                        <div className={`absolute ${isOwnMessage ? "-left-8" : "-right-8"} top-0 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-center h-full`}>
                                                             <DropdownMenu>
                                                                 <DropdownMenuTrigger asChild>
                                                                     <Button
@@ -887,7 +915,7 @@ function ChatMessagesComponent({
                             }
                             // Add new message at the end and sort to ensure correct order
                             const updated = [...prev, formattedMessage as Message];
-                            return updated.sort((a, b) => 
+                            return updated.sort((a, b) =>
                                 new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
                             );
                         });

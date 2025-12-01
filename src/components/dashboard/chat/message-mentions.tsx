@@ -21,14 +21,14 @@ export function MessageMentions({ content, mentions = [] }: MessageMentionsProps
         }
 
         let processed = content;
-        
+
         // Replace mentions with styled links
         mentions.forEach((mention) => {
             const regex = new RegExp(mention.mentioned_text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
-            
+
             let href = "#";
             let className = "font-semibold text-blue-600 hover:text-blue-800";
-            
+
             if (mention.entity_type === "user" && mention.user_id) {
                 href = `/dashboard/users/${mention.user_id}`;
             } else if (mention.entity_type === "client" && mention.client_id) {
@@ -42,18 +42,18 @@ export function MessageMentions({ content, mentions = [] }: MessageMentionsProps
             } else if (mention.entity_type === "invoice" && mention.entity_id) {
                 href = `/dashboard/invoices/${mention.entity_id}`;
             }
-            
+
             processed = processed.replace(
                 regex,
                 `<a href="${href}" class="${className}">${mention.mentioned_text}</a>`
             );
         });
-        
+
         return processed;
     }, [content, mentions]);
 
     return (
-        <div 
+        <span
             className="whitespace-pre-wrap break-words"
             dangerouslySetInnerHTML={{ __html: processedContent }}
         />
