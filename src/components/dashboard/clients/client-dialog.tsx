@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { createClient } from "@/actions/clients";
 import { Plus } from "lucide-react";
 import { useTranslation } from "@/lib/i18n/context";
@@ -24,6 +24,13 @@ export function ClientDialog() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  // Prevent hydration mismatch by only rendering after mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -39,9 +46,11 @@ export function ClientDialog() {
 
     if (result.success) {
       toast.success(t("clients.clientCreated") || "Client created successfully");
+      // Reset form before closing dialog
+      if (formRef.current) {
+        formRef.current.reset();
+      }
       setOpen(false);
-      // Reset form
-      e.currentTarget.reset();
       // Refresh the page to show new client
       router.refresh();
     } else {
@@ -51,55 +60,64 @@ export function ClientDialog() {
     setLoading(false);
   };
 
+  // Show placeholder during SSR to prevent hydration mismatch
+  const buttonText = mounted ? t("clients.addClient") : "Add Client";
+  const dialogTitle = mounted ? t("clients.addClient") : "Add Client";
+  const dialogDescription = mounted ? t("clients.addNewClient") : "Add a new client to your workspace";
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-[#0A33C6] hover:bg-[#0A33C6]/90 text-white shadow-lg shadow-[#0A33C6]/20 border-0 font-primary font-bold">
-          <Plus className="mr-2 h-4 w-4" /> {t("clients.addClient")}
+        <Button 
+          className="bg-[#0A33C6] hover:bg-[#0A33C6]/90 text-white shadow-lg shadow-[#0A33C6]/20 border-0 font-primary font-bold"
+        >
+          <Plus className="mr-2 h-4 w-4" /> {buttonText}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-white border-[#EDEDED]">
         <DialogHeader>
-          <DialogTitle className="font-primary text-[#02041D]">{t("clients.addClient")}</DialogTitle>
+          <DialogTitle className="font-primary text-[#02041D]">
+            {dialogTitle}
+          </DialogTitle>
           <DialogDescription className="font-primary text-[#606170]">
-            {t("clients.addNewClient")}
+            {dialogDescription}
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit}>
+        <form ref={formRef} onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="name" className="text-right font-primary text-[#02041D]">
-                {t("clients.name")}
+                {mounted ? t("clients.name") : "Name"}
               </Label>
               <Input 
                 id="name" 
                 name="name" 
-                placeholder={t("clients.name")} 
+                placeholder={mounted ? t("clients.name") : "Name"} 
                 className="col-span-3 bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]" 
                 required 
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="email" className="text-right font-primary text-[#02041D]">
-                {t("clients.email")}
+                {mounted ? t("clients.email") : "Email"}
               </Label>
               <Input 
                 id="email" 
                 name="email" 
                 type="email" 
-                placeholder={t("clients.email")} 
+                placeholder={mounted ? t("clients.email") : "Email"} 
                 className="col-span-3 bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]" 
                 required 
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="company_name" className="text-right font-primary text-[#02041D]">
-                {t("clients.company")}
+                {mounted ? t("clients.company") : "Company"}
               </Label>
               <Input 
                 id="company_name" 
                 name="company_name" 
-                placeholder={t("clients.company")} 
+                placeholder={mounted ? t("clients.company") : "Company"} 
                 className="col-span-3 bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]" 
                 required 
               />
@@ -111,7 +129,10 @@ export function ClientDialog() {
               disabled={loading}
               className="bg-[#0A33C6] hover:bg-[#0A33C6]/90 text-white"
             >
-                {loading ? t("clients.saving") : t("clients.saveChanges")}
+                {loading 
+                  ? (mounted ? t("clients.saving") : "Saving...") 
+                  : (mounted ? t("clients.saveChanges") : "Save Changes")
+                }
             </Button>
           </DialogFooter>
         </form>

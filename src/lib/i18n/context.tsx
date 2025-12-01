@@ -20,6 +20,7 @@ export function LanguageProvider({
 }) {
   // Ensure defaultLanguage is valid
   const validLanguage: Language = (defaultLanguage === "en" || defaultLanguage === "id") ? defaultLanguage : "en";
+  // Initialize with validLanguage to match server-side default
   const [language, setLanguage] = useState<Language>(validLanguage);
 
   // Update language when defaultLanguage changes

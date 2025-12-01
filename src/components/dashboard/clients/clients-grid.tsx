@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -96,6 +96,17 @@ export function ClientsGrid({ clients: initialClients, totalPages = 1, currentPa
   const [invoiceDialogOpen, setInvoiceDialogOpen] = useState(false);
   const [taskDialogOpen, setTaskDialogOpen] = useState(false);
   const [selectedClientForAction, setSelectedClientForAction] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  // Prevent hydration mismatch by only rendering translations after mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Helper function to safely get translation with fallback
+  const safeT = (key: string, fallback: string) => {
+    return mounted ? t(key) : fallback;
+  };
 
   // Get unique categories
   const categories = Array.from(new Set(clients.map(c => c.category).filter(Boolean)));
@@ -171,7 +182,7 @@ export function ClientsGrid({ clients: initialClients, totalPages = 1, currentPa
       <div className="flex flex-col sm:flex-row gap-4 mb-6">
         <div className="relative flex-1">
           <Input
-            placeholder={t("clients.searchPlaceholder")}
+            placeholder={safeT("clients.searchPlaceholder", "Search clients by name, email, or description...")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 bg-white border-[#EDEDED] font-primary text-[#02041D] placeholder:font-primary text-[#606170]"
@@ -343,7 +354,9 @@ export function ClientsGrid({ clients: initialClients, totalPages = 1, currentPa
                   {/* Engagement Bar */}
                   <div className="mb-4">
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-medium font-primary text-[#606170]">{t("clients.engagement")}</span>
+                      <span className="text-xs font-medium font-primary text-[#606170]">
+                        {safeT("clients.engagement", "Engagement")}
+                      </span>
                       <span className="text-xs font-primary text-[#606170]">{engagement}%</span>
                     </div>
                     <Progress value={engagement} className="h-2" />

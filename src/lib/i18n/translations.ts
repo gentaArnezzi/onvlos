@@ -21,7 +21,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "nav.search": "Search",
     "nav.notifications": "Notifications",
     "nav.noNotifications": "No notifications",
-    
+
     // Dashboard
     "dashboard.title": "Dashboard",
     "dashboard.description": "Welcome back! Here's what's happening with your business.",
@@ -49,9 +49,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "dashboard.upgradeToPro": "Upgrade to Pro",
     "dashboard.upgradeDesc": "Unlock advanced analytics, unlimited clients, and AI features.",
     "dashboard.upgradeNow": "Upgrade Now",
-    "dashboard.quickActions": "Quick Actions",
-    "dashboard.quickActionsDesc": "Common tasks to get you started",
-    
+
     // Clients
     "clients.title": "Clients",
     "clients.description": "Manage your client relationships and portals.",
@@ -105,7 +103,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "clients.recentlyUpdated": "Recently Updated",
     "clients.contractValue": "Contract Value",
     "clients.category": "Category",
-    
+
     // Invoices
     "invoices.title": "Invoices",
     "invoices.description": "Manage your billing and financial records.",
@@ -154,7 +152,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "invoices.currency": "Currency",
     "invoices.items": "Items",
     "invoices.addItem": "Add Item",
-    "invoices.description": "Description",
     "invoices.serviceName": "Service name",
     "invoices.qty": "Qty",
     "invoices.price": "Price",
@@ -169,7 +166,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "invoices.sendToClient": "Send to Client",
     "invoices.creating": "Creating...",
     "invoices.pickDate": "Pick a date",
-    
+
     // Common
     "common.loading": "Loading...",
     "common.error": "Error",
@@ -202,7 +199,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "common.optional": "Optional",
     "common.notes": "Notes",
     "common.comingSoon": "Coming soon",
-    
+
     // Settings
     "settings.title": "Settings",
     "settings.description": "Manage your account, workspace, and billing preferences.",
@@ -244,7 +241,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "settings.redirectedToCustomerPortal": "You will be redirected to the secure customer portal.",
     "settings.openCustomerPortal": "Open Customer Portal",
     "settings.stripePortalComingSoon": "Stripe customer portal integration coming soon",
-    
+
     // Brain
     "brain.title": "Brain",
     "brain.description": "Your AI-powered assistant for insights and automation.",
@@ -299,7 +296,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "brain.personal": "Personal",
     "brain.flows": "Flows",
     "brain.clients": "Clients",
-    
+
     // Flows
     "flows.title": "Flows",
     "flows.description": "Organize your departments, projects, and teams.",
@@ -344,7 +341,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "flows.addMember": "Add Member",
     "flows.noMembers": "No members in this flow",
     "flows.addFirstMember": "Add First Member",
-    
+
     // Pages
     "pages.title": "Pages",
     "pages.description": "Create websites, landing pages, and link-in-bio pages.",
@@ -368,13 +365,13 @@ export const translations: Record<Language, Record<string, string>> = {
     "pages.seoDescription": "SEO Description",
     "pages.seoDescriptionPlaceholder": "Enter SEO description",
     "pages.customDomain": "Custom Domain",
-    
+
     // Chat (New Types)
     "chat.flows": "Flows",
     "chat.clientsInternal": "Clients (Internal)",
     "chat.clientsExternal": "Clients (External)",
     "chat.directMessages": "Direct Messages",
-    
+
     // Proposals
     "proposals.details": "Proposal Details",
     "proposals.pricing": "Pricing",
@@ -407,7 +404,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "proposals.acceptConfirm": "Are you sure you want to accept this proposal? This action will create a contract and cannot be undone.",
     "proposals.acceptedSuccess": "Proposal accepted successfully! A contract has been created.",
     "proposals.acceptFailed": "Failed to accept proposal",
-    
+
     // Chat
     "chat.title": "Chat",
     "chat.description": "Communicate with your clients in real-time.",
@@ -420,9 +417,77 @@ export const translations: Record<Language, Record<string, string>> = {
     "chat.noMessagesYet": "No messages yet",
     "chat.startConversation": "Start the conversation by sending a message below",
     "chat.noConversationSelected": "No conversation selected",
+    "chat.selectConversationToStart": "Select a conversation from the sidebar to start chatting",
     "chat.selectClientToStart": "Select a client from the list to start chatting",
     "chat.failedToSend": "Failed to send message",
-    
+    "chat.search": "Search",
+    "chat.noConversations": "No conversations found",
+    "chat.reply": "Reply",
+    "chat.unstar": "Unstar",
+    "chat.star": "Star",
+    "chat.unpin": "Unpin",
+    "chat.pin": "Pin",
+    "chat.forward": "Forward",
+    "chat.replyingTo": "Replying to",
+    "chat.clients": "Clients",
+    "chat.direct": "Direct",
+    "chat.internal": "Internal",
+    "chat.external": "External",
+    "chat.viewPinnedMessages": "View Pinned Messages",
+    "chat.viewStarredMessages": "View Starred Messages",
+    "chat.mediaDocsLinks": "Media, Docs & Links",
+    "chat.mute": "Mute",
+    "chat.unmute": "Unmute",
+    "chat.conversationMuted": "Conversation muted",
+    "chat.conversationUnmuted": "Conversation unmuted",
+    "chat.groupSettings": "Group Settings",
+    "chat.createGroup": "Create Group Chat",
+    "chat.createGroupDescription": "Create a new group chat and add members",
+    "chat.groupName": "Group Name",
+    "chat.groupNamePlaceholder": "Enter group name",
+    "chat.groupDescription": "Description",
+    "chat.groupDescriptionPlaceholder": "Enter group description",
+    "chat.selectMembers": "Select Members",
+    "chat.searchMembers": "Search members...",
+    "chat.noMembersFound": "No members found",
+    "chat.groupNameRequired": "Group name is required",
+    "chat.selectAtLeastOneMember": "Please select at least one member",
+    "chat.groupCreated": "Group created successfully",
+    "chat.failedToCreateGroup": "Failed to create group",
+    "chat.memberSelected": "member(s) selected",
+    "chat.creating": "Creating...",
+    "chat.pinnedMessages": "Pinned Messages",
+    "chat.pinnedMessagesDescription": "Important messages that have been pinned in this conversation",
+    "chat.noPinnedMessages": "No pinned messages yet",
+    "chat.messageUnpinned": "Message unpinned",
+    "chat.failedToLoad": "Failed to load",
+    "chat.failedToUnpin": "Failed to unpin message",
+    "chat.starredMessages": "Starred Messages",
+    "chat.starredMessagesInConversation": "Starred messages in this conversation",
+    "chat.allStarredMessages": "All your starred messages across all conversations",
+    "chat.searchStarredMessages": "Search starred messages...",
+    "chat.noStarredMessages": "No starred messages yet",
+    "chat.noStarredMessagesFound": "No starred messages found",
+    "chat.messageUnstarred": "Message unstarred",
+    "chat.failedToUnstar": "Failed to unstar message",
+    "chat.mediaGallery": "Media Gallery",
+    "chat.allMedia": "All Media",
+    "chat.images": "Images",
+    "chat.documents": "Documents",
+    "chat.links": "Links",
+    "chat.searchMedia": "Search media...",
+    "chat.noMediaFound": "No media found",
+    "chat.noImagesFound": "No images found",
+    "chat.noDocumentsFound": "No documents found",
+    "chat.noLinksFound": "No links found",
+    "chat.view": "View",
+    "chat.download": "Download",
+    "chat.loading": "Loading...",
+    "chat.searchInChat": "Search in Chat",
+    "chat.searchInChatDescription": "Search for messages in this conversation",
+    "chat.searchPlaceholder": "Search messages...",
+    "chat.startTypingToSearch": "Start typing to search",
+
     // Boards
     "boards.title": "Boards",
     "boards.clientPipeline": "Client Pipeline",
@@ -448,7 +513,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "boards.column.contacted": "Contacted",
     "boards.column.proposalSent": "Proposal Sent",
     "boards.column.closed": "Closed",
-    
+
     // Workflows
     "workflows.title": "Automations",
     "workflows.description": "Streamline your processes with automated workflows.",
@@ -545,7 +610,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "workflows.editor.action.emailAddress": "Email Address",
     "workflows.editor.action.subject": "Subject",
     "workflows.editor.action.emailSubject": "Email subject",
-    "workflows.editor.action.message": "Message",
     "workflows.editor.action.emailMessage": "Email message (supports {{variables}})",
     "workflows.editor.action.availableVariables": "Available variables: {{client_name}}, {{invoice_amount}}, {{task_title}}",
     "workflows.editor.action.title": "Title",
@@ -561,7 +625,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "workflows.editor.action.chatAvailableVariables": "Available variables: {{client_name}}, {{task_title}}, {{invoice_amount}}",
     "workflows.editor.action.clientSpaceIdOptional": "Client Space ID (Optional)",
     "workflows.editor.action.leaveEmptyForAllSpaces": "Leave empty for all client spaces",
-    
+
     // Funnels
     "funnels.title": "Onboarding Funnels",
     "funnels.description": "Create and manage your client onboarding flows.",
@@ -647,8 +711,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "funnels.editor.invoice.currency": "Currency",
     "funnels.editor.invoice.defaultTitle": "Initial Deposit",
     "funnels.editor.invoice.paymentNote": "Note: This will create a payment intent using the configured payment gateway.",
-    "funnels.editor.invoice.paymentDue": "Payment Due",
-    "funnels.editor.invoice.completePayment": "Complete your payment to proceed",
+    "funnels.editor.invoice.paymentDue": "Complete your payment to proceed",
     "funnels.editor.invoice.totalAmount": "Total Amount",
     "funnels.editor.invoice.pending": "Pending",
     "funnels.editor.invoice.invoiceId": "Invoice ID",
@@ -668,7 +731,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "funnels.editor.automation.step": "Automation Step",
     "funnels.editor.automation.runsAutomatically": "This step runs automatically in the background. The client will not see this step, but will be redirected to the next step or the success page.",
     "funnels.editor.automation.processing": "Processing actions...",
-    
+
     // Analytics
     "analytics.title": "Analytics",
     "analytics.description": "Track your business performance.",
@@ -676,7 +739,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "analytics.clients": "Clients",
     "analytics.invoices": "Invoices",
     "analytics.tasks": "Tasks",
-    
+
     // Help & Documentation
     "help.title": "Help & Support",
     "help.description": "Find answers to common questions and get support",
@@ -709,7 +772,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "help.workflowAutomationDesc": "Automate your business processes",
     "help.noResults": "No results found",
     "help.tryDifferentTerm": "Try a different search term",
-    
+
     "docs.title": "Documentation",
     "docs.description": "Comprehensive guides and references for all features",
     "docs.searchPlaceholder": "Search documentation...",
@@ -747,7 +810,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "docs.apiDesc": "Integrate Onvlo with your existing tools",
     "docs.noResults": "No documentation found",
     "docs.tryDifferentTerm": "Try a different search term",
-    
+
     // Files
     "files.title": "Files",
     "files.description": "Manage your files and documents.",
@@ -756,7 +819,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "files.size": "Size",
     "files.type": "Type",
     "files.uploaded": "Uploaded",
-    
+
     // Proposals
     "proposals.title": "Proposals",
     "proposals.description": "Manage your proposals and contracts.",
@@ -769,14 +832,11 @@ export const translations: Record<Language, Record<string, string>> = {
     "proposals.proposalTitle": "Title",
     "proposals.amount": "Amount",
     "proposals.created": "Created",
-    "proposals.validUntil": "Valid Until",
     "proposals.contractNumber": "Contract #",
     "proposals.effectiveDate": "Effective Date",
     "proposals.fullySigned": "Fully Signed",
     "proposals.noProposals": "No proposals found",
     "proposals.noContracts": "No contracts found",
-    "proposals.proposalsAndContracts": "Proposals & Contracts",
-    "proposals.description": "Create, send, and track your business proposals.",
     "proposals.newProposal": "New Proposal",
     "proposals.createNewProposal": "Create New Proposal",
     "proposals.totalProposals": "Total Proposals",
@@ -788,13 +848,10 @@ export const translations: Record<Language, Record<string, string>> = {
     "proposals.awaitingResponse": "Awaiting response",
     "proposals.successfullyClosed": "Successfully closed",
     "proposals.potentialRevenue": "Potential revenue",
-    "proposals.allProposals": "All Proposals",
-    "proposals.allContracts": "All Contracts",
     "proposals.clientInformation": "Client Information",
     "proposals.selectClient": "Select Client",
     "proposals.selectClientRequired": "Select Client *",
     "proposals.chooseClient": "Choose a client",
-    "proposals.proposalTitle": "Proposal Title",
     "proposals.proposalTitleRequired": "Proposal Title *",
     "proposals.proposalTitlePlaceholder": "e.g., Website Development Proposal",
     "proposals.validFor": "Valid For (days)",
@@ -805,15 +862,11 @@ export const translations: Record<Language, Record<string, string>> = {
     "proposals.scopeOfWorkPlaceholder": "Detailed scope of work...",
     "proposals.timeline": "Timeline",
     "proposals.timelinePlaceholder": "Project timeline and milestones...",
-    "proposals.pricing": "Pricing",
     "proposals.itemName": "Item Name",
-    "proposals.description": "Description",
     "proposals.descriptionPlaceholder": "Brief description",
-    "proposals.quantity": "Quantity",
     "proposals.unitPrice": "Unit Price",
     "proposals.addItem": "Add Item",
     "proposals.serviceProduct": "Service/Product",
-    "proposals.total": "Total",
     "proposals.termsConditions": "Terms & Conditions",
     "proposals.termsPlaceholder": "Terms and conditions...",
     "proposals.cancel": "Cancel",
@@ -821,7 +874,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "proposals.saving": "Saving...",
     "proposals.saveSend": "Save & Send",
     "proposals.sending": "Sending...",
-    
+
     // Contracts
     "contracts.client": "Client",
     "contracts.details": "Contract Details",
@@ -862,7 +915,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "contracts.nameEmailRequired": "Name and email are required",
     "contracts.pleaseSignToSign": "Please sign to complete the signature",
     "contracts.signature": "Signature",
-    
+
     // Tasks
     "tasks.title": "Tasks",
     "tasks.description": "Track and manage your project deliverables.",
@@ -900,7 +953,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "tasks.selectClientOptional": "Select client (Optional)",
     "tasks.reviewDeliverables": "Review deliverables",
     "tasks.taskDetails": "Task details...",
-    
+
     // Table columns
     "table.invoice": "Invoice",
     "table.date": "Date",
@@ -916,7 +969,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "table.priority": "Priority",
     "table.dueDate": "Due Date",
     "table.title": "Title",
-    
+
     // Stats
     "stats.totalClients": "Total Clients",
     "stats.acrossAllWorkspaces": "Across all workspaces",
@@ -955,7 +1008,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "nav.search": "Cari",
     "nav.notifications": "Notifikasi",
     "nav.noNotifications": "Tidak ada notifikasi",
-    
+
     // Dashboard
     "dashboard.title": "Dasbor",
     "dashboard.description": "Selamat datang kembali! Berikut yang terjadi dengan bisnis Anda.",
@@ -983,9 +1036,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "dashboard.upgradeToPro": "Upgrade ke Pro",
     "dashboard.upgradeDesc": "Buka kunci analitik lanjutan, klien tak terbatas, dan fitur AI.",
     "dashboard.upgradeNow": "Upgrade Sekarang",
-    "dashboard.quickActions": "Aksi Cepat",
-    "dashboard.quickActionsDesc": "Tugas umum untuk memulai",
-    
+
     // Clients
     "clients.title": "Klien",
     "clients.description": "Kelola hubungan klien dan portal Anda.",
@@ -1039,7 +1090,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "clients.recentlyUpdated": "Baru Saja Diperbarui",
     "clients.contractValue": "Nilai Kontrak",
     "clients.category": "Kategori",
-    
+
     // Invoices
     "invoices.title": "Faktur",
     "invoices.description": "Kelola catatan penagihan dan keuangan Anda.",
@@ -1103,7 +1154,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "invoices.sendToClient": "Kirim ke Klien",
     "invoices.creating": "Membuat...",
     "invoices.pickDate": "Pilih tanggal",
-    
+
     // Common
     "common.loading": "Memuat...",
     "common.error": "Kesalahan",
@@ -1136,7 +1187,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "common.optional": "Opsional",
     "common.notes": "Catatan",
     "common.comingSoon": "Segera hadir",
-    
+
     // Settings
     "settings.title": "Pengaturan",
     "settings.description": "Kelola akun, ruang kerja, dan preferensi penagihan Anda.",
@@ -1178,7 +1229,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "settings.redirectedToCustomerPortal": "Anda akan diarahkan ke portal pelanggan yang aman.",
     "settings.openCustomerPortal": "Buka Portal Pelanggan",
     "settings.stripePortalComingSoon": "Integrasi portal pelanggan Stripe segera hadir",
-    
+
     // Brain
     "brain.title": "Otak",
     "brain.description": "Asisten AI Anda untuk wawasan dan otomatisasi.",
@@ -1220,7 +1271,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "brain.knowledgeBaseDesc": "Buat basis pengetahuan yang dapat dicari dari dokumen Anda",
     "brain.contentGeneration": "Generasi Konten",
     "brain.contentGenerationDesc": "Buat template email, proposal, dan SOP",
-    
+
     // Proposals
     "proposals.details": "Detail Proposal",
     "proposals.pricing": "Harga",
@@ -1253,7 +1304,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "proposals.acceptConfirm": "Apakah Anda yakin ingin menerima proposal ini? Tindakan ini akan membuat kontrak dan tidak dapat dibatalkan.",
     "proposals.acceptedSuccess": "Proposal berhasil diterima! Kontrak telah dibuat.",
     "proposals.acceptFailed": "Gagal menerima proposal",
-    
+
     // Chat
     "chat.title": "Obrolan",
     "chat.description": "Berkomunikasi dengan klien Anda secara real-time.",
@@ -1266,9 +1317,77 @@ export const translations: Record<Language, Record<string, string>> = {
     "chat.noMessagesYet": "Belum ada pesan",
     "chat.startConversation": "Mulai percakapan dengan mengirim pesan di bawah",
     "chat.noConversationSelected": "Tidak ada percakapan dipilih",
+    "chat.selectConversationToStart": "Pilih percakapan dari sidebar untuk mulai mengobrol",
     "chat.selectClientToStart": "Pilih klien dari daftar untuk mulai mengobrol",
     "chat.failedToSend": "Gagal mengirim pesan",
-    
+    "chat.search": "Cari",
+    "chat.noConversations": "Tidak ada percakapan ditemukan",
+    "chat.reply": "Balas",
+    "chat.unstar": "Hapus Bintang",
+    "chat.star": "Beri Bintang",
+    "chat.unpin": "Lepas Pin",
+    "chat.pin": "Pin",
+    "chat.forward": "Teruskan",
+    "chat.replyingTo": "Membalas ke",
+    "chat.clients": "Klien",
+    "chat.direct": "Langsung",
+    "chat.internal": "Internal",
+    "chat.external": "Eksternal",
+    "chat.viewPinnedMessages": "Lihat Pesan yang Disematkan",
+    "chat.viewStarredMessages": "Lihat Pesan yang Diberi Bintang",
+    "chat.mediaDocsLinks": "Media, Dokumen & Tautan",
+    "chat.mute": "Bisukan",
+    "chat.unmute": "Aktifkan Suara",
+    "chat.conversationMuted": "Percakapan dibisukan",
+    "chat.conversationUnmuted": "Percakapan diaktifkan",
+    "chat.groupSettings": "Pengaturan Grup",
+    "chat.createGroup": "Buat Grup Chat",
+    "chat.createGroupDescription": "Buat grup chat baru dan tambahkan anggota",
+    "chat.groupName": "Nama Grup",
+    "chat.groupNamePlaceholder": "Masukkan nama grup",
+    "chat.groupDescription": "Deskripsi",
+    "chat.groupDescriptionPlaceholder": "Masukkan deskripsi grup",
+    "chat.selectMembers": "Pilih Anggota",
+    "chat.searchMembers": "Cari anggota...",
+    "chat.noMembersFound": "Tidak ada anggota ditemukan",
+    "chat.groupNameRequired": "Nama grup wajib diisi",
+    "chat.selectAtLeastOneMember": "Silakan pilih setidaknya satu anggota",
+    "chat.groupCreated": "Grup berhasil dibuat",
+    "chat.failedToCreateGroup": "Gagal membuat grup",
+    "chat.memberSelected": "anggota dipilih",
+    "chat.creating": "Membuat...",
+    "chat.pinnedMessages": "Pesan yang Disematkan",
+    "chat.pinnedMessagesDescription": "Pesan penting yang telah disematkan dalam percakapan ini",
+    "chat.noPinnedMessages": "Belum ada pesan yang disematkan",
+    "chat.messageUnpinned": "Pesan tidak disematkan lagi",
+    "chat.failedToLoad": "Gagal memuat",
+    "chat.failedToUnpin": "Gagal menghapus sematan pesan",
+    "chat.starredMessages": "Pesan yang Diberi Bintang",
+    "chat.starredMessagesInConversation": "Pesan yang diberi bintang dalam percakapan ini",
+    "chat.allStarredMessages": "Semua pesan yang diberi bintang di semua percakapan",
+    "chat.searchStarredMessages": "Cari pesan yang diberi bintang...",
+    "chat.noStarredMessages": "Belum ada pesan yang diberi bintang",
+    "chat.noStarredMessagesFound": "Tidak ada pesan yang diberi bintang ditemukan",
+    "chat.messageUnstarred": "Pesan tidak diberi bintang lagi",
+    "chat.failedToUnstar": "Gagal menghapus bintang pesan",
+    "chat.mediaGallery": "Galeri Media",
+    "chat.allMedia": "Semua Media",
+    "chat.images": "Gambar",
+    "chat.documents": "Dokumen",
+    "chat.links": "Tautan",
+    "chat.searchMedia": "Cari media...",
+    "chat.noMediaFound": "Tidak ada media ditemukan",
+    "chat.noImagesFound": "Tidak ada gambar ditemukan",
+    "chat.noDocumentsFound": "Tidak ada dokumen ditemukan",
+    "chat.noLinksFound": "Tidak ada tautan ditemukan",
+    "chat.view": "Lihat",
+    "chat.download": "Unduh",
+    "chat.loading": "Memuat...",
+    "chat.searchInChat": "Cari di Obrolan",
+    "chat.searchInChatDescription": "Cari pesan dalam percakapan ini",
+    "chat.searchPlaceholder": "Cari pesan...",
+    "chat.startTypingToSearch": "Mulai mengetik untuk mencari",
+
     // Boards
     "boards.title": "Papan",
     "boards.clientPipeline": "Pipeline Klien",
@@ -1294,7 +1413,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "boards.column.contacted": "Dihubungi",
     "boards.column.proposalSent": "Proposal Dikirim",
     "boards.column.closed": "Ditutup",
-    
+
     // Workflows
     "workflows.title": "Otomatisasi",
     "workflows.description": "Sederhanakan proses Anda dengan alur kerja otomatis.",
@@ -1407,7 +1526,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "workflows.editor.action.chatAvailableVariables": "Variabel yang tersedia: {{client_name}}, {{task_title}}, {{invoice_amount}}",
     "workflows.editor.action.clientSpaceIdOptional": "ID Ruang Klien (Opsional)",
     "workflows.editor.action.leaveEmptyForAllSpaces": "Biarkan kosong untuk semua ruang klien",
-    
+
     // Funnels
     "funnels.title": "Funnel Onboarding",
     "funnels.description": "Buat dan kelola alur onboarding klien Anda.",
@@ -1514,7 +1633,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "funnels.editor.automation.step": "Langkah Otomasi",
     "funnels.editor.automation.runsAutomatically": "Langkah ini berjalan otomatis di latar belakang. Klien tidak akan melihat langkah ini, tetapi akan diarahkan ke langkah berikutnya atau halaman sukses.",
     "funnels.editor.automation.processing": "Memproses tindakan...",
-    
+
     // Analytics
     "analytics.title": "Analitik",
     "analytics.description": "Lacak kinerja bisnis Anda.",
@@ -1522,7 +1641,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "analytics.clients": "Klien",
     "analytics.invoices": "Faktur",
     "analytics.tasks": "Tugas",
-    
+
     // Files
     "files.title": "File",
     "files.description": "Kelola file dan dokumen Anda.",
@@ -1531,7 +1650,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "files.size": "Ukuran",
     "files.type": "Tipe",
     "files.uploaded": "Diunggah",
-    
+
     // Proposals
     "proposals.title": "Proposal",
     "proposals.description": "Kelola proposal dan kontrak Anda.",
@@ -1541,17 +1660,14 @@ export const translations: Record<Language, Record<string, string>> = {
     "proposals.value": "Nilai",
     "proposals.status": "Status",
     "proposals.proposalNumber": "Proposal #",
-    "proposals.proposalTitle": "Judul",
     "proposals.amount": "Jumlah",
     "proposals.created": "Dibuat",
-    "proposals.validUntil": "Berlaku Hingga",
     "proposals.contractNumber": "Kontrak #",
     "proposals.effectiveDate": "Tanggal Efektif",
     "proposals.fullySigned": "Tertandatangani Lengkap",
     "proposals.noProposals": "Tidak ada proposal ditemukan",
     "proposals.noContracts": "Tidak ada kontrak ditemukan",
     "proposals.proposalsAndContracts": "Proposal & Kontrak",
-    "proposals.description": "Buat, kirim, dan lacak proposal bisnis Anda.",
     "proposals.newProposal": "Proposal Baru",
     "proposals.createNewProposal": "Buat Proposal Baru",
     "proposals.totalProposals": "Total Proposal",
@@ -1559,10 +1675,10 @@ export const translations: Record<Language, Record<string, string>> = {
     "proposals.acceptedProposals": "Proposal Diterima",
     "proposals.totalValue": "Total Nilai",
     "proposals.contracts": "Kontrak",
-    "proposals.allTimeCreated": "Dibuat sepanjang masa",
-    "proposals.awaitingResponse": "Menunggu respons",
+    "proposals.allTimeCreated": "Dibuat sepanjang waktu",
+    "proposals.awaitingResponse": "Menunggu respon",
     "proposals.successfullyClosed": "Berhasil ditutup",
-    "proposals.potentialRevenue": "Pendapatan potensial",
+    "proposals.potentialRevenue": "Potensi pendapatan",
     "proposals.allProposals": "Semua Proposal",
     "proposals.allContracts": "Semua Kontrak",
     "proposals.clientInformation": "Informasi Klien",
@@ -1571,8 +1687,8 @@ export const translations: Record<Language, Record<string, string>> = {
     "proposals.chooseClient": "Pilih klien",
     "proposals.proposalTitle": "Judul Proposal",
     "proposals.proposalTitleRequired": "Judul Proposal *",
-    "proposals.proposalTitlePlaceholder": "contoh: Proposal Pengembangan Website",
-    "proposals.validFor": "Berlaku Untuk (hari)",
+    "proposals.proposalTitlePlaceholder": "cth., Proposal Pengembangan Website",
+    "proposals.validFor": "Berlaku Selama (hari)",
     "proposals.proposalContent": "Konten Proposal",
     "proposals.introduction": "Pengenalan",
     "proposals.introductionPlaceholder": "Pengenalan singkat tentang proposal...",
@@ -1580,15 +1696,11 @@ export const translations: Record<Language, Record<string, string>> = {
     "proposals.scopeOfWorkPlaceholder": "Ruang lingkup pekerjaan secara detail...",
     "proposals.timeline": "Timeline",
     "proposals.timelinePlaceholder": "Timeline proyek dan milestone...",
-    "proposals.pricing": "Harga",
     "proposals.itemName": "Nama Item",
-    "proposals.description": "Deskripsi",
     "proposals.descriptionPlaceholder": "Deskripsi singkat",
-    "proposals.quantity": "Jumlah",
     "proposals.unitPrice": "Harga Satuan",
     "proposals.addItem": "Tambah Item",
     "proposals.serviceProduct": "Layanan/Produk",
-    "proposals.total": "Total",
     "proposals.termsConditions": "Syarat & Ketentuan",
     "proposals.termsPlaceholder": "Syarat dan ketentuan...",
     "proposals.cancel": "Batal",
@@ -1596,7 +1708,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "proposals.saving": "Menyimpan...",
     "proposals.saveSend": "Simpan & Kirim",
     "proposals.sending": "Mengirim...",
-    
+
     // Contracts
     "contracts.client": "Klien",
     "contracts.details": "Detail Kontrak",
@@ -1637,7 +1749,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "contracts.nameEmailRequired": "Nama dan email wajib diisi",
     "contracts.pleaseSignToSign": "Silakan tandatangani untuk menyelesaikan tanda tangan",
     "contracts.signature": "Tanda Tangan",
-    
+
     // Tasks
     "tasks.title": "Tugas",
     "tasks.description": "Lacak dan kelola deliverable proyek Anda.",
@@ -1675,7 +1787,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "tasks.selectClientOptional": "Pilih klien (Opsional)",
     "tasks.reviewDeliverables": "Review deliverable",
     "tasks.taskDetails": "Detail tugas...",
-    
+
     // Table columns
     "table.invoice": "Faktur",
     "table.date": "Tanggal",
@@ -1691,7 +1803,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "table.priority": "Prioritas",
     "table.dueDate": "Jatuh Tempo",
     "table.title": "Judul",
-    
+
     // Stats
     "stats.totalClients": "Total Klien",
     "stats.acrossAllWorkspaces": "Di semua ruang kerja",
@@ -1709,7 +1821,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "stats.clientsCurrentlyActive": "Klien yang aktif saat ini",
     "stats.awaitingPayment": "Menunggu pembayaran",
     "stats.tasksCompletedOnTime": "Tugas selesai tepat waktu",
-    
+
     // Flows
     "flows.title": "Flows",
     "flows.description": "Organize your departments, projects, and teams.",
@@ -1754,7 +1866,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "flows.addMember": "Add Member",
     "flows.noMembers": "No members in this flow",
     "flows.addFirstMember": "Add First Member",
-    
+
     // Brain (Documents)
     "brain.folders": "Folders",
     "brain.allDocuments": "All Documents",
@@ -1769,7 +1881,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "brain.personal": "Personal",
     "brain.flows": "Flows",
     "brain.clients": "Clients",
-    
+
     // Pages
     "pages.title": "Pages",
     "pages.description": "Create websites, landing pages, and link-in-bio pages.",
@@ -1793,7 +1905,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "pages.seoDescription": "SEO Description",
     "pages.seoDescriptionPlaceholder": "Enter SEO description",
     "pages.customDomain": "Custom Domain",
-    
+
     // Chat (New Types)
     "chat.flows": "Flows",
     "chat.clientsInternal": "Clients (Internal)",
@@ -1805,20 +1917,20 @@ export const translations: Record<Language, Record<string, string>> = {
 export function getTranslation(key: string, language: Language = "en"): string {
   // Ensure language is valid
   const lang = (language === "en" || language === "id") ? language : "en";
-  
+
   // Direct key access (keys are stored as flat strings like "nav.dashboard")
   const langTranslations = translations[lang];
-  
+
   if (langTranslations && key in langTranslations) {
     return langTranslations[key];
   }
-  
+
   // Fallback to English if translation not found in requested language
   const enTranslations = translations.en;
   if (enTranslations && key in enTranslations) {
     return enTranslations[key];
   }
-  
+
   // Return key if translation not found at all
   console.warn(`Translation key not found: ${key}`);
   return key;

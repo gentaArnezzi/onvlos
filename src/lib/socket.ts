@@ -1,151 +1,28 @@
-import { Server as HTTPServer } from "http";
 import { Server as SocketIOServer } from "socket.io";
-import { db } from "./db";
-import { messages, conversations, client_spaces, client_companies } from "./db/schema";
-import { eq, desc } from "drizzle-orm";
+import { logger } from "./logger";
 
-let io: SocketIOServer | null = null;
-
-export function initSocketServer(httpServer: HTTPServer) {
-  io = new SocketIOServer(httpServer, {
-    cors: {
-      origin: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
-      credentials: true
-    }
-  });
-
-  io.on("connection", (socket) => {
-    console.log("User connected:", socket.id);
-
-    // Join conversation room
-    socket.on("join-conversation", (conversationId: string) => {
-      socket.join(`conversation-${conversationId}`);
-      console.log(`Socket ${socket.id} joined conversation ${conversationId}`);
-    });
-
-    // Leave conversation room
-    socket.on("leave-conversation", (conversationId: string) => {
-      socket.leave(`conversation-${conversationId}`);
-    });
-
-    // Handle message sending (from admin)
-    socket.on("send-message", async (data: {
-      conversationId: string;
-      content: string;
-      userId: string;
-      userName: string;
-    }) => {
-      try {
-        // Save message to database
-        const [newMessage] = await db.insert(messages).values({
-          conversation_id: data.conversationId,
-          user_id: data.userId,
-          content: data.content
-        }).returning();
-
-        // Broadcast to all users in the conversation
-        io?.to(`conversation-${data.conversationId}`).emit("new-message", {
-          id: newMessage.id,
-          content: newMessage.content,
-          user_id: newMessage.user_id,
-          user_name: data.userName,
-          created_at: newMessage.created_at,
-          conversation_id: data.conversationId
-        });
-      } catch (error) {
-        console.error("Error sending message:", error);
-        socket.emit("error", { message: "Failed to send message" });
-      }
-    });
-
-    // Handle message sending from portal (no auth required)
-    socket.on("send-message-portal", async (data: {
-      conversationId: string;
-      content: string;
-      userId: string;
-      userName: string;
-    }) => {
-      try {
-        // Import sendMessageFromPortal function
-        const { sendMessageFromPortal } = await import("@/actions/chat");
-        
-        // Save message to database using portal function
-        const result = await sendMessageFromPortal(data.conversationId, data.content);
-        
-        if (result.success) {
-          // Get the conversation to find client space and user info
-          const conversation = await db.query.conversations.findFirst({
-            where: eq(conversations.id, data.conversationId)
-          });
-
-          if (conversation) {
-            // Get client space and client info for user name
-            const clientSpace = await db.query.client_spaces.findFirst({
-              where: eq(client_spaces.id, conversation.client_space_id)
-            });
-
-            if (clientSpace) {
-              const client = await db.query.client_companies.findFirst({
-                where: eq(client_companies.id, clientSpace.client_id)
-              });
-
-              // Get the latest message from database
-              const latestMessages = await db.select()
-                .from(messages)
-                .where(eq(messages.conversation_id, data.conversationId))
-                .orderBy(desc(messages.created_at))
-                .limit(1);
-              
-              const latestMessage = latestMessages[0];
-
-              if (latestMessage) {
-                // Broadcast to all users in the conversation
-                io?.to(`conversation-${data.conversationId}`).emit("new-message", {
-                  id: latestMessage.id,
-                  content: latestMessage.content,
-                  user_id: latestMessage.user_id,
-                  user_name: client?.name || client?.company_name || data.userName || "Client",
-                  created_at: latestMessage.created_at,
-                  conversation_id: data.conversationId
-                });
-              }
-            }
-          }
-        } else {
-          socket.emit("error", { message: result.error || "Failed to send message" });
-        }
-      } catch (error) {
-        console.error("Error sending message from portal:", error);
-        socket.emit("error", { message: "Failed to send message" });
-      }
-    });
-
-    // Handle typing indicators
-    socket.on("typing", (data: {
-      conversationId: string;
-      userId: string;
-      userName: string;
-      isTyping: boolean;
-    }) => {
-      socket.to(`conversation-${data.conversationId}`).emit("user-typing", {
-        userId: data.userId,
-        userName: data.userName,
-        isTyping: data.isTyping
-      });
-    });
-
-    // Handle disconnect
-    socket.on("disconnect", () => {
-      console.log("User disconnected:", socket.id);
-    });
-  });
-
-  return io;
+/**
+ * Get the Socket.io server instance from global (set by server.js)
+ * This is a singleton pattern to ensure reliable access to the socket server
+ */
+export function getIO(): SocketIOServer | null {
+  // Try to get from global (set by server.js)
+  if (typeof global !== 'undefined' && (global as any).io) {
+    return (global as any).io as SocketIOServer;
+  }
+  
+  // Fallback: try to get from Node.js global
+  if (typeof globalThis !== 'undefined' && (globalThis as any).io) {
+    return (globalThis as any).io as SocketIOServer;
+  }
+  
+  logger.warn("Socket.io server not found in global. Make sure server.js is running.");
+  return null;
 }
 
-export function getIO() {
-  if (!io) {
-    throw new Error("Socket.io not initialized!");
-  }
-  return io;
+/**
+ * Check if socket server is available
+ */
+export function isSocketServerAvailable(): boolean {
+  return getIO() !== null;
 }

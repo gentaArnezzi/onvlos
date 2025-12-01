@@ -329,6 +329,11 @@ export const conversations = pgTable("conversations", {
   user_id_1: text("user_id_1").references(() => users.id, { onDelete: "cascade" }), // For direct messages
   user_id_2: text("user_id_2").references(() => users.id, { onDelete: "cascade" }), // For direct messages
   title: text("title"),
+  is_group: boolean("is_group").default(false), // For group chats
+  group_name: text("group_name"), // Name for group chats
+  group_description: text("group_description"), // Description for group chats
+  group_avatar_url: text("group_avatar_url"), // Avatar for group chats
+  created_by_user_id: text("created_by_user_id").references(() => users.id), // Creator of group chat
   created_at: timestamp("created_at").defaultNow(),
   updated_at: timestamp("updated_at").defaultNow(),
 });
@@ -343,6 +348,7 @@ export const messages = pgTable("messages", {
   is_pinned: boolean("is_pinned").default(false),
   attachments: json("attachments"), // JSON array: [{ type: "image" | "document" | "audio", url: string, name: string }]
   scheduled_for: timestamp("scheduled_for"), // For scheduled messages
+  delivery_status: text("delivery_status").default("sent"), // "sending" | "sent" | "delivered" | "read"
   created_at: timestamp("created_at").defaultNow(),
   updated_at: timestamp("updated_at").defaultNow(),
   deleted_at: timestamp("deleted_at"),
@@ -356,6 +362,77 @@ export const message_reads = pgTable("message_reads", {
 }, (table) => ({
   message_user_unique: uniqueIndex().on(table.message_id, table.user_id),
 }));
+
+// Message Reactions
+export const message_reactions = pgTable("message_reactions", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  message_id: text("message_id").notNull().references(() => messages.id, { onDelete: "cascade" }),
+  user_id: text("user_id").notNull().references(() => users.id),
+  emoji: text("emoji").notNull(), // Emoji character or unicode
+  created_at: timestamp("created_at").defaultNow(),
+}, (table) => ({
+  message_user_emoji_unique: uniqueIndex().on(table.message_id, table.user_id, table.emoji),
+}));
+
+// Conversation Members (for group chats)
+export const conversation_members = pgTable("conversation_members", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  conversation_id: text("conversation_id").notNull().references(() => conversations.id, { onDelete: "cascade" }),
+  user_id: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  role: text("role").default("member"), // "owner" | "admin" | "member"
+  added_by_user_id: text("added_by_user_id").references(() => users.id),
+  joined_at: timestamp("joined_at").defaultNow(),
+  left_at: timestamp("left_at"), // If user left the group
+}, (table) => ({
+  conversation_user_unique: uniqueIndex().on(table.conversation_id, table.user_id),
+}));
+
+// Conversation Settings (mute, notifications per user)
+export const conversation_settings = pgTable("conversation_settings", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  conversation_id: text("conversation_id").notNull().references(() => conversations.id, { onDelete: "cascade" }),
+  user_id: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  is_muted: boolean("is_muted").default(false),
+  mute_until: timestamp("mute_until"), // Optional: mute until specific time
+  notification_enabled: boolean("notification_enabled").default(true),
+  last_read_message_id: text("last_read_message_id").references(() => messages.id),
+  last_read_at: timestamp("last_read_at"),
+  created_at: timestamp("created_at").defaultNow(),
+  updated_at: timestamp("updated_at").defaultNow(),
+}, (table) => ({
+  conversation_user_settings_unique: uniqueIndex().on(table.conversation_id, table.user_id),
+}));
+
+// Message Mentions
+export const message_mentions = pgTable("message_mentions", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  message_id: text("message_id").notNull().references(() => messages.id, { onDelete: "cascade" }),
+  user_id: text("user_id").references(() => users.id, { onDelete: "cascade" }), // Nullable for client mentions
+  client_id: text("client_id").references(() => client_companies.id, { onDelete: "cascade" }), // For client mentions
+  entity_type: text("entity_type"), // "user" | "client" | "task" | "flow" | "board" | "invoice"
+  entity_id: text("entity_id"), // ID of the mentioned entity (for tasks, flows, etc.)
+  mentioned_text: text("mentioned_text"), // The text that was mentioned (e.g., "@John Doe", "@task:123")
+  created_at: timestamp("created_at").defaultNow(),
+});
+
+// Chat Media (for media gallery)
+export const chat_media = pgTable("chat_media", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  conversation_id: text("conversation_id").notNull().references(() => conversations.id, { onDelete: "cascade" }),
+  message_id: text("message_id").notNull().references(() => messages.id, { onDelete: "cascade" }),
+  media_type: text("media_type").notNull(), // "image" | "document" | "audio" | "video" | "gif" | "link"
+  file_url: text("file_url").notNull(),
+  file_name: text("file_name"),
+  file_size: integer("file_size"), // Size in bytes
+  mime_type: text("mime_type"),
+  thumbnail_url: text("thumbnail_url"), // For images/videos
+  width: integer("width"), // For images/videos
+  height: integer("height"), // For images/videos
+  duration: integer("duration"), // For audio/video in seconds
+  metadata: json("metadata"), // Additional metadata (e.g., link preview data)
+  uploaded_by_user_id: text("uploaded_by_user_id").references(() => users.id),
+  created_at: timestamp("created_at").defaultNow(),
+});
 
 // Calendar
 export const calendar_events = pgTable("calendar_events", {

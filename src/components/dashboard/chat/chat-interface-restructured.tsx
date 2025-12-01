@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card } from "@/components/ui/card";
-import { MessageSquare, Workflow, Users, User } from "lucide-react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { useTranslation } from "@/lib/i18n/context";
-import { Language } from "@/lib/i18n/translations";
+import { Language, getTranslation } from "@/lib/i18n/translations";
 import { ChatMessages } from "./chat-messages";
 import { ChatSidebarRestructured } from "./chat-sidebar-restructured";
+import { ChatEmptyState } from "./chat-empty-state";
+import { cn } from "@/lib/utils";
 
 interface ChatInterfaceRestructuredProps {
     conversationsData: {
@@ -18,115 +18,237 @@ interface ChatInterfaceRestructuredProps {
     };
     currentUserId: string;
     language?: Language;
+    initialTab?: "flows" | "clients" | "direct";
+    initialConversationId?: string;
+    initialSubTab?: "internal" | "external";
 }
 
-export function ChatInterfaceRestructured({ conversationsData, currentUserId, language: propLanguage }: ChatInterfaceRestructuredProps) {
-    const { t, language: contextLanguage } = useTranslation();
-    const language = propLanguage || contextLanguage;
-    const [activeTab, setActiveTab] = useState<"flows" | "clients-internal" | "clients-external" | "direct">("flows");
-    const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
+export function ChatInterfaceRestructured({ 
+    conversationsData, 
+    currentUserId, 
+    language: propLanguage,
+    initialTab,
+    initialConversationId,
+    initialSubTab
+}: ChatInterfaceRestructuredProps) {
+    const { language: contextLanguage } = useTranslation();
+    const language = propLanguage || contextLanguage || "en";
+    const t = (key: string) => getTranslation(key, language);
+    const router = useRouter();
+    
+    // Use props from server as initial state to prevent hydration mismatch
+    const [activeTab, setActiveTab] = useState<"flows" | "clients" | "direct">(initialTab || "flows");
+    const [selectedConversationId, setSelectedConversationId] = useState<string | null>(initialConversationId || null);
     const [selectedConversationType, setSelectedConversationType] = useState<string | null>(null);
-
-    const getSelectedConversation = () => {
-        if (!selectedConversationId || !selectedConversationType) return null;
-
-        switch (selectedConversationType) {
-            case "flow":
-                return conversationsData.flows.find(c => c.id === selectedConversationId);
-            case "client_internal":
-                return conversationsData.clientsInternal.find(c => c.id === selectedConversationId);
-            case "client_external":
-                return conversationsData.clientsExternal.find(c => c.id === selectedConversationId);
-            case "direct":
-                return conversationsData.direct.find(c => c.id === selectedConversationId);
-            default:
-                return null;
+    
+    const initializedRef = useRef(false);
+    
+    // Determine conversation type from initial conversation ID or conversation data (only once on mount)
+    useEffect(() => {
+        if (initializedRef.current) return;
+        if (initialConversationId && !selectedConversationType) {
+            // Try to find conversation in data to determine type
+            const allConversations = [
+                ...conversationsData.flows.map(c => ({ ...c, type: "flow" })),
+                ...conversationsData.clientsInternal.map(c => ({ ...c, type: "client_internal" })),
+                ...conversationsData.clientsExternal.map(c => ({ ...c, type: "client_external" })),
+                ...conversationsData.direct.map(c => ({ ...c, type: "direct" }))
+            ];
+            
+            const found = allConversations.find(c => c.id === initialConversationId);
+            if (found) {
+                setSelectedConversationType(found.type);
+                // Set active tab based on type (only if initialTab was not provided)
+                if (!initialTab) {
+                    if (found.type === "flow") {
+                        setActiveTab("flows");
+                    } else if (found.type === "client_internal" || found.type === "client_external") {
+                        setActiveTab("clients");
+                    } else if (found.type === "direct") {
+                        setActiveTab("direct");
+                    }
+                }
+                initializedRef.current = true;
+            }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const lastTabRef = useRef<string | null>(null);
+    
+    // Reset selection when tab changes
+    const handleTabChange = useCallback((value: "flows" | "clients" | "direct") => {
+        // Prevent duplicate tab changes
+        if (lastTabRef.current === value || isUpdatingUrlRef.current) {
+            return;
+        }
+        lastTabRef.current = value;
+        
+        setActiveTab(value);
+        setSelectedConversationId(null);
+        setSelectedConversationType(null);
+        lastSelectedRef.current = null;
+        
+        // Update URL params (only if different from current URL)
+        const currentUrl = typeof window !== 'undefined' ? window.location.search : '';
+        const params = new URLSearchParams(currentUrl);
+        params.delete("conversation");
+        params.set("tab", value);
+        const newUrl = `/dashboard/chat?${params.toString()}`;
+        const newUrlString = params.toString();
+        
+        // Only push if URL actually changed
+        if (lastUrlRef.current !== newUrlString && !isUpdatingUrlRef.current) {
+            isUpdatingUrlRef.current = true;
+            lastUrlRef.current = newUrlString;
+            router.push(newUrl, { scroll: false });
+            // Reset flag after a short delay
+            setTimeout(() => {
+                isUpdatingUrlRef.current = false;
+            }, 100);
+        }
+    }, [router]);
+
+    const getSelectedConversation = (): { conversation: any; type: string } | null => {
+        if (!selectedConversationId) return null;
+
+        // First try to find in the expected array based on type
+        if (selectedConversationType) {
+            switch (selectedConversationType) {
+                case "flow":
+                    const flowConv = conversationsData.flows.find(c => c.id === selectedConversationId);
+                    if (flowConv) return { conversation: flowConv, type: "flow" };
+                    break;
+                case "client_internal":
+                    const internalConv = conversationsData.clientsInternal.find(c => c.id === selectedConversationId);
+                    if (internalConv) return { conversation: internalConv, type: "client_internal" };
+                    break;
+                case "client_external":
+                    const externalConv = conversationsData.clientsExternal.find(c => c.id === selectedConversationId);
+                    if (externalConv) return { conversation: externalConv, type: "client_external" };
+                    break;
+                case "direct":
+                    const directConv = conversationsData.direct.find(c => c.id === selectedConversationId);
+                    if (directConv) return { conversation: directConv, type: "direct" };
+                    break;
+            }
+        }
+
+        // Fallback: search in all arrays if not found in expected array
+        const flowConv = conversationsData.flows.find(c => c.id === selectedConversationId);
+        if (flowConv) return { conversation: flowConv, type: "flow" };
+        
+        const internalConv = conversationsData.clientsInternal.find(c => c.id === selectedConversationId);
+        if (internalConv) return { conversation: internalConv, type: "client_internal" };
+        
+        const externalConv = conversationsData.clientsExternal.find(c => c.id === selectedConversationId);
+        if (externalConv) return { conversation: externalConv, type: "client_external" };
+        
+        const directConv = conversationsData.direct.find(c => c.id === selectedConversationId);
+        if (directConv) return { conversation: directConv, type: "direct" };
+
+        // If not found, return a minimal conversation object so ChatMessages can still load
+        return { 
+            conversation: { id: selectedConversationId }, 
+            type: selectedConversationType || "flow" 
+        };
     };
 
-    const handleSelectConversation = (conversationId: string, type: string) => {
+    const lastSelectedRef = useRef<string | null>(null);
+    const lastUrlRef = useRef<string | null>(null);
+    const isUpdatingUrlRef = useRef(false);
+    
+    const handleSelectConversation = useCallback((conversationId: string, type: string) => {
+        // Prevent duplicate selections
+        if (lastSelectedRef.current === conversationId || isUpdatingUrlRef.current) {
+            return;
+        }
+        lastSelectedRef.current = conversationId;
+        
         setSelectedConversationId(conversationId);
         setSelectedConversationType(type);
-    };
+        
+        // Update URL params to persist selection (only if different from current URL)
+        const currentUrl = typeof window !== 'undefined' ? window.location.search : '';
+        const params = new URLSearchParams(currentUrl);
+        params.set("conversation", conversationId);
+        params.set("tab", activeTab);
+        if (type === "client_internal" || type === "client_external") {
+            params.set("subTab", type === "client_internal" ? "internal" : "external");
+        } else {
+            params.delete("subTab");
+        }
+        const newUrl = `/dashboard/chat?${params.toString()}`;
+        const newUrlString = params.toString();
+        
+        // Only push if URL actually changed
+        if (lastUrlRef.current !== newUrlString && !isUpdatingUrlRef.current) {
+            isUpdatingUrlRef.current = true;
+            lastUrlRef.current = newUrlString;
+            router.push(newUrl, { scroll: false });
+            // Reset flag after a short delay
+            setTimeout(() => {
+                isUpdatingUrlRef.current = false;
+            }, 100);
+        }
+    }, [activeTab, router]);
 
-    const selectedConversation = getSelectedConversation();
+    const selectedConversationResult = getSelectedConversation();
+    const selectedConversation = selectedConversationResult?.conversation || null;
+    const actualConversationType = selectedConversationResult?.type || selectedConversationType || "flow";
+    
+    // Debug: Log when conversation is selected but not found
+    if (selectedConversationId && !selectedConversation && typeof window !== "undefined") {
+        console.warn("Conversation selected but not found in data:", {
+            selectedConversationId,
+            selectedConversationType,
+            availableIds: {
+                flows: conversationsData.flows.map(c => c.id),
+                clientsInternal: conversationsData.clientsInternal.map(c => c.id),
+                clientsExternal: conversationsData.clientsExternal.map(c => c.id),
+                direct: conversationsData.direct.map(c => c.id),
+            }
+        });
+    }
 
     return (
-        <div className="flex-1 flex flex-col h-full min-h-0 overflow-hidden">
-            <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="flex-1 flex flex-col min-h-0">
-                <TabsList className="bg-white border border-[#EDEDED] p-1 rounded-lg w-full sm:w-auto overflow-x-auto scrollbar-hide flex-shrink-0">
-                    <TabsTrigger 
-                        value="flows" 
-                        className="flex items-center gap-2 font-primary data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white text-[#606170] whitespace-nowrap flex-shrink-0"
-                    >
-                        <Workflow className="h-4 w-4" /> {t("chat.flows", language) || "Flows"}
-                    </TabsTrigger>
-                    <TabsTrigger 
-                        value="clients-internal" 
-                        className="flex items-center gap-2 font-primary data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white text-[#606170] whitespace-nowrap flex-shrink-0"
-                    >
-                        <Users className="h-4 w-4" /> {t("chat.clientsInternal", language) || "Clients (Internal)"}
-                    </TabsTrigger>
-                    <TabsTrigger 
-                        value="clients-external" 
-                        className="flex items-center gap-2 font-primary data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white text-[#606170] whitespace-nowrap flex-shrink-0"
-                    >
-                        <Users className="h-4 w-4" /> {t("chat.clientsExternal", language) || "Clients (External)"}
-                    </TabsTrigger>
-                    <TabsTrigger 
-                        value="direct" 
-                        className="flex items-center gap-2 font-primary data-[state=active]:bg-[#0A33C6] data-[state=active]:text-white text-[#606170] whitespace-nowrap flex-shrink-0"
-                    >
-                        <User className="h-4 w-4" /> {t("chat.directMessages", language) || "Direct Messages"}
-                    </TabsTrigger>
-                </TabsList>
+        <div className="h-full w-full flex overflow-hidden bg-white">
+            {/* Sidebar */}
+            <div className="w-80 flex-shrink-0 border-r border-[#EDEDED] bg-white overflow-hidden flex flex-col">
+                <ChatSidebarRestructured
+                    conversations={conversationsData}
+                    activeTab={activeTab}
+                    selectedConversationId={selectedConversationId}
+                    onSelectConversation={handleSelectConversation}
+                    onTabChange={handleTabChange}
+                    language={language}
+                    initialSubTab={initialSubTab}
+                />
+            </div>
 
-                <div className="flex-1 flex gap-4 mt-4 min-h-0 overflow-hidden">
-                    {/* Sidebar */}
-                    <div className="w-80 flex-shrink-0 overflow-hidden">
-                        <ChatSidebarRestructured
-                            conversations={activeTab === "flows" ? conversationsData.flows :
-                                         activeTab === "clients-internal" ? conversationsData.clientsInternal :
-                                         activeTab === "clients-external" ? conversationsData.clientsExternal :
-                                         conversationsData.direct}
-                            conversationType={activeTab === "flows" ? "flow" :
-                                          activeTab === "clients-internal" ? "client_internal" :
-                                          activeTab === "clients-external" ? "client_external" :
-                                          "direct"}
-                            selectedConversationId={selectedConversationId}
-                            onSelectConversation={handleSelectConversation}
+            {/* Messages Area */}
+            <div className="flex-1 min-w-0 overflow-hidden bg-white">
+                    {selectedConversationId && selectedConversation ? (
+                        <ChatMessages
+                            conversationId={selectedConversationId}
+                            conversationType={actualConversationType}
+                            conversationData={selectedConversation}
+                            currentUserId={currentUserId}
                             language={language}
                         />
-                    </div>
-
-                    {/* Messages */}
-                    <div className="flex-1 min-w-0 overflow-hidden">
-                        {selectedConversationId && selectedConversation ? (
-                            <ChatMessages
-                                conversationId={selectedConversationId}
-                                conversationType={selectedConversationType || "flow"}
-                                conversationData={selectedConversation}
-                                currentUserId={currentUserId}
-                                language={language}
-                            />
-                        ) : (
-                            <Card className="h-full border border-[#EDEDED] bg-white backdrop-blur-sm flex items-center justify-center">
-                                <div className="text-center p-4">
-                                    <div className="mx-auto w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-[#EDEDED] flex items-center justify-center mb-4">
-                                        <MessageSquare className="w-6 h-6 sm:w-8 sm:h-8 text-[#0A33C6]" />
-                                    </div>
-                                    <h3 className="text-base sm:text-lg font-semibold font-primary text-[#02041D] mb-2">
-                                        {t("chat.noConversationSelected", language)}
-                                    </h3>
-                                    <p className="font-primary text-[#606170] text-xs sm:text-sm">
-                                        {t("chat.selectConversationToStart", language) || "Select a conversation to start"}
-                                    </p>
-                                </div>
-                            </Card>
-                        )}
-                    </div>
-                </div>
-            </Tabs>
+                    ) : selectedConversationId ? (
+                        // If we have conversationId but conversationData is not loaded yet, still try to load messages
+                        <ChatMessages
+                            conversationId={selectedConversationId}
+                            conversationType={actualConversationType || selectedConversationType || "flow"}
+                            conversationData={null}
+                            currentUserId={currentUserId}
+                            language={language}
+                        />
+                    ) : (
+                        <ChatEmptyState type="select-conversation" />
+                    )}
+            </div>
         </div>
     );
 }

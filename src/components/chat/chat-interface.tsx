@@ -39,22 +39,57 @@ export function ChatInterface({ conversationId, initialMessages, currentUserId, 
 
     // Setup socket listeners
     useEffect(() => {
-        if (!socket) return;
+        if (!socket) {
+            console.log("ChatInterface: Socket not available, messages will not update in real-time");
+            return;
+        }
 
+        console.log("ChatInterface: Setting up socket listeners for conversation:", conversationId);
+        console.log("ChatInterface: isPortal:", isPortal, "isConnected:", isConnected);
+        
         // Join conversation room
         socket.emit("join-conversation", conversationId);
+        console.log("ChatInterface: Joined conversation room:", `conversation-${conversationId}`);
+        
+        // Verify we're in the room (for debugging)
+        setTimeout(() => {
+            if (socket && socket.connected) {
+                console.log("ChatInterface: Socket connected, listening for messages in room:", `conversation-${conversationId}`);
+            } else {
+                console.warn("ChatInterface: Socket not connected!");
+            }
+        }, 1000);
 
         // Listen for new messages
         socket.on("new-message", (message: Message) => {
+            console.log("ChatInterface: Received new message via socket:", message);
             setMessages(prev => {
                 // Check if message already exists (to prevent duplicates)
-                if (prev.some(m => m.id === message.id)) return prev;
+                if (prev.some(m => m.id === message.id)) {
+                    console.log("ChatInterface: Message already exists, skipping:", message.id);
+                    return prev;
+                }
                 
                 // Remove any temp messages with same content (optimistic update cleanup)
-                const filtered = prev.filter(m => !(m.id?.startsWith('temp-') && m.content === message.content));
+                const filtered = prev.filter(m => {
+                    // Remove temp messages that match this real message
+                    if (m.id?.startsWith('temp-')) {
+                        // Check if content matches (within 2 seconds)
+                        if (m.content === message.content) {
+                            const timeDiff = Math.abs(new Date(message.created_at || new Date()).getTime() - new Date(m.created_at || new Date()).getTime());
+                            if (timeDiff < 2000) {
+                                console.log("ChatInterface: Removing temp message:", m.id, "replacing with real message:", message.id);
+                                return false;
+                            }
+                        }
+                    }
+                    return true;
+                });
                 
+                console.log("ChatInterface: Adding new message to state");
                 return [...filtered, message];
             });
+            setSending(false); // Stop sending state when message arrives
         });
 
         // Listen for errors
@@ -141,34 +176,77 @@ export function ChatInterface({ conversationId, initialMessages, currentUserId, 
             isTyping: false
         });
 
-        // For portal, use socket if available, otherwise HTTP
-        // For admin, use socket if available, otherwise HTTP
+        // For portal, always use HTTP to ensure message is saved to database
+        // Socket is only used for receiving real-time updates
         if (isPortal) {
-            // Portal mode: try socket first, fallback to HTTP
-            if (socket && isConnected) {
-                // Add optimistic message
-                const tempMessageId = "temp-" + Date.now();
-                const tempMessage: Message = {
-                    id: tempMessageId,
-                    content: messageContent,
-                    created_at: new Date(),
-                    user_id: currentUserId,
-                    user_name: "Me"
-                };
-                setMessages(prev => [...prev, tempMessage]);
+            // Portal mode: always use HTTP to save, socket only for receiving
+            console.log("ChatInterface: Sending message via HTTP (portal mode)");
+            
+            // Add optimistic message
+            const tempMessageId = "temp-" + Date.now();
+            const tempMessage: Message = {
+                id: tempMessageId,
+                content: messageContent,
+                created_at: new Date(),
+                user_id: currentUserId,
+                user_name: "Me"
+            };
+            setMessages(prev => [...prev, tempMessage]);
+            
+            try {
+                console.log("ChatInterface: Calling sendMessageFromPortal...", { conversationId, messageContent: messageContent.substring(0, 50) });
+                const result = await sendMessageFromPortal(conversationId, messageContent);
+                console.log("ChatInterface: sendMessageFromPortal result:", result);
                 
-                // Use socket for real-time
-                socket.emit("send-message-portal", {
+                if (result.success && result.message) {
+                    // Replace temp message with real message from database
+                    setMessages(prev => {
+                        const filtered = prev.filter(m => m.id !== tempMessageId);
+                        return [...filtered, {
+                            id: result.message!.id,
+                            content: result.message!.content,
+                            created_at: result.message!.created_at || new Date(),
+                            user_id: result.message!.user_id,
+                            user_name: result.message!.user_name || "Me"
+                        }];
+                    });
+                    console.log("ChatInterface: Message saved successfully via HTTP:", result.message.id);
+                } else {
+                    // Remove temp message if send failed
+                    setMessages(prev => prev.filter(m => m.id !== tempMessageId));
+                    const errorMessage = result.error || "Failed to send message. Please try again.";
+                    console.error("ChatInterface: Failed to send message:", {
+                        error: result.error,
+                        success: result.success,
+                        hasMessage: !!result.message
+                    });
+                    toast.error(errorMessage);
+                }
+            } catch (error: any) {
+                // Remove temp message on error
+                setMessages(prev => prev.filter(m => m.id !== tempMessageId));
+                const errorMessage = error?.message || error?.toString() || "Failed to send message. Please try again.";
+                console.error("ChatInterface: Error sending message:", {
+                    error,
+                    message: error?.message,
+                    stack: error?.stack
+                });
+                toast.error(errorMessage);
+            } finally {
+                setSending(false);
+            }
+        } else {
+            // Admin mode: use socket if connected, otherwise HTTP
+            if (socket && isConnected) {
+                socket.emit("send-message", {
                     conversationId,
                     content: messageContent,
                     userId: currentUserId,
                     userName: "Me"
                 });
-                
-                // The real message will come via socket "new-message" event
-                // Remove temp message when real one arrives (handled in socket listener)
+                setSending(false);
             } else {
-                // Fallback to HTTP if socket not connected
+                // Fallback to HTTP if socket is not connected
                 const tempMessageId = "temp-" + Date.now();
                 const newMessage: Message = {
                     id: tempMessageId,
@@ -181,51 +259,23 @@ export function ChatInterface({ conversationId, initialMessages, currentUserId, 
                 setMessages(prev => [...prev, newMessage]);
                 
                 try {
-                    const result = await sendMessageFromPortal(conversationId, messageContent);
+                    const result = await sendMessage(conversationId, messageContent, currentUserId);
                     if (!result.success) {
                         // Remove temp message if send failed
                         setMessages(prev => prev.filter(m => m.id !== tempMessageId));
                         console.error("Failed to send message:", result.error);
                         toast.error(result.error || "Failed to send message. Please try again.");
                     }
-                    // Note: Real message will come via socket if connected, or we'll need to refresh
                 } catch (error) {
                     // Remove temp message on error
                     setMessages(prev => prev.filter(m => m.id !== tempMessageId));
                     console.error("Error sending message:", error);
                     toast.error("Failed to send message. Please try again.");
-                }
-            }
-        } else {
-            // Admin mode: use socket if connected, otherwise HTTP
-            if (socket && isConnected) {
-                socket.emit("send-message", {
-                    conversationId,
-                    content: messageContent,
-                    userId: currentUserId,
-                    userName: "Me"
-                });
-            } else {
-                // Fallback to HTTP if socket is not connected
-                const newMessage: Message = {
-                    id: "temp-" + Date.now(),
-                    content: messageContent,
-                    created_at: new Date(),
-                    user_id: currentUserId,
-                    user_name: "Me"
-                };
-
-                setMessages(prev => [...prev, newMessage]);
-                const result = await sendMessage(conversationId, messageContent, currentUserId);
-                if (!result.success) {
-                    // Remove temp message if send failed
-                    setMessages(prev => prev.filter(m => m.id !== newMessage.id));
-                    console.error("Failed to send message:", result.error);
+                } finally {
+                    setSending(false);
                 }
             }
         }
-        
-        setSending(false);
     };
 
     return (

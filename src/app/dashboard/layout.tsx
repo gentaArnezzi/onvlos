@@ -1,5 +1,4 @@
 import { Navbar } from "@/components/dashboard/navbar";
-import { AiAssistant } from "@/components/ai/ai-assistant";
 import { getSession } from "@/lib/get-session";
 import { getOrCreateWorkspace } from "@/actions/workspace";
 import { LanguageProviderWrapper } from "@/components/language-provider-wrapper";
@@ -16,12 +15,11 @@ export default async function DashboardLayout({
 
   return (
     <LanguageProviderWrapper defaultLanguage={defaultLanguage}>
-      <div className="h-full relative bg-[#EDEDED] overflow-x-hidden">
+      <div className="h-screen flex flex-col relative bg-[#EDEDED] overflow-x-hidden">
         <Navbar user={session?.user} />
-        <main className="min-h-screen bg-[#EDEDED]">
+        <main className="flex-1 min-h-0 overflow-hidden bg-[#EDEDED] flex flex-col">
           {children}
         </main>
-        <AiAssistant />
       </div>
     </LanguageProviderWrapper>
   );
